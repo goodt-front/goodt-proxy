@@ -1,0 +1,7 @@
+node_modules
+docs
+dist/demo.html
+dist/lib.umd-report.html
+.vscode
+.dev
+package-lock.json

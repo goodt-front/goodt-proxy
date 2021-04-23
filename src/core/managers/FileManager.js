@@ -10,7 +10,6 @@ import { EventBusBase, EventBusEvent } from './EventBus';
  */
 /**
  * @typedef {Object} FileManagerOptions
- * @property {Boolean} selectEnabled        file selection enabled
  * @property {Boolean} selectMultiple       multiple file selection mode
  */
 /**

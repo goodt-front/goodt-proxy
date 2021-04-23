@@ -1,4 +1,14 @@
-import cloneDeep from 'lodash/cloneDeep';
+/**
+ * @callback EventHandler
+ * @param {EventBusEvent} event
+ * @param {any} data
+ */
+/**
+ * @typedef {Object} ListenerInfo
+ * @property {EventBusEvent} event
+ * @property {EventHandler} handler
+ * @property {Boolean} once
+ */
 
 /**
  * EventBusBase class
@@ -9,22 +19,16 @@ class EventBusBase {
      */
     constructor() {
         /**
-         * @typedef {Object} Listener
-         * @property {EventBusEvent} event
-         * @property {Function} handler
-         * @property {Boolean} once
-         */
-        /**
-         * @type {Object.<String, Listener>}
+         * @type {Object.<string, ListenerInfo[]>}
          */
         this._listeners = Object.create(null);
     }
     /**
-     * Listen
+     * Registers an event handler
      * @param {EventBusEvent} event     event
-     * @param {Function} handler        handler
-     * @param {Boolean} once            once? @default false
-     * @return {Function}              dispose handler i.e. dispose() === unlisten(event, handler)
+     * @param {EventHandler} handler    handler
+     * @param {Boolean} [once=false]    if set true event handler will be auto-unregistered when invoked
+     * @return {Function}               dispose function to unregister the handler i.e. dispose() === unlisten(event, handler)
      */
     listen(event, handler, once = false) {
         if (!this._listeners[event.type]) {
@@ -34,10 +38,10 @@ class EventBusBase {
         return () => this.unlisten(event, handler);
     }
     /**
-     * Unlisten
+     * Unregisters an event handler
      * @param {EventBusEvent} event     event
-     * @param {Function} handler        handler
-     * @return {Boolean}
+     * @param {EventHandler} handler    handler
+     * @return {Boolean}                true if ayn handler unregistered
      */
     unlisten(event, handler) {
         let arr = this._listeners[event.type];
@@ -56,9 +60,9 @@ class EventBusBase {
         return n > 0;
     }
     /**
-     * Has
+     * Returns true if event handler is registered
      * @param {EventBusEvent} event     event
-     * @param {Function} handler        handler
+     * @param {EventHandler} handler    handler
      * @return {Boolean}
      */
     has(event, handler) {
@@ -66,11 +70,13 @@ class EventBusBase {
         if (!arr) {
             return false;
         }
-        let r = arr.find(obj => obj.event.fullType == event.fullType && obj.handler === handler);
+        let r = arr.find(
+            info => info.event.fullType === event.fullType && info.handler === handler
+        );
         return !(r == null);
     }
     /**
-     * Trigger
+     * Triggers event
      * @param {EventBusEvent} event     event
      * @param {*} data                  data
      */
@@ -80,10 +86,10 @@ class EventBusBase {
             return;
         }
         for (let i = 0; i < arr.length; ++i) {
-            let obj = arr[i];
-            if (obj.event.fullType == event.fullType) {
-                this.callEventHandler(obj.handler, event, data);
-                if (obj.once) {
+            let info = arr[i];
+            if (info.event.fullType === event.fullType) {
+                this.callEventHandler(info.handler, event, data);
+                if (info.once) {
                     arr.splice(i, 1);
                     i--;
                 }
@@ -97,16 +103,16 @@ class EventBusBase {
         this._listeners = Object.create(null);
     }
     /**
-     * Removes all listeners alias for 'resetListeners'
+     * Alias for 'resetListeners'
      */
     reset() {
         this.resetListeners();
     }
     /**
      * Call event handler
-     * @param {Function} handler        handler
+     * @param {EventHandler} handler        handler
      * @param {EventBusEvent} event     event
-     * @param {*} data                  data
+     * @param {any} data                  data
      */
     callEventHandler(handler, event, data) {
         handler.apply(this, [event, data]);
@@ -119,31 +125,29 @@ class EventBusBase {
 class EventBus extends EventBusBase {
     /**
      * Constructor
+     * @param {import('./StateManager').Store} store
      */
-    constructor() {
+    constructor(store) {
         super();
         this.useStateHistory = true;
         this.useStateDeferredMerging = true;
         //
-        this._state = this._createStateObj();
-        this._stateNew = this._createStateObj();
-        this._stateTriggerTimeout = {
-            [EventBus.STATE_SCOPE_PUBLIC]: null,
-            [EventBus.STATE_SCOPE_SESSION]: null
-        };
+        this._stateNew = {};
+        this._stateTriggerTimeout = null;
+        //
+        this._store = store;
+        this._store.addCommitHandler(this._storeCommitHandler.bind(this));
     }
     /**
      * Listen
      * @param {EventBusEvent} event     event
-     * @param {Function} handler        handler
-     * @param {Boolean} once            once? @default false
-     * @return {Function}              dispose handler i.e. dispose() === unlisten(event, handler)
+     * @param {(e:EventBusEvent, data:Object)} handler        handler
+     * @param {Boolean} [once=false]    once?
+     * @return {Function}               dispose handler i.e. dispose() === unlisten(event, handler)
      */
     listen(event, handler, once) {
-        if (event.type == EventBusEvent.EVENT_STATE_CHANGE) {
-            return this._listenStateChange(event, handler, once, EventBus.STATE_SCOPE_PUBLIC);
-        } else if (event.type == EventBusEvent.EVENT_SESSION_CHANGE) {
-            return this._listenStateChange(event, handler, once, EventBus.STATE_SCOPE_SESSION);
+        if (event.type === EventBusEvent.EVENT_STATE_CHANGE) {
+            return this._listenStateChange(event, handler, once);
         }
         return super.listen(event, handler, once);
     }
@@ -154,97 +158,68 @@ class EventBus extends EventBusBase {
      */
     trigger(event, data) {
         if (event.type == EventBusEvent.EVENT_STATE_CHANGE) {
-            this._triggerStateChange(event, data, EventBus.STATE_SCOPE_PUBLIC);
-        } else if (event.type == EventBusEvent.EVENT_SESSION_CHANGE) {
-            this._triggerStateChange(event, data, EventBus.STATE_SCOPE_SESSION);
-        } else if (event.type == EventBusEvent.EVENT_SESSION_CLEAR) {
-            let scope = EventBus.STATE_SCOPE_SESSION;
-            this.resetState(scope);
-            this._triggerStateChange(
-                new EventBusEvent(EventBusEvent.EVENT_SESSION_CHANGE),
-                {},
-                scope
-            );
+            this._triggerStateChange(event, data);
         } else {
             super.trigger(event, data);
         }
     }
     /**
      * Set state
-     * @param {String} stateScope   state scope
      * @param {Object} state
      */
-    setState(stateScope, state) {
-        this._state[stateScope] = state;
+    setState(state) {
+        this._store.commit(state, false);
     }
     /**
      * Returns state
-     * @param {String} stateScope   state scope
      * @return {Object}
      */
-    getState(stateScope) {
-        return this._state[stateScope];
+    getState() {
+        return { ...this._store.state };
     }
     /**
      * Reset latest/new states
-     * @param {String} stateScope   state scope or all if null @default null
      */
-    resetState(stateScope = null) {
-        if (stateScope) {
-            if (this._state[stateScope]) {
-                this._state[stateScope] = {};
-                this._stateNew[stateScope] = {};
-            }
-        } else {
-            this._state = this._createStateObj();
-            this._stateNew = this._createStateObj();
-        }
+    resetState() {
+        this._store.replace({});
     }
     /**
      * Create state trigger timeout
-     * @param {String} stateScope   state scope
      * @param {Function} handler    handler
      */
-    createStateTriggerTimeout(stateScope, handler) {
-        this._stateTriggerTimeout[stateScope] = setTimeout(() => {
-            this._stateTriggerTimeout[stateScope] = null;
+    createStateTriggerTimeout(handler) {
+        this._stateTriggerTimeout = setTimeout(() => {
+            this._stateTriggerTimeout = null;
             handler();
         });
     }
     /**
      * Reset active state trigger timeout
-     * @param {String} stateScope   state scope
      */
-    resetStateTriggerTimeout(stateScope = null) {
-        if (stateScope == null) {
-            Object.keys(this._stateTriggerTimeout).forEach(scope =>
-                this.resetStateTriggerTimeout(scope)
-            );
-        } else if (this._stateTriggerTimeout[stateScope]) {
-            clearTimeout(this._stateTriggerTimeout[stateScope]);
-            this._stateTriggerTimeout[stateScope] = null;
+    resetStateTriggerTimeout() {
+        if (this._stateTriggerTimeout) {
+            clearTimeout(this._stateTriggerTimeout);
+            this._stateTriggerTimeout = null;
         }
     }
     /**
      * Check if state timeout is active
-     * @param {String} stateScope   state scope
      * @return {Boolean}
      */
-    stateTriggerTimeoutActive(stateScope) {
-        return this._stateTriggerTimeout[stateScope] != null;
+    stateTriggerTimeoutActive() {
+        return this._stateTriggerTimeout != null;
     }
     /**
      * @private Listen state change event handler
      * @param {EventBusEvent} event     event
-     * @param {Function} handler        handler
+     * @param {EventHandler} handler    handler
      * @param {Boolean} once            once? @default false
-     * @param {String} stateScope       state scope
      * @return {Function}              dispose handler i.e. dispose() === unlisten(event, handler)
      */
-    _listenStateChange(event, handler, once, stateScope) {
+    _listenStateChange(event, handler, once) {
         if (this.useStateHistory) {
             // no timeout active --> force invoke handler with latest state
-            super.callEventHandler(handler, event, this._state[stateScope]);
+            super.callEventHandler(handler, event, this.getState());
             if (once) {
                 return () => {};
             }
@@ -255,44 +230,42 @@ class EventBus extends EventBusBase {
      * @private Trigger state change event handler
      * @param {EventBusEvent} event     event
      * @param {Object} stateChange      state change
-     * @param {String} stateScope       state scope
      */
-    _triggerStateChange(event, stateChange, stateScope) {
-        let stateChangeClone = cloneDeep(stateChange);
+    _triggerStateChange(event, stateChange) {
         // no defer merging strat
         if (!this.useStateDeferredMerging) {
-            // merge state + stateChangeClone
+            // merge state + stateChange
             if (this.useStateHistory) {
-                this._state[stateScope] = this._removeUndefinedKeys({
-                    ...this._state[stateScope],
-                    ...stateChangeClone
-                });
+                this.setState(
+                    this._removeUndefinedKeys({
+                        ...this.getState(),
+                        ...stateChange
+                    })
+                );
+                super.trigger(event, stateChange);
             }
-            // trigger --> stateChangeClone
-            let data = this._removeUndefinedKeys(stateChangeClone);
-            super.trigger(event, data);
             return;
         }
 
-        // defer merging strat --> collect 'stateChanges': merge stateNew + stateChangeClone
-        this._stateNew[stateScope] = {
-            ...this._stateNew[stateScope],
-            ...stateChangeClone
+        // defer merging strat --> collect 'stateChanges': merge stateNew + stateChange
+        this._stateNew = {
+            ...this._stateNew,
+            ...stateChange
         };
-        if (!this.stateTriggerTimeoutActive(stateScope)) {
+        if (!this.stateTriggerTimeoutActive()) {
             // defer the trigger
-            this.createStateTriggerTimeout(stateScope, () => {
+            this.createStateTriggerTimeout(() => {
                 // merge state + stateNew
                 if (this.useStateHistory) {
-                    this._state[stateScope] = this._removeUndefinedKeys({
-                        ...this._state[stateScope],
-                        ...this._stateNew[stateScope]
-                    });
+                    this.setState(
+                        this._removeUndefinedKeys({
+                            ...this.getState(),
+                            ...this._stateNew
+                        })
+                    );
                 }
-                // trigger --> stateNew
-                let data = this._removeUndefinedKeys(this._stateNew[stateScope]);
-                this._stateNew[stateScope] = {};
-                super.trigger(event, data);
+                super.trigger(event, this._stateNew);
+                this._stateNew = {};
             });
         }
     }
@@ -311,18 +284,13 @@ class EventBus extends EventBusBase {
         return out;
     }
     /**
-     * @private Creates a new state object
-     * @return {Object}
+     * @private Store commit handler
+     * @param {Object} stateChange
      */
-    _createStateObj() {
-        return {
-            [EventBus.STATE_SCOPE_PUBLIC]: {},
-            [EventBus.STATE_SCOPE_SESSION]: {}
-        };
+    _storeCommitHandler(stateChange) {
+        super.trigger(new EventBusEvent(EventBusEvent.EVENT_STATE_CHANGE), stateChange);
     }
 }
-EventBus.STATE_SCOPE_SESSION = 'session';
-EventBus.STATE_SCOPE_PUBLIC = 'public';
 
 /**
  * EventBusWrapper class
@@ -344,18 +312,21 @@ class EventBusWrapper {
         this._listeners = [];
         // { '<var-name>': { listen:'<var-alias>', trigger:'<var-alias>' } }
         this.varAliases = {};
+        //
+        this.toVO = (value, meta) => value;
+        this.toValue = vo => vo;
     }
     /**
      * Returns current state
      * @return {Object}
      */
     getState() {
-        let state = this._eb.getState(EventBus.STATE_SCOPE_PUBLIC);
+        let state = this._eb.getState();
         let stateLoc = {};
         for (let varName in this.varAliases) {
             let prop = this.varAliases[varName].listen;
             if (state[prop] != null) {
-                stateLoc[varName] = ValueObject.getValue(state[prop]);
+                stateLoc[varName] = this.toValue(state[prop]);
             }
         }
         return { ...stateLoc };
@@ -365,21 +336,21 @@ class EventBusWrapper {
      * @return {Object}
      */
     getSession() {
-        let session = this._eb.getState(EventBus.STATE_SCOPE_SESSION);
+        let session = this._eb.getState();
         return { ...session };
     }
     /**
      * Listen for @see EventBusEvent.EVENT_NAVIGATE event
-     * @param {Function} handler    handler
-     * @param {Boolean} once        once? @default false
-     * @return {Function}           handler ref
+     * @param {EventHandler} handler    handler
+     * @param {Boolean} [once=false]    once
+     * @return {Function}               handler ref
      */
     listenNavigate(handler, once = false) {
         return this.listen(EventBusEvent.EVENT_NAVIGATE, handler, once);
     }
     /**
      * Unlisten @see EventBusEvent.EVENT_NAVIGATE event
-     * @param {Function} handler    handler
+     * @param {EventHandler} handler    handler
      */
     unlistenNavigate(handler) {
         return this.unlisten(EventBusEvent.EVENT_NAVIGATE, handler);
@@ -406,9 +377,9 @@ class EventBusWrapper {
     }
     /**
      * Listen for @see EventBusEvent.EVENT_STATE_CHANGE event
-     * @param {Function} handler    handler
-     * @param {Boolean} once        once? @default false
-     * @return {Function}           decorated handler
+     * @param {EventHandler} handler    handler
+     * @param {Boolean} [once=false]    once
+     * @return {EventHandler}           decorated handler
      */
     listenStateChange(handler, once = false) {
         let decoratedHandler = (e, stateChange) => {
@@ -418,7 +389,7 @@ class EventBusWrapper {
                 for (let varName in this.varAliases) {
                     let alias = this.varAliases[varName];
                     if (alias && alias.listen === name) {
-                        obj[varName] = ValueObject.getValue(stateChange[name]);
+                        obj[varName] = this.toValue(stateChange[name]);
                     }
                 }
             }
@@ -431,7 +402,7 @@ class EventBusWrapper {
     }
     /**
      * Unlisten @see EventBusEvent.EVENT_STATE_CHANGE event
-     * @param {Function} decoratedHandler    decorated handler @see EventBusWrapper.listenStateChange()
+     * @param {EventHandler} decoratedHandler    decorated handler
      */
     unlistenStateChange(decoratedHandler) {
         this.unlisten(EventBusEvent.EVENT_STATE_CHANGE, decoratedHandler);
@@ -446,10 +417,7 @@ class EventBusWrapper {
             // replace 'name' -> aliases[ name ].trigger
             let alias = this.varAliases[name];
             if (alias && alias.trigger) {
-                obj[alias.trigger] =
-                    stateChange[name] === undefined
-                        ? stateChange[name]
-                        : new ValueObject(stateChange[name], alias.meta);
+                obj[alias.trigger] = this.toVO(stateChange[name], alias.meta);
             }
         }
         if (Object.keys(obj)) {
@@ -457,43 +425,11 @@ class EventBusWrapper {
         }
     }
     /**
-     * Listen for @see EventBusEvent.EVENT_SESSION_CHANGE event
-     * @param {Function} handler    handler
-     * @param {Boolean} once        once? @default false
-     * @return {Function}           dispose handler @see EventBus.listen()
-     */
-    listenSessionChange(handler, once = false) {
-        return this.listen(EventBusEvent.EVENT_SESSION_CHANGE, handler, once);
-    }
-    /**
-     * Unlisten @see EventBusEvent.EVENT_SESSION_CHANGE event
-     * @param {Function} handler    handler
-     */
-    unlistenSessionChange(handler) {
-        this.unlisten(EventBusEvent.EVENT_SESSION_CHANGE, handler);
-    }
-    /**
-     * Trigger @see EventBusEvent.EVENT_SESSION_CHANGE event
-     * @param {Object} sessionChange     session change object { '<key>': '<value>' }
-     */
-    triggerSessionChange(sessionChange) {
-        if (Object.keys(sessionChange)) {
-            this.trigger(EventBusEvent.EVENT_SESSION_CHANGE, sessionChange);
-        }
-    }
-    /**
-     * Trigger @see EventBusEvent.EVENT_SESSION_CLEAR event
-     * @invokes @see EventBusEvent.EVENT_SESSION_CHANGE event
-     */
-    triggerSessionClear() {
-        this.trigger(EventBusEvent.EVENT_SESSION_CLEAR);
-    }
-    /**
      * Listen
-     * @param {String|EventBusEvent} eventType    event type
-     * @param {Function} handler    handler
-     * @param {Boolean} once        once? @default false
-     * @return {Function}           dispose handler @see EventBus.listen()
+     * @param {String|EventBusEvent} eventType      event type
+     * @param {EventHandler} handler                handler
+     * @param {Boolean} [once=false]                once? @default false
+     * @return {Function}                           dispose handler
      */
     listen(eventType, handler, once = false) {
         if (!this._eb) {
@@ -508,7 +444,7 @@ class EventBusWrapper {
             let handlerCompat = (e, data) => {
                 let obj = {};
                 for (let k in data) {
-                    obj[k] = ValueObject.getValue(data[k]);
+                    obj[k] = this.toValue(data[k]);
                 }
                 if (Object.keys(obj).length) {
                     handler.apply(this, [e, obj]);
@@ -525,8 +461,8 @@ class EventBusWrapper {
     }
     /**
      * Unlisten
-     * @param {String|EventBusEvent} eventType    event type
-     * @param {Function} handler    handler
+     * @param {String|EventBusEvent} eventType      event type
+     * @param {EventHandler} handler                handler
      */
     unlisten(eventType, handler) {
         if (!this._eb) {
@@ -551,8 +487,7 @@ class EventBusWrapper {
         if (event.type === EventBusEvent.EVENT_STATE_CHANGE) {
             let obj = {};
             for (let k in data) {
-                let vo = data[k] !== undefined && !(data[k] instanceof ValueObject);
-                obj[k] = vo ? new ValueObject(data[k]) : data[k];
+                obj[k] = this.toVO(data[k]);
             }
             if (Object.keys(obj).length) {
                 this._eb.trigger(event, obj);
@@ -565,8 +500,8 @@ class EventBusWrapper {
     }
     /**
      * Has
-     * @param {String|EventBusEvent} eventType    event type
-     * @param {Function} handler    handler
+     * @param {String|EventBusEvent} eventType      event type
+     * @param {EventHandler} handler                handler
      * @return {Boolean}
      */
     has(eventType, handler) {
@@ -606,44 +541,5 @@ class EventBusEvent {
 }
 EventBusEvent.EVENT_NAVIGATE = 'navigate';
 EventBusEvent.EVENT_STATE_CHANGE = 'state-change';
-EventBusEvent.EVENT_SESSION_CHANGE = 'session-change';
-EventBusEvent.EVENT_SESSION_CLEAR = 'session-clear';
 
-/**
- * @typedef {Object} ValueObjectMeta
- * @property {Boolean} global   global flag
- */
-/**
- * ValueObject class
- */
-class ValueObject {
-    /**
-     * Constructor
-     * @param {any} value
-     * @param {ValueObjectMeta} [meta=null]
-     */
-    constructor(value, meta = null) {
-        const def = ValueObject.defaultMeta();
-        /**
-         * @member {any} value
-         */
-        this.value = value;
-        /**
-         * @member {ValueObjectMeta} meta
-         */
-        this.meta = meta ? { ...def, ...meta } : def;
-    }
-}
-/**
- * @static Default meta factory
- * @return {ValueObjectMeta}
- */
-ValueObject.defaultMeta = () => ({ global: true });
-/**
- * @static Returns 'value' property if obj is instanceof ValueObject; otherwise just returns the obj itself
- * @param {any} obj
- * @return {any}
- */
-ValueObject.getValue = obj => (obj instanceof ValueObject ? obj.value : obj);
-
-export { EventBusBase, EventBus, EventBusWrapper, EventBusEvent, ValueObject };
+export { EventBusBase, EventBus, EventBusWrapper, EventBusEvent };

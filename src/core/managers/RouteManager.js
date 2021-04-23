@@ -1,13 +1,19 @@
-import { EventBus, EventBusEvent } from './EventBus';
+import { EventBusBase, EventBusEvent } from './EventBus';
 
-let eventBusInstance = new EventBus();
+let eventBusInstance = new EventBusBase();
 let routeManager = null;
 let routeManagerEnforcer = Symbol();
 
 const RouteManagerEvent = {
-    ROUTE_CHANGED: 'route-changed',
-    PARAMS_CHANGED: 'params-changed'
+    ROUTE_CHANGED: 'route-changed'
 };
+
+/**
+ * @typedef {Object} RouteObject
+ * @param {String} path     route path
+ * @param {Object} query    query params
+ * @param {Object} meta     meta data
+ */
 
 export default class RouteManager {
     /**
@@ -18,10 +24,8 @@ export default class RouteManager {
         if (enforcer !== routeManagerEnforcer) {
             throw new Error(`Instantiation failed: use RouteManager.instance`);
         }
-        /** @type {Object} */
+        /** @type {RouteObject} */
         this._currentRoute = null;
-        /** @type {Object} */
-        this._currentParams = null;
     }
     /**
      * @return {RouteManager}
@@ -34,66 +38,30 @@ export default class RouteManager {
     }
     /**
      * Returns the current route
-     * @return {Object} route
+     * @return {RouteObject} route
      */
     get currentRoute() {
         return this._currentRoute;
     }
     /**
      * Sets the current route
-     * @param {Object} route
+     * @param {RouteObject} route
      */
     set currentRoute(route) {
         if (this._currentRoute !== route) {
             this._currentRoute = route;
-            eventBusInstance.trigger(
-                new EventBusEvent(RouteManagerEvent.ROUTE_CHANGED),
-                this.currentRoute
-            );
-        }
-    }
-    /**
-     * Returns current route params
-     * @return {Object} params
-     */
-    get currentParams() {
-        return this._currentParams;
-    }
-    /**
-     * Sets new route params
-     * @param {Object} params
-     */
-    set currentParams(params) {
-        if (this._currentParams !== params) {
-            this._currentParams = params;
-            eventBusInstance.trigger(
-                new EventBusEvent(RouteManagerEvent.PARAMS_CHANGED),
-                this.currentParams
-            );
+            eventBusInstance.trigger(new EventBusEvent(RouteManagerEvent.ROUTE_CHANGED), route);
         }
     }
     /**
      * Register a route change handler
-     * @param {Function} handler    handler
+     * @param {(route:RouteObject)} handler    handler
      * @return {Function}           dispose function to unregister handler
      */
     onRouteChange(handler) {
         return eventBusInstance.listen(
             new EventBusEvent(RouteManagerEvent.ROUTE_CHANGED),
-            handler,
-            false
-        );
-    }
-    /**
-     * Register a route params change handler
-     * @param {Function} handler    handler
-     * @return {Function}           dispose function to unregister handler
-     */
-    onParamsChange(handler) {
-        return eventBusInstance.listen(
-            new EventBusEvent(RouteManagerEvent.PARAMS_CHANGED),
-            handler,
-            false
+            (e, data) => handler(data)
         );
     }
 }

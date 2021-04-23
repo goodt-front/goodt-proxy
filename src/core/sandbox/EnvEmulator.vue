@@ -193,7 +193,10 @@ export default {
         initFileManager() {
             const { demoFiles } = this;
             const { instance } = FileManager;
-            const dispose = instance.onBrowse(() => instance.select(demoFiles));
+            const dispose = instance.onBrowse(({ resolve }) => {
+                const r = confirm('Select demo files?');
+                resolve(r ? demoFiles : []);
+            });
             this.$on('hook:destroyed', dispose);
             this.registerModule(MODULE_KEYS.FILE_MANAGER, FileManager);
         },

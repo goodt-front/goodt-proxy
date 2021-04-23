@@ -45,7 +45,7 @@
 </template>
 <script>
 import Panel from './../Panel.vue';
-import { ValueObject } from './../managers/EventBus';
+import { ValueObject } from './../managers/StateManager';
 import isEqual from 'lodash/isEqual';
 
 /**

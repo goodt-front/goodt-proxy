@@ -14,16 +14,12 @@
         <popup :visible.sync="showConsole" :dialog="consolePopupDialog">
             <template #body>
                 <div class="p">
-                    <code>$state</code>
-                    <pre class="text-xsmall">{{ state }}</pre>
-                </div>
-                <div class="p">
-                    <code>eventBus.state</code>
-                    <pre class="text-xsmall">{{ ebState }}</pre>
+                    <code>store.state</code>
+                    <pre class="text-xsmall">{{ storeState }}</pre>
                 </div>
                 <div>
-                    <code>authUserProfile</code>
-                    <pre class="text-xsmall">{{ authUserProfile }}</pre>
+                    <code>authAdapterUserProfile</code>
+                    <pre class="text-xsmall">{{ authAdapterUserProfile }}</pre>
                 </div>
             </template>
         </popup>
@@ -108,7 +104,7 @@ export default {
     },
     data() {
         return {
-            authUserProfile: {},
+            authAdapterUserProfile: {},
             /** @type {EventBus} */
             ebi: null,
             portalName: Const.PORTAL_TARGET_NAME_POPUP,
@@ -122,13 +118,8 @@ export default {
     },
     computed: {
         /** @return {Object} */
-        state() {
+        storeState() {
             return store.state;
-        },
-        /** @return {Object} */
-        ebState() {
-            let { ebi } = this;
-            return ebi ? ebi.getState(EventBus.STATE_SCOPE_PUBLIC) : null;
         }
     },
     watch: {
@@ -141,12 +132,12 @@ export default {
     },
     created() {
         this.initConst();
+        this.initEventBus();
         this.initAuthManager();
         this.initConstManager();
         this.initFileManager();
         this.initRouteManager();
         this.initStateManager();
-        this.initEventBus();
     },
     methods: {
         /**
@@ -183,7 +174,7 @@ export default {
                 })
                 .then(() => {
                     this.authenticated = true;
-                    instance.adapter.getUserProfile().then(p => (this.authUserProfile = p));
+                    instance.adapter.getUserProfile().then(p => (this.authAdapterUserProfile = p));
                 });
             this.registerModule(MODULE_KEYS.AUTH_MANAGER, AuthManager);
         },
@@ -222,20 +213,17 @@ export default {
          * Init eventbus
          */
         initEventBus() {
-            const ebi = new EventBus();
+            const ebi = new EventBus(store);
             // DI
             const handler = e => e.instance.setEventBus(ebi);
-            this.$on('hook:created', () => {
-                document.addEventListener(ElemEvent.MOUNTED, handler);
-            });
-            this.$on('hook:destroyed', () => {
-                document.removeEventListener(ElemEvent.MOUNTED, handler);
-            });
+            this.$on('hook:created', () => document.addEventListener(ElemEvent.MOUNTED, handler));
+            this.$on('hook:destroyed', () =>
+                document.removeEventListener(ElemEvent.MOUNTED, handler)
+            );
             this.ebi = ebi;
             this.registerModule(MODULE_KEYS.EVENT_BUS, {
                 instance: ebi,
-                EventBusEvent,
-                ValueObject: EB.ValueObject
+                EventBusEvent
             });
         },
         /**

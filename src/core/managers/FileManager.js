@@ -1,4 +1,4 @@
-import { EventBus, EventBusEvent } from './EventBus';
+import { EventBusBase, EventBusEvent } from './EventBus';
 
 /**
  * @typedef {Object} FileManagerOptions
@@ -15,7 +15,7 @@ import { EventBus, EventBusEvent } from './EventBus';
  */
 let fileManager = null;
 let fileManagerEnforcer = Symbol();
-let eventBusInstance = new EventBus();
+let eventBusInstance = new EventBusBase();
 
 const FileManagerEvent = {
     OPEN: 'open',

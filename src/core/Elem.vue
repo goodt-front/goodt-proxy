@@ -52,7 +52,7 @@ export default {
         props: {
             type: Object,
             default() {
-                return getDescriptorDefaultProps(descriptor());
+                return {};
             }
         },
         /** env mode (true - player env; false - editor env) */
@@ -109,15 +109,19 @@ export default {
     created() {
         if (this.isEditorMode) {
             this.$watch('props.varAliases', val => {
-                if (this.eventBusWrapper) {
-                    this.eventBusWrapper.varAliases = val;
+                // @ts-ignore
+                const { eventBusWrapper } = this;
+                if (eventBusWrapper) {
+                    eventBusWrapper.varAliases = val;
                 }
             });
         }
         /** @type {EventBusWrapper} */
+        // @ts-ignore
         this.eventBusWrapper = null;
         // emit 'created' event via vue/dom
         let e = new Event(ElemEvent.CREATED);
+        // @ts-ignore
         e.instance = this;
         document.dispatchEvent(e);
         this.$emit(e.type, this);
@@ -149,7 +153,6 @@ export default {
         },
         /**
          * Generates css-class def
-         * @see this.cssClass
          */
         genCssClass() {
             let o = {};
@@ -194,7 +197,6 @@ export default {
         },
         /**
          * Generates css-style def
-         * @see this.cssStyle
          */
         genCssStyle() {
             let o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
@@ -236,28 +238,40 @@ export default {
         /**
          * Creates a new event bus wrapper
          * @invoked after @see ElemEvent.MOUNTED
-         * @param {EventBus} eventBus   event bus instance
+         * @param {import('./managers/EventBus').EventBus} eventBus
          */
         setEventBus(eventBus) {
-            this.eventBusWrapper = new EventBusWrapper(eventBus);
-            this.eventBusWrapper.varAliases = this.props.varAliases || {};
+            let wrapper = new EventBusWrapper(eventBus);
+            wrapper.varAliases = this.props.varAliases || {};
+            // @NOTE method overloading for compatibily with old widgets that use EventBusWrapper for global state management
+            // {compat}
+            wrapper.toVO = (value, meta) =>
+                value instanceof ValueObject ? value : vo(value, meta);
+            wrapper.toValue = vo => ValueObject.getValue(vo);
+            // {/compat}
+            // @ts-ignore
+            this.eventBusWrapper = wrapper;
             this.$nextTick(() => this.subscribe());
         },
         /**
-         * Commits data to global $state
-         * @param {{String, any}} data
+         * Transforms 'stateChange' object to Object.< string, ValueObject>
+         * and commits stateChange to the store's state
+         * @param {Object.<string, any>} stateChange
+         * @return {Object} transformed 'stateChange' with ValueObjects
          */
-        $commitState(data) {
+        $commitState(stateChange) {
             let { varAliases } = this.props;
             varAliases = varAliases || {};
             let obj = {};
-            for (let k in data) {
+            for (let k in stateChange) {
                 if (varAliases[k] && varAliases[k].trigger) {
                     let alias = varAliases[k].trigger;
-                    obj[alias] = vo(data[k], varAliases[k].meta);
+                    obj[alias] = vo(stateChange[k], varAliases[k].meta);
                 }
             }
-            store.commit(obj);
+            // don't commit if obj is empty
+            Object.keys(obj) && store.commit(obj);
+            return {};
         },
         /**
          * Replaces all constant keys occurances with values in a string
@@ -280,6 +294,10 @@ export default {
         },
         /**
          * @private Mounted LC handler
+         * This method is useful for edge-cases when Elem's $el may change
+         * Cases:
+         * - root domNode has a v-if directive
+         * - component uses render() function and the domNode tag is dynamic and v-key is not used
          * @param {Boolean} [triggerEvents=true]    whether to emit 'mounted' event
          */
         _mounted(triggerEvents = true) {

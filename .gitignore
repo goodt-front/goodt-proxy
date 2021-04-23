@@ -5,3 +5,4 @@ dist/lib.umd-report.html
 .vscode
 .dev
 package-lock.json
+workspace.code-workspace

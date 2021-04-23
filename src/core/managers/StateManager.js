@@ -51,23 +51,60 @@ const stateOb = Vue.observable({ state: {} });
 /**
  * Store
  */
-const store = {
+class Store {
+    /**
+     * Constructor
+     */
+    constructor() {
+        /**
+         * @callback CommitHandler
+         * @param {Object} stateChange
+         */
+        /** @type {CommitHandler[]} */
+        this._commitHandlers = [];
+    }
+    /**
+     * Returns the current state
+     * @return {Object}
+     */
     get state() {
         return stateOb.state;
-    },
-    commit(newState) {
-        let { state } = stateOb;
-        for (let k in newState) {
-            if (newState[k] === undefined) {
-                Vue.delete(state, k);
-            } else {
-                Vue.set(state, k, newState[k]);
-            }
+    }
+    /**
+     * Merges the 'newState' object to the current state
+     * @param {Object} stateChange                      state change obj
+     * @param {Boolean} [invokeCommitHandlers=true]     if true will invoked
+     */
+    commit(stateChange, invokeCommitHandlers = true) {
+        let stateNew = { ...stateOb.state, ...stateChange };
+        for (let k in stateNew) {
+            stateNew[k] === undefined && delete stateNew[k];
         }
-    },
+        stateOb.state = stateNew;
+        invokeCommitHandlers && this._commitHandlers.forEach(h => h(stateChange));
+    }
+    /**
+     * Replaces the state with the 'newState'
+     * @param {Object} newState
+     */
     replace(newState) {
         stateOb.state = newState;
     }
-};
+    /**
+     * Adds a commit handler
+     * @param {CommitHandler} handler
+     */
+    addCommitHandler(handler) {
+        this._commitHandlers.push(handler);
+    }
+    /**
+     * Removes a commit handler
+     * @param {CommitHandler} handler
+     */
+    removeCommitHandler(handler) {
+        this._commitHandlers = this._commitHandlers.filter(h => h !== handler);
+    }
+}
+const store = new Store();
 
-export { store, vo, ValueObject };
+export { store, vo, ValueObject, Store };

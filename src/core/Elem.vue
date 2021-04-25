@@ -8,26 +8,11 @@ import descriptor from './Elem.descriptor';
 const { store, vo, ValueObject } = StateManager;
 const { EventBusWrapper } = EB;
 
-/**
- * Returns descriptor props hash with default values
- * @param {ElemDescriptor} descriptor
- * @return {Object}
- */
-const getDescriptorDefaultProps = descriptor => {
-    let o = {};
-    let p = descriptor.props;
-    for (let n in p) {
-        o[n] = typeof p[n].default === 'function' ? p[n].default() : p[n].default;
-    }
-    return o;
-};
-/**
- * Returns dom id
- * @return {String}
- */
-const getDomId = elemId => `elem-${elemId}`;
+import { dispatchEventByName, getDescriptorDefaultProps, patchRootDomElement } from './utils';
+
 /**
  * Elem events Lifecycle events
+ * @enum {string}
  */
 const ElemEvent = {
     CREATED: 'elem-created',
@@ -35,9 +20,9 @@ const ElemEvent = {
     DESTROYED: 'elem-destroyed'
 };
 
-export { getDescriptorDefaultProps, getDomId, ElemEvent };
+export { ElemEvent, getDescriptorDefaultProps };
 
-export default {
+const ComponentOptions = {
     props: {
         /** uniq instance id */
         id: {
@@ -120,11 +105,7 @@ export default {
         // @ts-ignore
         this.eventBusWrapper = null;
         // emit 'created' event via vue/dom
-        let e = new Event(ElemEvent.CREATED);
-        // @ts-ignore
-        e.instance = this;
-        document.dispatchEvent(e);
-        this.$emit(e.type, this);
+        dispatchEventByName.call(this, ElemEvent.CREATED);
     },
     mounted() {
         this._mounted();
@@ -136,10 +117,7 @@ export default {
             this.eventBusWrapper = null;
         }
         // emit 'destroyed' event via vue/dom
-        let e = new Event(ElemEvent.DESTROYED);
-        e.instance = this;
-        document.dispatchEvent(e);
-        this.$emit(e.type, this);
+        dispatchEventByName.call(this, ElemEvent.DESTROYED);
     },
     methods: {
         /**
@@ -148,7 +126,7 @@ export default {
          * @param {import('vue').ComponentOptions} componentOptions   component options
          * @return {Object}  methods list
          */
-        super(componentOptions) {
+        super(componentOptions = ComponentOptions) {
             return componentOptions.methods;
         },
         /**
@@ -166,7 +144,7 @@ export default {
                     }
                 });
             });
-            if (this.props.widthUnit == '' && this.props.width != '') {
+            if (this.props.widthUnit === '' && this.props.width !== '') {
                 o[`w-${this.props.width}`] = true;
             }
             if (this.props.marginT) {
@@ -201,13 +179,13 @@ export default {
         genCssStyle() {
             let o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
             if (
-                this.props.widthUnit != 'size' &&
+                this.props.widthUnit !== 'size' &&
                 !isNaN(this.props.width) &&
-                this.props.width != ''
+                this.props.width !== ''
             ) {
                 o.width = `${this.props.width}${this.props.widthUnit}`;
             }
-            if (!isNaN(this.props.height) && this.props.height != '') {
+            if (!isNaN(this.props.height) && this.props.height !== '') {
                 o.height = `${this.props.height}${this.props.heightUnit}`;
             }
             this.$set(this, 'cssStyle', o);
@@ -301,25 +279,14 @@ export default {
          * @param {Boolean} [triggerEvents=true]    whether to emit 'mounted' event
          */
         _mounted(triggerEvents = true) {
-            let { $el } = this;
-
-            if ($el) {
-                // expose vue component instance reference
-                $el.__elem__ = this;
-                // set id/data-elem attrs
-                if ($el.setAttribute) {
-                    $el.setAttribute('id', getDomId(this.id));
-                    $el.setAttribute('data-elem', this.type);
-                }
-            }
+            patchRootDomElement(this);
             if (triggerEvents) {
                 // emit 'mounted' event via vue/dom
-                let e = new Event(ElemEvent.MOUNTED);
-                e.instance = this;
-                document.dispatchEvent(e);
-                this.$emit(e.type, this);
+                dispatchEventByName(ElemEvent.MOUNTED, this);
             }
         }
     }
 };
+
+export default ComponentOptions;
 </script>

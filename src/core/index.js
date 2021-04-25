@@ -7,7 +7,8 @@ import * as Panels from './panels';
 import * as Sandbox from './sandbox';
 import Const from './Const';
 // @ts-ignore
-import Elem, { getDescriptorDefaultProps, ElemEvent } from './Elem.vue';
+import Elem, { ElemEvent } from './Elem.vue';
+import { getDescriptorDefaultProps } from './utils';
 // @ts-ignore
 import Panel from './Panel.vue';
 // VERSION

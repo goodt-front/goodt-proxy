@@ -3,6 +3,6 @@ import ConstManager from './ConstManager';
 import * as EB from './EventBus';
 import FileManager from './FileManager';
 import RouteManager from './RouteManager';
-import * as StateManager from './StateManager';
+import * as StoreManager from './StoreManager';
 
-export { AuthManager, ConstManager, EB, FileManager, RouteManager, StateManager };
+export { AuthManager, ConstManager, EB, FileManager, RouteManager, StoreManager };

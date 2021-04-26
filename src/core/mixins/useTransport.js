@@ -1,9 +1,10 @@
 import { createTransport } from '../net';
-import './';
+import './types';
 
 export { HttpTransportSymbol, HttpAuthTransportSymbol } from '../net';
-export const TransportSymbol = Symbol('Transport');
-const INSTANCE_ACCESSOR_NAME = '$transport';
+
+const PUBLIC_ACCESSOR_NAME = '$transport';
+const PRIVATE_ACCESSOR_NAME = Symbol('$transport');
 
 /**
  * @typedef {Object} UseTransportOptions
@@ -30,7 +31,7 @@ export const useTransport = (transportId, useOptions = {}) => {
      * @var {(function(*): TransportConfig|TransportConfig)} options
      * @var {string|symbol} name
      */
-    const { name: accessorName = INSTANCE_ACCESSOR_NAME, options: transportOptions } = useOptions;
+    const { name: $transport = PUBLIC_ACCESSOR_NAME, options: transportOptions } = useOptions;
 
     /**
      * @this {VueInstance}
@@ -55,19 +56,19 @@ export const useTransport = (transportId, useOptions = {}) => {
             /**
              * @this {VueInstance}
              */
-            [accessorName]() {
-                if (!this.$options[TransportSymbol]) {
-                    this.$options[TransportSymbol] = createTransportInstance.call(this);
+            [$transport]() {
+                if (!this[PRIVATE_ACCESSOR_NAME]) {
+                    this[PRIVATE_ACCESSOR_NAME] = createTransportInstance.call(this);
                 }
-                return this.$options[TransportSymbol];
+                return this[PRIVATE_ACCESSOR_NAME];
             }
         },
         /**
          * @this {VueInstance}
          */
         destroyed() {
-            if (this.$options[TransportSymbol]) {
-                this.$options[TransportSymbol].cancelAllRequests();
+            if (this[PRIVATE_ACCESSOR_NAME]) {
+                this[PRIVATE_ACCESSOR_NAME].cancelAllRequests();
             }
         }
     };

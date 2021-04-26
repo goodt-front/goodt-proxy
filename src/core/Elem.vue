@@ -2,32 +2,16 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
-import { ConstManager, StateManager, EB } from './managers/index';
+import { ConstManager, RouteManager, StoreManager, EB } from './managers';
 import descriptor from './Elem.descriptor';
+import { dispatchEventByName, getDescriptorDefaultProps, patchRootDomElement } from './utils';
 
-const { store, vo, ValueObject } = StateManager;
+const { store, vo, ValueObject } = StoreManager;
 const { EventBusWrapper } = EB;
 
 /**
- * Returns descriptor props hash with default values
- * @param {ElemDescriptor} descriptor
- * @return {Object}
- */
-const getDescriptorDefaultProps = descriptor => {
-    let o = {};
-    let p = descriptor.props;
-    for (let n in p) {
-        o[n] = typeof p[n].default === 'function' ? p[n].default() : p[n].default;
-    }
-    return o;
-};
-/**
- * Returns dom id
- * @return {String}
- */
-const getDomId = elemId => `elem-${elemId}`;
-/**
  * Elem events Lifecycle events
+ * @enum {string}
  */
 const ElemEvent = {
     CREATED: 'elem-created',
@@ -35,9 +19,7 @@ const ElemEvent = {
     DESTROYED: 'elem-destroyed'
 };
 
-export { getDescriptorDefaultProps, getDomId, ElemEvent };
-
-export default {
+const ComponentOptions = {
     props: {
         /** uniq instance id */
         id: {
@@ -78,7 +60,7 @@ export default {
          * Returns the current store state
          * @return {Object} state
          */
-        $state() {
+        $storeState() {
             let { state } = store;
             let { varAliases } = this.props;
             varAliases = varAliases || {};
@@ -90,6 +72,13 @@ export default {
                 }
             }
             return obj;
+        },
+        /**
+         * Returns the current route
+         * @return {import('./managers/RouteManager').RouteObject} current route object
+         */
+        $routeCurrent() {
+            return RouteManager.instance.route;
         }
     },
     watch: {
@@ -120,11 +109,7 @@ export default {
         // @ts-ignore
         this.eventBusWrapper = null;
         // emit 'created' event via vue/dom
-        let e = new Event(ElemEvent.CREATED);
-        // @ts-ignore
-        e.instance = this;
-        document.dispatchEvent(e);
-        this.$emit(e.type, this);
+        dispatchEventByName.call(this, ElemEvent.CREATED);
     },
     mounted() {
         this._mounted();
@@ -136,10 +121,7 @@ export default {
             this.eventBusWrapper = null;
         }
         // emit 'destroyed' event via vue/dom
-        let e = new Event(ElemEvent.DESTROYED);
-        e.instance = this;
-        document.dispatchEvent(e);
-        this.$emit(e.type, this);
+        dispatchEventByName.call(this, ElemEvent.DESTROYED);
     },
     methods: {
         /**
@@ -148,7 +130,7 @@ export default {
          * @param {import('vue').ComponentOptions} componentOptions   component options
          * @return {Object}  methods list
          */
-        super(componentOptions) {
+        super(componentOptions = ComponentOptions) {
             return componentOptions.methods;
         },
         /**
@@ -166,7 +148,7 @@ export default {
                     }
                 });
             });
-            if (this.props.widthUnit == '' && this.props.width != '') {
+            if (this.props.widthUnit === '' && this.props.width !== '') {
                 o[`w-${this.props.width}`] = true;
             }
             if (this.props.marginT) {
@@ -201,13 +183,13 @@ export default {
         genCssStyle() {
             let o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
             if (
-                this.props.widthUnit != 'size' &&
+                this.props.widthUnit !== 'size' &&
                 !isNaN(this.props.width) &&
-                this.props.width != ''
+                this.props.width !== ''
             ) {
                 o.width = `${this.props.width}${this.props.widthUnit}`;
             }
-            if (!isNaN(this.props.height) && this.props.height != '') {
+            if (!isNaN(this.props.height) && this.props.height !== '') {
                 o.height = `${this.props.height}${this.props.heightUnit}`;
             }
             this.$set(this, 'cssStyle', o);
@@ -243,7 +225,7 @@ export default {
         setEventBus(eventBus) {
             let wrapper = new EventBusWrapper(eventBus);
             wrapper.varAliases = this.props.varAliases || {};
-            // @NOTE method overloading for compatibily with old widgets that use EventBusWrapper for global state management
+            // @NOTE method overloading for compatibility with old widgets that use EventBusWrapper for global state management
             // {compat}
             wrapper.toVO = (value, meta) =>
                 value instanceof ValueObject ? value : vo(value, meta);
@@ -259,7 +241,7 @@ export default {
          * @param {Object.<string, any>} stateChange
          * @return {Object} transformed 'stateChange' with ValueObjects
          */
-        $commitState(stateChange) {
+        $storeCommit(stateChange) {
             let { varAliases } = this.props;
             varAliases = varAliases || {};
             let obj = {};
@@ -270,11 +252,22 @@ export default {
                 }
             }
             // don't commit if obj is empty
-            Object.keys(obj) && store.commit(obj);
+            if (Object.keys(obj).length > 0) {
+                store.commit(obj);
+            }
             return {};
         },
         /**
-         * Replaces all constant keys occurances with values in a string
+         /**
+         * Requests a route change by path
+         * @param {string} path
+         * @param {object} [query={}]
+         */
+        $routeNavigate({ path, query = {} }) {
+            RouteManager.instance.navigate({ path, query });
+        },
+        /**
+         * Replaces all constant keys occurrences with values in a string
          * @param {String} str  string to test
          * @return {any}
          */
@@ -301,25 +294,15 @@ export default {
          * @param {Boolean} [triggerEvents=true]    whether to emit 'mounted' event
          */
         _mounted(triggerEvents = true) {
-            let { $el } = this;
-
-            if ($el) {
-                // expose vue component instance reference
-                $el.__elem__ = this;
-                // set id/data-elem attrs
-                if ($el.setAttribute) {
-                    $el.setAttribute('id', getDomId(this.id));
-                    $el.setAttribute('data-elem', this.type);
-                }
-            }
+            patchRootDomElement(this);
             if (triggerEvents) {
                 // emit 'mounted' event via vue/dom
-                let e = new Event(ElemEvent.MOUNTED);
-                e.instance = this;
-                document.dispatchEvent(e);
-                this.$emit(e.type, this);
+                dispatchEventByName.call(this, ElemEvent.MOUNTED);
             }
         }
     }
 };
+
+export { ElemEvent, getDescriptorDefaultProps };
+export default ComponentOptions;
 </script>

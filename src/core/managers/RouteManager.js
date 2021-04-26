@@ -1,11 +1,13 @@
+import Vue from 'vue';
 import { EventBusBase, EventBusEvent } from './EventBus';
 
-let eventBusInstance = new EventBusBase();
+const eventBusInstance = new EventBusBase();
 let routeManager = null;
-let routeManagerEnforcer = Symbol();
+const routeManagerEnforcer = Symbol();
+const routeManagerObservable = Symbol('ob');
 
 const RouteManagerEvent = {
-    ROUTE_CHANGED: 'route-changed'
+    NAVIGATE: 'navigate'
 };
 
 /**
@@ -14,7 +16,6 @@ const RouteManagerEvent = {
  * @param {Object} query    query params
  * @param {Object} meta     meta data
  */
-
 export default class RouteManager {
     /**
      * Constructor
@@ -24,8 +25,8 @@ export default class RouteManager {
         if (enforcer !== routeManagerEnforcer) {
             throw new Error(`Instantiation failed: use RouteManager.instance`);
         }
-        /** @type {RouteObject} */
-        this._currentRoute = null;
+        /** @type {{ route:RouteObject }} */
+        this[routeManagerObservable] = Vue.observable({ route: null });
     }
     /**
      * @return {RouteManager}
@@ -40,28 +41,24 @@ export default class RouteManager {
      * Returns the current route
      * @return {RouteObject} route
      */
-    get currentRoute() {
-        return this._currentRoute;
+    get route() {
+        return this[routeManagerObservable].route;
     }
     /**
      * Sets the current route
      * @param {RouteObject} route
      */
-    set currentRoute(route) {
-        if (this._currentRoute !== route) {
-            this._currentRoute = route;
-            eventBusInstance.trigger(new EventBusEvent(RouteManagerEvent.ROUTE_CHANGED), route);
-        }
+    set route(route) {
+        this[routeManagerObservable].route = route;
     }
     /**
-     * Register a route change handler
-     * @param {(route:RouteObject)} handler    handler
-     * @return {Function}           dispose function to unregister handler
+     * Requests a route change by path
+     * @param {{ path:String, query:object = {}}} options   options
      */
-    onRouteChange(handler) {
-        return eventBusInstance.listen(
-            new EventBusEvent(RouteManagerEvent.ROUTE_CHANGED),
-            (e, data) => handler(data)
-        );
+    navigate({ path, query = {} }) {
+        eventBusInstance.trigger(new EventBusEvent(RouteManagerEvent.NAVIGATE), {
+            path,
+            query
+        });
     }
 }

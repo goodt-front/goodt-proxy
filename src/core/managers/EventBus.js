@@ -125,7 +125,7 @@ class EventBusBase {
 class EventBus extends EventBusBase {
     /**
      * Constructor
-     * @param {import('./StateManager').Store} store
+     * @param {import('./StoreManager').Store} store
      */
     constructor(store) {
         super();

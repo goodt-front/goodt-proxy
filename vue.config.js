@@ -1,7 +1,6 @@
 /* eslint-disable */
 const webpack = require('webpack');
-
-const isProd = process.env.NODE_ENV === 'production';
+const { isProd } = require('./.utils');
 
 // @see https://github.com/npm/npm/pull/5518
 module.exports = {

@@ -9,10 +9,9 @@ import { Elem } from './../../../core/index';
 import { useTransport, HttpTransportSymbol } from './../../../core/mixins/useTransport';
 
 /**
- *
+ * useTransport example
  */
 const { mixin: TransportMixin } = useTransport(HttpTransportSymbol, {
-    name: '$transport',
     options: function() {
         return {
             baseURL: this.props.apiURL
@@ -39,6 +38,11 @@ const descriptor = () => ({
  */
 export default {
     extends: Elem,
+    data() {
+        return {
+            descriptor: descriptor()
+        };
+    },
     mixins: [TransportMixin],
     computed: {
         /**

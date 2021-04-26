@@ -3,7 +3,7 @@
  */
 
 /**
- *
+ * Widget LC event class
  */
 class ElemEvent extends CustomEvent {
     constructor(eventName, instance) {
@@ -19,7 +19,7 @@ class ElemEvent extends CustomEvent {
 }
 
 /**
- * @todo (Event -to-> CustomEvent)? to do not patch Event instance with instance
+ * @param {string} eventName
  * @this {VueInstance}
  */
 export const dispatchEventByName = function(eventName) {
@@ -62,6 +62,6 @@ export const getDescriptorDefaultProps = descriptor => {
 
 /**
  * Returns dom id
- * @return {String}
+ * @return {string}
  */
 export const getDomId = elemId => `elem-${elemId}`;

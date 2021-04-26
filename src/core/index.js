@@ -11,7 +11,7 @@ import Elem, { ElemEvent } from './Elem.vue';
 import { getDescriptorDefaultProps } from './utils';
 // @ts-ignore
 import Panel from './Panel.vue';
-// VERSION
+
 export {
     // packages
     AbcCharts,

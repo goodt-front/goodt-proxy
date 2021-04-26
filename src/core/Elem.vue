@@ -2,13 +2,12 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
-import { ConstManager, RouteManager, StoreManager, EB } from './managers/index';
+import { ConstManager, RouteManager, StoreManager, EB } from './managers';
 import descriptor from './Elem.descriptor';
+import { dispatchEventByName, getDescriptorDefaultProps, patchRootDomElement } from './utils';
 
 const { store, vo, ValueObject } = StoreManager;
 const { EventBusWrapper } = EB;
-
-import { dispatchEventByName, getDescriptorDefaultProps, patchRootDomElement } from './utils';
 
 /**
  * Elem events Lifecycle events
@@ -19,8 +18,6 @@ const ElemEvent = {
     MOUNTED: 'elem-mounted',
     DESTROYED: 'elem-destroyed'
 };
-
-export { ElemEvent, getDescriptorDefaultProps };
 
 const ComponentOptions = {
     props: {
@@ -228,7 +225,7 @@ const ComponentOptions = {
         setEventBus(eventBus) {
             let wrapper = new EventBusWrapper(eventBus);
             wrapper.varAliases = this.props.varAliases || {};
-            // @NOTE method overloading for compatibily with old widgets that use EventBusWrapper for global state management
+            // @NOTE method overloading for compatibility with old widgets that use EventBusWrapper for global state management
             // {compat}
             wrapper.toVO = (value, meta) =>
                 value instanceof ValueObject ? value : vo(value, meta);
@@ -255,18 +252,22 @@ const ComponentOptions = {
                 }
             }
             // don't commit if obj is empty
-            Object.keys(obj).length && store.commit(obj);
+            if (Object.keys(obj).length > 0) {
+                store.commit(obj);
+            }
             return {};
         },
         /**
+         /**
          * Requests a route change by path
-         * @param {{ path:String, query:object = {}}} options   options
+         * @param {string} path
+         * @param {object} [query={}]
          */
         $routeNavigate({ path, query = {} }) {
             RouteManager.instance.navigate({ path, query });
         },
         /**
-         * Replaces all constant keys occurances with values in a string
+         * Replaces all constant keys occurrences with values in a string
          * @param {String} str  string to test
          * @return {any}
          */
@@ -296,11 +297,12 @@ const ComponentOptions = {
             patchRootDomElement(this);
             if (triggerEvents) {
                 // emit 'mounted' event via vue/dom
-                dispatchEventByName(ElemEvent.MOUNTED, this);
+                dispatchEventByName.call(this, ElemEvent.MOUNTED);
             }
         }
     }
 };
 
+export { ElemEvent, getDescriptorDefaultProps };
 export default ComponentOptions;
 </script>

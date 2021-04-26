@@ -2,7 +2,7 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
-import { ConstManager, StateManager, EB } from './managers/index';
+import { ConstManager, RouteManager, StateManager, EB } from './managers/index';
 import descriptor from './Elem.descriptor';
 
 const { store, vo, ValueObject } = StateManager;
@@ -90,6 +90,13 @@ export default {
                 }
             }
             return obj;
+        },
+        /**
+         * Returns the current route
+         * @return {import('./managers/RouteManager').RouteObject} current route object
+         */
+        $currentRoute() {
+            return RouteManager.instance.currentRoute;
         }
     },
     watch: {
@@ -272,6 +279,13 @@ export default {
             // don't commit if obj is empty
             Object.keys(obj) && store.commit(obj);
             return {};
+        },
+        /**
+         * Requests a route change by path
+         * @param {{ path:String, query:object = {}}} options   options
+         */
+        $navigateRoute({ path, query = {} }) {
+            RouteManager.instance.navigate(path, query);
         },
         /**
          * Replaces all constant keys occurances with values in a string

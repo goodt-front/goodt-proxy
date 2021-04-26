@@ -1,9 +1,16 @@
 import { EventBusBase, EventBusEvent } from './EventBus';
 
 /**
+ * @callback BrowseHandler
+ * @param {{ options:FileManagerOptions, resolve:FileResolver}} options
+ */
+/**
+ * @callback FileResolver
+ * @param {FileInfo[]} files    files
+ */
+/**
  * @typedef {Object} FileManagerOptions
- * @property {Boolean} selectEnabled       доступен ли выбор файла
- * @property {Boolean} selectMultiple      доступен ли выбор нескольких файлов
+ * @property {Boolean} selectMultiple       multiple file selection mode
  */
 /**
  * @typedef {Object} FileInfo
@@ -18,9 +25,7 @@ let fileManagerEnforcer = Symbol();
 let eventBusInstance = new EventBusBase();
 
 const FileManagerEvent = {
-    OPEN: 'open',
-    CLOSE: 'close',
-    SELECT: 'select'
+    BROWSE: 'browse'
 };
 
 export default class FileManager {
@@ -32,12 +37,6 @@ export default class FileManager {
         if (enforcer !== fileManagerEnforcer) {
             throw new Error(`Instantiation failed: use FileManager.instance`);
         }
-        /** @type {FileInfo[]} */
-        this._files = [];
-        /** @type {Function} */
-        this._closeDispose = null;
-        /** @type {Function} */
-        this._selectDispose = null;
     }
     /**
      * @return {FileManager}
@@ -49,69 +48,26 @@ export default class FileManager {
         return fileManager;
     }
     /**
-     * Invoke file browse
+     * Invokes env file manager's browse method for file selection
      * @param {FileManagerOptions} options
      * @return {Promise.<FileInfo[]>}
      */
-    browse({ selectEnabled = true, selectMultiple = true }) {
-        /**
-         * @param {FileInfo[]} files
-         * @param {Function} resolve
-         */
-        let onSelectFile = (files, resolve) => {
-            this._files = files;
-            this._selectDispose = null;
-            this._closeDispose();
-            this._closeDispose = null;
-            resolve(files);
-        };
-        /**
-         * @param {Function} resolve
-         */
-        let onCloseFileManager = resolve => {
-            this._closeDispose = null;
-            this._selectDispose();
-            this._selectDispose = null;
-            resolve([]);
-        };
-
-        const promise = new Promise(resolve => {
-            this._closeDispose = eventBusInstance.listen(
-                new EventBusEvent(FileManagerEvent.CLOSE),
-                () => onCloseFileManager(resolve),
-                true
-            );
-            this._selectDispose = eventBusInstance.listen(
-                new EventBusEvent(FileManagerEvent.SELECT),
-                (e, files) => onSelectFile(files, resolve),
-                true
-            );
+    browse({ selectMultiple = true }) {
+        return new Promise(resolve => {
+            const options = { selectMultiple };
+            eventBusInstance.trigger(new EventBusEvent(FileManagerEvent.BROWSE), {
+                options,
+                resolve
+            });
         });
-        eventBusInstance.trigger(new EventBusEvent(FileManagerEvent.OPEN), {
-            selectEnabled,
-            selectMultiple
-        });
-        return promise;
     }
     /**
-     * Register a route change handler
-     * @param {Function} handler    handler
-     * @return {Function}           dispose function to unregister handler
+     * Registers a browse() observer (used by the env)
+     * @param {BrowseHandler} handler     browse handler invoked by @see browse()
+     * @return {Function}                 dispose function to unregister observer
      */
     onBrowse(handler) {
-        return eventBusInstance.listen(new EventBusEvent(FileManagerEvent.OPEN), handler, false);
-    }
-    /**
-     * Trigger close selection
-     */
-    close() {
-        eventBusInstance.trigger(new EventBusEvent(FileManagerEvent.CLOSE));
-    }
-    /**
-     * Trigger file selection
-     * @param {FileInfo[]} files
-     */
-    select(files) {
-        eventBusInstance.trigger(new EventBusEvent(FileManagerEvent.SELECT), files);
+        const event = new EventBusEvent(FileManagerEvent.BROWSE);
+        return eventBusInstance.listen(event, (e, data) => handler(data));
     }
 }

@@ -2,10 +2,10 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
-import { ConstManager, StateManager, EB } from './managers/index';
+import { ConstManager, RouteManager, StoreManager, EB } from './managers/index';
 import descriptor from './Elem.descriptor';
 
-const { store, vo, ValueObject } = StateManager;
+const { store, vo, ValueObject } = StoreManager;
 const { EventBusWrapper } = EB;
 
 import { dispatchEventByName, getDescriptorDefaultProps, patchRootDomElement } from './utils';
@@ -63,7 +63,7 @@ const ComponentOptions = {
          * Returns the current store state
          * @return {Object} state
          */
-        $state() {
+        $storeState() {
             let { state } = store;
             let { varAliases } = this.props;
             varAliases = varAliases || {};
@@ -75,6 +75,13 @@ const ComponentOptions = {
                 }
             }
             return obj;
+        },
+        /**
+         * Returns the current route
+         * @return {import('./managers/RouteManager').RouteObject} current route object
+         */
+        $routeCurrent() {
+            return RouteManager.instance.route;
         }
     },
     watch: {
@@ -237,7 +244,7 @@ const ComponentOptions = {
          * @param {Object.<string, any>} stateChange
          * @return {Object} transformed 'stateChange' with ValueObjects
          */
-        $commitState(stateChange) {
+        $storeCommit(stateChange) {
             let { varAliases } = this.props;
             varAliases = varAliases || {};
             let obj = {};
@@ -248,8 +255,15 @@ const ComponentOptions = {
                 }
             }
             // don't commit if obj is empty
-            Object.keys(obj) && store.commit(obj);
+            Object.keys(obj).length && store.commit(obj);
             return {};
+        },
+        /**
+         * Requests a route change by path
+         * @param {{ path:String, query:object = {}}} options   options
+         */
+        $routeNavigate({ path, query = {} }) {
+            RouteManager.instance.navigate({ path, query });
         },
         /**
          * Replaces all constant keys occurances with values in a string

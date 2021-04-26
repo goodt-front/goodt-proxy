@@ -36,10 +36,10 @@ import {
     FileManager,
     EB,
     RouteManager,
-    StateManager
+    StoreManager
 } from './../managers/index';
 
-const { store } = StateManager;
+const { store } = StoreManager;
 const { EventBus, EventBusEvent } = EB;
 
 const MODULES = {};
@@ -48,7 +48,7 @@ const MODULE_KEYS = {
     CONST_MANAGER: 'ConstManager',
     FILE_MANAGER: 'FileManager',
     ROUTE_MANAGER: 'RouteManager',
-    STATE_MANAGER: 'StateManager',
+    STORE_MANAGER: 'StoreManager',
     CONST: 'Const',
     EVENT_BUS: 'EB'
 };
@@ -137,7 +137,7 @@ export default {
         this.initConstManager();
         this.initFileManager();
         this.initRouteManager();
-        this.initStateManager();
+        this.initStoreManager();
     },
     methods: {
         /**
@@ -193,7 +193,10 @@ export default {
         initFileManager() {
             const { demoFiles } = this;
             const { instance } = FileManager;
-            const dispose = instance.onBrowse(() => instance.select(demoFiles));
+            const dispose = instance.onBrowse(({ resolve }) => {
+                const r = confirm('Select demo files?');
+                resolve(r ? demoFiles : []);
+            });
             this.$on('hook:destroyed', dispose);
             this.registerModule(MODULE_KEYS.FILE_MANAGER, FileManager);
         },
@@ -206,8 +209,8 @@ export default {
         /**
          * Init state manager
          */
-        initStateManager() {
-            this.registerModule(MODULE_KEYS.STATE_MANAGER, StateManager);
+        initStoreManager() {
+            this.registerModule(MODULE_KEYS.STORE_MANAGER, StoreManager);
         },
         /**
          * Init eventbus

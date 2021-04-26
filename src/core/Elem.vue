@@ -2,10 +2,10 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
-import { ConstManager, RouteManager, StateManager, EB } from './managers/index';
+import { ConstManager, RouteManager, StoreManager, EB } from './managers/index';
 import descriptor from './Elem.descriptor';
 
-const { store, vo, ValueObject } = StateManager;
+const { store, vo, ValueObject } = StoreManager;
 const { EventBusWrapper } = EB;
 
 /**
@@ -78,7 +78,7 @@ export default {
          * Returns the current store state
          * @return {Object} state
          */
-        $state() {
+        $storeState() {
             let { state } = store;
             let { varAliases } = this.props;
             varAliases = varAliases || {};
@@ -266,7 +266,7 @@ export default {
          * @param {Object.<string, any>} stateChange
          * @return {Object} transformed 'stateChange' with ValueObjects
          */
-        $commitState(stateChange) {
+        $storeCommit(stateChange) {
             let { varAliases } = this.props;
             varAliases = varAliases || {};
             let obj = {};
@@ -277,7 +277,7 @@ export default {
                 }
             }
             // don't commit if obj is empty
-            Object.keys(obj) && store.commit(obj);
+            Object.keys(obj).length && store.commit(obj);
             return {};
         },
         /**

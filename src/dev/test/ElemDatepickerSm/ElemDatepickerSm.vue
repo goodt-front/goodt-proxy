@@ -39,7 +39,7 @@ export default {
         },
         onDatePick(e) {
             this.date = e.target.value;
-            this.$commitState({ date: this.date });
+            this.$storeCommit({ date: this.date });
         }
     }
 };

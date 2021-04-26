@@ -52,9 +52,9 @@ export default class FileManager {
      * @param {FileManagerOptions} options
      * @return {Promise.<FileInfo[]>}
      */
-    browse({ selectEnabled = true, selectMultiple = true }) {
+    browse({ selectMultiple = true }) {
         return new Promise(resolve => {
-            const options = { selectEnabled, selectMultiple };
+            const options = { selectMultiple };
             eventBusInstance.trigger(new EventBusEvent(FileManagerEvent.BROWSE), {
                 options,
                 resolve

@@ -95,8 +95,8 @@ export default {
          * Returns the current route
          * @return {import('./managers/RouteManager').RouteObject} current route object
          */
-        $currentRoute() {
-            return RouteManager.instance.currentRoute;
+        $routeCurrent() {
+            return RouteManager.instance.route;
         }
     },
     watch: {
@@ -284,8 +284,8 @@ export default {
          * Requests a route change by path
          * @param {{ path:String, query:object = {}}} options   options
          */
-        $navigateRoute({ path, query = {} }) {
-            RouteManager.instance.navigate(path, query);
+        $routeNavigate({ path, query = {} }) {
+            RouteManager.instance.navigate({ path, query });
         },
         /**
          * Replaces all constant keys occurances with values in a string

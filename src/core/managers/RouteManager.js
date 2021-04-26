@@ -41,22 +41,24 @@ export default class RouteManager {
      * Returns the current route
      * @return {RouteObject} route
      */
-    get currentRoute() {
+    get route() {
         return this[routeManagerObservable].route;
     }
     /**
      * Sets the current route
      * @param {RouteObject} route
      */
-    set currentRoute(route) {
+    set route(route) {
         this[routeManagerObservable].route = route;
     }
     /**
      * Requests a route change by path
-     * @param {String} path         route path
-     * @param {Object} [query={}]   optional route query params
+     * @param {{ path:String, query:object = {}}} options   options
      */
-    navigate(path, query = {}) {
-        eventBusInstance.trigger(new EventBusEvent(RouteManagerEvent.NAVIGATE), { path, query });
+    navigate({ path, query = {} }) {
+        eventBusInstance.trigger(new EventBusEvent(RouteManagerEvent.NAVIGATE), {
+            path,
+            query
+        });
     }
 }

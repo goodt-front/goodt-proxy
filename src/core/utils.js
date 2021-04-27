@@ -19,6 +19,9 @@ class ElemEvent extends CustomEvent {
 }
 
 /**
+ * Dispatches Elem Vue Component LC-specific Event
+ * via Vue emit mechanism and also DOM events mechanism.
+ *
  * @param {string} eventName
  * @this {VueInstance}
  */
@@ -29,6 +32,9 @@ export const dispatchEventByName = function(eventName) {
 };
 
 /**
+ * Patches vue component instance root dom element with runtime prop
+ * __elem__ refers to self component instance and set constructor-specific extra attributes
+ *
  * @param {VueInstance & {id, type}} context
  */
 export const patchRootDomElement = context => {
@@ -48,6 +54,7 @@ export const patchRootDomElement = context => {
 
 /**
  * Returns descriptor props hash with default values
+ *
  * @param {ElemDescriptor} descriptor
  * @return {Object}
  */
@@ -61,7 +68,7 @@ export const getDescriptorDefaultProps = descriptor => {
 };
 
 /**
- * Returns dom id
+ * Returns generated Constructor-specific dom id
  * @return {string}
  */
 export const getDomId = elemId => `elem-${elemId}`;

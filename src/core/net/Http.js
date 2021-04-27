@@ -20,7 +20,10 @@ let REQUEST_ID = 0;
  * @property {Function} [responseHandler=null]     response handler
  */
 /**
- * Http transform
+ * HTTP Transport Client implementation
+ * with Axios HTTP Client underhood
+ * and extra service-specific behaviour
+ * @implements {import('./types').ITransportConstructor}
  * @param {AxiosRequestConfig} [options={}]  axios config
  */
 export default class Http {
@@ -79,6 +82,12 @@ export default class Http {
         // @ts-ignore
         promise.id = requestId;
         return promise;
+    }
+    /**
+     * Disposes http transport related resources
+     */
+    dispose() {
+        this.cancelAllRequests();
     }
     /**
      * Cancel active RequestPromise

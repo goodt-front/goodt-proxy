@@ -3,6 +3,7 @@ docs
 dist/demo.html
 dist/lib.umd-report.html
 .vscode
+.idea
 .dev
 package-lock.json
 workspace.code-workspace

@@ -1,3 +1,5 @@
+const { isProd } = require('./.utils');
+
 module.exports = {
     root: true,
     env: {
@@ -10,6 +12,10 @@ module.exports = {
         allowImportExportEverywhere: true
     },
     rules: {
-        'no-unused-vars': 'off'
+        'no-unused-vars': isProd ? 'warning' : 'off',
+        // allow console.log during development only
+        'no-console': isProd ? 'error' : 'off',
+        // allow debugger during development only
+        'no-debugger': isProd ? 'error' : 'off'
     }
 };

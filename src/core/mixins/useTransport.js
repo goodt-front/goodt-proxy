@@ -18,13 +18,12 @@ const PRIVATE_ACCESSOR_NAME = Symbol('$transport');
  */
 
 /**
- * @typedef {ComponentOptions} TransportMixin
+ * @typedef {ComponentOptions|VueConstructor} TransportMixin
  */
 
 /**
- *
- * @param {symbol} transportId
- * @param {UseTransportOptions} [useOptions={}]
+ * Creates Vue Mixin with specified Transport and extra component transport-related behaviour
+ * @type {import('./useTransport').useTransport}
  */
 export const useTransport = (transportId, useOptions = {}) => {
     /**
@@ -49,7 +48,6 @@ export const useTransport = (transportId, useOptions = {}) => {
 
     /**
      * @type {TransportMixin}
-     * @this {TransportMixinInstance}
      */
     const VueMixinComponentOptions = {
         computed: {
@@ -68,7 +66,7 @@ export const useTransport = (transportId, useOptions = {}) => {
          */
         destroyed() {
             if (this[PRIVATE_ACCESSOR_NAME]) {
-                this[PRIVATE_ACCESSOR_NAME].cancelAllRequests();
+                this[PRIVATE_ACCESSOR_NAME].dispose();
             }
         }
     };

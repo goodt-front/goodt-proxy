@@ -5,14 +5,14 @@ import HttpAuth from './HttpAuth';
 class TransportFactoryError extends Error {}
 
 /**
- *
+ * @implements {ITransportFactory}
  * @param {TransportConfig} options
  * @return {Http}
  */
 const createHttp = options => new Http(options);
 
 /**
- *
+ * @implements {ITransportFactory}
  * @param {TransportConfig} options
  * @return {HttpAuth}
  */
@@ -24,7 +24,7 @@ export const HttpTransportSymbol = Symbol('HttpTransport');
 export const HttpAuthTransportSymbol = Symbol('HttpAuthTransport');
 
 /**
- * @type {Map<symbol, ITransportFactory>}
+ * @type {Map<symbol, Function>}
  */
 const TransportFactoryMap = new Map();
 TransportFactoryMap.set(HttpTransportSymbol, createHttp);
@@ -32,7 +32,7 @@ TransportFactoryMap.set(HttpAuthTransportSymbol, createHttpAuth);
 
 /**
  * @param {symbol} transportId
- * @param {TransportConfig} options
+ * @param {Function|Record<string, any>} options
  * @throws {TransportFactoryError}
  * @return {ITransport}
  */

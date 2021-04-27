@@ -267,8 +267,7 @@ const ComponentOptions = {
         /**
          /**
          * Requests a route change by path
-         * @param {string} path
-         * @param {object} [query={}]
+         * @param {import('./managers/RouteManager').NavigateOptions} options
          */
         $routeNavigate({ path, query = {} }) {
             RouteManager.instance.navigate({ path, query });

@@ -126,8 +126,9 @@ class EventBus extends EventBusBase {
     /**
      * Constructor
      * @param {import('./StoreManager').Store} store
+     * @param {import('./RouteManager').default} routeManager
      */
-    constructor(store) {
+    constructor(store, routeManager) {
         super();
         this.useStateHistory = true;
         this.useStateDeferredMerging = true;
@@ -137,6 +138,8 @@ class EventBus extends EventBusBase {
         //
         this._store = store;
         this._store.addCommitHandler(this._storeCommitHandler.bind(this));
+        this._routeManager = routeManager;
+        this._routeManager.addRouteHandler(this._routeManagerRouteHandler.bind(this));
     }
     /**
      * Listen
@@ -159,6 +162,9 @@ class EventBus extends EventBusBase {
     trigger(event, data) {
         if (event.type == EventBusEvent.EVENT_STATE_CHANGE) {
             this._triggerStateChange(event, data);
+        } else if (event.type == EventBusEvent.EVENT_NAVIGATE) {
+            const { url, params } = data;
+            this._routeManager.navigate({ path: url, query: params });
         } else {
             super.trigger(event, data);
         }
@@ -289,6 +295,13 @@ class EventBus extends EventBusBase {
      */
     _storeCommitHandler(stateChange) {
         super.trigger(new EventBusEvent(EventBusEvent.EVENT_STATE_CHANGE), stateChange);
+    }
+    /**
+     * @private Route manager route handler
+     * @param {import('./RouteManager').RouteObject} route
+     */
+    _routeManagerRouteHandler({ path: url, query: params }) {
+        super.trigger(new EventBusEvent(EventBusEvent.EVENT_NAVIGATE), { url, params });
     }
 }
 

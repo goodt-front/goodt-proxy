@@ -4,7 +4,11 @@
 <script>
 import { ConstManager, RouteManager, StoreManager, EB } from './managers';
 import descriptor from './Elem.descriptor';
-import { dispatchEventByName, getDescriptorDefaultProps, patchRootDomElement } from './utils';
+import {
+    dispatchEventByName,
+    getDescriptorDefaultProps,
+    patchComponentRootDomElement
+} from './utils';
 
 const { store, vo, ValueObject } = StoreManager;
 const { EventBusWrapper } = EB;
@@ -13,12 +17,15 @@ const { EventBusWrapper } = EB;
  * Elem events Lifecycle events
  * @enum {string}
  */
-const ElemEvent = {
+const ElemEvent = Object.freeze({
     CREATED: 'elem-created',
     MOUNTED: 'elem-mounted',
     DESTROYED: 'elem-destroyed'
-};
+});
 
+/**
+ * @type {import("./Elem.vue.d.ts").ComponentOptions}
+ */
 const ComponentOptions = {
     props: {
         /** uniq instance id */
@@ -268,16 +275,16 @@ const ComponentOptions = {
         },
         /**
          * Replaces all constant keys occurrences with values in a string
-         * @param {String} str  string to test
+         * @param {any} constantName  string to test
          * @return {any}
          */
-        $c(str) {
-            if (typeof str !== 'string') {
-                return str;
+        $c(constantName) {
+            if (typeof constantName !== 'string') {
+                return constantName;
             }
             let manager = ConstManager.instance;
             // @TODO regExp should be defined via ConstManager constant
-            return str.replace(/(%[^%]+%)/g, m => manager.getConstValue(m));
+            return constantName.replace(/(%[^%]+%)/g, m => manager.getConstValue(m));
         },
         /**
          * LC stage, called by the env after 'mounted()'
@@ -294,7 +301,7 @@ const ComponentOptions = {
          * @param {Boolean} [triggerEvents=true]    whether to emit 'mounted' event
          */
         _mounted(triggerEvents = true) {
-            patchRootDomElement(this);
+            patchComponentRootDomElement(this);
             if (triggerEvents) {
                 // emit 'mounted' event via vue/dom
                 dispatchEventByName.call(this, ElemEvent.MOUNTED);

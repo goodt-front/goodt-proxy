@@ -4,7 +4,7 @@ import { SDKFactory } from './../../../dremio/index';
 export default class extends Keycloak {
     /**
      * Constructor
-     * @param {Object} [config={}]
+     * @param {Record<string, any>} [config={}]
      */
     constructor(config = {}) {
         super(config);
@@ -16,7 +16,7 @@ export default class extends Keycloak {
     }
     /**
      * Login method
-     * @param {Object} [credentials={}]  user credentials
+     * @param {Record<string, any>} [credentials={}]  user credentials
      * @return {Promise}
      */
     login(credentials = {}) {

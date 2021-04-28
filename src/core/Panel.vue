@@ -7,8 +7,8 @@ const { descriptor } = Elem.data();
 
 /**
  * @typedef {Object} PanelMetaData
- * @property {String} name      panel name
- * @property {String} icon      mdi icon class
+ * @property {string} name      panel name
+ * @property {string} icon      mdi icon class
  */
 export default {
     components: { ...PanelUi },

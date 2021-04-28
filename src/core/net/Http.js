@@ -4,19 +4,19 @@ import axios, { AxiosRequestConfig, CancelTokenSource } from 'axios';
 let REQUEST_ID = 0;
 /**
  * @typedef {Promise} RequestPromise
- * @property {Number} id
+ * @property {number} id
  */
 /**
  * @typedef {Object} RequestRecord
- * @property {Number} id
+ * @property {number} id
  * @property {CancelTokenSource} source
  */
 /**
  * @typedef {Object} RequestConfig
- * @property {String} url               url
- * @property {String} [method='get']    request method
- * @property {Object} [params={}]       params
- * @property {Object} [options={}]      request options (axios)
+ * @property {string} url               url
+ * @property {string} [method='get']    request method
+ * @property {Record<string, any>} [params={}]       params
+ * @property {Record<string, any>} [options={}]      request options (axios)
  * @property {Function} [responseHandler=null]     response handler
  */
 /**
@@ -94,7 +94,7 @@ export default class Http {
 
     /**
      * Cancel active RequestPromise
-     * @param {Number} id   request id
+     * @param {number} id   request id
      */
     cancelRequest(id) {
         const i = this._requests.findIndex(item => item.id === id);
@@ -116,7 +116,7 @@ export default class Http {
 
     /**
      * Returns the base url
-     * @return {String}
+     * @return {string}
      */
     getBaseUrl() {
         return this.options.baseURL;
@@ -124,7 +124,7 @@ export default class Http {
 
     /**
      * @private Registers a new cancel source
-     * @param {Number} id   id
+     * @param {number} id   id
      * @param {CancelTokenSource} source
      */
     _registerRequest(id, source) {

@@ -7,7 +7,7 @@
  * @typedef {Object} ListenerInfo
  * @property {EventBusEvent} event
  * @property {EventHandler} handler
- * @property {Boolean} once
+ * @property {boolean} once
  */
 
 /**
@@ -28,7 +28,7 @@ class EventBusBase {
      * Registers an event handler
      * @param {EventBusEvent} event     event
      * @param {EventHandler} handler    handler
-     * @param {Boolean} [once=false]    if set true event handler will be auto-unregistered when invoked
+     * @param {boolean} [once=false]    if set true event handler will be auto-unregistered when invoked
      * @return {Function}               dispose function to unregister the handler i.e. dispose() === unlisten(event, handler)
      */
     listen(event, handler, once = false) {
@@ -43,7 +43,7 @@ class EventBusBase {
      * Unregisters an event handler
      * @param {EventBusEvent} event     event
      * @param {EventHandler} handler    handler
-     * @return {Boolean}                true if ayn handler unregistered
+     * @return {boolean}                true if ayn handler unregistered
      */
     unlisten(event, handler) {
         const arr = this._listeners[event.type];
@@ -66,7 +66,7 @@ class EventBusBase {
      * Returns true if event handler is registered
      * @param {EventBusEvent} event     event
      * @param {EventHandler} handler    handler
-     * @return {Boolean}
+     * @return {boolean}
      */
     has(event, handler) {
         const arr = this._listeners[event.type];
@@ -152,8 +152,8 @@ class EventBus extends EventBusBase {
     /**
      * Listen
      * @param {EventBusEvent} event     event
-     * @param {(e:EventBusEvent, data:Object)} handler        handler
-     * @param {Boolean} [once=false]    once?
+     * @param {function(e: EventBusEvent, data: Object): void} handler        handler
+     * @param {boolean} [once=false]    once?
      * @return {Function}               dispose handler i.e. dispose() === unlisten(event, handler)
      */
     listen(event, handler, once) {
@@ -169,9 +169,9 @@ class EventBus extends EventBusBase {
      * @param {*} data                  data
      */
     trigger(event, data) {
-        if (event.type == EventBusEvent.EVENT_STATE_CHANGE) {
+        if (event.type === EventBusEvent.EVENT_STATE_CHANGE) {
             this._triggerStateChange(event, data);
-        } else if (event.type == EventBusEvent.EVENT_NAVIGATE) {
+        } else if (event.type === EventBusEvent.EVENT_NAVIGATE) {
             const { url, params } = data;
             this._routeManager.navigate({ path: url, query: params });
         } else {
@@ -181,7 +181,7 @@ class EventBus extends EventBusBase {
 
     /**
      * Set state
-     * @param {Object} state
+     * @param {Record<string, any>} state
      */
     setState(state) {
         this._store.commit(state, false);
@@ -189,7 +189,7 @@ class EventBus extends EventBusBase {
 
     /**
      * Returns state
-     * @return {Object}
+     * @return {Record<string, any>}
      */
     getState() {
         return { ...this._store.state };
@@ -225,7 +225,7 @@ class EventBus extends EventBusBase {
 
     /**
      * Check if state timeout is active
-     * @return {Boolean}
+     * @return {boolean}
      */
     stateTriggerTimeoutActive() {
         return this._stateTriggerTimeout != null;
@@ -235,10 +235,10 @@ class EventBus extends EventBusBase {
      * @private Listen state change event handler
      * @param {EventBusEvent} event     event
      * @param {EventHandler} handler    handler
-     * @param {Boolean} once            once? @default false
+     * @param {boolean} [once=false]            once? @default false
      * @return {Function}              dispose handler i.e. dispose() === unlisten(event, handler)
      */
-    _listenStateChange(event, handler, once) {
+    _listenStateChange(event, handler, once = false) {
         if (this.useStateHistory) {
             // no timeout active --> force invoke handler with latest state
             super.callEventHandler(handler, event, this.getState());
@@ -252,7 +252,7 @@ class EventBus extends EventBusBase {
     /**
      * @private Trigger state change event handler
      * @param {EventBusEvent} event     event
-     * @param {Object} stateChange      state change
+     * @param {Record<string, any>} stateChange      state change
      */
     _triggerStateChange(event, stateChange) {
         // no defer merging strat
@@ -295,8 +295,8 @@ class EventBus extends EventBusBase {
 
     /**
      * @private Removes all keys with 'undefined' values
-     * @param {Object} obj     object
-     * @return {Object}
+     * @param {Record<string, any>} obj     object
+     * @return {Record<string, any>}
      */
     _removeUndefinedKeys(obj) {
         const out = { ...obj };
@@ -310,7 +310,7 @@ class EventBus extends EventBusBase {
 
     /**
      * @private Store commit handler
-     * @param {Object} stateChange
+     * @param {Record<string, any>} stateChange
      */
     _storeCommitHandler(stateChange) {
         super.trigger(new EventBusEvent(EventBusEvent.EVENT_STATE_CHANGE), stateChange);
@@ -352,7 +352,7 @@ class EventBusWrapper {
 
     /**
      * Returns current state
-     * @return {Object}
+     * @return {Record<string, any>}
      */
     getState() {
         const state = this._eb.getState();
@@ -368,7 +368,7 @@ class EventBusWrapper {
 
     /**
      * Returns currect session
-     * @return {Object}
+     * @return {Record<string, any>}
      */
     getSession() {
         const session = this._eb.getState();
@@ -378,7 +378,7 @@ class EventBusWrapper {
     /**
      * Listen for @see EventBusEvent.EVENT_NAVIGATE event
      * @param {EventHandler} handler    handler
-     * @param {Boolean} [once=false]    once
+     * @param {boolean} [once=false]    once
      * @return {Function}               handler ref
      */
     listenNavigate(handler, once = false) {
@@ -395,8 +395,8 @@ class EventBusWrapper {
 
     /**
      * Trigger @see EventBusEvent.EVENT_NAVIGATE event (for relative urls; change window location for other url schemas)
-     * @param {Object} info     nav info object { url:{String}, params:{Object} }
-     * @return {Boolean}        whether the event was triggered or not
+     * @param {Record<string, any>} info     nav info object {{ url: String, params: Record<string, any>  }}
+     * @return {boolean}        whether the event was triggered or not
      */
     triggerNavigate({ url, params = {} }) {
         const r = new RegExp('^(?:\\w*:(//)?)+', 'i');
@@ -418,7 +418,7 @@ class EventBusWrapper {
     /**
      * Listen for @see EventBusEvent.EVENT_STATE_CHANGE event
      * @param {EventHandler} handler    handler
-     * @param {Boolean} [once=false]    once
+     * @param {boolean} [once=false]    once
      * @return {EventHandler}           decorated handler
      */
     listenStateChange(handler, once = false) {
@@ -451,7 +451,7 @@ class EventBusWrapper {
 
     /**
      * Trigger @see EventBusEvent.EVENT_STATE_CHANGE event
-     * @param {Object} stateChange     state change object { '<key>': '<value>' }
+     * @param {Record<string, any>} stateChange     state change object { '<key>': '<value>' }
      */
     triggerStateChange(stateChange) {
         const obj = {};
@@ -471,7 +471,7 @@ class EventBusWrapper {
      * Listen
      * @param {String|EventBusEvent} eventType      event type
      * @param {EventHandler} handler                handler
-     * @param {Boolean} [once=false]                once? @default false
+     * @param {boolean} [once=false]                once? @default false
      * @return {Function}                           dispose handler
      */
     listen(eventType, handler, once = false) {
@@ -519,7 +519,7 @@ class EventBusWrapper {
     /**
      * Trigger
      * @param {String|EventBusEvent} eventType    event type
-     * @param {Object} data         custom data
+     * @param {Record<string, any>} data         custom data
      */
     trigger(eventType, data) {
         if (!this._eb) {
@@ -548,7 +548,7 @@ class EventBusWrapper {
      * Has
      * @param {String|EventBusEvent} eventType      event type
      * @param {EventHandler} handler                handler
-     * @return {Boolean}
+     * @return {boolean}
      */
     has(eventType, handler) {
         if (!this._eb) {
@@ -575,8 +575,8 @@ class EventBusWrapper {
 class EventBusEvent {
     /**
      * EventBusEvent
-     * @param {String} type     event type
-     * @param {String} ns       event namespace @default '''
+     * @param {string} type     event type
+     * @param {string} ns       event namespace @default '''
      */
     constructor(type, ns = '') {
         this.type = type;

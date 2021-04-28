@@ -37,7 +37,7 @@ const mixin = {
         return {
             /**
              * Dremio query 'offset'
-             * @property {Number}
+             * @property {number}
              */
             offset: 0,
             /**
@@ -51,7 +51,7 @@ const mixin = {
             /**
              * loadData() method hooks
              * @see loadData()
-             * @property {Object}
+             * @property {Record<string, any>}
              */
             loadDataHooks: {
                 before: () => {
@@ -74,7 +74,7 @@ const mixin = {
     computed: {
         /**
          * alias ~ props.dremio.limit
-         * @return {Number}
+         * @return {number}
          */
         limit() {
             const { dremio } = this.props;
@@ -82,27 +82,27 @@ const mixin = {
         },
         /**
          * alias ~ result.rowCount
-         * @return {Number}
+         * @return {number}
          */
         rowCount() {
             return this.result ? this.result.rowCount : 0;
         },
         page: {
             /**
-             * @param {Number} val
+             * @param {number} val
              */
             set(val) {
                 this.offset = (val - 1) * this.limit;
             },
             /**
-             * @return {Number}
+             * @return {number}
              */
             get() {
                 return this.limit ? this.offset / this.limit + 1 : 1;
             }
         },
         /**
-         * @return {Number}
+         * @return {number}
          */
         pages() {
             // @ts-ignore
@@ -204,7 +204,7 @@ const mixin = {
         },
         /**
          * Applies dremio filters
-         * @param {Object} params   params to be injected
+         * @param {Record<string, any>} params   params to be injected
          */
         applyDremioFilters(params) {
             const { query } = this.queryHelper;
@@ -227,9 +227,9 @@ const mixin = {
         },
         /**
          * Creates a new dremio query filter
-         * @param {String} name         metric/dimension/field name
+         * @param {string} name         metric/dimension/field name
          * @param {String|Array} value  value
-         * @return {Object} filter
+         * @return {Record<string, any>} filter
          */
         createDremioFilter(name, value) {
             const isArray = Array.isArray(value);

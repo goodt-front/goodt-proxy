@@ -62,7 +62,7 @@ export const patchComponentRootDomElement = context => {
  * Returns descriptor props hash with default values
  *
  * @param {ElemDescriptor} descriptor
- * @return {Object}
+ * @return {Record<string, any>}
  */
 export const getDescriptorDefaultProps = descriptor => {
     const o = {};

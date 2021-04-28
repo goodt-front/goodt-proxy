@@ -26,7 +26,7 @@ export default class {
     /**
      * Redirect to login page (redirect -> login -> redirect back)
      * or resolve promise
-     * @param {Object} [credentials={}]  user credentials
+     * @param {Record<string, any>} [credentials={}]  user credentials
      * @return {Promise}
      */
     login(credentials = {}) {
@@ -44,7 +44,7 @@ export default class {
 
     /**
      * If the token expires within minValidity seconds the token is refreshed.
-     * @param {Number} [minValidity=10]
+     * @param {number} [minValidity=10]
      * @return {Promise.<Boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
      */
     updateToken(minValidity = 10) {
@@ -77,8 +77,8 @@ export default class {
 
     /**
      * Returns true if the token has less than minValidity seconds left before it expires (minValidity is optional, if not specified 0 is used).
-     * @param {Number} [minValidity=10]
-     * @return {Boolean}
+     * @param {number} [minValidity=10]
+     * @return {boolean}
      */
     isTokenExpired(minValidity = 10) {
         return false;
@@ -86,7 +86,7 @@ export default class {
 
     /**
      * Return auth status
-     * @return {Boolean}
+     * @return {boolean}
      */
     get authenticated() {
         return true;
@@ -94,7 +94,7 @@ export default class {
 
     /**
      * Return token
-     * @return {String}
+     * @return {string}
      */
     get token() {
         return '';
@@ -110,7 +110,7 @@ export default class {
 
     /**
      * Returns default config
-     * @return {Object}
+     * @return {Record<string, any>}
      */
     get configDefault() {
         return {};

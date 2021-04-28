@@ -32,8 +32,8 @@
 </template>
 <script>
 import { PortalTarget } from 'portal-vue';
-import { ElemEvent, Const } from './../index';
-import { Popup } from '../components/ui/index';
+import { ElemEvent, Const as Globals } from '../';
+import { Popup } from '../components/ui';
 import {
     AuthManager,
     ConstManager,
@@ -41,7 +41,7 @@ import {
     EB,
     RouteManager,
     StoreManager
-} from './../managers/index';
+} from '../managers';
 
 const { store } = StoreManager;
 const { EventBus, EventBusEvent } = EB;
@@ -70,7 +70,7 @@ export default {
         envConstants: {
             type: Object,
             default() {
-                return { ...Const };
+                return { ...Globals };
             }
         },
         appConstants: {
@@ -122,7 +122,7 @@ export default {
             authAdapterUserProfile: {},
             /** @type {EventBus} */
             ebi: null,
-            portalName: Const.PORTAL_TARGET_NAME_POPUP,
+            portalName: Globals.PORTAL_TARGET_NAME_POPUP,
             authenticated: false,
             showConsole: false,
             consolePopupDialog: {
@@ -172,12 +172,13 @@ export default {
          */
         initConst() {
             const { envConstants } = this;
-            for (let k in Const) {
-                if (Object.prototype.hasOwnProperty.call(envConstants, k)) {
-                    Const[k] = envConstants[k];
+            for (const constant in Globals) {
+                if (Object.prototype.hasOwnProperty.call(envConstants, constant)) {
+                    Globals[constant] = envConstants[constant];
                 }
             }
-            this.registerModule(MODULE_KEYS.CONST, Const);
+
+            this.registerModule(MODULE_KEYS.CONST, Globals);
         },
         /**
          * Init auth manager

@@ -1,5 +1,5 @@
-import ControlLayout from './../components/ControlLayout.vue';
-import ConstManager from './../../../managers/ConstManager';
+import ControlLayout from '../components/ControlLayout.vue';
+import ConstManager from '../../../managers/ConstManager';
 
 /*
 Slot proxy
@@ -7,7 +7,7 @@ Slot proxy
     <slot :name="name" v-bind="scope"></slot>
 </template>
 */
-let ControlMixin = {
+const ControlMixin = {
     inheritAttrs: false,
     components: { ControlLayout },
     props: {
@@ -26,12 +26,12 @@ let ControlMixin = {
             type: String,
             default: '12-12',
             validation(val) {
-                let m = val.match(/^(\d+)-(\d+)$/);
+                const m = val.match(/^(\d+)-(\d+)$/);
                 if (!m) {
                     return false;
                 }
                 m.shift();
-                for (let n of m) {
+                for (const n of m) {
                     if (n < 1 || n > 12) {
                         return false;
                     }
@@ -56,11 +56,11 @@ let ControlMixin = {
     },
     computed: {
         attrs() {
-            let { colSize, value, disabled, ...attrs } = this.$attrs;
+            const { colSize, value, disabled, ...attrs } = this.$attrs;
             return { ...attrs, disabled: this.disabled, value: this.value };
         },
         listeners() {
-            let { input, change, ...listeners } = { ...this.$listeners };
+            const { input, change, ...listeners } = { ...this.$listeners };
             return { ...listeners, input: this.onInput, change: this.onChange };
         },
         controlCl() {
@@ -85,8 +85,8 @@ let ControlMixin = {
     }
 };
 
-let getConstants = () => Object.keys(ConstManager.instance.getConstantsHash());
+const getConstants = () => Object.keys(ConstManager.instance.getConstantsHash());
 
-let isConstant = v => v != null && typeof v === 'string' && !!v.match(/^%([\w-])+%$/);
+const isConstant = v => v != null && typeof v === 'string' && !!v.match(/^%([\w-])+%$/);
 
 export { ControlMixin, getConstants, isConstant };

@@ -63,6 +63,7 @@ class Store {
         /** @type {CommitHandler[]} */
         this._commitHandlers = [];
     }
+
     /**
      * Returns the current state
      * @return {Object}
@@ -70,19 +71,21 @@ class Store {
     get state() {
         return stateOb.state;
     }
+
     /**
      * Merges the 'newState' object to the current state
      * @param {Object} stateChange                      state change obj
      * @param {Boolean} [invokeCommitHandlers=true]     if true will invoked
      */
     commit(stateChange, invokeCommitHandlers = true) {
-        let stateNew = { ...stateOb.state, ...stateChange };
-        for (let k in stateNew) {
+        const stateNew = { ...stateOb.state, ...stateChange };
+        for (const k in stateNew) {
             stateNew[k] === undefined && delete stateNew[k];
         }
         stateOb.state = stateNew;
         invokeCommitHandlers && this._commitHandlers.forEach(h => h(stateChange));
     }
+
     /**
      * Replaces the state with the 'newState'
      * @param {Object} newState
@@ -90,6 +93,7 @@ class Store {
     replace(newState) {
         stateOb.state = newState;
     }
+
     /**
      * Adds a commit handler
      * @param {CommitHandler} handler
@@ -97,6 +101,7 @@ class Store {
     addCommitHandler(handler) {
         this._commitHandlers.push(handler);
     }
+
     /**
      * Removes a commit handler
      * @param {CommitHandler} handler

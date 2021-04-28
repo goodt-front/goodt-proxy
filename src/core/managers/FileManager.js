@@ -21,8 +21,8 @@ import { EventBusBase, EventBusEvent } from './EventBus';
  * @property {String} hash  file hash
  */
 let fileManager = null;
-let fileManagerEnforcer = Symbol();
-let eventBusInstance = new EventBusBase();
+const fileManagerEnforcer = Symbol();
+const eventBusInstance = new EventBusBase();
 
 const FileManagerEvent = {
     BROWSE: 'browse'
@@ -31,13 +31,14 @@ const FileManagerEvent = {
 export default class FileManager {
     /**
      * Constructor
-     * @param {Symbol} enforcer  singleton enforcer
+     * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
         if (enforcer !== fileManagerEnforcer) {
             throw new Error(`Instantiation failed: use FileManager.instance`);
         }
     }
+
     /**
      * @return {FileManager}
      */
@@ -47,10 +48,11 @@ export default class FileManager {
         }
         return fileManager;
     }
+
     /**
      * Invokes env file manager's browse method for file selection
      * @param {FileManagerOptions} options
-     * @return {Promise.<FileInfo[]>}
+     * @return {Promise<FileInfo[]>}
      */
     browse({ selectMultiple = true }) {
         return new Promise(resolve => {
@@ -61,6 +63,7 @@ export default class FileManager {
             });
         });
     }
+
     /**
      * Registers a browse() observer (used by the env)
      * @param {BrowseHandler} handler     browse handler invoked by @see browse()

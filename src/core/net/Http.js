@@ -38,18 +38,19 @@ export default class Http {
         this.options = options;
         this.axios = axios.create(this.options);
     }
+
     /**
      * Creates a new request
      * @param {RequestConfig} config
      * @return {RequestPromise}
      */
     request({ url, method = 'get', params = {}, options = {}, responseHandler = null }) {
-        let CancelToken = axios.CancelToken;
-        let source = CancelToken.source();
-        let requestId = REQUEST_ID++;
-        let request = {
+        const {CancelToken} = axios;
+        const source = CancelToken.source();
+        const requestId = REQUEST_ID++;
+        const request = {
             method,
-            url: url,
+            url,
             cancelToken: source.token,
             ...options
         };
@@ -59,13 +60,13 @@ export default class Http {
             request.data = params;
         }
         /** @type {RequestPromise} */
-        let promise = new Promise((resolve, reject) => {
+        const promise = new Promise((resolve, reject) => {
             this._registerRequest(requestId, source);
             this.axios
                 .request(request)
                 .then(response => {
                     this._unregisterRequest(requestId);
-                    if (typeof response.data == 'object' && response.data.error) {
+                    if (typeof response.data === 'object' && response.data.error) {
                         reject(response.data.error);
                         return;
                     }
@@ -83,25 +84,28 @@ export default class Http {
         promise.id = requestId;
         return promise;
     }
+
     /**
      * Disposes http transport related resources
      */
     dispose() {
         this.cancelAllRequests();
     }
+
     /**
      * Cancel active RequestPromise
      * @param {Number} id   request id
      */
     cancelRequest(id) {
-        let i = this._requests.findIndex(item => item.id === id);
+        const i = this._requests.findIndex(item => item.id === id);
         if (i < 0) {
             return;
         }
-        let item = this._requests[i];
+        const item = this._requests[i];
         item.source.cancel('canceled');
         this._requests.splice(i, 1);
     }
+
     /**
      * Cancel all active RequestPromises
      */
@@ -109,6 +113,7 @@ export default class Http {
         this._requests.forEach(item => item.source.cancel('canceled'));
         this._requests = [];
     }
+
     /**
      * Returns the base url
      * @return {String}
@@ -116,6 +121,7 @@ export default class Http {
     getBaseUrl() {
         return this.options.baseURL;
     }
+
     /**
      * @private Registers a new cancel source
      * @param {Number} id   id
@@ -124,6 +130,7 @@ export default class Http {
     _registerRequest(id, source) {
         this._requests.push({ id, source });
     }
+
     /**
      * @private Unregister RequestPromise from the pool
      */

@@ -1,5 +1,5 @@
 let constManager = null;
-let constManagerEnforcer = Symbol();
+const constManagerEnforcer = Symbol();
 
 export default class ConstManager {
     /**
@@ -12,6 +12,7 @@ export default class ConstManager {
         }
         this._constants = {};
     }
+
     /**
      * @return {ConstManager}
      */
@@ -21,6 +22,7 @@ export default class ConstManager {
         }
         return constManager;
     }
+
     /**
      * Return key value or key if no value found
      * @param {String} key  key
@@ -32,6 +34,7 @@ export default class ConstManager {
         }
         return this._constants[key];
     }
+
     /**
      * Set the constants hash
      * @param {Object} constants
@@ -39,6 +42,7 @@ export default class ConstManager {
     setConstantsHash(constants = {}) {
         this._constants = constants;
     }
+
     /**
      * Return the constants hash
      * @return {Object}

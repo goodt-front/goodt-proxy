@@ -43,6 +43,7 @@ export default class RouteManager {
         /** @type {RouteHandler[]} */
         this._routeHandlers = [];
     }
+
     /**
      * @return {RouteManager}
      */
@@ -52,6 +53,7 @@ export default class RouteManager {
         }
         return routeManager;
     }
+
     /**
      * Returns the current route
      * @return {RouteObject} route
@@ -59,6 +61,7 @@ export default class RouteManager {
     get route() {
         return this[routeManagerObservable].route;
     }
+
     /**
      * Sets the current route
      * @param {RouteObject} route                       new route
@@ -68,6 +71,7 @@ export default class RouteManager {
         this[routeManagerObservable].route = route;
         invokeRouteHandlers && this._routeHandlers.forEach(h => h(route));
     }
+
     /**
      * Requests a route change by path
      * @param {NavigateOptions} options
@@ -78,6 +82,7 @@ export default class RouteManager {
             query
         });
     }
+
     /**
      * Registers a navigate() observer (used by the env)
      * @param {NavigateHandler} handler     navigate handler invoked by @see navigate()
@@ -87,6 +92,7 @@ export default class RouteManager {
         const event = new EventBusEvent(RouteManagerEvent.NAVIGATE);
         return eventBusInstance.listen(event, (e, data) => handler(data));
     }
+
     /**
      * Adds a route handler
      * @param {RouteHandler} handler
@@ -94,6 +100,7 @@ export default class RouteManager {
     addRouteHandler(handler) {
         this._routeHandlers.push(handler);
     }
+
     /**
      * Removes a route handler
      * @param {RouteHandler} handler

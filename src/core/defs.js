@@ -7,7 +7,7 @@
  * @typedef {Record<string, any>} ElemPropDef
  * @property {Function|Function[]} type                     Ctor type @example String or [String,Array]
  * @property {Boolean|Number|String|Function} default       default value for Object, Array must be a factory method
- * @property {Array.<{ value:any, label:String}>} [options]   value options
+ * @property {Array<{ value:any, label: string}>} [options]   value options
  */
 /**
  * @typedef {Record<string, any>} ElemVarDef

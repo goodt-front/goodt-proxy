@@ -469,7 +469,7 @@ class EventBusWrapper {
 
     /**
      * Listen
-     * @param {String|EventBusEvent} eventType      event type
+     * @param {string|EventBusEvent} eventType      event type
      * @param {EventHandler} handler                handler
      * @param {boolean} [once=false]                once? @default false
      * @return {Function}                           dispose handler
@@ -505,7 +505,7 @@ class EventBusWrapper {
 
     /**
      * Unlisten
-     * @param {String|EventBusEvent} eventType      event type
+     * @param {string|EventBusEvent} eventType      event type
      * @param {EventHandler} handler                handler
      */
     unlisten(eventType, handler) {
@@ -518,7 +518,7 @@ class EventBusWrapper {
 
     /**
      * Trigger
-     * @param {String|EventBusEvent} eventType    event type
+     * @param {string|EventBusEvent} eventType    event type
      * @param {Record<string, any>} data         custom data
      */
     trigger(eventType, data) {
@@ -546,7 +546,7 @@ class EventBusWrapper {
 
     /**
      * Has
-     * @param {String|EventBusEvent} eventType      event type
+     * @param {string|EventBusEvent} eventType      event type
      * @param {EventHandler} handler                handler
      * @return {boolean}
      */

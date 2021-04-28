@@ -58,7 +58,7 @@ export default class extends Adapter {
     /**
      * If the token expires within minValidity seconds the token is refreshed.
      * @param {number} [minValidity=5]
-     * @return {Promise.<Boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
+     * @return {Promise<boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
      */
     updateToken(minValidity = 5) {
         return this.kc.updateToken(minValidity);

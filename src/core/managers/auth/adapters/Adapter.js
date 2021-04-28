@@ -1,7 +1,7 @@
 export default class {
     /**
      * Constructor
-     * @param {any} [config={}]  adapter config
+     * @param {Record<string, any>} [config={}]  adapter config
      */
     constructor(config = {}) {
         this.config = config;
@@ -17,7 +17,7 @@ export default class {
 
     /**
      * Destroy adapter
-     * @return {Promise}
+     * @return {Promise<void>}
      */
     destroy() {
         return Promise.resolve();
@@ -27,7 +27,7 @@ export default class {
      * Redirect to login page (redirect -> login -> redirect back)
      * or resolve promise
      * @param {Record<string, any>} [credentials={}]  user credentials
-     * @return {Promise}
+     * @return {Promise<void>}
      */
     login(credentials = {}) {
         return Promise.resolve();
@@ -45,7 +45,7 @@ export default class {
     /**
      * If the token expires within minValidity seconds the token is refreshed.
      * @param {number} [minValidity=10]
-     * @return {Promise.<Boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
+     * @return {Promise<boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
      */
     updateToken(minValidity = 10) {
         return Promise.resolve(true);

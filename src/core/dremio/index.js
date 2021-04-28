@@ -109,7 +109,7 @@ const mixin = {
             return this.limit ? Math.ceil(this.rowCount / this.limit) : 1;
         },
         /**
-         * @return {?String}
+         * @return {?string}
          */
         dremioStr() {
             try {
@@ -228,7 +228,7 @@ const mixin = {
         /**
          * Creates a new dremio query filter
          * @param {string} name         metric/dimension/field name
-         * @param {String|Array} value  value
+         * @param {string|Array} value  value
          * @return {Record<string, any>} filter
          */
         createDremioFilter(name, value) {
@@ -241,7 +241,7 @@ const mixin = {
         },
         /**
          * Returns dremio query metric/dimension/field names
-         * @return {String[]}
+         * @return {string[]}
          */
         getDremioQueryParamNames() {
             const { query, dimensionList } = this.queryHelper;

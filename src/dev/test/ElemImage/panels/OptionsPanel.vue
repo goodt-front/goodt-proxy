@@ -9,10 +9,10 @@
     </div>
 </template>
 <script>
-import { Panel } from '../../../../core/index';
+import { Panel } from '../../../../core';
 import ElemImage from '../ElemImage.vue';
 
-let descriptor = ElemImage.data().descriptor;
+const { descriptor } = ElemImage.data();
 
 export default {
     extends: Panel,

@@ -44,6 +44,13 @@ const ComponentOptions = {
                 return {};
             }
         },
+        /** slot scope data if component is inside scoped slot of the parent component */
+        slotData: {
+            type: Object,
+            default() {
+                return {};
+            }
+        },
         /** env mode (true - player env; false - editor env) */
         isEditorMode: {
             type: Boolean,

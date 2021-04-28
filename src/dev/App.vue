@@ -8,16 +8,19 @@
                 </select>
             </div>
             <widget-preview v-bind="widgetPreviewCfg"></widget-preview>
+            <widget-render v-bind="{ elem, vnodeData: elemVnodeData }"></widget-render>
         </div>
     </env-emulator>
 </template>
 <script>
-import { Sandbox } from './../core';
-const { EnvEmulator, WidgetPreview } = Sandbox;
+import { Sandbox } from '../core';
+import { ElemEvent } from '../core/Elem.vue';
+
+const { EnvEmulator, WidgetPreview, WidgetRender } = Sandbox;
 
 export default {
     name: 'App',
-    components: { EnvEmulator, WidgetPreview },
+    components: { EnvEmulator, WidgetPreview, WidgetRender },
     data() {
         return {
             envEmulatorCfg: {
@@ -54,7 +57,39 @@ export default {
                     type: 'ElemNavigate',
                     props: {}
                 }
-            ]
+            ],
+            elem: {
+                id: 'w0',
+                type: 'ElemContainer',
+                props: { cssClass: ['bg-grey', 'pad-l3'] },
+                component: () => import('./test/ElemContainer/ElemContainer.vue'),
+                children: [
+                    {
+                        id: 'w1',
+                        type: 'ElemContainer',
+                        props: { cssClass: ['bg-green', 'pad-l3'] },
+                        component: () => import('./test/ElemContainer/ElemContainer.vue'),
+                        children: []
+                    },
+                    {
+                        id: 'w2',
+                        type: 'ElemContainer',
+                        props: { cssClass: ['bg-primary', 'pad-l3'] },
+                        component: () => import('./test/ElemContainer/ElemContainer.vue'),
+                        children: []
+                    }
+                ]
+            },
+            // editor env test: adding custom styling + attaching vue/webapi event handler
+            elemVnodeData: {
+                style: { border: '5px solid black' },
+                on: {
+                    [ElemEvent.CREATED]: vue => console.log('ElemEvent.CREATED', vue)
+                },
+                nativeOn: {
+                    click: e => console.log('click.native', e.currentTarget)
+                }
+            }
         };
     }
 };

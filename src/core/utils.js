@@ -46,7 +46,7 @@ export const dispatchEventByName = function(eventName) {
  */
 export const patchComponentRootDomElement = context => {
     const { $el, id, type } = context;
-    if ($el) {
+    if (!$el) {
         return;
     }
     // expose vue component instance reference

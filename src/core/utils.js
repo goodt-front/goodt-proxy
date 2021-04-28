@@ -13,10 +13,17 @@ class ElemEvent extends CustomEvent {
             }
         });
     }
+
     get instance() {
         return this.detail.instance;
     }
 }
+
+/**
+ * Returns generated Constructor-specific dom id
+ * @return {string}
+ */
+export const getDomId = elemId => `elem-${elemId}`;
 
 /**
  * Dispatches Elem Vue Component LC-specific Event
@@ -43,7 +50,6 @@ export const patchRootDomElement = context => {
         return;
     }
     // expose vue component instance reference
-    // @ts-ignore
     $el.__elem__ = context;
     // set id/data-elem attrs
     if ($el.setAttribute) {
@@ -59,16 +65,10 @@ export const patchRootDomElement = context => {
  * @return {Object}
  */
 export const getDescriptorDefaultProps = descriptor => {
-    let o = {};
+    const o = {};
     let p = descriptor.props;
     for (let n in p) {
         o[n] = typeof p[n].default === 'function' ? p[n].default() : p[n].default;
     }
     return o;
 };
-
-/**
- * Returns generated Constructor-specific dom id
- * @return {string}
- */
-export const getDomId = elemId => `elem-${elemId}`;

@@ -5,5 +5,5 @@ dist/lib.umd-report.html
 .vscode
 .idea
 .dev
-package-lock.json
+.history
 workspace.code-workspace

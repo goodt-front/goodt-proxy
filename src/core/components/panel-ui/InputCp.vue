@@ -37,9 +37,9 @@
     </div>
 </template>
 <script>
+import { Select as UiSelect , InputColorPicker } from 'goodteditor-ui';
+
 import { ControlMixin, getConstants, isConstant } from './utils/index';
-import { Select as UiSelect } from 'goodteditor-ui';
-import { InputColorPicker } from 'goodteditor-ui';
 
 export default {
     components: { InputColorPicker, UiSelect },
@@ -49,7 +49,7 @@ export default {
     },
     computed: {
         selectOptions() {
-            let opt = {
+            const opt = {
                 options: getConstants(),
                 labelField: null,
                 valueField: null

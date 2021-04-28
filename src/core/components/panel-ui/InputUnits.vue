@@ -89,7 +89,7 @@
 }
 </style>
 <script>
-import { ControlMixin } from './utils/index';
+import { ControlMixin } from './utils';
 import { Select as UiSelect, Popover as UiPopover, Datalist as UiDatalist } from 'goodteditor-ui';
 
 export default {
@@ -134,17 +134,17 @@ export default {
     },
     computed: {
         valuePrivate() {
-            let { num, unit } = this;
+            const { num, unit } = this;
             return `${num}${unit}`;
         },
         formElemCl() {
-            let o = {
+            const o = {
                 focus: this.formElemHasFocus
             };
             return { ...this.controlCl, ...o };
         },
         inputListeners() {
-            let { input, change, ...listeners } = { ...this.listeners };
+            const { input, change, ...listeners } = { ...this.listeners };
             return {
                 focusin: this.toggleFormElemFocus,
                 focusout: this.toggleFormElemFocus,
@@ -170,13 +170,13 @@ export default {
                     return;
                 }
 
-                let a = String(v).match(/^([\d.-]*)([a-z%]+)$/i);
+                const a = String(v).match(/^([\d.-]*)([a-z%]+)$/i);
                 this.unit = this.units.length ? this.units[0] : '';
 
                 if (!a) {
                     this.num = v;
                 } else {
-                    let [_, num, unit] = a;
+                    const [_, num, unit] = a;
                     if (this.units.includes(unit)) {
                         this.num = num;
                         this.unit = unit;
@@ -212,7 +212,7 @@ export default {
             this.showPopover = !this.showPopover;
         },
         emitInput() {
-            let { valuePrivate } = this;
+            const { valuePrivate } = this;
             /**
              * Input event
              * @property {any} value
@@ -220,7 +220,7 @@ export default {
             this.$emit('input', valuePrivate);
         },
         emitChange() {
-            let { valuePrivate, num: value, unit } = this;
+            const { valuePrivate, num: value, unit } = this;
             /**
              * Change event
              * @property {any} value
@@ -243,7 +243,7 @@ export default {
             }
         },
         onFormElemFocus() {
-            let el = this.$refs.input;
+            const el = this.$refs.input;
             el && el.focus();
         }
     }

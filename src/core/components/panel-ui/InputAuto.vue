@@ -20,8 +20,8 @@
     </div>
 </template>
 <script>
-import { ControlMixin, getConstants } from './utils/index';
 import { InputAutocomplete } from 'goodteditor-ui';
+import { ControlMixin, getConstants } from './utils';
 
 export default {
     components: { InputAutocomplete },
@@ -39,7 +39,7 @@ export default {
     },
     computed: {
         inputOptions() {
-            let { options, ...rest } = this.attrs;
+            const { options, ...rest } = this.attrs;
             return { ...rest, options: [...this.options, ...getConstants()] };
         }
     },

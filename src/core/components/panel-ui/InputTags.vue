@@ -31,7 +31,7 @@
     </div>
 </template>
 <script>
-import { ControlMixin } from './utils/index';
+import { ControlMixin } from './utils';
 import { InputTags as UiInputTags } from 'goodteditor-ui';
 
 export default {
@@ -67,7 +67,7 @@ export default {
          * @public
          */
         setNewTag(val) {
-            let el = this.$refs.tags;
+            const el = this.$refs.tags;
             el && el.setNewTag(val);
         }
     }

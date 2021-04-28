@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-import { ControlMixin } from './utils/index';
+import { ControlMixin } from './utils';
 import { InputTimePicker } from 'goodteditor-ui';
 
 /**
@@ -31,7 +31,7 @@ export default {
     mixins: [ControlMixin],
     computed: {
         listenersTp() {
-            let { clear, ...rest } = this.listeners;
+            const { clear, ...rest } = this.listeners;
             return { ...rest, clear: this.onClear };
         }
     },

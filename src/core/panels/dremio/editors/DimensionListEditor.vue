@@ -52,9 +52,9 @@
     </div>
 </template>
 <script>
-import DimensionListItemEditor from './DimensionListItemEditor.vue';
 import cloneDeep from 'lodash/cloneDeep';
-import { Query } from './../../../dremio/index';
+import DimensionListItemEditor from './DimensionListItemEditor.vue';
+import { Query } from "../../../dremio/index";
 
 export default {
     components: {
@@ -118,7 +118,7 @@ export default {
             this.newDimension.fields = [];
         },
         addNewDimension() {
-            let { name, fields } = this.newDimension;
+            const { name, fields } = this.newDimension;
             this.$set(this.dimensionListEdit, name, fields);
             this.showNewEditor = false;
             this.dimensionListChanged();

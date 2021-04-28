@@ -6,6 +6,7 @@ export default class {
     constructor(config = {}) {
         this.config = config;
     }
+
     /**
      * Init adapter
      * @return {Promise}
@@ -13,6 +14,7 @@ export default class {
     init() {
         return Promise.resolve();
     }
+
     /**
      * Destroy adapter
      * @return {Promise}
@@ -20,6 +22,7 @@ export default class {
     destroy() {
         return Promise.resolve();
     }
+
     /**
      * Redirect to login page (redirect -> login -> redirect back)
      * or resolve promise
@@ -29,6 +32,7 @@ export default class {
     login(credentials = {}) {
         return Promise.resolve();
     }
+
     /**
      * Redirect to logout page (redirect -> logout -> redirect)
      * or resolve promise
@@ -37,6 +41,7 @@ export default class {
     logout() {
         return Promise.resolve();
     }
+
     /**
      * If the token expires within minValidity seconds the token is refreshed.
      * @param {Number} [minValidity=10]
@@ -45,6 +50,7 @@ export default class {
     updateToken(minValidity = 10) {
         return Promise.resolve(true);
     }
+
     /**
      * Returns session permissions list
      * @return {Promise.<Object[]>}
@@ -52,6 +58,7 @@ export default class {
     getPermissions() {
         return Promise.resolve([{}]);
     }
+
     /**
      * Returns session permissions
      * @return {Promise.<Object[]>}
@@ -59,6 +66,7 @@ export default class {
     getUserPermissions() {
         return Promise.resolve([{}]);
     }
+
     /**
      * Returns user profile
      * @return {Promise.<Object>}   Promise; resolve(profile); reject() on error
@@ -66,6 +74,7 @@ export default class {
     getUserProfile() {
         return Promise.resolve({});
     }
+
     /**
      * Returns true if the token has less than minValidity seconds left before it expires (minValidity is optional, if not specified 0 is used).
      * @param {Number} [minValidity=10]
@@ -74,6 +83,7 @@ export default class {
     isTokenExpired(minValidity = 10) {
         return false;
     }
+
     /**
      * Return auth status
      * @return {Boolean}
@@ -81,6 +91,7 @@ export default class {
     get authenticated() {
         return true;
     }
+
     /**
      * Return token
      * @return {String}
@@ -88,6 +99,7 @@ export default class {
     get token() {
         return '';
     }
+
     /**
      * Return parsed token
      * @return {?Object}
@@ -95,6 +107,7 @@ export default class {
     get tokenParsed() {
         return null;
     }
+
     /**
      * Returns default config
      * @return {Object}

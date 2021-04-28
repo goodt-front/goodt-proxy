@@ -1,8 +1,8 @@
-import Adapter from './Adapter';
 import merge from 'lodash/merge';
-import Http from './../../../net/Http';
+import Adapter from './Adapter';
+import Http from '../../../net/Http';
 
-let configDefault = {
+const configDefault = {
     tokenParam: 'token',
     login: {
         url: '',
@@ -26,6 +26,7 @@ export default class extends Adapter {
         this._token = null;
         this._authenticated = false;
     }
+
     /**
      * Init adapter
      * @return {Promise}
@@ -41,6 +42,7 @@ export default class extends Adapter {
             resolve(this._authenticated);
         });
     }
+
     /**
      * Login method
      * @param {Object} [credentials={}]  user credentials
@@ -48,7 +50,7 @@ export default class extends Adapter {
      */
     login(credentials = {}) {
         return new Promise((resolve, reject) => {
-            let { url, method } = this.config.login;
+            const { url, method } = this.config.login;
             this._http
                 .request({
                     url,
@@ -57,7 +59,7 @@ export default class extends Adapter {
                     options: { withCredentials: true }
                 })
                 .then(({ data }) => {
-                    this._authenticated = data == 1;
+                    this._authenticated = data === 1;
                     if (this._authenticated) {
                         resolve();
                     } else {
@@ -66,19 +68,21 @@ export default class extends Adapter {
                 });
         });
     }
+
     /**
      * Logout method
      * @return {Promise}
      */
     logout() {
         return new Promise(resolve => {
-            let { url, method } = this.config.logout;
+            const { url, method } = this.config.logout;
             this._http.request({ url, method }).then(() => {
                 this._authenticated = false;
                 resolve();
             });
         });
     }
+
     /**
      * Return auth status
      * @return {Boolean}
@@ -86,6 +90,7 @@ export default class extends Adapter {
     get authenticated() {
         return this._authenticated;
     }
+
     /**
      * Return token
      * @return {String}
@@ -93,6 +98,7 @@ export default class extends Adapter {
     get token() {
         return this._token;
     }
+
     /**
      * Returns default config
      * @return {Object}

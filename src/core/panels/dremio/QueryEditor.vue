@@ -38,7 +38,7 @@
             <sidebar-tile
                 v-for="(tile, i) in sidebarTilesDisplayed"
                 :key="tile.name"
-                :open="sidebarTileActive == tile.name"
+                :open="sidebarTileActive === tile.name"
                 :toggle-enabled="from.length > 0"
                 :class="{ 'mar-top-3': i > 0 }"
                 @toggle="onSidebarTileToggle(tile)"
@@ -86,6 +86,8 @@
     </editor-popup>
 </template>
 <script>
+import isEqual from 'lodash/isEqual';
+import cloneDeep from 'lodash/cloneDeep';
 import DatasetTree from './Tree.vue';
 import EditorPopup from './EditorPopup.vue';
 import SidebarTile from './SidebarTile.vue';
@@ -98,9 +100,7 @@ import FiltersEditor from './editors/FiltersEditor.vue';
 import SortEditor from './editors/SortEditor.vue';
 import PaginationEditor from './editors/PaginationEditor.vue';
 // utils
-import isEqual from 'lodash/isEqual';
-import cloneDeep from 'lodash/cloneDeep';
-import { Query, SDKFactory } from './../../dremio/index';
+import { Query, SDKFactory } from '../../dremio';
 
 const { KEY } = Query;
 const FIELD_TYPES_META = {
@@ -169,9 +169,9 @@ export default {
                             loading: this.loading.catalog
                         };
                     }.bind(this),
-                    componentEvents: function() {
+                    componentEvents() {
                         return {};
-                    }.bind(this)
+                    }
                 },
                 {
                     name: 'fields',
@@ -190,7 +190,7 @@ export default {
                             change: val => (this.fields = val),
                             generate: val => {
                                 val.forEach(metric => {
-                                    let metricNames = Query.queryMetricNames(this.query);
+                                    const metricNames = Query.queryMetricNames(this.query);
                                     if (!metricNames.includes(Query.getMetricName(metric))) {
                                         this.query[KEY.METRICS].push(metric);
                                     }
@@ -297,25 +297,26 @@ export default {
             return ['from', 'fields'].indexOf(this.sidebarTileActive) >= 0;
         },
         sidebarTilesDisplayed() {
-            let handler = ({ name }) => (!this.from.length ? name == 'from' : name != 'from');
+            const handler = ({ name }) => (!this.from.length ? name === 'from' : name !== 'from');
             return this.sidebarTiles.filter(handler);
         },
         metricTypes() {
-            return Object.keys(Query.METRIC_TYPE).map(k => {
-                return { name: k, type: Query.METRIC_TYPE[k] };
-            });
+            return Object.keys(Query.METRIC_TYPE).map(k => ({
+                name: k,
+                type: Query.METRIC_TYPE[k]
+            }));
         },
         fieldsSchemaExt() {
             return this.fieldsSchema.map(({ name, type }) => {
-                let t = type.name;
-                let column = name;
+                const t = type.name;
+                const column = name;
                 let field = name;
                 let selected = false;
                 let meta = this.fieldTypesMeta[t];
                 meta = meta || this.fieldTypesMeta.UNKNOWN;
 
-                for (let f in this.fields) {
-                    if (this.fields[f] == column) {
+                for (const f in this.fields) {
+                    if (this.fields[f] === column) {
                         field = f;
                         selected = true;
                         break;
@@ -421,7 +422,7 @@ export default {
             return this.dremioSdk.getEntityByPath(path);
         },
         selectDataset(path) {
-            let query = Query.createQuery();
+            const query = Query.createQuery();
             query[KEY.FROM] = path;
             this.query = query;
         },
@@ -449,7 +450,7 @@ export default {
             }
         },
         onDatasetChange() {
-            let query = Query.createQuery();
+            const query = Query.createQuery();
             query[KEY.FROM] = this.from;
             this.queryDemo = query;
             this.sidebarTileActive = 'fields';

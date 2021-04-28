@@ -1,9 +1,8 @@
-import Adapter from './auth/adapters/Adapter';
-import Adapters from './auth/adapters/index';
+import Adapters from './auth/adapters';
 
 /** @type {AuthManager} */
 let authManager = null;
-let authManagerEnforcer = Symbol();
+const authManagerEnforcer = Symbol();
 
 /**
  * @typedef {Object} AdapterInfo
@@ -13,7 +12,7 @@ let authManagerEnforcer = Symbol();
 export default class AuthManager {
     /**
      * Constructor
-     * @param {Symbol} enforcer  singleton enforcer
+     * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
         if (enforcer !== authManagerEnforcer) {
@@ -24,6 +23,7 @@ export default class AuthManager {
          */
         this._adapter = null;
     }
+
     /**
      * @return {AuthManager}
      */
@@ -33,6 +33,7 @@ export default class AuthManager {
         }
         return authManager;
     }
+
     /**
      * Initializes manager with the specified adapter
      * @param {String} adapterName  adapter name
@@ -43,6 +44,7 @@ export default class AuthManager {
         this._adapter = this._createAdapter(adapterName, config);
         return this._adapter.init();
     }
+
     /**
      * Destroys adapter
      */
@@ -58,6 +60,7 @@ export default class AuthManager {
             }
         });
     }
+
     /**
      * Current used adapter
      * @return {Adapter} adapter
@@ -65,6 +68,7 @@ export default class AuthManager {
     get adapter() {
         return this._adapter;
     }
+
     /**
      * Available adapters list
      * @return {Object.<String, Adapter>}
@@ -72,18 +76,20 @@ export default class AuthManager {
     get adaptersList() {
         return Adapters;
     }
+
     /**
      * Available adapters info
      * @return {AdapterInfo[]}
      */
     get adaptersInfo() {
-        let a = [];
-        for (let name in Adapters) {
-            let config = new Adapters[name]().configDefault;
+        const a = [];
+        for (const name in Adapters) {
+            const config = new Adapters[name]().configDefault;
             a.push({ name, config });
         }
         return a;
     }
+
     /**
      * @private Creates a new adapter instance
      * @param {String} adapterName
@@ -91,7 +97,7 @@ export default class AuthManager {
      * @returns
      */
     _createAdapter(adapterName, config) {
-        let AdapterClass = Adapters[adapterName];
+        const AdapterClass = Adapters[adapterName];
         if (!AdapterClass) {
             throw new Error(`AuthManager adapter not found: ${adapterName}`);
         }

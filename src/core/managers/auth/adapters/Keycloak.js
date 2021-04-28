@@ -1,15 +1,15 @@
 import Adapter from './Adapter';
 import Keycloak from 'keycloak-js';
 
-let href = location.href.replace(location.hash, '');
+const href = location.href.replace(location.hash, '');
 /** @type {import('keycloak-js').KeycloakConfig} */
-let configDefault = {
+const configDefault = {
     url: '',
     realm: '',
     clientId: ''
 };
 /** @type {import('keycloak-js').KeycloakInitOptions} */
-let initConfig = {
+const initConfig = {
     onLoad: 'check-sso',
     silentCheckSsoRedirectUri: `${href}keycloak-check-sso.html`,
     pkceMethod: 'S256',
@@ -27,6 +27,7 @@ export default class extends Adapter {
         /** @type {import('keycloak-js').KeycloakInstance} */
         this.kc = Keycloak(config);
     }
+
     /**
      * Init adapter
      * @return {Promise}
@@ -34,6 +35,7 @@ export default class extends Adapter {
     init() {
         return this.kc.init(initConfig);
     }
+
     /**
      * Login method
      * @param {Object} [credentials={}]  user credentials
@@ -43,6 +45,7 @@ export default class extends Adapter {
         this.kc.login();
         return super.login(credentials);
     }
+
     /**
      * Logout method
      * @return {Promise}
@@ -51,6 +54,7 @@ export default class extends Adapter {
         this.kc.logout();
         return super.logout();
     }
+
     /**
      * If the token expires within minValidity seconds the token is refreshed.
      * @param {Number} [minValidity=5]
@@ -59,6 +63,7 @@ export default class extends Adapter {
     updateToken(minValidity = 5) {
         return this.kc.updateToken(minValidity);
     }
+
     /**
      * Returns user profile (depends on the adapter)
      * @return {Promise.<Object>}   Promise; resolve(profile); reject() on error
@@ -66,6 +71,7 @@ export default class extends Adapter {
     getUserProfile() {
         return this.kc.loadUserProfile();
     }
+
     /**
      * Returns true if the token has less than minValidity seconds left before it expires (minValidity is optional, if not specified 0 is used).
      * @param {Number} [minValidity=5]
@@ -74,6 +80,7 @@ export default class extends Adapter {
     isTokenExpired(minValidity = 5) {
         return this.kc.isTokenExpired(minValidity);
     }
+
     /**
      * Return auth status
      * @return {Boolean}
@@ -81,6 +88,7 @@ export default class extends Adapter {
     get authenticated() {
         return this.kc.authenticated;
     }
+
     /**
      * Return token
      * @return {String}
@@ -88,6 +96,7 @@ export default class extends Adapter {
     get token() {
         return this.kc.token;
     }
+
     /**
      * Return parsed token
      * @return {?Object}
@@ -95,6 +104,7 @@ export default class extends Adapter {
     get tokenParsed() {
         return this.kc.tokenParsed;
     }
+
     /**
      * Returns default config
      * @return {Object}

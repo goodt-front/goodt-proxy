@@ -1,5 +1,5 @@
 import Keycloak from './Keycloak';
-import { SDKFactory } from './../../../dremio/index';
+import { SDKFactory } from '../../../dremio';
 
 export default class extends Keycloak {
     /**
@@ -14,6 +14,7 @@ export default class extends Keycloak {
             userPermissions: null
         };
     }
+
     /**
      * Login method
      * @param {Object} [credentials={}]  user credentials
@@ -23,6 +24,7 @@ export default class extends Keycloak {
         this._clearCache();
         return super.login(credentials);
     }
+
     /**
      * Logout method
      * @return {Promise}
@@ -31,6 +33,7 @@ export default class extends Keycloak {
         this._clearCache();
         return super.logout();
     }
+
     /**
      * Returns session permissions list
      * @return {Promise.<Object[]>}
@@ -47,6 +50,7 @@ export default class extends Keycloak {
             }
         });
     }
+
     /**
      * Returns session permissions
      * @return {Promise.<Object[]>}
@@ -63,6 +67,7 @@ export default class extends Keycloak {
             }
         });
     }
+
     _clearCache() {
         this._cache = {
             permissions: null,

@@ -8,8 +8,8 @@
         "serve": "vue-cli-service serve",
         "build": "npm run lint && npm run format && npm run build:lib",
         "build:lib": "vue-cli-service build --target lib --formats umd --dest ./dist/ --name goodt-wcore --filename lib ./src/core/index.js --report",
-        "lint": "eslint src/ --color",
-        "lint:fix": "eslint src/ --fix",
+        "lint": "vue-cli-service lint --no-fix src/",
+        "lint:fix": "vue-cli-service lint src/",
         "format": "prettier --write ./src/**/*",
         "docs:panel-ui": "vue-styleguidist server",
         "docs:panel-ui:build": "vue-styleguidist build",
@@ -48,7 +48,7 @@
     },
     "lint-staged": {
         "*.(js|jsx|vue|ts)": [
-            "npm run lint:write"
+            "npm run lint:fix"
         ]
     }
 }

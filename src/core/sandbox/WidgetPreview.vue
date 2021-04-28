@@ -57,9 +57,9 @@
 </template>
 <script>
 import Vue from 'vue';
-import { ElemEvent, getDescriptorDefaultProps } from './../index';
-import { UiCollapse } from './../components/panel-ui/index';
-import { StylePanel, VariablePanel } from './../panels/index';
+import { ElemEvent, getDescriptorDefaultProps } from '../';
+import { UiCollapse } from '../components/panel-ui';
+import { StylePanel, VariablePanel } from '../panels';
 
 let ID = 0;
 export default {
@@ -135,9 +135,7 @@ export default {
         onElemMounted(ci) {
             this.elemInstance = ci;
             Promise.all(ci.getPanels()).then(m => {
-                this.panels = m.map(mi => {
-                    return { def: mi.default, meta: mi.default.data().$meta };
-                });
+                this.panels = m.map(mi => ({ def: mi.default, meta: mi.default.data().$meta }));
             });
         },
         onPanelChange(newProps, propName = null) {

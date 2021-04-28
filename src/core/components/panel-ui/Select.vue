@@ -21,7 +21,7 @@
     </div>
 </template>
 <script>
-import { ControlMixin } from './utils/index';
+import { ControlMixin } from './utils';
 import { Select as UiSelect } from 'goodteditor-ui';
 
 /**
@@ -55,7 +55,7 @@ export default {
     },
     computed: {
         selectAttrs() {
-            let { options, multiple, ...rest } = this.attrs;
+            const { options, multiple, ...rest } = this.attrs;
             return {
                 ...rest,
                 options: this.options,

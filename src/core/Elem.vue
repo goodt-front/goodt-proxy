@@ -24,7 +24,7 @@ const ElemEvent = {
 };
 
 /**
- * @type {import("./Elem.vue.d.ts").ComponentOptions}
+ * @type {import("./Elem.vue").ComponentOptions}
  */
 const ComponentOptions = {
     props: {
@@ -68,17 +68,25 @@ const ComponentOptions = {
          * @return {Object} state
          */
         $storeState() {
-            let { state } = store;
-            let { varAliases } = this.props;
-            varAliases = varAliases || {};
-            let obj = {};
-            for (let k in varAliases) {
-                let alias = varAliases[k].listen;
-                if (alias && state[alias]) {
-                    obj[k] = ValueObject.getValue(state[alias]);
+            const varAliases = this.props.varAliases || {};
+            const { state: externalState } = store;
+            const internalState = {};
+            for (let propName in varAliases) {
+                const propAliasData = varAliases[propName];
+                if (!propAliasData) {
+                    continue;
+                }
+                const { listen: alias } = propAliasData;
+                if (!alias) {
+                    continue;
+                }
+                const propValue = externalState[alias];
+                if (propValue) {
+                    internalState[propName] = ValueObject.getValue(propValue);
                 }
             }
-            return obj;
+
+            return internalState;
         },
         /**
          * Returns the current route
@@ -144,11 +152,11 @@ const ComponentOptions = {
          * Generates css-class def
          */
         genCssClass() {
-            let o = {};
-            let p = ['display', 'position', 'cssClass'];
+            const o = {};
+            const p = ['display', 'position', 'cssClass'];
             p.forEach(pName => {
-                let pVal = this.props[pName];
-                let pValArr = Array.isArray(pVal) ? pVal : [pVal];
+                const pVal = this.props[pName];
+                const pValArr = Array.isArray(pVal) ? pVal : [pVal];
                 pValArr.forEach(v => {
                     if (v) {
                         o[v] = true;
@@ -188,7 +196,7 @@ const ComponentOptions = {
          * Generates css-style def
          */
         genCssStyle() {
-            let o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
+            const o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
             if (
                 this.props.widthUnit !== 'size' &&
                 !isNaN(this.props.width) &&
@@ -230,7 +238,7 @@ const ComponentOptions = {
          * @param {import('./managers/EventBus').EventBus} eventBus
          */
         setEventBus(eventBus) {
-            let wrapper = new EventBusWrapper(eventBus);
+            const wrapper = new EventBusWrapper(eventBus);
             wrapper.varAliases = this.props.varAliases || {};
             // @NOTE method overloading for compatibility with old widgets that use EventBusWrapper for global state management
             // {compat}
@@ -245,24 +253,27 @@ const ComponentOptions = {
         /**
          * Transforms 'stateChange' object to Object.< string, ValueObject>
          * and commits stateChange to the store's state
-         * @param {Object.<string, any>} stateChange
+         * @param {Record<string, any>} internalState
          * @return {Object} transformed 'stateChange' with ValueObjects
          */
-        $storeCommit(stateChange) {
-            let { varAliases } = this.props;
-            varAliases = varAliases || {};
-            let obj = {};
-            for (let k in stateChange) {
-                if (varAliases[k] && varAliases[k].trigger) {
-                    let alias = varAliases[k].trigger;
-                    obj[alias] = vo(stateChange[k], varAliases[k].meta);
+        $storeCommit(internalState) {
+            const varAliases = this.props.varAliases || {};
+            const externalState = {};
+            for (let propName in internalState) {
+                const propAliasData = varAliases[propName];
+                if (!propAliasData) {
+                    continue;
                 }
+                const { trigger: alias, meta } = propAliasData;
+                if (!alias) {
+                    continue;
+                }
+                externalState[alias] = vo(internalState[propName], meta);
             }
             // don't commit if obj is empty
-            if (Object.keys(obj).length > 0) {
-                store.commit(obj);
+            if (Object.keys(externalState).length > 0) {
+                store.commit(externalState);
             }
-            return {};
         },
         /**
          /**
@@ -281,7 +292,7 @@ const ComponentOptions = {
             if (typeof constantName !== 'string') {
                 return constantName;
             }
-            let manager = ConstManager.instance;
+            const manager = ConstManager.instance;
             // @TODO regExp should be defined via ConstManager constant
             return constantName.replace(/(%[^%]+%)/g, m => manager.getConstValue(m));
         },

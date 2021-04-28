@@ -1,4 +1,5 @@
 import Adapter from './Adapter';
+
 export default class extends Adapter {
     /**
      * Constructor
@@ -8,6 +9,7 @@ export default class extends Adapter {
         super(config);
         this._authenticated = false;
     }
+
     /**
      * Login method
      * @param {Object} [credentials={}]  user credentials
@@ -17,6 +19,7 @@ export default class extends Adapter {
         this._authenticated = true;
         return super.login(credentials);
     }
+
     /**
      * Logout method
      * @return {Promise}
@@ -25,6 +28,7 @@ export default class extends Adapter {
         this._authenticated = false;
         return super.logout();
     }
+
     /**
      * Return auth status
      * @return {Boolean}

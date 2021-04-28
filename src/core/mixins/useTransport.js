@@ -36,15 +36,15 @@ export const useTransport = (transportId, useOptions = {}) => {
      * @this {VueInstance}
      * @return {ITransport}
      */
-    const createTransportInstance = function() {
+    function createTransportInstance() {
         const transportOptionsResolved =
             typeof transportOptions === 'function'
-                ? //@ts-ignore
+                ? // @ts-ignore
                   transportOptions.call(this)
                 : transportOptions;
 
         return createTransport(transportId, transportOptionsResolved);
-    };
+    }
 
     /**
      * @type {TransportMixin}

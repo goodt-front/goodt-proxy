@@ -1,11 +1,11 @@
 import Http from './Http';
-import AuthManager from './../managers/AuthManager';
+import AuthManager from "../managers/AuthManager";
 
 export default class HttpAuth extends Http {
     constructor(options = {}) {
         super(options);
         this.axios.interceptors.request.use(config => {
-            let adapter = AuthManager.instance.adapter;
+            const {adapter} = AuthManager.instance;
             if (adapter) {
                 return adapter
                     .updateToken()

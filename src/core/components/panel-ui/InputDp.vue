@@ -31,7 +31,7 @@ export default {
     mixins: [ControlMixin],
     computed: {
         listenersDp() {
-            let { clear, ...rest } = this.listeners;
+            const { clear, ...rest } = this.listeners;
             return { ...rest, clear: this.onClear };
         }
     },

@@ -12,6 +12,8 @@ interface TransportMixinComputed {
     $transport: ITransport;
 }
 
+declare const HttpTransportSymbol: symbol;
+
 /**
  * Creates Vue Mixin with specified Transport and extra component transport-related behaviour
  * and returns meta object with it

@@ -1,10 +1,10 @@
 import { DataProvider } from 'abc-charts/dataProvider';
 import cloneDeep from 'lodash/cloneDeep';
-import Const from './../Const';
+import GlobalConstants from '../Const';
 
 let dp = null;
-let getDataProviderInstance = () => {
-    dp = dp || new DataProvider(Const.WFM_DATAPROVIDER_API_URL);
+const getDataProviderInstance = () => {
+    dp = dp || new DataProvider(GlobalConstants.WFM_DATAPROVIDER_API_URL);
     return dp;
 };
 
@@ -12,6 +12,7 @@ export default {
     /**
      * DataProvider graphql load method
      * @param {DataSet} dataset
+     * @param {boolean} [hasEntity=false]
      * @return {Promise}
      */
     load(dataset, hasEntity = false) {
@@ -28,8 +29,8 @@ export default {
      * @return {object}
      */
     datasetVarsMixin() {
-        let dimensionVars = ds => {
-            let d = {};
+        const dimensionVars = ds => {
+            const d = {};
             if (!ds) {
                 return {};
             }
@@ -45,7 +46,7 @@ export default {
             return d;
         };
         return {
-            mounted: function() {
+            mounted() {
                 if (!this.isEditorMode) {
                     return;
                 }
@@ -55,13 +56,13 @@ export default {
                 this.$watch('props.dataset', {
                     deep: true,
                     immediate: true,
-                    handler: function(newVal, oldVal) {
+                    handler(newVal, oldVal) {
                         let dimVars = dimensionVars(oldVal);
-                        for (let name in dimVars) {
+                        for (const name in dimVars) {
                             this.$delete(this.descriptor.vars, name);
                         }
                         dimVars = dimensionVars(newVal);
-                        for (let name in dimVars) {
+                        for (const name in dimVars) {
                             this.$set(this.descriptor.vars, name, dimVars[name]);
                         }
                     }
@@ -69,14 +70,15 @@ export default {
             }
         };
     },
+
     filterDataset(params, propsDataset) {
-        let dataset = cloneDeep(propsDataset);
+        const dataset = cloneDeep(propsDataset);
         if (!dataset) {
             return null;
         }
-        for (let key in params) {
+        for (const key in params) {
             if (key && key !== 'orgunit-select') {
-                let index = dataset.dimensions.findIndex(item => item.name === key);
+                const index = dataset.dimensions.findIndex(item => item.name === key);
 
                 if (index !== -1) {
                     dataset.dimensions[index].values = [params[key]];
@@ -90,8 +92,8 @@ export default {
                     });
                 }
             } else if (key && key === 'orgunit-select') {
-                for (let dim in params[key]) {
-                    let index = dataset.dimensions.findIndex(item => item.name === dim);
+                for (const dim in params[key]) {
+                    const index = dataset.dimensions.findIndex(item => item.name === dim);
 
                     if (index !== -1) {
                         dataset.dimensions[index].values = params[key][dim];

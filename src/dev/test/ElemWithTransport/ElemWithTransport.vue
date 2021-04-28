@@ -5,14 +5,14 @@
     </section>
 </template>
 <script>
-import { Elem } from './../../../core/index';
-import { useTransport, HttpTransportSymbol } from './../../../core/mixins/useTransport';
+import { Elem } from '../../../core/index';
+import { useTransport, HttpTransportSymbol } from '../../../core/mixins/useTransport';
 
 /**
  * useTransport example
  */
 const { mixin: TransportMixin } = useTransport(HttpTransportSymbol, {
-    options: function() {
+    options() {
         return {
             baseURL: this.props.apiURL
         };

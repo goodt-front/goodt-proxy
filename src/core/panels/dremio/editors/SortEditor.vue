@@ -54,7 +54,7 @@
 import SortItemEditor from './SortItemEditor.vue';
 import cloneDeep from 'lodash/cloneDeep';
 import draggable from 'vuedraggable';
-import { Query } from './../../../dremio/index';
+import { Query } from '../../../dremio';
 
 export default {
     components: {
@@ -124,7 +124,7 @@ export default {
             this.$emit('change', this.sortEdit);
         },
         onNewItemAdd() {
-            let sort = Query.createSort(this.newSortItem);
+            const sort = Query.createSort(this.newSortItem);
             this.sortEdit.push(sort);
             this.showNewEditor = false;
             this.sortChanged();
@@ -133,7 +133,7 @@ export default {
             this.newSortItem = info;
         },
         onItemChange(i, { name, type }) {
-            let sort = Query.createSort({ name, type });
+            const sort = Query.createSort({ name, type });
             this.sortEdit.splice(i, 1, sort);
             this.sortChanged();
         },

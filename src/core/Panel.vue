@@ -1,9 +1,9 @@
 <script>
-import Elem from './Elem.vue';
-import { PanelUi } from './components/index';
 import cloneDeep from 'lodash/cloneDeep';
+import Elem from './Elem.vue';
+import { PanelUi } from './components';
 
-const descriptor = Elem.data().descriptor;
+const { descriptor } = Elem.data();
 
 /**
  * @typedef {Object} PanelMetaData

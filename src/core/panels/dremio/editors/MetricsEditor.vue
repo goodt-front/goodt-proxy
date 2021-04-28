@@ -48,9 +48,9 @@
     </div>
 </template>
 <script>
-import MetricItemEditor from './MetricItemEditor.vue';
+import { Query } from '../../../dremio';
 import cloneDeep from 'lodash/cloneDeep';
-import { Query } from './../../../dremio/index';
+import MetricItemEditor from './MetricItemEditor.vue';
 
 export default {
     components: {
@@ -96,7 +96,7 @@ export default {
         metricNames() {
             let arr = this.metrics.map(el => this.getMetricName(el));
             arr = arr.concat(Object.keys(this.dimensionList));
-            return arr.filter((el, i, a) => a.indexOf(el) == i && el != '');
+            return arr.filter((el, i, a) => a.indexOf(el) === i && el !== '');
         }
     },
     watch: {

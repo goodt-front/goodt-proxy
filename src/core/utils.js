@@ -66,8 +66,8 @@ export const patchComponentRootDomElement = context => {
  */
 export const getDescriptorDefaultProps = descriptor => {
     const o = {};
-    let p = descriptor.props;
-    for (let n in p) {
+    const p = descriptor.props;
+    for (const n in p) {
         o[n] = typeof p[n].default === 'function' ? p[n].default() : p[n].default;
     }
     return o;

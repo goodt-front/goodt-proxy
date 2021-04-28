@@ -12,7 +12,8 @@
     </env-emulator>
 </template>
 <script>
-import { Sandbox } from './../core';
+import { Sandbox } from '../core';
+
 const { EnvEmulator, WidgetPreview } = Sandbox;
 
 export default {

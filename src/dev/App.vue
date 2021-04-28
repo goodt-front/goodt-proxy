@@ -48,6 +48,11 @@ export default {
                     elem: import('./test/ElemDatepickerSm/ElemDatepickerSm.vue'),
                     type: 'ElemDatepickerSm',
                     props: { cssClass: ['bg-green', 'pad-l3'] }
+                },
+                {
+                    elem: import('./test/ElemNavigate/ElemNavigate.vue'),
+                    type: 'ElemNavigate',
+                    props: {}
                 }
             ]
         };

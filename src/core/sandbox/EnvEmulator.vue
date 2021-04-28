@@ -17,6 +17,10 @@
                     <code>store.state</code>
                     <pre class="text-xsmall">{{ storeState }}</pre>
                 </div>
+                <div class="p">
+                    <code>RouteManager.route</code>
+                    <pre class="text-xsmall">{{ routeManagerRoute }}</pre>
+                </div>
                 <div>
                     <code>authAdapterUserProfile</code>
                     <pre class="text-xsmall">{{ authAdapterUserProfile }}</pre>
@@ -100,6 +104,17 @@ export default {
                     }
                 ];
             }
+        },
+        /** @type {import('vue').PropOptions<import('../managers/RouteManager').RouteObject>} */
+        demoRoute: {
+            type: Object,
+            default() {
+                return {
+                    path: '/',
+                    query: {},
+                    meta: {}
+                };
+            }
         }
     },
     data() {
@@ -117,9 +132,13 @@ export default {
         };
     },
     computed: {
-        /** @return {Object} */
+        /** @return {object} */
         storeState() {
             return store.state;
+        },
+        /** @return {import('../managers/RouteManager').RouteObject} */
+        routeManagerRoute() {
+            return RouteManager.instance.route;
         }
     },
     watch: {
@@ -204,6 +223,13 @@ export default {
          * Init route manager
          */
         initRouteManager() {
+            const { demoRoute } = this;
+            const { instance } = RouteManager;
+            const dispose = instance.onNavigate(({ path, query }) =>
+                instance.setRoute({ path, query, meta: {} })
+            );
+            instance.setRoute(demoRoute);
+            this.$on('hook:destroyed', dispose);
             this.registerModule(MODULE_KEYS.ROUTE_MANAGER, RouteManager);
         },
         /**
@@ -216,7 +242,7 @@ export default {
          * Init eventbus
          */
         initEventBus() {
-            const ebi = new EventBus(store);
+            const ebi = new EventBus(store, RouteManager.instance);
             // DI
             const handler = e => e.instance.setEventBus(ebi);
             this.$on('hook:created', () => document.addEventListener(ElemEvent.MOUNTED, handler));

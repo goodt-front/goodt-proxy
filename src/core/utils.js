@@ -37,7 +37,7 @@ export const dispatchEventByName = function(eventName) {
  *
  * @param {VueInstance & {id, type}} context
  */
-export const patchRootDomElement = context => {
+export const patchComponentRootDomElement = context => {
     const { $el, id, type } = context;
     if ($el) {
         return;

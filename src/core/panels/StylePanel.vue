@@ -166,8 +166,8 @@
 }
 </style>
 <script>
-import Panel from './../Panel.vue';
 import { Badge as UiBadge } from 'goodteditor-ui';
+import Panel from '../Panel.vue';
 
 export default {
     components: { UiBadge },
@@ -209,42 +209,42 @@ export default {
         },
         widthWithUnit: {
             get() {
-                let { width, widthUnit } = this.props;
+                const { width, widthUnit } = this.props;
                 return `${width}${widthUnit}`;
             },
             set(v) {
-                let a = String(v).match(/^([\d.-]*)([a-z%]+)$/i);
-                let [_, n, u] = a || [];
+                const a = String(v).match(/^([\d.-]*)([a-z%]+)$/i);
+                const [_, n, u] = a || [];
                 this.props.width = n == null ? v : n;
                 this.props.widthUnit = u == null ? '' : u;
             }
         },
         heightWithUnit: {
             get() {
-                let { height, heightUnit } = this.props;
+                const { height, heightUnit } = this.props;
                 return `${height}${heightUnit}`;
             },
             set(v) {
-                let a = String(v).match(/^([\d.-]*)([a-z%]+)$/i);
-                let [_, n, u] = a || [];
+                const a = String(v).match(/^([\d.-]*)([a-z%]+)$/i);
+                const [_, n, u] = a || [];
                 this.props.height = n == null ? v : n;
                 this.props.heightUnit = u == null ? '' : u;
             }
         },
         cssStyles: {
             get() {
-                let { cssStyle = {} } = this.props;
-                let a = [];
-                for (let k in cssStyle) {
+                const { cssStyle = {} } = this.props;
+                const a = [];
+                for (const k in cssStyle) {
                     a.push(`${k}: ${cssStyle[k]}`);
                 }
                 return a.sort();
             },
             set(v) {
-                let obj = v
-                    .filter(v => v != '')
+                const obj = v
+                    .filter(v => v !== '')
                     .reduce((acc, el) => {
-                        let obj = this.getStyleDefObj(el);
+                        const obj = this.getStyleDefObj(el);
                         acc[obj.key] = obj.value;
                         return acc;
                     }, {});
@@ -254,7 +254,7 @@ export default {
     },
     methods: {
         getStyleDefObj(def) {
-            let [key, value] = def.split(':');
+            const [key, value] = def.split(':');
             return { key: key.trim(), value: value.trim() };
         }
     }

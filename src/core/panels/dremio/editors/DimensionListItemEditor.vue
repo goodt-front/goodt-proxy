@@ -158,15 +158,15 @@ export default {
     },
     methods: {
         validateName() {
-            let val = this.nameEdit.trim();
-            let i = this.names.indexOf(val);
+            const val = this.nameEdit.trim();
+            const i = this.names.indexOf(val);
             return val.length > 0 && i < 0;
         },
         validateFields() {
             return this.fieldsEdit.length > 0;
         },
         changed() {
-            let valid = this.validateName() && this.validateFields();
+            const valid = this.validateName() && this.validateFields();
             if (valid) {
                 this.$emit('change', {
                     name: this.nameEdit.trim(),

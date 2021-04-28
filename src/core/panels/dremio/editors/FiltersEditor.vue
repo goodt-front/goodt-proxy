@@ -52,9 +52,9 @@
     </div>
 </template>
 <script>
-import FilterItemEditor from './FilterItemEditor.vue';
 import cloneDeep from 'lodash/cloneDeep';
-import { Query } from './../../../dremio/index';
+import FilterItemEditor from './FilterItemEditor.vue';
+import { Query } from '../../../dremio';
 
 export default {
     components: {
@@ -92,18 +92,21 @@ export default {
             newFilter: null,
             filtersEdit: [],
             filterTypes: {
-                [Query.FILTER_TYPE.EQ]: { name: '=', validator: arr => arr.length == 1 },
-                [Query.FILTER_TYPE.EQ_NOT]: { name: '!=', validator: arr => arr.length == 1 },
-                [Query.FILTER_TYPE.LESS]: { name: '<', validator: arr => arr.length == 1 },
-                [Query.FILTER_TYPE.LESS_EQ]: { name: '<=', validator: arr => arr.length == 1 },
-                [Query.FILTER_TYPE.GREATER]: { name: '>', validator: arr => arr.length == 1 },
-                [Query.FILTER_TYPE.GREATER_EQ]: { name: '>=', validator: arr => arr.length == 1 },
+                [Query.FILTER_TYPE.EQ]: { name: '=', validator: arr => arr.length === 1 },
+                [Query.FILTER_TYPE.EQ_NOT]: { name: '!=', validator: arr => arr.length === 1 },
+                [Query.FILTER_TYPE.LESS]: { name: '<', validator: arr => arr.length === 1 },
+                [Query.FILTER_TYPE.LESS_EQ]: { name: '<=', validator: arr => arr.length === 1 },
+                [Query.FILTER_TYPE.GREATER]: { name: '>', validator: arr => arr.length === 1 },
+                [Query.FILTER_TYPE.GREATER_EQ]: { name: '>=', validator: arr => arr.length === 1 },
                 [Query.FILTER_TYPE.IN]: { name: 'in', validator: arr => arr.length > 0 },
                 [Query.FILTER_TYPE.IN_NOT]: { name: ' not in', validator: arr => arr.length > 0 },
-                [Query.FILTER_TYPE.BETWEEN]: { name: 'between', validator: arr => arr.length == 2 },
+                [Query.FILTER_TYPE.BETWEEN]: {
+                    name: 'between',
+                    validator: arr => arr.length === 2
+                },
                 [Query.FILTER_TYPE.BETWEEN_NOT]: {
                     name: 'not between',
-                    validator: arr => arr.length == 2
+                    validator: arr => arr.length === 2
                 },
                 [Query.FILTER_TYPE.LIKE]: { name: 'like', validator: arr => arr.length > 0 }
             }
@@ -118,7 +121,7 @@ export default {
                 ...this.metricNames,
                 ...Object.keys(this.dimensionList),
                 ...Object.keys(this.fields)
-            ].filter((el, i, a) => a.indexOf(el) == i && this.filterNames.indexOf(el) < 0);
+            ].filter((el, i, a) => a.indexOf(el) === i && this.filterNames.indexOf(el) < 0);
         },
         metricNames() {
             return this.metrics.map(el => Query.getMetricName(el));
@@ -150,7 +153,7 @@ export default {
             return Query.getFilterValue(filter);
         },
         onNewFilterAdd() {
-            let filter = Query.createFilter(this.newFilter);
+            const filter = Query.createFilter(this.newFilter);
             this.filtersEdit.push(filter);
             this.filtersChanged();
             this.showNewEditor = false;
@@ -159,7 +162,7 @@ export default {
             this.newFilter = { name, type, value };
         },
         onFilterChange(i, { name, type, value }) {
-            let filter = Query.createFilter({ name, type, value });
+            const filter = Query.createFilter({ name, type, value });
             this.filtersEdit.splice(i, 1, filter);
             this.filtersChanged();
         },

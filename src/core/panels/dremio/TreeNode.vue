@@ -113,22 +113,22 @@ export default {
     },
     computed: {
         name() {
-            let name = this.entity ? this.entity.path[this.entity.path.length - 1] : '';
+            const name = this.entity ? this.entity.path[this.entity.path.length - 1] : '';
             return trim(name, '"');
         },
         icon() {
-            let type = this.entity ? this.entity.type : '';
-            let containerType = this.entity ? this.entity.containerType : '';
+            const type = this.entity ? this.entity.type : '';
+            const containerType = this.entity ? this.entity.containerType : '';
             if (this.error) {
                 return 'mdi mdi-alert-circle-outline color-red';
             }
-            if (containerType == CONTAINER_TYPE.SOURCE) {
+            if (containerType === CONTAINER_TYPE.SOURCE) {
                 return 'mdi mdi-cube-outline';
             }
-            if (type == CATALOG_ENTITY_TYPE.DATASET) {
+            if (type === CATALOG_ENTITY_TYPE.DATASET) {
                 return 'mdi-database color-primary';
             }
-            if (type == CATALOG_ENTITY_TYPE.CONTAINER) {
+            if (type === CATALOG_ENTITY_TYPE.CONTAINER) {
                 return 'mdi-folder color-grey-dark';
             }
             return 'mdi-help';
@@ -136,7 +136,7 @@ export default {
         hasChildren() {
             return (
                 (this.initLoad || (!this.initLoad && this.children.length)) &&
-                this.entity.type == CATALOG_ENTITY_TYPE.CONTAINER
+                this.entity.type === CATALOG_ENTITY_TYPE.CONTAINER
             );
         }
     },
@@ -157,8 +157,8 @@ export default {
                     }
                     this.children = result.children.filter(
                         el =>
-                            el.type == CATALOG_ENTITY_TYPE.DATASET ||
-                            el.type == CATALOG_ENTITY_TYPE.CONTAINER
+                            el.type === CATALOG_ENTITY_TYPE.DATASET ||
+                            el.type === CATALOG_ENTITY_TYPE.CONTAINER
                     );
                 })
                 .catch(e => (this.error = e))
@@ -168,7 +168,7 @@ export default {
                 });
         },
         onNodeClick() {
-            if (this.entity.type == CATALOG_ENTITY_TYPE.DATASET) {
+            if (this.entity.type === CATALOG_ENTITY_TYPE.DATASET) {
                 this.selectDataset(this.entity.path);
             } else {
                 this.setOpen(!this.open);

@@ -38,7 +38,7 @@
 </template>
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import { Query } from './../../../dremio/index';
+import { Query } from '../../../dremio';
 
 export default {
     props: {
@@ -71,16 +71,16 @@ export default {
             return Object.keys(this.fieldsEdit);
         },
         columnNames() {
-            let arr = Object.values(this.fieldsEdit);
+            const arr = Object.values(this.fieldsEdit);
             arr.sort((a, b) => {
-                let ai = this.schema.findIndex(el => el.column == a);
-                let bi = this.schema.findIndex(el => el.column == b);
+                const ai = this.schema.findIndex(el => el.column === a);
+                const bi = this.schema.findIndex(el => el.column === b);
                 return ai - bi;
             });
             return arr;
         },
         activeColumnSchema() {
-            return this.schema.find(el => el.column == this.activeColumnName);
+            return this.schema.find(el => el.column === this.activeColumnName);
         },
         activeColumnNameExists() {
             return this.columnNames.indexOf(this.activeColumnName) >= 0;
@@ -101,8 +101,8 @@ export default {
         },
         activeColumnName: {
             handler(val) {
-                for (let n in this.fieldsEdit) {
-                    if (this.fieldsEdit[n] == this.activeColumnName) {
+                for (const n in this.fieldsEdit) {
+                    if (this.fieldsEdit[n] === this.activeColumnName) {
                         this.activeFieldName = n;
                         return;
                     }
@@ -113,16 +113,16 @@ export default {
     },
     methods: {
         generateMetrics() {
-            let metrics = this.fieldNames.map(name => {
-                return Query.createMetric({ name, type: Query.METRIC_TYPE.VALUE, field: name });
-            });
+            const metrics = this.fieldNames.map(name =>
+                Query.createMetric({ name, type: Query.METRIC_TYPE.VALUE, field: name })
+            );
             this.$emit('generate', metrics);
         },
         changeActiveFieldName(nameOld, nameNew) {
             if (!nameNew.trim().length) {
                 return;
             }
-            if (nameOld != nameNew) {
+            if (nameOld !== nameNew) {
                 this.$delete(this.fieldsEdit, nameOld);
             }
             this.$set(this.fieldsEdit, nameNew, this.activeColumnName);

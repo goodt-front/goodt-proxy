@@ -1,5 +1,8 @@
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 import Vue, { AsyncComponent, VueConstructor, ComponentOptions as VueComponentOptions } from 'vue';
+import { ElemDescriptor } from '../types/core';
+import { Props as ElemDescriptorProps } from './Elem.descriptor';
+import { getDescriptorDefaultProps } from './utils';
 
 interface StoreState {
     [k as string]: any;
@@ -20,7 +23,6 @@ export namespace ElemEvent {
     const MOUNTED: string;
     const DESTROYED: string;
 }
-import { getDescriptorDefaultProps } from './utils';
 export { getDescriptorDefaultProps };
 
 /**
@@ -35,14 +37,23 @@ interface Data {
 }
 
 /**
- * Component Instance 'props' ComponentOptions descriptor section members
- * @interface {Props}
+ * @interface PropsWithDescriptor
  */
-interface Props {
+export interface PropsWithDescriptor<P extends Record<string, any>, V extends Record<string, any>> {
+    readonly props: P;
+    readonly vars: V;
+}
+
+/**
+ * Component Instance 'props' ComponentOptions descriptor section members
+ * @interface Props
+ * @extends PropsWithDescriptor<ElemDescriptorProps>
+ * @see ElemDescriptorProps
+ */
+interface Props extends PropsWithDescriptor<ElemDescriptorProps> {
     readonly id: string;
     readonly type: string;
     readonly isEditorMode: boolean;
-    readonly props: Record<string, any>;
 }
 
 /**

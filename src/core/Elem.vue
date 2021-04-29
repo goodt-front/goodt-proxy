@@ -70,21 +70,24 @@ const ComponentOptions = {
         $storeState() {
             const varAliases = this.props.varAliases || {};
             const { state: externalState } = store;
-            const internalState = {};
-            for (let propName in varAliases) {
-                const propAliasData = varAliases[propName];
-                if (!propAliasData) {
-                    continue;
-                }
-                const { listen: alias } = propAliasData;
-                if (!alias) {
-                    continue;
-                }
-                const propValue = externalState[alias];
-                if (propValue) {
-                    internalState[propName] = ValueObject.getValue(propValue);
-                }
-            }
+            const internalState = Object.entries(varAliases).reduce(
+                (state, [varName, varAliasData]) => {
+                    const { listen: alias } = varAliasData;
+                    if (!alias) {
+                        return state;
+                    }
+                    if (alias in externalState) {
+                        const varValueObject = externalState[alias];
+                        return {
+                            ...state,
+                            [varName]: ValueObject.getValue(varValueObject)
+                        };
+                    }
+
+                    return state;
+                },
+                {}
+            );
 
             return internalState;
         },
@@ -199,12 +202,12 @@ const ComponentOptions = {
             const o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
             if (
                 this.props.widthUnit !== 'size' &&
-                !isNaN(this.props.width) &&
+                !Number.isNaN(this.props.width) &&
                 this.props.width !== ''
             ) {
                 o.width = `${this.props.width}${this.props.widthUnit}`;
             }
-            if (!isNaN(this.props.height) && this.props.height !== '') {
+            if (!Number.isNaN(this.props.height) && this.props.height !== '') {
                 o.height = `${this.props.height}${this.props.heightUnit}`;
             }
             this.$set(this, 'cssStyle', o);
@@ -244,9 +247,8 @@ const ComponentOptions = {
             // {compat}
             wrapper.toVO = (value, meta) =>
                 value instanceof ValueObject ? value : vo(value, meta);
-            wrapper.toValue = vo => ValueObject.getValue(vo);
+            wrapper.toValue = (valueObject) => ValueObject.getValue(valueObject);
             // {/compat}
-            // @ts-ignore
             this.eventBusWrapper = wrapper;
             this.$nextTick(() => this.subscribe());
         },
@@ -258,18 +260,21 @@ const ComponentOptions = {
          */
         $storeCommit(internalState) {
             const varAliases = this.props.varAliases || {};
-            const externalState = {};
-            for (let propName in internalState) {
-                const propAliasData = varAliases[propName];
-                if (!propAliasData) {
-                    continue;
-                }
-                const { trigger: alias, meta } = propAliasData;
-                if (!alias) {
-                    continue;
-                }
-                externalState[alias] = vo(internalState[propName], meta);
-            }
+            const externalState = Object.entries(internalState).reduce(
+                (state, [varName, varValue]) => {
+                    const { trigger: alias, meta } = varAliases[varName] || {};
+                    if (alias) {
+                        const valueObject = vo(varValue, meta);
+                        return {
+                            ...state,
+                            [alias]: valueObject
+                        };
+                    }
+                    return state;
+                },
+                {}
+            );
+
             // don't commit if obj is empty
             if (Object.keys(externalState).length > 0) {
                 store.commit(externalState);

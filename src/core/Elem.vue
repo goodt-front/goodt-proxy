@@ -17,11 +17,11 @@ const { EventBusWrapper } = EB;
  * Elem events Lifecycle events
  * @enum {string}
  */
-const ElemEvent = {
+const ElemEvent = Object.freeze({
     CREATED: 'elem-created',
     MOUNTED: 'elem-mounted',
     DESTROYED: 'elem-destroyed'
-};
+});
 
 /**
  * @type {import("./Elem.vue").ComponentOptions}
@@ -274,6 +274,7 @@ const ComponentOptions = {
             if (Object.keys(externalState).length > 0) {
                 store.commit(externalState);
             }
+            return {};
         },
         /**
          /**

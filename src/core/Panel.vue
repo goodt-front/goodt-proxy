@@ -45,7 +45,7 @@ export default {
     methods: {
         /**
          * Notifies env that the 'props' object has changed (used by the editor env)
-         * @param {?string} [propName=null]     property to update from the 'props' object or null to replace the whole 'props' object
+         * @param {?string} [propName=null] property to update from the 'props' object or null to replace the whole 'props' object
          */
         propChanged(propName = null) {
             propName = typeof propName === 'string' ? propName : null;

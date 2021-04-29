@@ -6,8 +6,8 @@ const authManagerEnforcer = Symbol();
 
 /**
  * @typedef {Object} AdapterInfo
- * @property {String} name      name
- * @property {Object} config    default config
+ * @property {string} name      name
+ * @property {Record<string, any>} config    default config
  */
 export default class AuthManager {
     /**
@@ -36,8 +36,8 @@ export default class AuthManager {
 
     /**
      * Initializes manager with the specified adapter
-     * @param {String} adapterName  adapter name
-     * @param {Object} config       adapter config
+     * @param {string} adapterName  adapter name
+     * @param {Record<string, any>} config       adapter config
      * @return {Promise}
      */
     init(adapterName, config = {}) {
@@ -92,8 +92,8 @@ export default class AuthManager {
 
     /**
      * @private Creates a new adapter instance
-     * @param {String} adapterName
-     * @param {Object} config
+     * @param {string} adapterName
+     * @param {Record<string, any>} config
      * @returns
      */
     _createAdapter(adapterName, config) {

@@ -25,7 +25,7 @@ export default class ConstManager {
 
     /**
      * Return key value or key if no value found
-     * @param {String} key  key
+     * @param {string} key  key
      * @return {any} value
      */
     getConstValue(key) {
@@ -37,7 +37,7 @@ export default class ConstManager {
 
     /**
      * Set the constants hash
-     * @param {Object} constants
+     * @param {Record<string, any>} constants
      */
     setConstantsHash(constants = {}) {
         this._constants = constants;
@@ -45,7 +45,7 @@ export default class ConstManager {
 
     /**
      * Return the constants hash
-     * @return {Object}
+     * @return {Record<string, any>}
      */
     getConstantsHash() {
         return this._constants;

@@ -17,7 +17,7 @@ const configDefault = {
 export default class extends Adapter {
     /**
      * Constructor
-     * @param {Object} [config={}]
+     * @param {Record<string, any>} [config={}]
      */
     constructor(config = {}) {
         config = merge({}, configDefault, config);
@@ -45,7 +45,7 @@ export default class extends Adapter {
 
     /**
      * Login method
-     * @param {Object} [credentials={}]  user credentials
+     * @param {Record<string, any>} [credentials={}]  user credentials
      * @return {Promise}
      */
     login(credentials = {}) {
@@ -85,7 +85,7 @@ export default class extends Adapter {
 
     /**
      * Return auth status
-     * @return {Boolean}
+     * @return {boolean}
      */
     get authenticated() {
         return this._authenticated;
@@ -93,7 +93,7 @@ export default class extends Adapter {
 
     /**
      * Return token
-     * @return {String}
+     * @return {string}
      */
     get token() {
         return this._token;
@@ -101,7 +101,7 @@ export default class extends Adapter {
 
     /**
      * Returns default config
-     * @return {Object}
+     * @return {Record<string, any>}
      */
     get configDefault() {
         return { ...configDefault };

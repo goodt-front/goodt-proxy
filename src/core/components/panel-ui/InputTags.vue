@@ -19,7 +19,7 @@
                     <template #tag="{ tag, remove }">
                         <!-- 
                         @slot tag slot
-                        @binding {String} tag           tag
+                        @binding {string} tag           tag
                         @binding {Function} remove      remove tag function(tag:String)
                         @binding {Function} setNewTag   set new tag function(tag:String)
                         -->
@@ -63,7 +63,7 @@ export default {
         },
         /**
          * Sest the new tag for the input
-         * @param {String} val
+         * @param {string} val
          * @public
          */
         setNewTag(val) {

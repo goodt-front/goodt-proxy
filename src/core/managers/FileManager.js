@@ -10,15 +10,15 @@ import { EventBusBase, EventBusEvent } from './EventBus';
  */
 /**
  * @typedef {Object} FileManagerOptions
- * @property {Boolean} selectMultiple       multiple file selection mode
+ * @property {boolean} selectMultiple       multiple file selection mode
  */
 /**
  * @typedef {Object} FileInfo
- * @property {String} url   url
- * @property {String} name  name
- * @property {String} type  mime-type
- * @property {Number} size  size in bytes
- * @property {String} hash  file hash
+ * @property {string} url   url
+ * @property {string} name  name
+ * @property {string} type  mime-type
+ * @property {number} size  size in bytes
+ * @property {string} hash  file hash
  */
 let fileManager = null;
 const fileManagerEnforcer = Symbol();

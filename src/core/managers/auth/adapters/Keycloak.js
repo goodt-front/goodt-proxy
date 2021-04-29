@@ -19,7 +19,7 @@ const initConfig = {
 export default class extends Adapter {
     /**
      * Constructor
-     * @param {Object} [config={}]
+     * @param {Record<string, any>} [config={}]
      */
     constructor(config = {}) {
         config = { ...configDefault, ...config };
@@ -38,7 +38,7 @@ export default class extends Adapter {
 
     /**
      * Login method
-     * @param {Object} [credentials={}]  user credentials
+     * @param {Record<string, any>} [credentials={}]  user credentials
      * @return {Promise}
      */
     login(credentials = {}) {
@@ -57,8 +57,8 @@ export default class extends Adapter {
 
     /**
      * If the token expires within minValidity seconds the token is refreshed.
-     * @param {Number} [minValidity=5]
-     * @return {Promise.<Boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
+     * @param {number} [minValidity=5]
+     * @return {Promise<boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
      */
     updateToken(minValidity = 5) {
         return this.kc.updateToken(minValidity);
@@ -74,8 +74,8 @@ export default class extends Adapter {
 
     /**
      * Returns true if the token has less than minValidity seconds left before it expires (minValidity is optional, if not specified 0 is used).
-     * @param {Number} [minValidity=5]
-     * @return {Boolean}
+     * @param {number} [minValidity=5]
+     * @return {boolean}
      */
     isTokenExpired(minValidity = 5) {
         return this.kc.isTokenExpired(minValidity);
@@ -83,7 +83,7 @@ export default class extends Adapter {
 
     /**
      * Return auth status
-     * @return {Boolean}
+     * @return {boolean}
      */
     get authenticated() {
         return this.kc.authenticated;
@@ -91,7 +91,7 @@ export default class extends Adapter {
 
     /**
      * Return token
-     * @return {String}
+     * @return {string}
      */
     get token() {
         return this.kc.token;
@@ -107,7 +107,7 @@ export default class extends Adapter {
 
     /**
      * Returns default config
-     * @return {Object}
+     * @return {Record<string, any>}
      */
     get configDefault() {
         return { ...configDefault };

@@ -26,7 +26,7 @@ export default {
     },
     /**
      * Returns mounted() mixin which generates 'descriptor.vars' from 'this.props.dataset' dimensions with 'groupBy:true'
-     * @return {object}
+     * @return {Record<string, any>}
      */
     datasetVarsMixin() {
         const dimensionVars = ds => {

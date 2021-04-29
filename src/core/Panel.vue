@@ -7,8 +7,8 @@ const { descriptor } = Elem.data();
 
 /**
  * @typedef {Object} PanelMetaData
- * @property {String} name      panel name
- * @property {String} icon      mdi icon class
+ * @property {string} name      panel name
+ * @property {string} icon      mdi icon class
  */
 export default {
     components: { ...PanelUi },
@@ -45,7 +45,7 @@ export default {
     methods: {
         /**
          * Notifies env that the 'props' object has changed (used by the editor env)
-         * @param {?String} [propName=null]     property to update from the 'props' object or null to replace the whole 'props' object
+         * @param {?string} [propName=null]     property to update from the 'props' object or null to replace the whole 'props' object
          */
         propChanged(propName = null) {
             propName = typeof propName === 'string' ? propName : null;

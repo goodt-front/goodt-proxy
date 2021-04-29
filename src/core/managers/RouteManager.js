@@ -13,17 +13,17 @@ const RouteManagerEvent = {
 /**
  * @typedef {Object} RouteObject
  * @property {string} path     route path
- * @property {object} query    query params
- * @property {object} meta     meta data
+ * @property {Record<string, any>} query    query params
+ * @property {Record<string, any>} meta     meta data
  */
 /**
  * @typedef {Object} NavigateOptions
  * @property {string} path          route path
- * @property {object} [query={}]    query params
+ * @property {Record<string, any>} [query={}]    query params
  */
 /**
  * @callback NavigateHandler
- * @param {{ path:String, query:object }} options
+ * @param {{ path: String, query: object }} options
  */
 /**
  * @callback RouteHandler
@@ -65,7 +65,7 @@ export default class RouteManager {
     /**
      * Sets the current route
      * @param {RouteObject} route                       new route
-     * @param {Boolean} [invokeRouteHandlers=true]      if true will invoke route handlers
+     * @param {boolean} [invokeRouteHandlers=true]      if true will invoke route handlers
      */
     setRoute(route, invokeRouteHandlers = true) {
         this[routeManagerObservable].route = route;

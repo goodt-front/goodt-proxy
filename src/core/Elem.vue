@@ -65,7 +65,7 @@ const ComponentOptions = {
     computed: {
         /**
          * Returns the current store state
-         * @return {Object} state
+         * @return {Record<string, any>} state
          */
         $storeState() {
             const varAliases = this.props.varAliases || {};
@@ -143,7 +143,7 @@ const ComponentOptions = {
          * Super method call helper, allows calling super methods when using extends/mixins
          * @example this.super(ComponentOptions).method.call(this)
          * @param {import('vue').ComponentOptions} componentOptions   component options
-         * @return {Object}  methods list
+         * @return {Record<string, any>}  methods list
          */
         super(componentOptions = ComponentOptions) {
             return componentOptions.methods;
@@ -226,8 +226,8 @@ const ComponentOptions = {
         },
         /**
          * Returns true if component accepts children (used by the editor env, dnd)
-         * @param {String} type     elem fulltype to test @example 'Ns/SubNs/ElemExample'
-         * @return {Boolean}        true if 'type' child is allowed
+         * @param {string} type     elem fulltype to test @example 'Ns/SubNs/ElemExample'
+         * @return {boolean}        true if 'type' child is allowed
          */
         isChildAllowed(type) {
             return true;
@@ -254,7 +254,7 @@ const ComponentOptions = {
          * Transforms 'stateChange' object to Object.< string, ValueObject>
          * and commits stateChange to the store's state
          * @param {Record<string, any>} internalState
-         * @return {Object} transformed 'stateChange' with ValueObjects
+         * @return {Record<string, any>} transformed 'stateChange' with ValueObjects
          */
         $storeCommit(internalState) {
             const varAliases = this.props.varAliases || {};
@@ -308,7 +308,7 @@ const ComponentOptions = {
          * Cases:
          * - root domNode has a v-if directive
          * - component uses render() function and the domNode tag is dynamic and v-key is not used
-         * @param {Boolean} [triggerEvents=true]    whether to emit 'mounted' event
+         * @param {boolean} [triggerEvents=true]    whether to emit 'mounted' event
          */
         _mounted(triggerEvents = true) {
             patchComponentRootDomElement(this);

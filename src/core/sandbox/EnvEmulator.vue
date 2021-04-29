@@ -132,7 +132,7 @@ export default {
         };
     },
     computed: {
-        /** @return {object} */
+        /** @return {Record<string, any>} */
         storeState() {
             return store.state;
         },
@@ -161,8 +161,8 @@ export default {
     methods: {
         /**
          * Registers core module
-         * @param {String} key
-         * @param {Object} m
+         * @param {string} key
+         * @param {Record<string, any>} m
          */
         registerModule(key, m) {
             MODULES[key] = m;

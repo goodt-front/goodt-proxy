@@ -6,13 +6,20 @@ export default {
         elem: {
             type: Object
         },
-        vnodeData: {
-            type: Object
+        dataAddons: {
+            type: Object,
+            default() {
+                return {};
+            }
+        },
+        isEditorMode: {
+            type: Boolean,
+            default: false
         }
     },
     render(h) {
-        const { elem, vnodeData } = this;
-        return renderElem(h, elem, vnodeData);
+        const { elem, dataAddons, isEditorMode } = this;
+        return renderElem(h, elem, dataAddons, isEditorMode);
     }
 };
 </script>

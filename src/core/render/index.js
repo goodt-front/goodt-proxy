@@ -3,24 +3,24 @@
  * @property {string} id            id
  * @property {string} type          type
  * @property {object} props         props
- * @property {string} slot          slot name
- * @property {object} component     component options
+ * @property {string|import('vue').Component|import('vue').AsyncComponent} component     component def
  * @property {ElemInfo[]} children  children
  * @return {import("vue/types/umd").VNode[]}
  */
 /**
  * Recursively renders elems' collection
- * @param {import("vue").CreateElement} h       createElement function provided by vue
- * @param {ElemInfo} elem                       elem
- * @param {import("vue").VNodeData} vnodeData   additional VNodeData to share across all vnodes (used by the editor env)
- * @param {object} [slotData={}]                slot data object (holds the scoped slot context)
+ * @param {import('vue').CreateElement} h                   createElement function provided by vue
+ * @param {ElemInfo} elemInfo                               elem info
+ * @param {import('vue').VNodeData} [vnodeData={}]          vnode data addon options
+ * @param {boolean} [isEditorMode=false]                    editor mode
+ * @param {object} [slotData={}]                            slot data object (holds the scoped slot context)
  * @return {import("vue/types/umd").VNode}
  */
-export default function render(h, elem, vnodeData = {}, slotData = {}) {
+export default function render(h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}) {
     // we are mapping our nodes array to a hash keyed by 'slot'
     /** @type {Object.<string, ElemInfo[]>} */
-    const slots = elem.children.reduce((obj, child) => {
-        const slotName = elem.slot || 'default';
+    const slots = elemInfo.children.reduce((obj, child) => {
+        const slotName = child.props.slot || 'default';
         // eslint-disable-next-line
         obj[slotName] = obj[slotName] ?? [];
         obj[slotName].push(child);
@@ -28,18 +28,21 @@ export default function render(h, elem, vnodeData = {}, slotData = {}) {
     }, {});
     // next we need to transform our hash values a factory methods
     /** @type {Object.<string, (props:object) => import("vue/types/umd").VNode[]>} */
-    const scopedSlots = Object.entries(slots).reduce((obj, [slotName, slotNodes]) => {
+    const scopedSlots = Object.entries(slots).reduce((obj, [slotName, slotElemInfos]) => {
         // eslint-disable-next-line
-        obj[slotName] = props => slotNodes.map(slotElem => render(h, slotElem, vnodeData, props));
+        obj[slotName] = props =>
+            slotElemInfos.map(slotElemInfo =>
+                render(h, slotElemInfo, vnodeData, isEditorMode, props)
+            );
         return obj;
     }, {});
-    const { id, type, props } = elem;
-    // render vnode now
-    const vnode = h(elem.component, {
-        props: { id, type, props, slotData },
+    const { id, type, props } = elemInfo;
+    const data = {
+        props: { id, type, initProps: props, slotData, isEditorMode },
         scopedSlots,
-        key: elem.id,
+        key: elemInfo.id,
         ...vnodeData
-    });
-    return vnode;
+    };
+    // create vnode
+    return h(elemInfo.component, data);
 }

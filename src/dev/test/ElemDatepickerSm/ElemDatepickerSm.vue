@@ -24,7 +24,7 @@ export default {
         };
     },
     watch: {
-        $state(val) {
+        $storeState(val) {
             if (val.date !== undefined) {
                 this.date = val.date;
             }

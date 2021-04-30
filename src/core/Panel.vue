@@ -1,9 +1,20 @@
 <script>
+import cloneDeep from 'lodash/cloneDeep';
+import isEqual from 'lodash/isEqual';
 import Elem from './Elem.vue';
 import { PanelUi } from './components/index';
-import cloneDeep from 'lodash/cloneDeep';
+import { getDescriptorDefaultProps } from './utils';
 
-const descriptor = Elem.data().descriptor;
+const descriptor = { ...Elem.data().descriptor };
+
+/**
+ * Panel events
+ * @enum {string}
+ */
+const PanelEvent = {
+    PROPS_CHANGE: 'props-change'
+};
+export { PanelEvent };
 
 /**
  * @typedef {Object} PanelMetaData
@@ -33,10 +44,18 @@ export default {
             descriptor
         };
     },
+    computed: {
+        /**
+         * @return {object}
+         */
+        propsDefault() {
+            return getDescriptorDefaultProps(this.descriptor);
+        }
+    },
     watch: {
         initProps: {
             handler(val) {
-                this.props = cloneDeep(val);
+                this.props = { ...this.propsDefault, ...cloneDeep(val) };
             },
             deep: true,
             immediate: true
@@ -48,8 +67,19 @@ export default {
          * @param {?String} [propName=null]     property to update from the 'props' object or null to replace the whole 'props' object
          */
         propChanged(propName = null) {
-            propName = typeof propName === 'string' ? propName : null;
-            this.$emit('change', this.props, propName);
+            const { props, propsDefault } = this;
+            const propsDif = Object.keys(propsDefault).reduce((obj, key) => {
+                if (!isEqual(propsDefault[key], props[key])) {
+                    obj[key] = props[key];
+                }
+                return obj;
+            }, {});
+
+            this.$emit(
+                PanelEvent.PROPS_CHANGE,
+                propsDif,
+                typeof propName === 'string' ? propName : null
+            );
         }
     }
 };

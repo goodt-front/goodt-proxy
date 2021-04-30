@@ -38,7 +38,7 @@ const ComponentOptions = {
             default: ''
         },
         /** elem props defined in ElemDescriptor */
-        props: {
+        initProps: {
             type: Object,
             default() {
                 return {};
@@ -71,21 +71,28 @@ const ComponentOptions = {
     },
     computed: {
         /**
+         * Merged props
+         * @return {object}
+         */
+        props() {
+            const { initProps } = this;
+            const defaultProps = getDescriptorDefaultProps(this.descriptor);
+            return { ...defaultProps, ...initProps };
+        },
+        /**
          * Returns the current store state
-         * @return {Object} state
+         * @return {object}
          */
         $storeState() {
-            let { state } = store;
-            let { varAliases } = this.props;
-            varAliases = varAliases || {};
-            let obj = {};
-            for (let k in varAliases) {
-                let alias = varAliases[k].listen;
+            const { state } = store;
+            const aliases = this.props.varAliases ?? {};
+            return Object.keys(aliases).reduce((obj, key) => {
+                const alias = aliases[key].listen;
                 if (alias && state[alias]) {
-                    obj[k] = ValueObject.getValue(state[alias]);
+                    obj[key] = ValueObject.getValue(state[alias]);
                 }
-            }
-            return obj;
+                return obj;
+            }, {});
         },
         /**
          * Returns the current route
@@ -142,7 +149,7 @@ const ComponentOptions = {
          * Super method call helper, allows calling super methods when using extends/mixins
          * @example this.super(ComponentOptions).method.call(this)
          * @param {import('vue').ComponentOptions} componentOptions   component options
-         * @return {Object}  methods list
+         * @return {object}  methods list
          */
         super(componentOptions = ComponentOptions) {
             return componentOptions.methods;
@@ -225,8 +232,8 @@ const ComponentOptions = {
         },
         /**
          * Returns true if component accepts children (used by the editor env, dnd)
-         * @param {String} type     elem fulltype to test @example 'Ns/SubNs/ElemExample'
-         * @return {Boolean}        true if 'type' child is allowed
+         * @param {string} type     elem fulltype to test @example 'Ns/SubNs/ElemExample'
+         * @return {boolean}        true if 'type' child is allowed
          */
         isChildAllowed(type) {
             return true;
@@ -237,7 +244,7 @@ const ComponentOptions = {
          * @param {import('./managers/EventBus').EventBus} eventBus
          */
         setEventBus(eventBus) {
-            let wrapper = new EventBusWrapper(eventBus);
+            const wrapper = new EventBusWrapper(eventBus);
             wrapper.varAliases = this.props.varAliases || {};
             // @NOTE method overloading for compatibility with old widgets that use EventBusWrapper for global state management
             // {compat}
@@ -253,20 +260,19 @@ const ComponentOptions = {
          * Transforms 'stateChange' object to Object.< string, ValueObject>
          * and commits stateChange to the store's state
          * @param {Object.<string, any>} stateChange
-         * @return {Object} transformed 'stateChange' with ValueObjects
+         * @return {object} transformed 'stateChange' with ValueObjects
          */
         $storeCommit(stateChange) {
-            let { varAliases } = this.props;
-            varAliases = varAliases || {};
-            let obj = {};
-            for (let k in stateChange) {
-                if (varAliases[k] && varAliases[k].trigger) {
-                    let alias = varAliases[k].trigger;
-                    obj[alias] = vo(stateChange[k], varAliases[k].meta);
+            const aliases = this.props.varAliases ?? {};
+            const obj = Object.keys(stateChange).reduce((obj, key) => {
+                const alias = aliases[key];
+                if (alias && alias.trigger) {
+                    obj[alias.trigger] = vo(stateChange[key], alias.meta);
                 }
-            }
+                return obj;
+            }, {});
             // don't commit if obj is empty
-            if (Object.keys(obj).length > 0) {
+            if (Object.keys(obj).length) {
                 store.commit(obj);
             }
             return {};
@@ -304,7 +310,7 @@ const ComponentOptions = {
          * Cases:
          * - root domNode has a v-if directive
          * - component uses render() function and the domNode tag is dynamic and v-key is not used
-         * @param {Boolean} [triggerEvents=true]    whether to emit 'mounted' event
+         * @param {boolean} [triggerEvents=true]    whether to emit 'mounted' event
          */
         _mounted(triggerEvents = true) {
             patchComponentRootDomElement(this);

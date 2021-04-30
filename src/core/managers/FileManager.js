@@ -21,7 +21,7 @@ import { EventBusBase, EventBusEvent } from './EventBus';
  * @property {string} hash  file hash
  */
 let fileManager = null;
-const fileManagerEnforcer = Symbol();
+const fileManagerEnforcer = Symbol('fileManagerEnforcer');
 const eventBusInstance = new EventBusBase();
 
 const FileManagerEvent = {
@@ -54,8 +54,9 @@ export default class FileManager {
      * @param {FileManagerOptions} options
      * @return {Promise<FileInfo[]>}
      */
+    // eslint-disable-next-line class-methods-use-this
     browse({ selectMultiple = true }) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const options = { selectMultiple };
             eventBusInstance.trigger(new EventBusEvent(FileManagerEvent.BROWSE), {
                 options,
@@ -69,6 +70,7 @@ export default class FileManager {
      * @param {BrowseHandler} handler     browse handler invoked by @see browse()
      * @return {Function}                 dispose function to unregister observer
      */
+    // eslint-disable-next-line class-methods-use-this
     onBrowse(handler) {
         const event = new EventBusEvent(FileManagerEvent.BROWSE);
         return eventBusInstance.listen(event, (e, data) => handler(data));

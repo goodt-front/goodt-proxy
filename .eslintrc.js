@@ -19,6 +19,12 @@ module.exports = {
         'no-debugger': isProd ? 'error' : 'off',
 
         // Editor-specific rule override
-        'import/no-extraneous-dependencies': 'off'
+        // offs
+        'no-underscore-dangle': 'off',
+        'no-plusplus': 'off',
+        'import/no-extraneous-dependencies': 'off',
+        // warns
+        'no-alert': 'warn',
+        'import/prefer-default-export': 'warn'
     }
 };

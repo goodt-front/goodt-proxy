@@ -9,11 +9,11 @@
                 :class="{ 'mar-top-3': i > 0 }"
                 v-bind="{
                     name,
-                    names: namesUsed.filter(v => v != name),
+                    names: namesUsed.filter((v) => v != name),
                     fields: dimensionList[name],
                     fieldsAvailable
                 }"
-                @change="info => onItemChange(name, info)"
+                @change="(info) => onItemChange(name, info)"
                 @delete="onItemDelete(name)"
             />
         </div>
@@ -28,8 +28,8 @@
                             fieldsAvailable,
                             deletable: false
                         }"
-                        @change="info => onNewItemChange(info)"
-                        @validate="valid => (newDimension.valid = valid)"
+                        @change="(info) => onNewItemChange(info)"
+                        @validate="(valid) => { newDimension.valid = valid }"
                     />
                 </div>
                 <div class="popup-dialog-footer pad-top-none text-right">
@@ -54,7 +54,7 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import DimensionListItemEditor from './DimensionListItemEditor.vue';
-import { Query } from "../../../dremio/index";
+import { Query } from '../../../dremio';
 
 export default {
     components: {
@@ -92,9 +92,9 @@ export default {
             return Object.keys(this.dimensionList);
         },
         namesUsed() {
-            let arr = this.metrics.map(el => this.getMetricName(el));
-            arr = arr.concat(this.names);
-            return arr.filter((el, i, a) => a.indexOf(el) == i && el != '');
+            const arr = this.metrics.map((el) => this.getMetricName(el)).concat(this.names);
+            // eslint-disable-next-line eqeqeq
+            return arr.filter((el, i, a) => a.indexOf(el) === i && el !== '');
         },
         fieldsAvailable() {
             return Object.keys(this.fields);
@@ -110,7 +110,7 @@ export default {
     },
     methods: {
         getMetricName(metric) {
-            return Query.getMetricName(name);
+            return Query.getMetricName(metric);
         },
         openNewEditor() {
             this.showNewEditor = true;
@@ -129,7 +129,7 @@ export default {
         },
         onItemChange(nameOld, { name, fields }) {
             this.$set(this.dimensionListEdit, name, fields);
-            if (name != nameOld) {
+            if (name !== nameOld) {
                 this.$delete(this.dimensionListEdit, nameOld);
             }
             this.dimensionListChanged();

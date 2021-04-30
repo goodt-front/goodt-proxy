@@ -48,8 +48,8 @@
     </div>
 </template>
 <script>
-import { Query } from '../../../dremio';
 import cloneDeep from 'lodash/cloneDeep';
+import { Query } from '../../../dremio';
 import MetricItemEditor from './MetricItemEditor.vue';
 
 export default {

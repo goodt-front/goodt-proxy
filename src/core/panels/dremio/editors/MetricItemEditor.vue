@@ -31,7 +31,7 @@
                     Поле
                 </div>
                 <textarea
-                    v-if="typeEdit == typeExpression"
+                    v-if="typeEdit === typeExpression"
                     v-model="fieldEdit"
                     class="textarea textarea-small w-100"
                     @change="changed()"
@@ -120,7 +120,7 @@ export default {
             return val.length > 0 && i < 0;
         },
         validateType() {
-            return this.metricTypes.find(el => el.type == this.typeEdit) != null;
+            return this.metricTypes.find((el) => el.type === this.typeEdit) != null;
         },
         changed() {
             if (this.validateName() && this.validateType()) {

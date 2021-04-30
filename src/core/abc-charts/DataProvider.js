@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in,no-restricted-syntax */
 import { DataProvider } from 'abc-charts/dataProvider';
 import cloneDeep from 'lodash/cloneDeep';
 import GlobalConstants from '../Const';
@@ -29,13 +30,13 @@ export default {
      * @return {Record<string, any>}
      */
     datasetVarsMixin() {
-        const dimensionVars = ds => {
+        const dimensionVars = (ds) => {
             const d = {};
             if (!ds) {
                 return {};
             }
-            ds.dataSetTemplates.forEach(dst => {
-                dst.dataSource1.dimensions.forEach(dimension => {
+            ds.dataSetTemplates.forEach((dst) => {
+                dst.dataSource1.dimensions.forEach((dimension) => {
                     if (dimension.groupBy) {
                         d[dimension.name] = {
                             description: dimension.name
@@ -78,14 +79,15 @@ export default {
         }
         for (const key in params) {
             if (key && key !== 'orgunit-select') {
-                const index = dataset.dimensions.findIndex(item => item.name === key);
+                const index = dataset.dimensions.findIndex((item) => item.name === key);
 
                 if (index !== -1) {
                     dataset.dimensions[index].values = [params[key]];
 
-                    dataset.dataSetTemplates.forEach(dsTemplate => {
-                        dsTemplate.dataSource1.dimensions.forEach(ds => {
+                    dataset.dataSetTemplates.forEach((dsTemplate) => {
+                        dsTemplate.dataSource1.dimensions.forEach((ds) => {
                             if (ds.name === key) {
+                                // eslint-disable-next-line no-param-reassign
                                 ds.values = [params[key]];
                             }
                         });
@@ -93,13 +95,14 @@ export default {
                 }
             } else if (key && key === 'orgunit-select') {
                 for (const dim in params[key]) {
-                    const index = dataset.dimensions.findIndex(item => item.name === dim);
+                    const index = dataset.dimensions.findIndex((item) => item.name === dim);
 
                     if (index !== -1) {
                         dataset.dimensions[index].values = params[key][dim];
-                        dataset.dataSetTemplates.forEach(dsTemplate => {
-                            dsTemplate.dataSource1.dimensions.forEach(ds => {
+                        dataset.dataSetTemplates.forEach((dsTemplate) => {
+                            dsTemplate.dataSource1.dimensions.forEach((ds) => {
                                 if (ds.name === dim) {
+                                    // eslint-disable-next-line no-param-reassign
                                     ds.values = params[key][dim];
                                 }
                             });

@@ -20,8 +20,8 @@ export default class extends Adapter {
      * @param {Record<string, any>} [config={}]
      */
     constructor(config = {}) {
-        config = merge({}, configDefault, config);
-        super(config);
+        const mergedConfig = merge({}, configDefault, config);
+        super(mergedConfig);
         this._http = new Http();
         this._token = null;
         this._authenticated = false;
@@ -32,11 +32,11 @@ export default class extends Adapter {
      * @return {Promise}
      */
     init() {
-        return new Promise(resolve => {
-            let p = new URLSearchParams(location.search);
+        return new Promise((resolve) => {
+            let p = new URLSearchParams(window.location.search);
             this._token = p.get(this.config.tokenParam);
             if (!this._token) {
-                p = new URLSearchParams(location.hash.replace(/^.*#.*\?/, ''));
+                p = new URLSearchParams(window.location.hash.replace(/^.*#.*\?/, ''));
                 this._token = p.get(this.config.tokenParam);
             }
             resolve(this._authenticated);
@@ -74,7 +74,7 @@ export default class extends Adapter {
      * @return {Promise}
      */
     logout() {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const { url, method } = this.config.logout;
             this._http.request({ url, method }).then(() => {
                 this._authenticated = false;
@@ -103,6 +103,7 @@ export default class extends Adapter {
      * Returns default config
      * @return {Record<string, any>}
      */
+    // eslint-disable-next-line class-methods-use-this
     get configDefault() {
         return { ...configDefault };
     }

@@ -1,14 +1,19 @@
 import Vue from 'vue';
 import { EventBusBase, EventBusEvent } from './EventBus';
 
-const eventBusInstance = new EventBusBase();
 let routeManager = null;
-const routeManagerEnforcer = Symbol();
-const routeManagerObservable = Symbol('ob');
+const eventBusInstance = new EventBusBase();
+const routeManagerEnforcer = Symbol('routeManagerEnforcer');
+const routeManagerObservable = Symbol('routeManagerObservable');
 
-const RouteManagerEvent = {
+/**
+ * @readonly
+ * @enum {string}
+ * @type {Readonly<{NAVIGATE: string}>}
+ */
+const RouteManagerEvent = Object.freeze({
     NAVIGATE: 'navigate'
-};
+});
 
 /**
  * @typedef {Object} RouteObject
@@ -23,7 +28,7 @@ const RouteManagerEvent = {
  */
 /**
  * @callback NavigateHandler
- * @param {{ path: String, query: object }} options
+ * @param {{ path: string, query: object }} options
  */
 /**
  * @callback RouteHandler
@@ -32,7 +37,7 @@ const RouteManagerEvent = {
 export default class RouteManager {
     /**
      * Constructor
-     * @param {Symbol} enforcer  singleton enforcer
+     * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
         if (enforcer !== routeManagerEnforcer) {
@@ -65,17 +70,20 @@ export default class RouteManager {
     /**
      * Sets the current route
      * @param {RouteObject} route                       new route
-     * @param {boolean} [invokeRouteHandlers=true]      if true will invoke route handlers
+     * @param {boolean} [isInvokeRouteHandlers=true]      if true will invoke route handlers
      */
-    setRoute(route, invokeRouteHandlers = true) {
+    setRoute(route, isInvokeRouteHandlers = true) {
         this[routeManagerObservable].route = route;
-        invokeRouteHandlers && this._routeHandlers.forEach(h => h(route));
+        if (isInvokeRouteHandlers) {
+            this._routeHandlers.forEach((h) => h(route));
+        }
     }
 
     /**
      * Requests a route change by path
      * @param {NavigateOptions} options
      */
+    // eslint-disable-next-line class-methods-use-this
     navigate({ path, query = {} }) {
         eventBusInstance.trigger(new EventBusEvent(RouteManagerEvent.NAVIGATE), {
             path,
@@ -88,6 +96,7 @@ export default class RouteManager {
      * @param {NavigateHandler} handler     navigate handler invoked by @see navigate()
      * @return {Function}                   dispose function to unregister observer
      */
+    // eslint-disable-next-line class-methods-use-this
     onNavigate(handler) {
         const event = new EventBusEvent(RouteManagerEvent.NAVIGATE);
         return eventBusInstance.listen(event, (e, data) => handler(data));
@@ -106,6 +115,6 @@ export default class RouteManager {
      * @param {RouteHandler} handler
      */
     removeRouteHandler(handler) {
-        this._routeHandlers = this._routeHandlers.filter(h => h !== handler);
+        this._routeHandlers = this._routeHandlers.filter((h) => h !== handler);
     }
 }

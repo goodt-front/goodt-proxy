@@ -1,7 +1,7 @@
-import Adapter from './Adapter';
 import Keycloak from 'keycloak-js';
+import Adapter from './Adapter';
 
-const href = location.href.replace(location.hash, '');
+const href = window.location.href.replace(window.location.hash, '');
 /** @type {import('keycloak-js').KeycloakConfig} */
 const configDefault = {
     url: '',
@@ -17,15 +17,20 @@ const initConfig = {
 };
 
 export default class extends Adapter {
+    /** @type {import('keycloak-js').KeycloakInstance} */
+    kc;
+
     /**
      * Constructor
      * @param {Record<string, any>} [config={}]
      */
     constructor(config = {}) {
-        config = { ...configDefault, ...config };
-        super(config);
-        /** @type {import('keycloak-js').KeycloakInstance} */
-        this.kc = Keycloak(config);
+        /**
+         * @type {import('keycloak-js').KeycloakConfig | string}
+         */
+        const mergedConfig = { ...configDefault, ...config };
+        super(mergedConfig);
+        this.kc = Keycloak(mergedConfig);
     }
 
     /**
@@ -109,6 +114,7 @@ export default class extends Adapter {
      * Returns default config
      * @return {Record<string, any>}
      */
+    // eslint-disable-next-line class-methods-use-this
     get configDefault() {
         return { ...configDefault };
     }

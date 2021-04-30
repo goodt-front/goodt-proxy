@@ -53,7 +53,9 @@ export default {
             this.$routeNavigate(this.getRandomRoute());
         },
         subscribe() {
-            this.eventBusWrapper.listenNavigate((e, data) => (this.routeCurrent = data));
+            this.eventBusWrapper.listenNavigate((e, data) => {
+                this.routeCurrent = data;
+            });
         }
     }
 };

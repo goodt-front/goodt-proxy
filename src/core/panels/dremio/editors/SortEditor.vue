@@ -51,9 +51,9 @@
     </div>
 </template>
 <script>
-import SortItemEditor from './SortItemEditor.vue';
 import cloneDeep from 'lodash/cloneDeep';
 import draggable from 'vuedraggable';
+import SortItemEditor from './SortItemEditor.vue';
 import { Query } from '../../../dremio';
 
 export default {

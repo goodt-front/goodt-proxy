@@ -6,4 +6,5 @@ dist/lib.umd-report.html
 .idea
 .dev
 .history
+.todo
 workspace.code-workspace

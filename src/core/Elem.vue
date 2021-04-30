@@ -71,13 +71,16 @@ const ComponentOptions = {
             const varAliases = this.props.varAliases || {};
             const { state: externalState } = store;
             const internalState = {};
-            for (let propName in varAliases) {
+            // eslint-disable-next-line guard-for-in,no-restricted-syntax
+            for (const propName in varAliases) {
                 const propAliasData = varAliases[propName];
                 if (!propAliasData) {
+                    // eslint-disable-next-line no-continue
                     continue;
                 }
                 const { listen: alias } = propAliasData;
                 if (!alias) {
+                    // eslint-disable-next-line no-continue
                     continue;
                 }
                 const propValue = externalState[alias];
@@ -199,12 +202,12 @@ const ComponentOptions = {
             const o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
             if (
                 this.props.widthUnit !== 'size' &&
-                !isNaN(this.props.width) &&
+                !Number.isNaN(this.props.width) &&
                 this.props.width !== ''
             ) {
                 o.width = `${this.props.width}${this.props.widthUnit}`;
             }
-            if (!isNaN(this.props.height) && this.props.height !== '') {
+            if (!Number.isNaN(this.props.height) && this.props.height !== '') {
                 o.height = `${this.props.height}${this.props.heightUnit}`;
             }
             this.$set(this, 'cssStyle', o);
@@ -244,7 +247,7 @@ const ComponentOptions = {
             // {compat}
             wrapper.toVO = (value, meta) =>
                 value instanceof ValueObject ? value : vo(value, meta);
-            wrapper.toValue = vo => ValueObject.getValue(vo);
+            wrapper.toValue = valueObject => ValueObject.getValue(valueObject);
             // {/compat}
             // @ts-ignore
             this.eventBusWrapper = wrapper;
@@ -259,13 +262,16 @@ const ComponentOptions = {
         $storeCommit(internalState) {
             const varAliases = this.props.varAliases || {};
             const externalState = {};
-            for (let propName in internalState) {
+            // eslint-disable-next-line guard-for-in,no-restricted-syntax
+            for (const propName in internalState) {
                 const propAliasData = varAliases[propName];
                 if (!propAliasData) {
+                    // eslint-disable-next-line no-continue
                     continue;
                 }
                 const { trigger: alias, meta } = propAliasData;
                 if (!alias) {
+                    // eslint-disable-next-line no-continue
                     continue;
                 }
                 externalState[alias] = vo(internalState[propName], meta);

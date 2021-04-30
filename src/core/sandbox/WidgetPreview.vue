@@ -57,7 +57,8 @@
 </template>
 <script>
 import Vue from 'vue';
-import { ElemEvent, getDescriptorDefaultProps } from '../';
+// eslint-disable-next-line import/no-cycle
+import { ElemEvent, getDescriptorDefaultProps } from "..";
 import { UiCollapse } from '../components/panel-ui';
 import { StylePanel, VariablePanel } from '../panels';
 

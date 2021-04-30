@@ -32,7 +32,8 @@
 </template>
 <script>
 import { PortalTarget } from 'portal-vue';
-import { ElemEvent, Const as Globals } from '../';
+// eslint-disable-next-line import/no-cycle
+import { ElemEvent, Const as Globals } from '..';
 import { Popup } from '../components/ui';
 import {
     AuthManager,
@@ -172,6 +173,7 @@ export default {
          */
         initConst() {
             const { envConstants } = this;
+            // eslint-disable-next-line no-restricted-syntax
             for (const constant in Globals) {
                 if (Object.prototype.hasOwnProperty.call(envConstants, constant)) {
                     Globals[constant] = envConstants[constant];
@@ -194,7 +196,9 @@ export default {
                 })
                 .then(() => {
                     this.authenticated = true;
-                    instance.adapter.getUserProfile().then(p => (this.authAdapterUserProfile = p));
+                    instance.adapter.getUserProfile().then((p) => {
+                        this.authAdapterUserProfile = p;
+                    });
                 });
             this.registerModule(MODULE_KEYS.AUTH_MANAGER, AuthManager);
         },
@@ -214,7 +218,8 @@ export default {
             const { demoFiles } = this;
             const { instance } = FileManager;
             const dispose = instance.onBrowse(({ resolve }) => {
-                const r = confirm('Select demo files?');
+                // eslint-disable-next-line no-alert
+                const r = window.confirm('Select demo files?');
                 resolve(r ? demoFiles : []);
             });
             this.$on('hook:destroyed', dispose);
@@ -245,7 +250,7 @@ export default {
         initEventBus() {
             const ebi = new EventBus(store, RouteManager.instance);
             // DI
-            const handler = e => e.instance.setEventBus(ebi);
+            const handler = (e) => e.instance.setEventBus(ebi);
             this.$on('hook:created', () => document.addEventListener(ElemEvent.MOUNTED, handler));
             this.$on('hook:destroyed', () =>
                 document.removeEventListener(ElemEvent.MOUNTED, handler)

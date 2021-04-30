@@ -1,6 +1,12 @@
 # Внесение изменений
 
-## Правила и договорённости
+## Оформление изменений
+
+### Commits and PRs
+Для описания комментариев к коммитам и пулл реквестам используется [«Соглашение о коммитах»](https://www.conventionalcommits.org/ru/v1.0.0/),
+проверка соответствия осуществляется линтером [conventional-changelog](https://github.com/conventional-changelog/commitlint#readme).
+
+## Оформление кода: стиль и соглашения
 
 ### JavaScript Style Guide
 Мы используем [Airbnb’s JavaScript Style Guide] и соответствующий ему набор правил линтера eslint

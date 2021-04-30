@@ -67,7 +67,7 @@
 import { Portal } from 'portal-vue';
 import Globals from '../../Const';
 
-const mouse = e => ({ x: e.pageX, y: e.pageY });
+const mouse = (e) => ({ x: e.pageX, y: e.pageY });
 const FocusManager = {
     pool: [],
     get active() {
@@ -77,7 +77,7 @@ const FocusManager = {
         this.pool.push(id);
     },
     remove(id) {
-        this.pool = this.pool.filter(v => v != id);
+        this.pool = this.pool.filter((v) => v !== id);
     }
 };
 let ID = 1;
@@ -126,7 +126,7 @@ export default {
     watch: {
         'focusManager.active': {
             handler(v) {
-                this.panelHasFocus = this.panelId == v;
+                this.panelHasFocus = this.panelId === v;
             },
             immediate: true
         }

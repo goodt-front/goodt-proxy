@@ -20,8 +20,8 @@
     </div>
 </template>
 <script>
-import { ControlMixin } from './utils/index';
 import { InputDatePicker } from 'goodteditor-ui';
+import { ControlMixin } from './utils';
 
 /**
  * For more <b>props</b> @see https://goodt-ui.netlify.app/#!/InputDatePicker

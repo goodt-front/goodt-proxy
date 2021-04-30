@@ -89,8 +89,8 @@
 }
 </style>
 <script>
-import { ControlMixin } from './utils';
 import { Select as UiSelect, Popover as UiPopover, Datalist as UiDatalist } from 'goodteditor-ui';
+import { ControlMixin } from './utils';
 
 export default {
     components: { UiSelect, UiPopover, UiDatalist },

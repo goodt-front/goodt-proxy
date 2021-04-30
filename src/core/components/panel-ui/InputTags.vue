@@ -31,8 +31,8 @@
     </div>
 </template>
 <script>
-import { ControlMixin } from './utils';
 import { InputTags as UiInputTags } from 'goodteditor-ui';
+import { ControlMixin } from './utils';
 
 export default {
     components: { UiInputTags },

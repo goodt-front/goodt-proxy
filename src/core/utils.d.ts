@@ -19,3 +19,10 @@ declare function getDescriptorDefaultProps(descriptor: ElemDescriptor);
  * Returns generated Constructor-specific dom id
  */
 declare function getDomId(elemId: string): string;
+/**
+ * Returns generated Constructor-specific dom id
+ */
+declare function filterObject<T extends Record<string, unknown>>(
+    object: T,
+    filterFn: ([key, value]: [string, unknown]) => boolean
+): T;

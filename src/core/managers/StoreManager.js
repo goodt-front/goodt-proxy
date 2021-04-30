@@ -1,5 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import Vue from 'vue';
+import { filterObject } from '../utils';
 
 /**
  * @typedef {Object} ValueObjectMeta
@@ -75,19 +76,18 @@ class Store {
     }
 
     /**
-     * Merges the 'newState' object to the current state
-     * @param {Record<string, any>} statePartial          state change obj
+     * Merges the 'statePartial' object to the current state
+     * @param {Record<string, unknown>} statePartial      state change obj
      * @param {boolean} [isInvokeCommitHandlers=true]     if true will invoked
      */
     commit(statePartial, isInvokeCommitHandlers = true) {
-        const stateNew = Object.entries({ ...stateOb.state, ...statePartial })
-            .reduce((state, [ key, value] ) => ({
-                ...state,
-                ...(value === undefined ? {} : { [key]: value })
-            }), {});
+        const stateNew = filterObject(
+            { ...stateOb.state, ...statePartial },
+            ([, value]) => value !== undefined
+        );
         stateOb.state = stateNew;
         if (isInvokeCommitHandlers) {
-            this._commitHandlers.forEach((h) => {
+            this._commitHandlers.forEach(h => {
                 h(statePartial);
             });
         }

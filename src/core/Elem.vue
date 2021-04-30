@@ -2,6 +2,11 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
+import {
+    buildExternalStateFromInternal,
+    buildInternalStateFromExternal
+} from './mixins/useStoreTransitional';
+
 import { ConstManager, RouteManager, StoreManager, EB } from './managers';
 import descriptor from './Elem.descriptor';
 import {
@@ -70,24 +75,7 @@ const ComponentOptions = {
         $storeState() {
             const varAliases = this.props.varAliases || {};
             const { state: externalState } = store;
-            const internalState = {};
-            // eslint-disable-next-line guard-for-in,no-restricted-syntax
-            for (const propName in varAliases) {
-                const propAliasData = varAliases[propName];
-                if (!propAliasData) {
-                    // eslint-disable-next-line no-continue
-                    continue;
-                }
-                const { listen: alias } = propAliasData;
-                if (!alias) {
-                    // eslint-disable-next-line no-continue
-                    continue;
-                }
-                const propValue = externalState[alias];
-                if (propValue) {
-                    internalState[propName] = ValueObject.getValue(propValue);
-                }
-            }
+            const internalState = buildInternalStateFromExternal(externalState, varAliases);
 
             return internalState;
         },
@@ -115,7 +103,7 @@ const ComponentOptions = {
     },
     created() {
         if (this.isEditorMode) {
-            this.$watch('props.varAliases', val => {
+            this.$watch('props.varAliases', (val) => {
                 // @ts-ignore
                 const { eventBusWrapper } = this;
                 if (eventBusWrapper) {
@@ -157,10 +145,10 @@ const ComponentOptions = {
         genCssClass() {
             const o = {};
             const p = ['display', 'position', 'cssClass'];
-            p.forEach(pName => {
+            p.forEach((pName) => {
                 const pVal = this.props[pName];
                 const pValArr = Array.isArray(pVal) ? pVal : [pVal];
-                pValArr.forEach(v => {
+                pValArr.forEach((v) => {
                     if (v) {
                         o[v] = true;
                     }
@@ -247,38 +235,27 @@ const ComponentOptions = {
             // {compat}
             wrapper.toVO = (value, meta) =>
                 value instanceof ValueObject ? value : vo(value, meta);
-            wrapper.toValue = valueObject => ValueObject.getValue(valueObject);
+            wrapper.toValue = (valueObject) => ValueObject.getValue(valueObject);
             // {/compat}
-            // @ts-ignore
             this.eventBusWrapper = wrapper;
             this.$nextTick(() => this.subscribe());
         },
         /**
-         * Transforms 'stateChange' object to Object.< string, ValueObject>
-         * and commits stateChange to the store's state
-         * @param {Record<string, any>} internalState
-         * @return {Record<string, any>} transformed 'stateChange' with ValueObjects
+         * Transforms 'internalStatePartial' object to Object.< string, ValueObject>
+         * and commits internalStatePartial to the store's state
+         * @param {Record<string, any>} internalStatePartial
+         * @return {Record<string, any>} transformed 'internalStatePartial' with ValueObjects
          */
-        $storeCommit(internalState) {
+        $storeCommit(internalStatePartial) {
             const varAliases = this.props.varAliases || {};
-            const externalState = {};
-            // eslint-disable-next-line guard-for-in,no-restricted-syntax
-            for (const propName in internalState) {
-                const propAliasData = varAliases[propName];
-                if (!propAliasData) {
-                    // eslint-disable-next-line no-continue
-                    continue;
-                }
-                const { trigger: alias, meta } = propAliasData;
-                if (!alias) {
-                    // eslint-disable-next-line no-continue
-                    continue;
-                }
-                externalState[alias] = vo(internalState[propName], meta);
-            }
+            const externalStatePartial = buildExternalStateFromInternal(
+                internalStatePartial,
+                varAliases
+            );
+
             // don't commit if obj is empty
-            if (Object.keys(externalState).length > 0) {
-                store.commit(externalState);
+            if (Object.keys(externalStatePartial).length > 0) {
+                store.commit(externalStatePartial);
             }
             return {};
         },
@@ -301,7 +278,7 @@ const ComponentOptions = {
             }
             const manager = ConstManager.instance;
             // @TODO regExp should be defined via ConstManager constant
-            return constantName.replace(/(%[^%]+%)/g, m => manager.getConstValue(m));
+            return constantName.replace(/(%[^%]+%)/g, (m) => manager.getConstValue(m));
         },
         /**
          * LC stage, called by the env after 'mounted()'

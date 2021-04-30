@@ -6,7 +6,7 @@
                     v-for="(g, i) in groups"
                     :key="i"
                     class="btn btn-small flex-grow"
-                    :class="[i == activeIndex ? 'btn-primary' : 'btn-ghost']"
+                    :class="[i === activeIndex ? 'btn-primary' : 'btn-ghost']"
                     :style="{ width: `${(1 / groups.length) * 100}%` }"
                     @click="activeIndex = i"
                 >

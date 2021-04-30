@@ -21,8 +21,8 @@
     </div>
 </template>
 <script>
-import { ControlMixin } from './utils';
 import { Select as UiSelect } from 'goodteditor-ui';
+import { ControlMixin } from './utils';
 
 /**
  * For more <b>props</b> @see https://goodt-ui.netlify.app/#!/Select

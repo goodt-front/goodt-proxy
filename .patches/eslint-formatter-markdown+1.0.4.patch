@@ -1,0 +1,8 @@
+diff --git a/node_modules/eslint-formatter-markdown/templates/md-template-result.md b/node_modules/eslint-formatter-markdown/templates/md-template-result.md
+index 309bdc9..7dc1f7e 100644
+--- a/node_modules/eslint-formatter-markdown/templates/md-template-result.md
++++ b/node_modules/eslint-formatter-markdown/templates/md-template-result.md
+@@ -1,2 +1,2 @@
+ 
+-### <%= filePath %> - <%= summary %>
++### [<%= filePath %>](<%= filePath %>) - <%= summary %>

@@ -19,6 +19,7 @@ export default class {
      * Destroy adapter
      * @return {Promise<void>}
      */
+    // eslint-disable-next-line class-methods-use-this
     destroy() {
         return Promise.resolve();
     }
@@ -29,6 +30,7 @@ export default class {
      * @param {Record<string, any>} [credentials={}]  user credentials
      * @return {Promise<void>}
      */
+    // eslint-disable-next-line class-methods-use-this
     login(credentials = {}) {
         return Promise.resolve();
     }
@@ -47,6 +49,7 @@ export default class {
      * @param {number} [minValidity=10]
      * @return {Promise<boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
      */
+    // eslint-disable-next-line class-methods-use-this
     updateToken(minValidity = 10) {
         return Promise.resolve(true);
     }
@@ -80,6 +83,7 @@ export default class {
      * @param {number} [minValidity=10]
      * @return {boolean}
      */
+    // eslint-disable-next-line class-methods-use-this
     isTokenExpired(minValidity = 10) {
         return false;
     }
@@ -88,6 +92,7 @@ export default class {
      * Return auth status
      * @return {boolean}
      */
+    // eslint-disable-next-line class-methods-use-this
     get authenticated() {
         return true;
     }
@@ -96,6 +101,7 @@ export default class {
      * Return token
      * @return {string}
      */
+    // eslint-disable-next-line class-methods-use-this
     get token() {
         return '';
     }
@@ -112,6 +118,7 @@ export default class {
      * Returns default config
      * @return {Record<string, any>}
      */
+    // eslint-disable-next-line class-methods-use-this
     get configDefault() {
         return {};
     }

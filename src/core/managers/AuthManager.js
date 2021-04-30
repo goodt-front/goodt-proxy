@@ -1,8 +1,9 @@
+// eslint-disable-next-line import/no-cycle
 import Adapters from './auth/adapters';
 
 /** @type {AuthManager} */
 let authManager = null;
-const authManagerEnforcer = Symbol();
+const authManagerEnforcer = Symbol('authManagerEnforcer');
 
 /**
  * @typedef {Object} AdapterInfo
@@ -49,7 +50,7 @@ export default class AuthManager {
      * Destroys adapter
      */
     destroy() {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             if (this.adapter) {
                 this.adapter.destroy().finally(() => {
                     this._adapter = null;
@@ -73,6 +74,7 @@ export default class AuthManager {
      * Available adapters list
      * @return {Object.<String, Adapter>}
      */
+    // eslint-disable-next-line class-methods-use-this
     get adaptersList() {
         return Adapters;
     }
@@ -81,13 +83,14 @@ export default class AuthManager {
      * Available adapters info
      * @return {AdapterInfo[]}
      */
+    // eslint-disable-next-line class-methods-use-this
     get adaptersInfo() {
-        const a = [];
-        for (const name in Adapters) {
-            const config = new Adapters[name]().configDefault;
-            a.push({ name, config });
-        }
-        return a;
+        const adapters = Object.entries(Adapters).map(([name, Ctor]) => ({
+            name,
+            config: new Ctor().configDefault
+        }));
+
+        return adapters;
     }
 
     /**
@@ -96,6 +99,7 @@ export default class AuthManager {
      * @param {Record<string, any>} config
      * @returns
      */
+    // eslint-disable-next-line class-methods-use-this
     _createAdapter(adapterName, config) {
         const AdapterClass = Adapters[adapterName];
         if (!AdapterClass) {

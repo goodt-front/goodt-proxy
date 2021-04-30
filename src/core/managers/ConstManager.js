@@ -1,10 +1,10 @@
 let constManager = null;
-const constManagerEnforcer = Symbol();
+const constManagerEnforcer = Symbol('constManagerEnforcer');
 
 export default class ConstManager {
     /**
      * Constructor
-     * @param {Symbol} enforcer  singleton enforcer
+     * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
         if (enforcer !== constManagerEnforcer) {

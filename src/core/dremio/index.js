@@ -1,5 +1,6 @@
 import { SDK, Query, Dremio, Errors } from 'goodt-dremio-sdk';
 import cloneDeep from 'lodash/cloneDeep';
+// eslint-disable-next-line import/no-cycle
 import AuthManager from '../managers/AuthManager';
 import Const from '../Const';
 
@@ -57,8 +58,8 @@ const mixin = {
                 before: () => {
                     this.loading = true;
                 },
-                then: r => r,
-                catch: e => {
+                then: (r) => r,
+                catch: (e) => {
                     if (!e.isCancel) {
                         this.error = e;
                     }
@@ -161,7 +162,7 @@ const mixin = {
 
             this.dremioSdk
                 .getData(query, this.offset, this.limit)
-                .then(result => {
+                .then((result) => {
                     this.result = result;
                     this.loadDataHooks.then(result);
                 })
@@ -196,7 +197,7 @@ const mixin = {
                 return arr;
             }, []);
 
-            dremioParams.forEach(name => {
+            dremioParams.forEach((name) => {
                 const variable = { description: name };
                 this.$set(this.descriptor.vars, name, variable);
                 this.dremioVars.push(name);

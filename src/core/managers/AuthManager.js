@@ -85,12 +85,11 @@ export default class AuthManager {
      */
     // eslint-disable-next-line class-methods-use-this
     get adaptersInfo() {
-        const adapters = [];
-        // eslint-disable-next-line guard-for-in,no-restricted-syntax
-        for (const name in Adapters) {
-            const config = new Adapters[name]().configDefault;
-            adapters.push({ name, config });
-        }
+        const adapters = Object.entries(Adapters).map(([name, Ctor]) => ({
+            name,
+            config: new Ctor().configDefault
+        }));
+
         return adapters;
     }
 

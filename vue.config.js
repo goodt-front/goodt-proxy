@@ -4,6 +4,7 @@ const { isProd } = require('./.utils');
 
 // @see https://github.com/npm/npm/pull/5518
 module.exports = {
+    lintOnSave: false,
     devServer: {
         port: 3000
     },
@@ -17,7 +18,7 @@ module.exports = {
     css: {
         extract: false
     },
-    configureWebpack: config => {
+    configureWebpack: (config) => {
         if (isProd) {
             config.externals = {
                 ...config.externals

@@ -2,6 +2,11 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
+import {
+    buildExternalStateFromInternal,
+    buildInternalStateFromExternal
+} from './mixins/useStoreTransitional';
+
 import { ConstManager, RouteManager, StoreManager, EB } from './managers';
 import descriptor from './Elem.descriptor';
 import {
@@ -70,24 +75,7 @@ const ComponentOptions = {
         $storeState() {
             const varAliases = this.props.varAliases || {};
             const { state: externalState } = store;
-            const internalState = Object.entries(varAliases).reduce(
-                (state, [varName, varAliasData]) => {
-                    const { listen: alias } = varAliasData;
-                    if (!alias) {
-                        return state;
-                    }
-                    if (alias in externalState) {
-                        const varValueObject = externalState[alias];
-                        return {
-                            ...state,
-                            [varName]: ValueObject.getValue(varValueObject)
-                        };
-                    }
-
-                    return state;
-                },
-                {}
-            );
+            const internalState = buildInternalStateFromExternal(externalState, varAliases);
 
             return internalState;
         },
@@ -115,7 +103,7 @@ const ComponentOptions = {
     },
     created() {
         if (this.isEditorMode) {
-            this.$watch('props.varAliases', val => {
+            this.$watch('props.varAliases', (val) => {
                 // @ts-ignore
                 const { eventBusWrapper } = this;
                 if (eventBusWrapper) {
@@ -157,10 +145,10 @@ const ComponentOptions = {
         genCssClass() {
             const o = {};
             const p = ['display', 'position', 'cssClass'];
-            p.forEach(pName => {
+            p.forEach((pName) => {
                 const pVal = this.props[pName];
                 const pValArr = Array.isArray(pVal) ? pVal : [pVal];
-                pValArr.forEach(v => {
+                pValArr.forEach((v) => {
                     if (v) {
                         o[v] = true;
                     }
@@ -253,31 +241,21 @@ const ComponentOptions = {
             this.$nextTick(() => this.subscribe());
         },
         /**
-         * Transforms 'stateChange' object to Object.< string, ValueObject>
-         * and commits stateChange to the store's state
-         * @param {Record<string, any>} internalState
-         * @return {Record<string, any>} transformed 'stateChange' with ValueObjects
+         * Transforms 'internalStatePartial' object to Object.< string, ValueObject>
+         * and commits internalStatePartial to the store's state
+         * @param {Record<string, any>} internalStatePartial
+         * @return {Record<string, any>} transformed 'internalStatePartial' with ValueObjects
          */
-        $storeCommit(internalState) {
+        $storeCommit(internalStatePartial) {
             const varAliases = this.props.varAliases || {};
-            const externalState = Object.entries(internalState).reduce(
-                (state, [varName, varValue]) => {
-                    const { trigger: alias, meta } = varAliases[varName] || {};
-                    if (alias) {
-                        const valueObject = vo(varValue, meta);
-                        return {
-                            ...state,
-                            [alias]: valueObject
-                        };
-                    }
-                    return state;
-                },
-                {}
+            const externalStatePartial = buildExternalStateFromInternal(
+                internalStatePartial,
+                varAliases
             );
 
             // don't commit if obj is empty
-            if (Object.keys(externalState).length > 0) {
-                store.commit(externalState);
+            if (Object.keys(externalStatePartial).length > 0) {
+                store.commit(externalStatePartial);
             }
             return {};
         },
@@ -300,7 +278,7 @@ const ComponentOptions = {
             }
             const manager = ConstManager.instance;
             // @TODO regExp should be defined via ConstManager constant
-            return constantName.replace(/(%[^%]+%)/g, m => manager.getConstValue(m));
+            return constantName.replace(/(%[^%]+%)/g, (m) => manager.getConstValue(m));
         },
         /**
          * LC stage, called by the env after 'mounted()'

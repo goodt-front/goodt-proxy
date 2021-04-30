@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-./.utils/eslint-staged-short.sh 2>/dev/null
+./.utils/eslint-staged-short.sh

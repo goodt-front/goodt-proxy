@@ -1,8 +1,10 @@
+// eslint-disable-next-line max-classes-per-file
 import Vue from 'vue';
+import { filterObject } from '../utils';
 
 /**
  * @typedef {Object} ValueObjectMeta
- * @property {Boolean} global   global flag
+ * @property {boolean} global   global flag
  */
 /**
  * ValueObject class
@@ -11,7 +13,7 @@ class ValueObject {
     /**
      * Constructor
      * @param {any} value
-     * @param {ValueObjectMeta} [meta=null]
+     * @param {?ValueObjectMeta} [meta=null]
      */
     constructor(value, meta = null) {
         const def = ValueObject.defaultMeta();
@@ -58,38 +60,48 @@ class Store {
     constructor() {
         /**
          * @callback CommitHandler
-         * @param {Object} stateChange
+         * @param {Record<string, any>} statePartial
          */
         /** @type {CommitHandler[]} */
         this._commitHandlers = [];
     }
+
     /**
      * Returns the current state
-     * @return {Object}
+     * @return {Record<string, any>}
      */
+    // eslint-disable-next-line class-methods-use-this
     get state() {
         return stateOb.state;
     }
+
     /**
-     * Merges the 'newState' object to the current state
-     * @param {Object} stateChange                      state change obj
-     * @param {Boolean} [invokeCommitHandlers=true]     if true will invoked
+     * Merges the 'statePartial' object to the current state
+     * @param {Record<string, unknown>} statePartial      state change obj
+     * @param {boolean} [isInvokeCommitHandlers=true]     if true will invoked
      */
-    commit(stateChange, invokeCommitHandlers = true) {
-        let stateNew = { ...stateOb.state, ...stateChange };
-        for (let k in stateNew) {
-            stateNew[k] === undefined && delete stateNew[k];
-        }
+    commit(statePartial, isInvokeCommitHandlers = true) {
+        const stateNew = filterObject(
+            { ...stateOb.state, ...statePartial },
+            ([, value]) => value !== undefined
+        );
         stateOb.state = stateNew;
-        invokeCommitHandlers && this._commitHandlers.forEach(h => h(stateChange));
+        if (isInvokeCommitHandlers) {
+            this._commitHandlers.forEach(h => {
+                h(statePartial);
+            });
+        }
     }
+
     /**
      * Replaces the state with the 'newState'
-     * @param {Object} newState
+     * @param {Record<string, any>} newState
      */
+    // eslint-disable-next-line class-methods-use-this
     replace(newState) {
         stateOb.state = newState;
     }
+
     /**
      * Adds a commit handler
      * @param {CommitHandler} handler
@@ -97,6 +109,7 @@ class Store {
     addCommitHandler(handler) {
         this._commitHandlers.push(handler);
     }
+
     /**
      * Removes a commit handler
      * @param {CommitHandler} handler

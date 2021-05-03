@@ -8,12 +8,16 @@
         "serve": "vue-cli-service serve",
         "build": "npm run lint && npm run format && npm run build:lib",
         "build:lib": "vue-cli-service build --target lib --formats umd --dest ./dist/ --name goodt-wcore --filename lib ./src/core/index.js --report",
-        "lint": "eslint src/ --color",
-        "lint:fix": "eslint src/ --fix",
+        "lint": "vue-cli-service lint --no-fix src/",
+        "lint:all": ".utils/lint/eslint-all.sh",
+        "lint:all:fix": "vue-cli-service lint src/",
+        "lint:staged": ".utils/lint/eslint-staged.sh",
+        "lint:committed": ".utils/lint/eslint-committed.sh",
         "format": "prettier --write ./src/**/*",
         "docs:panel-ui": "vue-styleguidist server",
         "docs:panel-ui:build": "vue-styleguidist build",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "postinstall": "npx patch-package --patch-dir=.patches"
     },
     "dependencies": {
         "abc-charts": "^1.6.4",
@@ -30,11 +34,14 @@
         "@commitlint/cli": "^12.1.1",
         "@commitlint/config-conventional": "^12.1.1",
         "@vue/cli-plugin-babel": "^4.5.12",
+        "@vue/cli-plugin-eslint": "5.0.0-beta.0",
         "@vue/cli-service": "^4.5.12",
         "@vue/eslint-config-airbnb": "^5.3.0",
         "@vue/eslint-config-typescript": "^7.0.0",
         "eslint": "^7.25.0",
         "eslint-config-prettier": "^8.3.0",
+        "eslint-formatter-friendly": "^7.0.0",
+        "eslint-formatter-markdown": "^1.0.4",
         "eslint-plugin-vue": "^7.9.0",
         "goodt-framework-css": "^1.1.1",
         "husky": "^6.0.0",
@@ -48,7 +55,7 @@
     },
     "lint-staged": {
         "*.(js|jsx|vue|ts)": [
-            "npm run lint:write"
+            "npm run lint"
         ]
     }
 }

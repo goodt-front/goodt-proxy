@@ -1,15 +1,15 @@
-import Adapter from './Adapter';
 import Keycloak from 'keycloak-js';
+import Adapter from './Adapter';
 
-let href = location.href.replace(location.hash, '');
+const href = window.location.href.replace(window.location.hash, '');
 /** @type {import('keycloak-js').KeycloakConfig} */
-let configDefault = {
+const configDefault = {
     url: '',
     realm: '',
     clientId: ''
 };
 /** @type {import('keycloak-js').KeycloakInitOptions} */
-let initConfig = {
+const initConfig = {
     onLoad: 'check-sso',
     silentCheckSsoRedirectUri: `${href}keycloak-check-sso.html`,
     pkceMethod: 'S256',
@@ -17,16 +17,22 @@ let initConfig = {
 };
 
 export default class extends Adapter {
+    /** @type {import('keycloak-js').KeycloakInstance} */
+    kc;
+
     /**
      * Constructor
-     * @param {Object} [config={}]
+     * @param {Record<string, any>} [config={}]
      */
     constructor(config = {}) {
-        config = { ...configDefault, ...config };
-        super(config);
-        /** @type {import('keycloak-js').KeycloakInstance} */
-        this.kc = Keycloak(config);
+        /**
+         * @type {import('keycloak-js').KeycloakConfig | string}
+         */
+        const mergedConfig = { ...configDefault, ...config };
+        super(mergedConfig);
+        this.kc = Keycloak(mergedConfig);
     }
+
     /**
      * Init adapter
      * @return {Promise}
@@ -34,15 +40,17 @@ export default class extends Adapter {
     init() {
         return this.kc.init(initConfig);
     }
+
     /**
      * Login method
-     * @param {Object} [credentials={}]  user credentials
+     * @param {Record<string, any>} [credentials={}]  user credentials
      * @return {Promise}
      */
     login(credentials = {}) {
         this.kc.login();
         return super.login(credentials);
     }
+
     /**
      * Logout method
      * @return {Promise}
@@ -51,14 +59,16 @@ export default class extends Adapter {
         this.kc.logout();
         return super.logout();
     }
+
     /**
      * If the token expires within minValidity seconds the token is refreshed.
-     * @param {Number} [minValidity=5]
-     * @return {Promise.<Boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
+     * @param {number} [minValidity=5]
+     * @return {Promise<boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
      */
     updateToken(minValidity = 5) {
         return this.kc.updateToken(minValidity);
     }
+
     /**
      * Returns user profile (depends on the adapter)
      * @return {Promise.<Object>}   Promise; resolve(profile); reject() on error
@@ -66,28 +76,32 @@ export default class extends Adapter {
     getUserProfile() {
         return this.kc.loadUserProfile();
     }
+
     /**
      * Returns true if the token has less than minValidity seconds left before it expires (minValidity is optional, if not specified 0 is used).
-     * @param {Number} [minValidity=5]
-     * @return {Boolean}
+     * @param {number} [minValidity=5]
+     * @return {boolean}
      */
     isTokenExpired(minValidity = 5) {
         return this.kc.isTokenExpired(minValidity);
     }
+
     /**
      * Return auth status
-     * @return {Boolean}
+     * @return {boolean}
      */
     get authenticated() {
         return this.kc.authenticated;
     }
+
     /**
      * Return token
-     * @return {String}
+     * @return {string}
      */
     get token() {
         return this.kc.token;
     }
+
     /**
      * Return parsed token
      * @return {?Object}
@@ -95,10 +109,12 @@ export default class extends Adapter {
     get tokenParsed() {
         return this.kc.tokenParsed;
     }
+
     /**
      * Returns default config
-     * @return {Object}
+     * @return {Record<string, any>}
      */
+    // eslint-disable-next-line class-methods-use-this
     get configDefault() {
         return { ...configDefault };
     }

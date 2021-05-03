@@ -37,8 +37,8 @@ export default {
     },
     computed: {
         cssClass() {
-            let { type, inline, icon } = this;
-            let a = [`btn-${type}`];
+            const { type, inline, icon } = this;
+            const a = [`btn-${type}`];
             if (!inline) {
                 a.push('d-flex');
             }

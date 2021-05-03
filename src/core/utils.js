@@ -23,7 +23,7 @@ class ElemEvent extends CustomEvent {
  * Returns generated Constructor-specific dom id
  * @return {string}
  */
-export const getDomId = elemId => `elem-${elemId}`;
+export const getDomId = (elemId) => `elem-${elemId}`;
 
 /**
  * Dispatches Elem Vue Component LC-specific Event
@@ -32,11 +32,11 @@ export const getDomId = elemId => `elem-${elemId}`;
  * @param {string} eventName
  * @this {VueInstance}
  */
-export const dispatchEventByName = function(eventName) {
+export function dispatchEventByName(eventName) {
     const e = new ElemEvent(eventName, this);
     this.$emit(e.type, this);
     document.dispatchEvent(e);
-};
+}
 
 /**
  * Patches vue component instance root dom element with runtime prop
@@ -44,7 +44,7 @@ export const dispatchEventByName = function(eventName) {
  *
  * @param {VueInstance & {id, type}} context
  */
-export const patchComponentRootDomElement = context => {
+export const patchComponentRootDomElement = (context) => {
     const { $el, id, type } = context;
     if (!$el) {
         return;
@@ -62,13 +62,24 @@ export const patchComponentRootDomElement = context => {
  * Returns descriptor props hash with default values
  *
  * @param {ElemDescriptor} descriptor
- * @return {Object}
+ * @return {Record<string, any>}
  */
-export const getDescriptorDefaultProps = descriptor => {
-    const o = {};
-    let p = descriptor.props;
-    for (let n in p) {
-        o[n] = typeof p[n].default === 'function' ? p[n].default() : p[n].default;
-    }
-    return o;
+export const getDescriptorDefaultProps = (descriptor) => {
+    const { props } = descriptor;
+    return Object.entries(props).reduce((defaults, [propName, propOptions]) => {
+        const { default: value } = propOptions;
+        return {
+            ...defaults,
+            [propName]: typeof value === 'function' ? value() : value
+        };
+    });
 };
+
+/**
+ *
+ * @param {Record<string, unknown>} object
+ * @param {function([string, unknown]): boolean} filterFn
+ * @return {Record<string, unknown>}
+ */
+export const filterObject = (object, filterFn) =>
+    Object.fromEntries(Object.entries(object).filter(filterFn));

@@ -1,21 +1,22 @@
 import { SDK, Query, Dremio, Errors } from 'goodt-dremio-sdk';
-import AuthManager from './../managers/AuthManager';
-import Const from './../Const';
 import cloneDeep from 'lodash/cloneDeep';
+// eslint-disable-next-line import/no-cycle
+import AuthManager from '../managers/AuthManager';
+import Const from '../Const';
 
 /**
  * Dremio sdk factory
  * @param {import('goodt-dremio-sdk').SDKConfig} config
  * @return {SDK}  sdk instance
  */
-let SDKFactory = (config = {}) => {
-    let configDefault = {
+const SDKFactory = (config = {}) => {
+    const configDefault = {
         host: Const.DREMIO_API_URL
     };
-    let instance = new SDK({ ...configDefault, ...config });
-    instance.beforeRequest = () => {
-        return new Promise(resolve => {
-            let adapter = AuthManager.instance.adapter;
+    const instance = new SDK({ ...configDefault, ...config });
+    instance.beforeRequest = () =>
+        new Promise(resolve => {
+            const { adapter } = AuthManager.instance;
             if (adapter) {
                 adapter
                     .updateToken()
@@ -27,18 +28,17 @@ let SDKFactory = (config = {}) => {
                 resolve();
             }
         });
-    };
     return instance;
 };
 /**
  * (dremio) Widget component mixin
  */
-let mixin = {
+const mixin = {
     data() {
         return {
             /**
              * Dremio query 'offset'
-             * @property {Number}
+             * @property {number}
              */
             offset: 0,
             /**
@@ -52,14 +52,14 @@ let mixin = {
             /**
              * loadData() method hooks
              * @see loadData()
-             * @property {Object}
+             * @property {Record<string, any>}
              */
             loadDataHooks: {
                 before: () => {
                     this.loading = true;
                 },
-                then: r => r,
-                catch: e => {
+                then: (r) => r,
+                catch: (e) => {
                     if (!e.isCancel) {
                         this.error = e;
                     }
@@ -75,42 +75,42 @@ let mixin = {
     computed: {
         /**
          * alias ~ props.dremio.limit
-         * @return {Number}
+         * @return {number}
          */
         limit() {
-            let { dremio } = this.props;
+            const { dremio } = this.props;
             return dremio && dremio.limit != null ? dremio.limit : 0;
         },
         /**
          * alias ~ result.rowCount
-         * @return {Number}
+         * @return {number}
          */
         rowCount() {
             return this.result ? this.result.rowCount : 0;
         },
         page: {
             /**
-             * @param {Number} val
+             * @param {number} val
              */
             set(val) {
                 this.offset = (val - 1) * this.limit;
             },
             /**
-             * @return {Number}
+             * @return {number}
              */
             get() {
                 return this.limit ? this.offset / this.limit + 1 : 1;
             }
         },
         /**
-         * @return {Number}
+         * @return {number}
          */
         pages() {
             // @ts-ignore
             return this.limit ? Math.ceil(this.rowCount / this.limit) : 1;
         },
         /**
-         * @return {?String}
+         * @return {?string}
          */
         dremioStr() {
             try {
@@ -158,11 +158,11 @@ let mixin = {
             this.dremioSdk.cancelActiveRequests();
             this.loadDataHooks.before();
 
-            let query = this.queryHelper.buildQuery();
+            const query = this.queryHelper.buildQuery();
 
             this.dremioSdk
                 .getData(query, this.offset, this.limit)
-                .then(result => {
+                .then((result) => {
                     this.result = result;
                     this.loadDataHooks.then(result);
                 })
@@ -173,7 +173,7 @@ let mixin = {
          * Inits queryHelpher, injects dremio vars, reloads data
          */
         dremioHandler() {
-            let { dremio } = this.props;
+            const { dremio } = this.props;
             if (!dremio) {
                 this.result = null;
                 return;
@@ -186,7 +186,7 @@ let mixin = {
          * Injects dremio.query metrics/dimensions/fields in descriptor.vars
          */
         setDremioVars() {
-            let dremioParams = this.getDremioQueryParamNames();
+            const dremioParams = this.getDremioQueryParamNames();
 
             this.dremioVars = this.dremioVars.reduce((arr, name) => {
                 if (dremioParams.includes(name)) {
@@ -197,26 +197,26 @@ let mixin = {
                 return arr;
             }, []);
 
-            dremioParams.forEach(name => {
-                let variable = { description: name };
+            dremioParams.forEach((name) => {
+                const variable = { description: name };
                 this.$set(this.descriptor.vars, name, variable);
                 this.dremioVars.push(name);
             });
         },
         /**
          * Applies dremio filters
-         * @param {Object} params   params to be injected
+         * @param {Record<string, any>} params   params to be injected
          */
         applyDremioFilters(params) {
-            let { query } = this.queryHelper;
-            let dremioParams = this.getDremioQueryParamNames();
+            const { query } = this.queryHelper;
+            const dremioParams = this.getDremioQueryParamNames();
             let anyFilterApplied = false;
 
             Object.entries(params).forEach(([name, paramVal]) => {
                 if (dremioParams.includes(name)) {
                     anyFilterApplied = true;
                     if (paramVal !== null) {
-                        let filter = this.createDremioFilter(name, paramVal);
+                        const filter = this.createDremioFilter(name, paramVal);
                         this.queryHelper.query = Query.queryInsertUpdateFilter(query, filter);
                     } else {
                         this.queryHelper.query = Query.queryRemoveFilter(query, name);
@@ -228,12 +228,12 @@ let mixin = {
         },
         /**
          * Creates a new dremio query filter
-         * @param {String} name         metric/dimension/field name
-         * @param {String|Array} value  value
-         * @return {Object} filter
+         * @param {string} name         metric/dimension/field name
+         * @param {string|Array} value  value
+         * @return {Record<string, any>} filter
          */
         createDremioFilter(name, value) {
-            let isArray = Array.isArray(value);
+            const isArray = Array.isArray(value);
             return Query.createFilter({
                 name,
                 type: isArray ? Query.FILTER_TYPE.IN : Query.FILTER_TYPE.EQ,
@@ -242,13 +242,13 @@ let mixin = {
         },
         /**
          * Returns dremio query metric/dimension/field names
-         * @return {String[]}
+         * @return {string[]}
          */
         getDremioQueryParamNames() {
-            let { query, dimensionList } = this.queryHelper;
-            let metrics = Query.queryMetricNames(query);
-            let dimensions = Object.keys(dimensionList);
-            let fields = Query.queryFieldNames(query);
+            const { query, dimensionList } = this.queryHelper;
+            const metrics = Query.queryMetricNames(query);
+            const dimensions = Object.keys(dimensionList);
+            const fields = Query.queryFieldNames(query);
             return [...metrics, ...dimensions, ...fields];
         }
     }

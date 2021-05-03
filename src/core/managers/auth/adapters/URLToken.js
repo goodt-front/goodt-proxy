@@ -1,8 +1,8 @@
-import Adapter from './Adapter';
 import merge from 'lodash/merge';
-import Http from './../../../net/Http';
+import Adapter from './Adapter';
+import Http from '../../../net/Http';
 
-let configDefault = {
+const configDefault = {
     tokenParam: 'token',
     login: {
         url: '',
@@ -17,38 +17,40 @@ let configDefault = {
 export default class extends Adapter {
     /**
      * Constructor
-     * @param {Object} [config={}]
+     * @param {Record<string, any>} [config={}]
      */
     constructor(config = {}) {
-        config = merge({}, configDefault, config);
-        super(config);
+        const mergedConfig = merge({}, configDefault, config);
+        super(mergedConfig);
         this._http = new Http();
         this._token = null;
         this._authenticated = false;
     }
+
     /**
      * Init adapter
      * @return {Promise}
      */
     init() {
-        return new Promise(resolve => {
-            let p = new URLSearchParams(location.search);
+        return new Promise((resolve) => {
+            let p = new URLSearchParams(window.location.search);
             this._token = p.get(this.config.tokenParam);
             if (!this._token) {
-                p = new URLSearchParams(location.hash.replace(/^.*#.*\?/, ''));
+                p = new URLSearchParams(window.location.hash.replace(/^.*#.*\?/, ''));
                 this._token = p.get(this.config.tokenParam);
             }
             resolve(this._authenticated);
         });
     }
+
     /**
      * Login method
-     * @param {Object} [credentials={}]  user credentials
+     * @param {Record<string, any>} [credentials={}]  user credentials
      * @return {Promise}
      */
     login(credentials = {}) {
         return new Promise((resolve, reject) => {
-            let { url, method } = this.config.login;
+            const { url, method } = this.config.login;
             this._http
                 .request({
                     url,
@@ -57,7 +59,7 @@ export default class extends Adapter {
                     options: { withCredentials: true }
                 })
                 .then(({ data }) => {
-                    this._authenticated = data == 1;
+                    this._authenticated = data === 1;
                     if (this._authenticated) {
                         resolve();
                     } else {
@@ -66,37 +68,42 @@ export default class extends Adapter {
                 });
         });
     }
+
     /**
      * Logout method
      * @return {Promise}
      */
     logout() {
-        return new Promise(resolve => {
-            let { url, method } = this.config.logout;
+        return new Promise((resolve) => {
+            const { url, method } = this.config.logout;
             this._http.request({ url, method }).then(() => {
                 this._authenticated = false;
                 resolve();
             });
         });
     }
+
     /**
      * Return auth status
-     * @return {Boolean}
+     * @return {boolean}
      */
     get authenticated() {
         return this._authenticated;
     }
+
     /**
      * Return token
-     * @return {String}
+     * @return {string}
      */
     get token() {
         return this._token;
     }
+
     /**
      * Returns default config
-     * @return {Object}
+     * @return {Record<string, any>}
      */
+    // eslint-disable-next-line class-methods-use-this
     get configDefault() {
         return { ...configDefault };
     }

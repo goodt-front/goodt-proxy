@@ -44,18 +44,18 @@
     </div>
 </template>
 <script>
-import Panel from './../Panel.vue';
-import { ValueObject } from '../managers/StoreManager';
 import isEqual from 'lodash/isEqual';
+import Panel from '../Panel.vue';
+import { ValueObject } from '../managers/StoreManager';
 
 /**
  * Var alias factory
  * @return {ElemVarAliasDef}
  */
-let varAlias = ({ listen = '', trigger = '', meta = null }) => ({
+const varAlias = ({ listen = '', trigger = '', meta = null }) => ({
     listen,
     trigger,
-    meta: meta ? meta : ValueObject.defaultMeta()
+    meta: meta || ValueObject.defaultMeta()
 });
 
 export default {
@@ -69,26 +69,26 @@ export default {
     },
     computed: {
         varsInfo() {
-            let { varsDescriptor } = this;
-            let { varAliases } = this.props;
-            let arr = [];
-            for (let name in varsDescriptor) {
-                let alias = varAlias(varAliases[name] || {});
+            const { varsDescriptor } = this;
+            const { varAliases } = this.props;
+            const arr = [];
+            for (const name in varsDescriptor) {
+                const alias = varAlias(varAliases[name] || {});
                 arr.push({ name, ...varsDescriptor[name], alias });
             }
             return arr.sort((a, b) => {
-                let i = a.sortIndex || 0;
-                let j = b.sortIndex || 0;
+                const i = a.sortIndex || 0;
+                const j = b.sortIndex || 0;
                 return i - j;
             });
         }
     },
     methods: {
         exportAliases() {
-            let aliases = {};
+            const aliases = {};
             this.varsInfo.forEach(({ name, alias }) => {
-                let { listen, trigger, meta } = alias;
-                let obj = {};
+                const { listen, trigger, meta } = alias;
+                const obj = {};
                 // no lister,trigger -> ignore
                 if (!listen && !trigger) {
                     return;

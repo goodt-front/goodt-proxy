@@ -31,7 +31,7 @@
                     Поле
                 </div>
                 <textarea
-                    v-if="typeEdit == typeExpression"
+                    v-if="typeEdit === typeExpression"
                     v-model="fieldEdit"
                     class="textarea textarea-small w-100"
                     @change="changed()"
@@ -61,7 +61,6 @@
     </div>
 </template>
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import { Query } from 'goodt-dremio-sdk';
 
 export default {
@@ -116,16 +115,16 @@ export default {
     },
     methods: {
         validateName() {
-            let val = this.nameEdit.trim();
-            let i = this.metricNames.indexOf(val);
+            const val = this.nameEdit.trim();
+            const i = this.metricNames.indexOf(val);
             return val.length > 0 && i < 0;
         },
         validateType() {
-            return this.metricTypes.find(el => el.type == this.typeEdit) != null;
+            return this.metricTypes.find((el) => el.type === this.typeEdit) != null;
         },
         changed() {
             if (this.validateName() && this.validateType()) {
-                let { nameEdit: name, typeEdit: type, fieldEdit: field } = this;
+                const { nameEdit: name, typeEdit: type, fieldEdit: field } = this;
                 this.$emit('change', { name: name.trim(), type, field });
             } else {
                 this.$emit('invalid');

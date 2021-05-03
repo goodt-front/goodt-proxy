@@ -32,8 +32,9 @@
 </template>
 <script>
 import { PortalTarget } from 'portal-vue';
-import { ElemEvent, Const } from './../index';
-import { Popup } from '../components/ui/index';
+// eslint-disable-next-line import/no-cycle
+import { ElemEvent, Const as Globals } from '..';
+import { Popup } from '../components/ui';
 import {
     AuthManager,
     ConstManager,
@@ -41,7 +42,7 @@ import {
     EB,
     RouteManager,
     StoreManager
-} from './../managers/index';
+} from '../managers';
 
 const { store } = StoreManager;
 const { EventBus, EventBusEvent } = EB;
@@ -70,7 +71,7 @@ export default {
         envConstants: {
             type: Object,
             default() {
-                return { ...Const };
+                return { ...Globals };
             }
         },
         appConstants: {
@@ -122,7 +123,7 @@ export default {
             authAdapterUserProfile: {},
             /** @type {EventBus} */
             ebi: null,
-            portalName: Const.PORTAL_TARGET_NAME_POPUP,
+            portalName: Globals.PORTAL_TARGET_NAME_POPUP,
             authenticated: false,
             showConsole: false,
             consolePopupDialog: {
@@ -132,7 +133,7 @@ export default {
         };
     },
     computed: {
-        /** @return {object} */
+        /** @return {Record<string, any>} */
         storeState() {
             return store.state;
         },
@@ -161,8 +162,8 @@ export default {
     methods: {
         /**
          * Registers core module
-         * @param {String} key
-         * @param {Object} m
+         * @param {string} key
+         * @param {Record<string, any>} m
          */
         registerModule(key, m) {
             MODULES[key] = m;
@@ -172,12 +173,14 @@ export default {
          */
         initConst() {
             const { envConstants } = this;
-            for (let k in Const) {
-                if (Object.prototype.hasOwnProperty.call(envConstants, k)) {
-                    Const[k] = envConstants[k];
+            // eslint-disable-next-line no-restricted-syntax
+            for (const constant in Globals) {
+                if (Object.prototype.hasOwnProperty.call(envConstants, constant)) {
+                    Globals[constant] = envConstants[constant];
                 }
             }
-            this.registerModule(MODULE_KEYS.CONST, Const);
+
+            this.registerModule(MODULE_KEYS.CONST, Globals);
         },
         /**
          * Init auth manager
@@ -193,7 +196,9 @@ export default {
                 })
                 .then(() => {
                     this.authenticated = true;
-                    instance.adapter.getUserProfile().then(p => (this.authAdapterUserProfile = p));
+                    instance.adapter.getUserProfile().then((p) => {
+                        this.authAdapterUserProfile = p;
+                    });
                 });
             this.registerModule(MODULE_KEYS.AUTH_MANAGER, AuthManager);
         },
@@ -213,7 +218,8 @@ export default {
             const { demoFiles } = this;
             const { instance } = FileManager;
             const dispose = instance.onBrowse(({ resolve }) => {
-                const r = confirm('Select demo files?');
+                // eslint-disable-next-line no-alert
+                const r = window.confirm('Select demo files?');
                 resolve(r ? demoFiles : []);
             });
             this.$on('hook:destroyed', dispose);
@@ -244,7 +250,7 @@ export default {
         initEventBus() {
             const ebi = new EventBus(store, RouteManager.instance);
             // DI
-            const handler = e => e.instance.setEventBus(ebi);
+            const handler = (e) => e.instance.setEventBus(ebi);
             this.$on('hook:created', () => document.addEventListener(ElemEvent.MOUNTED, handler));
             this.$on('hook:destroyed', () =>
                 document.removeEventListener(ElemEvent.MOUNTED, handler)

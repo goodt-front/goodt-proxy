@@ -70,9 +70,9 @@
 import { Portal } from 'portal-vue';
 import QueryEditor from './dremio/QueryEditor.vue';
 import ImportDatasetPopup from './dremio/ImportDatasetPopup.vue';
-import { Query } from './../dremio/index';
-import Panel from './../Panel.vue';
-import Const from './../Const';
+import { Query } from '../dremio';
+import Panel from '../Panel.vue';
+import Const from '../Const';
 
 const { KEY } = Query;
 
@@ -105,7 +105,7 @@ export default {
             if (!this.query) {
                 return null;
             }
-            let from = this.query[KEY.FROM];
+            const from = this.query[KEY.FROM];
             return from[from.length - 1];
         }
     },

@@ -1,10 +1,10 @@
 let constManager = null;
-let constManagerEnforcer = Symbol();
+const constManagerEnforcer = Symbol('constManagerEnforcer');
 
 export default class ConstManager {
     /**
      * Constructor
-     * @param {Symbol} enforcer  singleton enforcer
+     * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
         if (enforcer !== constManagerEnforcer) {
@@ -12,6 +12,7 @@ export default class ConstManager {
         }
         this._constants = {};
     }
+
     /**
      * @return {ConstManager}
      */
@@ -21,9 +22,10 @@ export default class ConstManager {
         }
         return constManager;
     }
+
     /**
      * Return key value or key if no value found
-     * @param {String} key  key
+     * @param {string} key  key
      * @return {any} value
      */
     getConstValue(key) {
@@ -32,16 +34,18 @@ export default class ConstManager {
         }
         return this._constants[key];
     }
+
     /**
      * Set the constants hash
-     * @param {Object} constants
+     * @param {Record<string, any>} constants
      */
     setConstantsHash(constants = {}) {
         this._constants = constants;
     }
+
     /**
      * Return the constants hash
-     * @return {Object}
+     * @return {Record<string, any>}
      */
     getConstantsHash() {
         return this._constants;

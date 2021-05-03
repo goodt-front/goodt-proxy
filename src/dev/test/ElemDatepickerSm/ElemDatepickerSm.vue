@@ -6,7 +6,7 @@
 <script>
 import { Elem } from '../../../core/index';
 
-let descriptor = () => ({
+const descriptor = () => ({
     props: {},
     vars: {
         date: {
@@ -31,7 +31,7 @@ export default {
         }
     },
     methods: {
-        isChildAllowed(type) {
+        isChildAllowed() {
             return false;
         },
         getSlotNames() {

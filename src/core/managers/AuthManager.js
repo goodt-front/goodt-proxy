@@ -1,19 +1,19 @@
-import Adapter from './auth/adapters/Adapter';
-import Adapters from './auth/adapters/index';
+// eslint-disable-next-line import/no-cycle
+import Adapters from './auth/adapters';
 
 /** @type {AuthManager} */
 let authManager = null;
-let authManagerEnforcer = Symbol();
+const authManagerEnforcer = Symbol('authManagerEnforcer');
 
 /**
  * @typedef {Object} AdapterInfo
- * @property {String} name      name
- * @property {Object} config    default config
+ * @property {string} name      name
+ * @property {Record<string, any>} config    default config
  */
 export default class AuthManager {
     /**
      * Constructor
-     * @param {Symbol} enforcer  singleton enforcer
+     * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
         if (enforcer !== authManagerEnforcer) {
@@ -24,6 +24,7 @@ export default class AuthManager {
          */
         this._adapter = null;
     }
+
     /**
      * @return {AuthManager}
      */
@@ -33,21 +34,23 @@ export default class AuthManager {
         }
         return authManager;
     }
+
     /**
      * Initializes manager with the specified adapter
-     * @param {String} adapterName  adapter name
-     * @param {Object} config       adapter config
+     * @param {string} adapterName  adapter name
+     * @param {Record<string, any>} config       adapter config
      * @return {Promise}
      */
     init(adapterName, config = {}) {
         this._adapter = this._createAdapter(adapterName, config);
         return this._adapter.init();
     }
+
     /**
      * Destroys adapter
      */
     destroy() {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             if (this.adapter) {
                 this.adapter.destroy().finally(() => {
                     this._adapter = null;
@@ -58,6 +61,7 @@ export default class AuthManager {
             }
         });
     }
+
     /**
      * Current used adapter
      * @return {Adapter} adapter
@@ -65,33 +69,39 @@ export default class AuthManager {
     get adapter() {
         return this._adapter;
     }
+
     /**
      * Available adapters list
      * @return {Object.<String, Adapter>}
      */
+    // eslint-disable-next-line class-methods-use-this
     get adaptersList() {
         return Adapters;
     }
+
     /**
      * Available adapters info
      * @return {AdapterInfo[]}
      */
+    // eslint-disable-next-line class-methods-use-this
     get adaptersInfo() {
-        let a = [];
-        for (let name in Adapters) {
-            let config = new Adapters[name]().configDefault;
-            a.push({ name, config });
-        }
-        return a;
+        const adapters = Object.entries(Adapters).map(([name, Ctor]) => ({
+            name,
+            config: new Ctor().configDefault
+        }));
+
+        return adapters;
     }
+
     /**
      * @private Creates a new adapter instance
-     * @param {String} adapterName
-     * @param {Object} config
+     * @param {string} adapterName
+     * @param {Record<string, any>} config
      * @returns
      */
+    // eslint-disable-next-line class-methods-use-this
     _createAdapter(adapterName, config) {
-        let AdapterClass = Adapters[adapterName];
+        const AdapterClass = Adapters[adapterName];
         if (!AdapterClass) {
             throw new Error(`AuthManager adapter not found: ${adapterName}`);
         }

@@ -65,10 +65,10 @@
 </style>
 <script>
 import { Portal } from 'portal-vue';
-import Const from './../../Const';
+import Globals from '../../Const';
 
-let mouse = e => ({ x: e.pageX, y: e.pageY });
-let FocusManager = {
+const mouse = (e) => ({ x: e.pageX, y: e.pageY });
+const FocusManager = {
     pool: [],
     get active() {
         return this.pool.length ? this.pool[this.pool.length - 1] : null;
@@ -77,7 +77,7 @@ let FocusManager = {
         this.pool.push(id);
     },
     remove(id) {
-        this.pool = this.pool.filter(v => v != id);
+        this.pool = this.pool.filter((v) => v !== id);
     }
 };
 let ID = 1;
@@ -107,16 +107,16 @@ export default {
             panelDragging: false,
             panelHasFocus: false,
             focusManager: FocusManager,
-            portalTarget: Const.PORTAL_TARGET_NAME_POPUP
+            portalTarget: Globals.PORTAL_TARGET_NAME_POPUP
         };
     },
     computed: {
         panelClass() {
-            let { animatePanel, panelHasFocus } = this;
+            const { animatePanel, panelHasFocus } = this;
             return { animate: animatePanel, focus: panelHasFocus };
         },
         panelStyle() {
-            let { x, y } = this.panelPos;
+            const { x, y } = this.panelPos;
             return {
                 left: `${x | 0}px`,
                 top: `${y | 0}px`
@@ -126,7 +126,7 @@ export default {
     watch: {
         'focusManager.active': {
             handler(v) {
-                this.panelHasFocus = this.panelId == v;
+                this.panelHasFocus = this.panelId === v;
             },
             immediate: true
         }
@@ -161,7 +161,7 @@ export default {
             if (this.observer) {
                 return;
             }
-            let cfg = { attributes: true, childList: true, subtree: true };
+            const cfg = { attributes: true, childList: true, subtree: true };
             this.observer = new MutationObserver(() => this.$nextTick(this.fixPanelPos));
             this.observer.observe(this.$refs.panelbody, cfg);
         },
@@ -191,8 +191,8 @@ export default {
             }
         },
         placePanelInitPos() {
-            let r = this.$el.getBoundingClientRect();
-            let p = this.$refs.panel.getBoundingClientRect();
+            const r = this.$el.getBoundingClientRect();
+            const p = this.$refs.panel.getBoundingClientRect();
             this.panelPos.x = r.x - p.width - this.panelOffset.x;
             this.panelPos.y = r.y + r.height / 2 - p.height / 2;
             setTimeout(() => {
@@ -201,8 +201,8 @@ export default {
             });
         },
         fixPanelPos() {
-            let r = this.$refs.panel.getBoundingClientRect();
-            let { innerWidth: width, innerHeight: height } = window;
+            const r = this.$refs.panel.getBoundingClientRect();
+            const { innerWidth: width, innerHeight: height } = window;
             if (r.x < 0) {
                 this.panelPos.x = 0;
             } else if (r.right > width) {
@@ -219,15 +219,15 @@ export default {
             FocusManager.push(this.panelId);
         },
         onPanelDraggerMouseDown(e) {
-            let m = mouse(e);
-            let r = e.currentTarget.getBoundingClientRect();
+            const m = mouse(e);
+            const r = e.currentTarget.getBoundingClientRect();
             this.animatePanel = false;
             this.panelDragOffset = { x: r.x - m.x, y: r.y - m.y };
             this.panelDragging = true;
             this.addMouseListeners();
         },
         onDocMouseMove(e) {
-            let m = mouse(e);
+            const m = mouse(e);
             this.panelPos = {
                 x: m.x + this.panelDragOffset.x,
                 y: m.y + this.panelDragOffset.y

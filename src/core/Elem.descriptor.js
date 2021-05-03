@@ -160,11 +160,18 @@ const descriptor = () => ({
             type: Object,
             /**
              * Returns aliases hash for 'vars'
-             * @return {Object.<String, ElemVarAliasDef>}
+             * @return {Record<string, ElemVarAliasDef>}
              */
             default() {
                 return {};
             }
+        },
+        slotData: {
+            type: Object,
+            /**
+             * @return {Record<string, any>}
+             */
+            default: () => ({})
         }
     },
     vars: {}

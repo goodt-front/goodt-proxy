@@ -167,10 +167,10 @@
     </div>
 </template>
 <script>
-import ExcelTable from './ExcelTable.vue';
-import { Query, SDKFactory } from './../../dremio/index';
 import { Pagination } from 'goodteditor-ui';
 import cloneDeep from 'lodash/cloneDeep';
+import ExcelTable from './ExcelTable.vue';
+import { Query, SDKFactory } from '../../dremio';
 
 const { KEY } = Query;
 
@@ -233,7 +233,7 @@ export default {
     },
     computed: {
         dremio() {
-            let { query, dimensionList, queryLimit: limit } = this;
+            const { query, dimensionList, queryLimit: limit } = this;
             return limit !== 0 ? { query, dimensionList, limit } : { query, dimensionList };
         },
         sql() {
@@ -265,14 +265,14 @@ export default {
         },
         header() {
             return this.schema.map(({ name, type }) => {
-                let column = name;
+                const column = name;
                 let field = name;
                 let selected = false;
                 let meta = this.fieldTypesMeta[type];
                 meta = meta || this.fieldTypesMeta.UNKNOWN;
 
-                for (let f in this.fields) {
-                    if (this.fields[f] == column) {
+                for (const f in this.fields) {
+                    if (this.fields[f] === column) {
                         field = f;
                         selected = true;
                         break;
@@ -283,7 +283,7 @@ export default {
         },
         headerAllSelected() {
             return (
-                this.header.reduce((acc, { selected }) => (selected ? acc + 1 : acc), 0) ==
+                this.header.reduce((acc, { selected }) => (selected ? acc + 1 : acc), 0) ===
                 this.header.length
             );
         },
@@ -295,7 +295,7 @@ export default {
             if (!this.demo && !this.metrics.length && !Object.keys(this.dimensionList).length) {
                 return null;
             }
-            let q = { ...this.query, [KEY.FIELDS]: {} };
+            const q = { ...this.query, [KEY.FIELDS]: {} };
             return JSON.stringify(q);
         }
     },
@@ -306,7 +306,7 @@ export default {
                     this.result = null;
                     return;
                 }
-                if (val != valOld) {
+                if (val !== valOld) {
                     this.load();
                 }
             }
@@ -353,17 +353,17 @@ export default {
                 .finally(() => (this.loading = false));
         },
         buildQuery() {
-            let query = cloneDeep(this.query);
-            let dl = this.dimensionList || {};
-            for (let name in dl) {
-                let field = dl[name][0];
-                let d = Query.createDimension({ name, field });
+            const query = cloneDeep(this.query);
+            const dl = this.dimensionList || {};
+            for (const name in dl) {
+                const field = dl[name][0];
+                const d = Query.createDimension({ name, field });
                 Query.queryInsertUpdateDimension(query, d);
             }
             return query;
         },
         onColumnSummarySelect() {
-            let selected = this.headerAllSelected ? [] : this.header.map(({ column }) => column);
+            const selected = this.headerAllSelected ? [] : this.header.map(({ column }) => column);
             this.$emit('column-summary-select', selected);
         },
         onColumnSelect(item) {

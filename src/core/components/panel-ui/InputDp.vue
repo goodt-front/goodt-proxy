@@ -20,8 +20,8 @@
     </div>
 </template>
 <script>
-import { ControlMixin } from './utils/index';
 import { InputDatePicker } from 'goodteditor-ui';
+import { ControlMixin } from './utils';
 
 /**
  * For more <b>props</b> @see https://goodt-ui.netlify.app/#!/InputDatePicker
@@ -31,7 +31,7 @@ export default {
     mixins: [ControlMixin],
     computed: {
         listenersDp() {
-            let { clear, ...rest } = this.listeners;
+            const { clear, ...rest } = this.listeners;
             return { ...rest, clear: this.onClear };
         }
     },

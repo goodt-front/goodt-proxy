@@ -119,7 +119,7 @@ export default {
             const { type, children, component } = this.elem;
             const id = this.getElemNextId();
             /** @param {ElemInfo} child */
-            const patch = child => ({
+            const patch = (child) => ({
                 ...child,
                 id: this.getElemNextId(),
                 children: child.children.map(patch)
@@ -166,8 +166,8 @@ export default {
             this.elemInstance = ci;
             this.elemDescriptor = ci.descriptor;
 
-            Promise.all(ci.getPanels()).then(m => {
-                this.panels = m.map(mi => ({ def: mi.default, meta: mi.default.data().$meta }));
+            Promise.all(ci.getPanels()).then((m) => {
+                this.panels = m.map((mi) => ({ def: mi.default, meta: mi.default.data().$meta }));
             });
         },
         onPanelPropsChange(newProps, propName = null) {

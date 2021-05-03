@@ -125,7 +125,7 @@ export default {
             }
         },
         namesAvailable() {
-            let arr = this.filterNamesAvailable.slice(0);
+            const arr = this.filterNamesAvailable.slice(0);
             arr.sort((a, b) => a.localeCompare(b));
             return arr;
         },
@@ -161,7 +161,7 @@ export default {
             return this.filterEdit.type.length > 0;
         },
         validateValues() {
-            let t = this.filterTypes[this.filterEdit.type];
+            const t = this.filterTypes[this.filterEdit.type];
             return t ? t.validator(this.filterEdit.value) : false;
         },
         selectValueOption(opt) {

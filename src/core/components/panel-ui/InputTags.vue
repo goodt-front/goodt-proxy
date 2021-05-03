@@ -19,7 +19,7 @@
                     <template #tag="{ tag, remove }">
                         <!-- 
                         @slot tag slot
-                        @binding {String} tag           tag
+                        @binding {string} tag           tag
                         @binding {Function} remove      remove tag function(tag:String)
                         @binding {Function} setNewTag   set new tag function(tag:String)
                         -->
@@ -31,8 +31,8 @@
     </div>
 </template>
 <script>
-import { ControlMixin } from './utils/index';
 import { InputTags as UiInputTags } from 'goodteditor-ui';
+import { ControlMixin } from './utils';
 
 export default {
     components: { UiInputTags },
@@ -63,11 +63,11 @@ export default {
         },
         /**
          * Sest the new tag for the input
-         * @param {String} val
+         * @param {string} val
          * @public
          */
         setNewTag(val) {
-            let el = this.$refs.tags;
+            const el = this.$refs.tags;
             el && el.setNewTag(val);
         }
     }

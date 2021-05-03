@@ -10,19 +10,19 @@ import { EventBusBase, EventBusEvent } from './EventBus';
  */
 /**
  * @typedef {Object} FileManagerOptions
- * @property {Boolean} selectMultiple       multiple file selection mode
+ * @property {boolean} selectMultiple       multiple file selection mode
  */
 /**
  * @typedef {Object} FileInfo
- * @property {String} url   url
- * @property {String} name  name
- * @property {String} type  mime-type
- * @property {Number} size  size in bytes
- * @property {String} hash  file hash
+ * @property {string} url   url
+ * @property {string} name  name
+ * @property {string} type  mime-type
+ * @property {number} size  size in bytes
+ * @property {string} hash  file hash
  */
 let fileManager = null;
-let fileManagerEnforcer = Symbol();
-let eventBusInstance = new EventBusBase();
+const fileManagerEnforcer = Symbol('fileManagerEnforcer');
+const eventBusInstance = new EventBusBase();
 
 const FileManagerEvent = {
     BROWSE: 'browse'
@@ -31,13 +31,14 @@ const FileManagerEvent = {
 export default class FileManager {
     /**
      * Constructor
-     * @param {Symbol} enforcer  singleton enforcer
+     * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
         if (enforcer !== fileManagerEnforcer) {
             throw new Error(`Instantiation failed: use FileManager.instance`);
         }
     }
+
     /**
      * @return {FileManager}
      */
@@ -47,13 +48,15 @@ export default class FileManager {
         }
         return fileManager;
     }
+
     /**
      * Invokes env file manager's browse method for file selection
      * @param {FileManagerOptions} options
-     * @return {Promise.<FileInfo[]>}
+     * @return {Promise<FileInfo[]>}
      */
+    // eslint-disable-next-line class-methods-use-this
     browse({ selectMultiple = true }) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const options = { selectMultiple };
             eventBusInstance.trigger(new EventBusEvent(FileManagerEvent.BROWSE), {
                 options,
@@ -61,11 +64,13 @@ export default class FileManager {
             });
         });
     }
+
     /**
      * Registers a browse() observer (used by the env)
      * @param {BrowseHandler} handler     browse handler invoked by @see browse()
      * @return {Function}                 dispose function to unregister observer
      */
+    // eslint-disable-next-line class-methods-use-this
     onBrowse(handler) {
         const event = new EventBusEvent(FileManagerEvent.BROWSE);
         return eventBusInstance.listen(event, (e, data) => handler(data));

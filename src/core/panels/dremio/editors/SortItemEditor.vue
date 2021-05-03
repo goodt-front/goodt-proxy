@@ -113,10 +113,10 @@ export default {
     },
     methods: {
         validateName() {
-            return this.names.find(el => el == this.itemEdit.name) != null;
+            return this.names.find((el) => el === this.itemEdit.name) != null;
         },
         validateType() {
-            return this.types.find(el => el == this.itemEdit.type) != null;
+            return this.types.find((el) => el === this.itemEdit.type) != null;
         },
         onChange() {
             if (this.validateName() && this.validateType()) {

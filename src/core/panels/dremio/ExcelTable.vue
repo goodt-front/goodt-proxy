@@ -111,24 +111,24 @@ export default {
     },
     computed: {
         headerFull() {
-            let arr = [...this.header];
-            let n = this.numCols - arr.length;
+            const arr = [...this.header];
+            const n = this.numCols - arr.length;
             for (let i = 0; i < n; i++) {
                 arr.push(null);
             }
             return arr;
         },
         bodyFull() {
-            let arr = [...this.body];
-            let n = this.minRows - arr.length;
+            const arr = [...this.body];
+            const n = this.minRows - arr.length;
             for (let i = 0; i < n; i++) {
                 arr.push(null);
             }
             return arr;
         },
         numCols() {
-            let { min, max } = this.minCols;
-            let l = this.header.length;
+            const { min, max } = this.minCols;
+            const l = this.header.length;
             if (l < min) {
                 return min;
             }
@@ -137,7 +137,7 @@ export default {
     },
     methods: {
         toColumnName(num) {
-            let n = alphabet.length;
+            const n = alphabet.length;
             let ret = '';
             for (let a = 1, b = n; (num -= a) >= 0; a = b, b *= n) {
                 ret = alphabet[parseInt((num % b) / a)] + ret;

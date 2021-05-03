@@ -2,6 +2,11 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
+import {
+    buildExternalStateFromInternal,
+    buildInternalStateFromExternal
+} from './mixins/useStoreTransitional';
+
 import { ConstManager, RouteManager, StoreManager, EB } from './managers';
 import descriptor from './Elem.descriptor';
 import {
@@ -17,14 +22,14 @@ const { EventBusWrapper } = EB;
  * Elem events Lifecycle events
  * @enum {string}
  */
-const ElemEvent = {
+const ElemEvent = Object.freeze({
     CREATED: 'elem-created',
     MOUNTED: 'elem-mounted',
     DESTROYED: 'elem-destroyed'
-};
+});
 
 /**
- * @type {import("./Elem.vue.d.ts").ComponentOptions}
+ * @type {import("./Elem.vue").ComponentOptions}
  */
 const ComponentOptions = {
     props: {
@@ -81,18 +86,14 @@ const ComponentOptions = {
         },
         /**
          * Returns the current store state
-         * @return {object}
+         * @return {Record<string, any>} state
          */
         $storeState() {
-            const { state } = store;
-            const aliases = this.props.varAliases ?? {};
-            return Object.keys(aliases).reduce((obj, key) => {
-                const alias = aliases[key].listen;
-                if (alias && state[alias]) {
-                    obj[key] = ValueObject.getValue(state[alias]);
-                }
-                return obj;
-            }, {});
+            const varAliases = this.props.varAliases || {};
+            const { state: externalState } = store;
+            const internalState = buildInternalStateFromExternal(externalState, varAliases);
+
+            return internalState;
         },
         /**
          * Returns the current route
@@ -118,7 +119,7 @@ const ComponentOptions = {
     },
     created() {
         if (this.isEditorMode) {
-            this.$watch('props.varAliases', val => {
+            this.$watch('props.varAliases', (val) => {
                 // @ts-ignore
                 const { eventBusWrapper } = this;
                 if (eventBusWrapper) {
@@ -149,7 +150,7 @@ const ComponentOptions = {
          * Super method call helper, allows calling super methods when using extends/mixins
          * @example this.super(ComponentOptions).method.call(this)
          * @param {import('vue').ComponentOptions} componentOptions   component options
-         * @return {object}  methods list
+         * @return {Record<string, any>}  methods list
          */
         super(componentOptions = ComponentOptions) {
             return componentOptions.methods;
@@ -158,12 +159,12 @@ const ComponentOptions = {
          * Generates css-class def
          */
         genCssClass() {
-            let o = {};
-            let p = ['display', 'position', 'cssClass'];
-            p.forEach(pName => {
-                let pVal = this.props[pName];
-                let pValArr = Array.isArray(pVal) ? pVal : [pVal];
-                pValArr.forEach(v => {
+            const o = {};
+            const p = ['display', 'position', 'cssClass'];
+            p.forEach((pName) => {
+                const pVal = this.props[pName];
+                const pValArr = Array.isArray(pVal) ? pVal : [pVal];
+                pValArr.forEach((v) => {
                     if (v) {
                         o[v] = true;
                     }
@@ -202,15 +203,15 @@ const ComponentOptions = {
          * Generates css-style def
          */
         genCssStyle() {
-            let o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
+            const o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
             if (
                 this.props.widthUnit !== 'size' &&
-                !isNaN(this.props.width) &&
+                !Number.isNaN(this.props.width) &&
                 this.props.width !== ''
             ) {
                 o.width = `${this.props.width}${this.props.widthUnit}`;
             }
-            if (!isNaN(this.props.height) && this.props.height !== '') {
+            if (!Number.isNaN(this.props.height) && this.props.height !== '') {
                 o.height = `${this.props.height}${this.props.heightUnit}`;
             }
             this.$set(this, 'cssStyle', o);
@@ -250,30 +251,27 @@ const ComponentOptions = {
             // {compat}
             wrapper.toVO = (value, meta) =>
                 value instanceof ValueObject ? value : vo(value, meta);
-            wrapper.toValue = vo => ValueObject.getValue(vo);
+            wrapper.toValue = (valueObject) => ValueObject.getValue(valueObject);
             // {/compat}
-            // @ts-ignore
             this.eventBusWrapper = wrapper;
             this.$nextTick(() => this.subscribe());
         },
         /**
-         * Transforms 'stateChange' object to Object.< string, ValueObject>
-         * and commits stateChange to the store's state
-         * @param {Object.<string, any>} stateChange
-         * @return {object} transformed 'stateChange' with ValueObjects
+         * Transforms 'internalStatePartial' object to Object.< string, ValueObject>
+         * and commits internalStatePartial to the store's state
+         * @param {Record<string, any>} internalStatePartial
+         * @return {Record<string, any>} transformed 'internalStatePartial' with ValueObjects
          */
-        $storeCommit(stateChange) {
-            const aliases = this.props.varAliases ?? {};
-            const obj = Object.keys(stateChange).reduce((obj, key) => {
-                const alias = aliases[key];
-                if (alias && alias.trigger) {
-                    obj[alias.trigger] = vo(stateChange[key], alias.meta);
-                }
-                return obj;
-            }, {});
+        $storeCommit(internalStatePartial) {
+            const varAliases = this.props.varAliases || {};
+            const externalStatePartial = buildExternalStateFromInternal(
+                internalStatePartial,
+                varAliases
+            );
+
             // don't commit if obj is empty
-            if (Object.keys(obj).length) {
-                store.commit(obj);
+            if (Object.keys(externalStatePartial).length > 0) {
+                store.commit(externalStatePartial);
             }
             return {};
         },
@@ -294,9 +292,9 @@ const ComponentOptions = {
             if (typeof constantName !== 'string') {
                 return constantName;
             }
-            let manager = ConstManager.instance;
+            const manager = ConstManager.instance;
             // @TODO regExp should be defined via ConstManager constant
-            return constantName.replace(/(%[^%]+%)/g, m => manager.getConstValue(m));
+            return constantName.replace(/(%[^%]+%)/g, (m) => manager.getConstValue(m));
         },
         /**
          * LC stage, called by the env after 'mounted()'

@@ -51,7 +51,7 @@ export default {
             return `ui-checkbox-${ID++}`;
         },
         attrsCb() {
-            let { value, ...attrs } = this.attrs;
+            const { value, ...attrs } = this.attrs;
             return { ...attrs, checked: value };
         }
     },

@@ -25,9 +25,9 @@
     </div>
 </template>
 <script>
-import { ControlMixin, getConstants } from './utils/index';
 import { InputAutocomplete } from 'goodteditor-ui';
-import FileManager from './../../managers/FileManager';
+import { ControlMixin, getConstants } from './utils';
+import FileManager from '../../managers/FileManager';
 
 /**
  * environment required
@@ -48,7 +48,7 @@ export default {
     },
     computed: {
         inputOptions() {
-            let { options = [], ...rest } = this.attrs;
+            const { options = [], ...rest } = this.attrs;
             return { ...rest, options: [...this.options, ...getConstants()] };
         }
     },
@@ -58,7 +58,7 @@ export default {
                 .browse({ selectEnabled: true, selectMultiple: false })
                 .then(([file]) => {
                     if (file != null) {
-                        let { url } = file;
+                        const { url } = file;
                         this.onInput(url);
                         this.onChange(url);
                     }

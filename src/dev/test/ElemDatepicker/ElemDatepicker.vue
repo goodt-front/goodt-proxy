@@ -6,7 +6,7 @@
 <script>
 import { Elem } from '../../../core/index';
 
-let descriptor = () => ({
+const descriptor = () => ({
     props: {},
     vars: {
         date: {

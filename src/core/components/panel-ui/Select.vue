@@ -21,8 +21,8 @@
     </div>
 </template>
 <script>
-import { ControlMixin } from './utils/index';
 import { Select as UiSelect } from 'goodteditor-ui';
+import { ControlMixin } from './utils';
 
 /**
  * For more <b>props</b> @see https://goodt-ui.netlify.app/#!/Select
@@ -55,7 +55,7 @@ export default {
     },
     computed: {
         selectAttrs() {
-            let { options, multiple, ...rest } = this.attrs;
+            const { options, multiple, ...rest } = this.attrs;
             return {
                 ...rest,
                 options: this.options,

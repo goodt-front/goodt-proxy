@@ -47,6 +47,7 @@ export default {
         onInput(value) {
             /**
              * Input event
+             *
              * @property {any} value
              */
             this.$emit('input', value);

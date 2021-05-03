@@ -12,6 +12,7 @@ export default class extends Adapter {
 
     /**
      * Login method
+     *
      * @param {Record<string, any>} [credentials={}]  user credentials
      * @return {Promise}
      */

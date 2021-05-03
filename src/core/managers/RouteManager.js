@@ -16,13 +16,13 @@ const RouteManagerEvent = Object.freeze({
 });
 
 /**
- * @typedef {Object} RouteObject
+ * @typedef {object} RouteObject
  * @property {string} path     route path
  * @property {Record<string, any>} query    query params
  * @property {Record<string, any>} meta     meta data
  */
 /**
- * @typedef {Object} NavigateOptions
+ * @typedef {object} NavigateOptions
  * @property {string} path          route path
  * @property {Record<string, any>} [query={}]    query params
  */
@@ -37,6 +37,7 @@ const RouteManagerEvent = Object.freeze({
 export default class RouteManager {
     /**
      * Constructor
+     *
      * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
@@ -81,6 +82,7 @@ export default class RouteManager {
 
     /**
      * Requests a route change by path
+     *
      * @param {NavigateOptions} options
      */
     // eslint-disable-next-line class-methods-use-this
@@ -93,6 +95,7 @@ export default class RouteManager {
 
     /**
      * Registers a navigate() observer (used by the env)
+     *
      * @param {NavigateHandler} handler     navigate handler invoked by @see navigate()
      * @return {Function}                   dispose function to unregister observer
      */

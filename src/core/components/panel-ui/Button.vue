@@ -11,14 +11,13 @@ export default {
     props: {
         /**
          * Button type
+         *
          * @values 'primary', 'ghost', 'error', 'success', 'misc'
          */
         type: {
             type: String,
             default: 'primary',
-            validation(val) {
-                return ['primary', 'ghost', 'error', 'success', 'misc'].includes(val);
-            }
+            enum: ['primary', 'ghost', 'error', 'success', 'misc']
         },
         /**
          * Whether the button is an 'inline' element or 'block'

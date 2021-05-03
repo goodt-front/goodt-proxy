@@ -6,6 +6,7 @@ import Const from '../Const';
 
 /**
  * Dremio sdk factory
+ *
  * @param {import('goodt-dremio-sdk').SDKConfig} config
  * @return {SDK}  sdk instance
  */
@@ -38,6 +39,7 @@ const mixin = {
         return {
             /**
              * Dremio query 'offset'
+             *
              * @property {number}
              */
             offset: 0,
@@ -51,6 +53,7 @@ const mixin = {
             queryHelper: null,
             /**
              * loadData() method hooks
+             *
              * @see loadData()
              * @property {Record<string, any>}
              */
@@ -75,6 +78,7 @@ const mixin = {
     computed: {
         /**
          * alias ~ props.dremio.limit
+         *
          * @return {number}
          */
         limit() {
@@ -83,6 +87,7 @@ const mixin = {
         },
         /**
          * alias ~ result.rowCount
+         *
          * @return {number}
          */
         rowCount() {
@@ -126,7 +131,7 @@ const mixin = {
          */
         this.dremioSdk = SDKFactory();
         /**
-         * @property {Array.<String>}
+         * @property {Array.<string>}
          */
         this.dremioVars = [];
 
@@ -205,6 +210,7 @@ const mixin = {
         },
         /**
          * Applies dremio filters
+         *
          * @param {Record<string, any>} params   params to be injected
          */
         applyDremioFilters(params) {
@@ -228,6 +234,7 @@ const mixin = {
         },
         /**
          * Creates a new dremio query filter
+         *
          * @param {string} name         metric/dimension/field name
          * @param {string|Array} value  value
          * @return {Record<string, any>} filter
@@ -242,6 +249,7 @@ const mixin = {
         },
         /**
          * Returns dremio query metric/dimension/field names
+         *
          * @return {string[]}
          */
         getDremioQueryParamNames() {

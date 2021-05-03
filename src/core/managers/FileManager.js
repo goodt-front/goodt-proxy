@@ -9,11 +9,11 @@ import { EventBusBase, EventBusEvent } from './EventBus';
  * @param {FileInfo[]} files    files
  */
 /**
- * @typedef {Object} FileManagerOptions
+ * @typedef {object} FileManagerOptions
  * @property {boolean} selectMultiple       multiple file selection mode
  */
 /**
- * @typedef {Object} FileInfo
+ * @typedef {object} FileInfo
  * @property {string} url   url
  * @property {string} name  name
  * @property {string} type  mime-type
@@ -31,6 +31,7 @@ const FileManagerEvent = {
 export default class FileManager {
     /**
      * Constructor
+     *
      * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
@@ -51,6 +52,7 @@ export default class FileManager {
 
     /**
      * Invokes env file manager's browse method for file selection
+     *
      * @param {FileManagerOptions} options
      * @return {Promise<FileInfo[]>}
      */
@@ -67,6 +69,7 @@ export default class FileManager {
 
     /**
      * Registers a browse() observer (used by the env)
+     *
      * @param {BrowseHandler} handler     browse handler invoked by @see browse()
      * @return {Function}                 dispose function to unregister observer
      */

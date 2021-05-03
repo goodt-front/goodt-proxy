@@ -1,6 +1,7 @@
 export default class {
     /**
      * Constructor
+     *
      * @param {Record<string, any>} [config={}]  adapter config
      */
     constructor(config = {}) {
@@ -9,14 +10,17 @@ export default class {
 
     /**
      * Init adapter
+     *
      * @return {Promise}
      */
+    // eslint-disable-next-line class-methods-use-this
     init() {
         return Promise.resolve();
     }
 
     /**
      * Destroy adapter
+     *
      * @return {Promise<void>}
      */
     // eslint-disable-next-line class-methods-use-this
@@ -27,6 +31,7 @@ export default class {
     /**
      * Redirect to login page (redirect -> login -> redirect back)
      * or resolve promise
+     *
      * @param {Record<string, any>} [credentials={}]  user credentials
      * @return {Promise<void>}
      */
@@ -38,14 +43,17 @@ export default class {
     /**
      * Redirect to logout page (redirect -> logout -> redirect)
      * or resolve promise
+     *
      * @return {Promise}
      */
+    // eslint-disable-next-line class-methods-use-this
     logout() {
         return Promise.resolve();
     }
 
     /**
      * If the token expires within minValidity seconds the token is refreshed.
+     *
      * @param {number} [minValidity=10]
      * @return {Promise<boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
      */
@@ -56,30 +64,37 @@ export default class {
 
     /**
      * Returns session permissions list
-     * @return {Promise.<Object[]>}
+     *
+     * @return {Promise.<object[]>}
      */
+    // eslint-disable-next-line class-methods-use-this
     getPermissions() {
         return Promise.resolve([{}]);
     }
 
     /**
      * Returns session permissions
-     * @return {Promise.<Object[]>}
+     *
+     * @return {Promise.<object[]>}
      */
+    // eslint-disable-next-line class-methods-use-this
     getUserPermissions() {
         return Promise.resolve([{}]);
     }
 
     /**
      * Returns user profile
-     * @return {Promise.<Object>}   Promise; resolve(profile); reject() on error
+     *
+     * @return {Promise.<object>}   Promise; resolve(profile); reject() on error
      */
+    // eslint-disable-next-line class-methods-use-this
     getUserProfile() {
         return Promise.resolve({});
     }
 
     /**
      * Returns true if the token has less than minValidity seconds left before it expires (minValidity is optional, if not specified 0 is used).
+     *
      * @param {number} [minValidity=10]
      * @return {boolean}
      */
@@ -90,6 +105,7 @@ export default class {
 
     /**
      * Return auth status
+     *
      * @return {boolean}
      */
     // eslint-disable-next-line class-methods-use-this
@@ -99,6 +115,7 @@ export default class {
 
     /**
      * Return token
+     *
      * @return {string}
      */
     // eslint-disable-next-line class-methods-use-this
@@ -108,14 +125,17 @@ export default class {
 
     /**
      * Return parsed token
-     * @return {?Object}
+     *
+     * @return {?object}
      */
+    // eslint-disable-next-line class-methods-use-this
     get tokenParsed() {
         return null;
     }
 
     /**
      * Returns default config
+     *
      * @return {Record<string, any>}
      */
     // eslint-disable-next-line class-methods-use-this

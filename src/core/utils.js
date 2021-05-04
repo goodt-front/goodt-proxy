@@ -1,5 +1,5 @@
 /**
- * @typedef {import('vue/types/vue').Vue} VueInstance
+ * @typedef {import('vue/types/vue')} VueInstance
  */
 
 /**
@@ -21,6 +21,8 @@ class ElemEvent extends CustomEvent {
 
 /**
  * Returns generated Constructor-specific dom id
+ *
+ * @param {string | number} elemId
  * @return {string}
  */
 export const getDomId = (elemId) => `elem-${elemId}`;

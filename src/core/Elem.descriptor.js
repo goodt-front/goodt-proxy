@@ -1,3 +1,5 @@
+import './defs';
+
 const cssOptions = {
     height: [{ value: '', label: 'inherit' }],
     sizeUnits: [
@@ -39,6 +41,7 @@ const cssOptions = {
 };
 /**
  * Returns base elem descriptor
+ *
  * @return {ElemDescriptor}
  */
 const descriptor = () => ({
@@ -59,6 +62,9 @@ const descriptor = () => ({
                 { value: 'pos-sticky', label: 'sticky' }
             ]
         },
+        /**
+         * @type {PropOptions<Record<string, Record>>}
+         */
         display: {
             type: String,
             default: '',
@@ -144,33 +150,37 @@ const descriptor = () => ({
             default: '',
             options: cssOptions.marginPadding
         },
+        /**
+         * @type {PropOptions<Record<string, unknown>[]>}
+         */
         cssClass: {
             type: Array,
             default() {
                 return [];
             }
         },
+        /**
+         * @type {PropOptions<Record<string, Record>>}
+         */
         cssStyle: {
             type: Object,
             default() {
                 return {};
             }
         },
+        /**
+         * Returns aliases hash for 'vars'
+         *
+         * @type PropOptions<Record<string, ElemVarAliasDef>>
+         */
         varAliases: {
             type: Object,
-            /**
-             * Returns aliases hash for 'vars'
-             * @return {Record<string, ElemVarAliasDef>}
-             */
             default() {
                 return {};
             }
         },
         slotData: {
             type: Object,
-            /**
-             * @return {Record<string, any>}
-             */
             default: () => ({})
         }
     },

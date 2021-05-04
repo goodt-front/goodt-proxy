@@ -67,6 +67,7 @@ export default {
         onInput(value) {
             /**
              * Input event
+             *
              * @property {any} value
              */
             this.$emit('input', value);
@@ -74,6 +75,7 @@ export default {
         onChange(value) {
             /**
              * Change event
+             *
              * @property {any} value
              */
             this.$emit('change', value);

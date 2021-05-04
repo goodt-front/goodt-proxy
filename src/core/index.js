@@ -1,3 +1,4 @@
+import './defs';
 import * as AbcCharts from './abc-charts';
 import * as Components from './components';
 import * as Dremio from './dremio';

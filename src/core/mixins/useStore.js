@@ -1,9 +1,9 @@
 /**
- * @typedef {Object} UseStoreOptions
+ * @typedef {object} UseStoreOptions
  * @property {string} [name='$state'] instance property name
  */
 /**
- * @typedef {Object} AliasMapMeta
+ * @typedef {object} AliasMapMeta
  * @property {string} listen
  * @property {string} trigger
  * @property {import('../managers/StoreManager').ValueObjectMeta} meta
@@ -20,8 +20,9 @@ const INSTANCE_ACCESSOR_NAME = '$store';
  * Functions with dynamic context to encapsulate mixin private
  * context-dependent service/helper methods
  /
-
+ 
  /**
+ *
  * @param {Record<string, ValueObject>} externalState
  * @param {Record<string, AliasMapMeta>} varAliases
  * @return {Record<string, any>}
@@ -97,7 +98,8 @@ export const useStore = (useOptions = {}) => {
         computed: {
             /**
              * Returns the current store state
-             * @return {Object} state
+             *
+             * @return {object} state
              */
             [`${$accessorName}State`]() {
                 const varAliases = this.props.varAliases || {};
@@ -111,8 +113,9 @@ export const useStore = (useOptions = {}) => {
             /**
              * Transforms 'internalStatePartial' object to Record<string, ValueObject>
              * and commits internalStatePartial to the store's state
+             *
              * @param {Record<string, any>} internalStatePartial
-             * @return {Object} transformed 'internalStatePartial' with ValueObjects
+             * @return {object} transformed 'internalStatePartial' with ValueObjects
              */
             [`${$accessorName}Commit`](internalStatePartial) {
                 const varAliases = this.props.varAliases || {};

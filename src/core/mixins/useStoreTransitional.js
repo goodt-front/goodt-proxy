@@ -12,7 +12,9 @@ import {
 } from './useStore';
 
 /**
+ * @param {IArguments} args
  * @see buildInternalStateFromExternalRefactored
+ * @return {Record<string, ValueObject>}
  */
 export const buildExternalStateFromInternal = (...args) => {
     const result = buildExternalStateFromInternalRefactored(...args);
@@ -28,7 +30,9 @@ export const buildExternalStateFromInternal = (...args) => {
 };
 
 /**
+ * @param {IArguments} args
  * @see buildInternalStateFromExternalRefactored
+ * @return {Record<string, *>}
  */
 export const buildInternalStateFromExternal = (...args) => {
     const result = buildInternalStateFromExternalRefactored(...args);

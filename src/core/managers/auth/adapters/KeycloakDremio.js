@@ -28,6 +28,7 @@ export default class extends Keycloak {
 
     /**
      * Logout method
+     *
      * @return {Promise}
      */
     logout() {
@@ -37,7 +38,8 @@ export default class extends Keycloak {
 
     /**
      * Returns session permissions list
-     * @return {Promise.<Object[]>}
+     *
+     * @return {Promise.<object[]>}
      */
     getPermissions() {
         return new Promise((resolve) => {
@@ -54,7 +56,8 @@ export default class extends Keycloak {
 
     /**
      * Returns session permissions
-     * @return {Promise.<Object[]>}
+     *
+     * @return {Promise.<object[]>}
      */
     getUserPermissions() {
         return new Promise((resolve) => {

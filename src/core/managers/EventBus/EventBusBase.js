@@ -4,10 +4,10 @@
  * @param {any} data
  */
 /**
- * @typedef {Object} ListenerInfo
+ * @typedef {object} ListenerInfo
  * @property {EventBusEvent} event
  * @property {EventHandler} handler
- * @property {Boolean} once
+ * @property {boolean} once
  */
 
 /**
@@ -29,6 +29,7 @@ class EventBusBase {
 
     /**
      * Registers an event handler
+     *
      * @param {EventBusEvent} event     event
      * @param {EventHandler} handler    handler
      * @param {boolean} [once=false]    if set true event handler will be auto-unregistered when invoked
@@ -44,6 +45,7 @@ class EventBusBase {
 
     /**
      * Unregisters an event handler
+     *
      * @param {EventBusEvent} event     event
      * @param {EventHandler} handler    handler
      * @return {boolean}                true if ayn handler unregistered
@@ -67,6 +69,7 @@ class EventBusBase {
 
     /**
      * Returns true if event handler is registered
+     *
      * @param {EventBusEvent} theEvent     event
      * @param {EventHandler} theHandler    handler
      * @return {boolean}
@@ -85,6 +88,7 @@ class EventBusBase {
 
     /**
      * Triggers event
+     *
      * @param {EventBusEvent} event     event
      * @param {*} data                  data
      */
@@ -121,6 +125,7 @@ class EventBusBase {
 
     /**
      * Call event handler
+     *
      * @param {EventHandler} handler        handler
      * @param {EventBusEvent} event     event
      * @param {any} data                  data

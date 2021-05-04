@@ -4,6 +4,7 @@ const constManagerEnforcer = Symbol('constManagerEnforcer');
 export default class ConstManager {
     /**
      * Constructor
+     *
      * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
@@ -25,6 +26,7 @@ export default class ConstManager {
 
     /**
      * Return key value or key if no value found
+     *
      * @param {string} key  key
      * @return {any} value
      */
@@ -37,6 +39,7 @@ export default class ConstManager {
 
     /**
      * Set the constants hash
+     *
      * @param {Record<string, any>} constants
      */
     setConstantsHash(constants = {}) {
@@ -45,6 +48,7 @@ export default class ConstManager {
 
     /**
      * Return the constants hash
+     *
      * @return {Record<string, any>}
      */
     getConstantsHash() {

@@ -1,3 +1,8 @@
+/* globals Record */
+/* globals unknown */
+/**
+ * @typedef {import('vue').PropOptions} PropOptions
+ */
 /**
  * @typedef {Record<string, any>} ElemDescriptor
  * @property {Record<string, ElemPropDef>} props
@@ -6,7 +11,7 @@
 /**
  * @typedef {Record<string, any>} ElemPropDef
  * @property {Function|Function[]} type                     Ctor type @example String or [String,Array]
- * @property {Boolean|Number|String|Function} default       default value for Object, Array must be a factory method
+ * @property {boolean | number | string | Function} default       default value for Object, Array must be a factory method
  * @property {Array<{ value:any, label: string}>} [options]   value options
  */
 /**
@@ -14,12 +19,12 @@
  * @property {string} description   variable description
  */
 /**
- * @typedef {Object} ElemVarAliasDef
+ * @typedef {object} ElemVarAliasDef
  * @property {string} listen            listen alias
  * @property {string} trigger           trigger alias
  * @property {?ElemVarAliasMeta} meta   meta data
  */
 /**
- * @typedef {Object} ElemVarAliasMeta
+ * @typedef {object} ElemVarAliasMeta
  * @property {boolean} [global=true]    alias global scope
  */

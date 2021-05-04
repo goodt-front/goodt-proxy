@@ -93,6 +93,7 @@ export default class extends Adapter {
 
     /**
      * Return token
+     *
      * @return {string}
      */
     get token() {

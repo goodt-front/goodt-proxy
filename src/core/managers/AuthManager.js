@@ -6,13 +6,14 @@ let authManager = null;
 const authManagerEnforcer = Symbol('authManagerEnforcer');
 
 /**
- * @typedef {Object} AdapterInfo
+ * @typedef {object} AdapterInfo
  * @property {string} name      name
- * @property {Record<string, any>} config    default config
+ * @property {Record<string, any>} config default config
  */
 export default class AuthManager {
     /**
      * Constructor
+     *
      * @param {symbol} enforcer  singleton enforcer
      */
     constructor(enforcer) {
@@ -37,6 +38,7 @@ export default class AuthManager {
 
     /**
      * Initializes manager with the specified adapter
+     *
      * @param {string} adapterName  adapter name
      * @param {Record<string, any>} config       adapter config
      * @return {Promise}
@@ -64,6 +66,7 @@ export default class AuthManager {
 
     /**
      * Current used adapter
+     *
      * @return {Adapter} adapter
      */
     get adapter() {
@@ -72,7 +75,8 @@ export default class AuthManager {
 
     /**
      * Available adapters list
-     * @return {Object.<String, Adapter>}
+     *
+     * @return {object.<string, Adapter>}
      */
     // eslint-disable-next-line class-methods-use-this
     get adaptersList() {
@@ -81,6 +85,7 @@ export default class AuthManager {
 
     /**
      * Available adapters info
+     *
      * @return {AdapterInfo[]}
      */
     // eslint-disable-next-line class-methods-use-this
@@ -94,10 +99,10 @@ export default class AuthManager {
     }
 
     /**
-     * @private Creates a new adapter instance
+     * @private
      * @param {string} adapterName
      * @param {Record<string, any>} config
-     * @returns
+     * @return
      */
     // eslint-disable-next-line class-methods-use-this
     _createAdapter(adapterName, config) {

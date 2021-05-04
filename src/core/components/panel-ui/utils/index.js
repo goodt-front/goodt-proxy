@@ -20,6 +20,7 @@ const ControlMixin = {
         },
         /**
          * Column size (12-fraction)
+         *
          * @example 1-12, 2-12, ..., 12-12
          */
         colSize: {
@@ -71,22 +72,23 @@ const ControlMixin = {
         onInput(e) {
             /**
              * Input event
+             *
              * @property {any} value
              */
             this.$emit('input', e.target.value);
         },
-        onChange(e) {
-            /**
-             * Change event
-             * @property {any} value
-             */
-            this.$emit('change', e.target.value);
+        /**
+         *
+         * @param {Event} event
+         */
+        onChange(event) {
+            this.$emit('change', event.target.value);
         }
     }
 };
 
 const getConstants = () => Object.keys(ConstManager.instance.getConstantsHash());
 
-const isConstant = v => v != null && typeof v === 'string' && !!v.match(/^%([\w-])+%$/);
+const isConstant = (v) => v != null && typeof v === 'string' && !!v.match(/^%([\w-])+%$/);
 
 export { ControlMixin, getConstants, isConstant };

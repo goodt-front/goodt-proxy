@@ -7,7 +7,8 @@ const PUBLIC_ACCESSOR_NAME = '$transport';
 const PRIVATE_ACCESSOR_NAME = Symbol('$transport');
 
 /**
- * @typedef {Object} UseTransportOptions
+ * @typedef {import('vue/types/vue').Vue} VueInstance
+ * @typedef {Record<string, unknown>} UseTransportOptions
  * @property {string} [name='$state'] instance property name
  * @property {TransportConfig} [options={}] instance property name
  */
@@ -18,17 +19,18 @@ const PRIVATE_ACCESSOR_NAME = Symbol('$transport');
  */
 
 /**
- * @typedef {ComponentOptions|VueConstructor} TransportMixin
+ * @typedef {ComponentOptions|VueInstance} TransportMixin
  */
 
 /**
  * Creates Vue Mixin with specified Transport and extra component transport-related behaviour
+ *
  * @type {import('./useTransport').useTransport}
  */
 export const useTransport = (transportId, useOptions = {}) => {
     /**
-     * @var {(function(*): TransportConfig|TransportConfig)} options
-     * @var {string|symbol} name
+     * @member {(function(*): TransportConfig|TransportConfig)} options
+     * @member {string|symbol} name
      */
     const { name: $transport = PUBLIC_ACCESSOR_NAME, options: transportOptions } = useOptions;
 
@@ -75,3 +77,5 @@ export const useTransport = (transportId, useOptions = {}) => {
         mixin: VueMixinComponentOptions
     };
 };
+
+export default useTransport;

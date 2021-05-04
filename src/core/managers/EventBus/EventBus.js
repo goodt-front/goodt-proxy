@@ -4,19 +4,19 @@
  * @param {any} data
  */
 /**
- * @typedef {Object} ListenerInfo
+ * @typedef {object} ListenerInfo
  * @property {EventBusEvent} event
  * @property {EventHandler} handler
- * @property {Boolean} once
+ * @property {boolean} once
  */
 
 import EventBusEvent from './EventBusEvent';
 import EventBusBase from './EventBusBase';
 
 /**
- * @private Removes all keys with 'undefined' values
- * @param {Object} obj     object
- * @return {Object}
+ * @private
+ * @param {object} obj     object
+ * @return {object}
  */
 function removeUndefinedKeys(obj) {
     const out = { ...obj };
@@ -35,6 +35,7 @@ function removeUndefinedKeys(obj) {
 class EventBus extends EventBusBase {
     /**
      * Constructor
+     *
      * @param {import('./StoreManager').Store} store
      * @param {import('./RouteManager').default} routeManager
      */
@@ -54,9 +55,10 @@ class EventBus extends EventBusBase {
 
     /**
      * Listen
+     *
      * @param {EventBusEvent} event     event
      * @param {(e:EventBusEvent, data:Object)} handler        handler
-     * @param {Boolean} [once=false]    once?
+     * @param {boolean} [once=false]    once?
      * @return {Function}               dispose handler i.e. dispose() === unlisten(event, handler)
      */
     listen(event, handler, once) {
@@ -68,6 +70,7 @@ class EventBus extends EventBusBase {
 
     /**
      * Trigger
+     *
      * @param {EventBusEvent} event     event
      * @param {*} data                  data
      */
@@ -84,7 +87,8 @@ class EventBus extends EventBusBase {
 
     /**
      * Set state
-     * @param {Object} state
+     *
+     * @param {object} state
      */
     setState(state) {
         this._store.commit(state, false);
@@ -92,7 +96,8 @@ class EventBus extends EventBusBase {
 
     /**
      * Returns state
-     * @return {Object}
+     *
+     * @return {object}
      */
     getState() {
         return { ...this._store.state };
@@ -107,6 +112,7 @@ class EventBus extends EventBusBase {
 
     /**
      * Create state trigger timeout
+     *
      * @param {Function} handler    handler
      */
     createStateTriggerTimeout(handler) {
@@ -128,17 +134,20 @@ class EventBus extends EventBusBase {
 
     /**
      * Check if state timeout is active
-     * @return {Boolean}
+     *
+     * @return {boolean}
      */
     stateTriggerTimeoutActive() {
         return this._stateTriggerTimeout != null;
     }
 
     /**
-     * @private Listen state change event handler
+     * Listen state change event handler
+     *
+     * @private
      * @param {EventBusEvent} event     event
      * @param {EventHandler} handler    handler
-     * @param {Boolean} once            once? @default false
+     * @param {boolean} once            once? @default false
      * @return {Function}              dispose handler i.e. dispose() === unlisten(event, handler)
      */
     _listenStateChange(event, handler, once) {
@@ -153,9 +162,11 @@ class EventBus extends EventBusBase {
     }
 
     /**
-     * @private Trigger state change event handler
+     * Trigger state change event handler
+     *
+     * @private
      * @param {EventBusEvent} event     event
-     * @param {Object} stateChange      state change
+     * @param {object} stateChange      state change
      */
     _triggerStateChange(event, stateChange) {
         // no defer merging strat
@@ -197,15 +208,19 @@ class EventBus extends EventBusBase {
     }
 
     /**
-     * @private Store commit handler
-     * @param {Object} stateChange
+     * Store commit handler
+     *
+     * @private
+     * @param {object} stateChange
      */
     _storeCommitHandler(stateChange) {
         super.trigger(new EventBusEvent(EventBusEvent.EVENT_STATE_CHANGE), stateChange);
     }
 
     /**
-     * @private Route manager route handler
+     * Route manager route handler
+     *
+     * @private
      * @param {import('./RouteManager').RouteObject} route
      */
     _routeManagerRouteHandler({ path: url, query: params }) {

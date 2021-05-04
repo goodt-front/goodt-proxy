@@ -3,7 +3,7 @@ import Vue from 'vue';
 import { filterObject } from '../utils';
 
 /**
- * @typedef {Object} ValueObjectMeta
+ * @typedef {object} ValueObjectMeta
  * @property {boolean} global   global flag
  */
 /**
@@ -12,6 +12,7 @@ import { filterObject } from '../utils';
 class ValueObject {
     /**
      * Constructor
+     *
      * @param {any} value
      * @param {?ValueObjectMeta} [meta=null]
      */
@@ -28,19 +29,24 @@ class ValueObject {
     }
 }
 /**
- * @static Default meta factory
+ * Default meta factory
+ *
+ * @static
  * @return {ValueObjectMeta}
  */
 ValueObject.defaultMeta = () => ({ global: true });
 /**
- * @static Returns 'value' property if 'obj' is instanceof ValueObject; otherwise just returns the obj itself
+ * Returns 'value' property if 'obj' is instanceof ValueObject; otherwise just returns the obj itself
+ *
+ * @static
  * @param {any} obj
  * @return {any}
  */
-ValueObject.getValue = obj => (obj instanceof ValueObject ? obj.value : obj);
+ValueObject.getValue = (obj) => (obj instanceof ValueObject ? obj.value : obj);
 
 /**
  * ValueObject factory method
+ *
  * @param {any} value
  * @param {?ValueObjectMeta} [meta=null]
  */
@@ -68,6 +74,7 @@ class Store {
 
     /**
      * Returns the current state
+     *
      * @return {Record<string, any>}
      */
     // eslint-disable-next-line class-methods-use-this
@@ -77,6 +84,7 @@ class Store {
 
     /**
      * Merges the 'statePartial' object to the current state
+     *
      * @param {Record<string, unknown>} statePartial      state change obj
      * @param {boolean} [isInvokeCommitHandlers=true]     if true will invoked
      */
@@ -87,7 +95,7 @@ class Store {
         );
         stateOb.state = stateNew;
         if (isInvokeCommitHandlers) {
-            this._commitHandlers.forEach(h => {
+            this._commitHandlers.forEach((h) => {
                 h(statePartial);
             });
         }
@@ -95,6 +103,7 @@ class Store {
 
     /**
      * Replaces the state with the 'newState'
+     *
      * @param {Record<string, any>} newState
      */
     // eslint-disable-next-line class-methods-use-this
@@ -104,6 +113,7 @@ class Store {
 
     /**
      * Adds a commit handler
+     *
      * @param {CommitHandler} handler
      */
     addCommitHandler(handler) {
@@ -112,10 +122,11 @@ class Store {
 
     /**
      * Removes a commit handler
+     *
      * @param {CommitHandler} handler
      */
     removeCommitHandler(handler) {
-        this._commitHandlers = this._commitHandlers.filter(h => h !== handler);
+        this._commitHandlers = this._commitHandlers.filter((h) => h !== handler);
     }
 }
 const store = new Store();

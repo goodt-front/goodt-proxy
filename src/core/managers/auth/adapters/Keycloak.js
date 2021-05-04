@@ -22,19 +22,21 @@ export default class extends Adapter {
 
     /**
      * Constructor
+     *
      * @param {Record<string, any>} [config={}]
      */
     constructor(config = {}) {
         /**
          * @type {import('keycloak-js').KeycloakConfig | string}
          */
-        const mergedConfig = { ...configDefault, ...config };
-        super(mergedConfig);
-        this.kc = Keycloak(mergedConfig);
+        const configFinal = { ...configDefault, ...config };
+        super(configFinal);
+        this.kc = Keycloak(configFinal);
     }
 
     /**
      * Init adapter
+     *
      * @return {Promise}
      */
     init() {
@@ -43,6 +45,7 @@ export default class extends Adapter {
 
     /**
      * Login method
+     *
      * @param {Record<string, any>} [credentials={}]  user credentials
      * @return {Promise}
      */
@@ -53,6 +56,7 @@ export default class extends Adapter {
 
     /**
      * Logout method
+     *
      * @return {Promise}
      */
     logout() {
@@ -62,6 +66,7 @@ export default class extends Adapter {
 
     /**
      * If the token expires within minValidity seconds the token is refreshed.
+     *
      * @param {number} [minValidity=5]
      * @return {Promise<boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
      */
@@ -71,7 +76,8 @@ export default class extends Adapter {
 
     /**
      * Returns user profile (depends on the adapter)
-     * @return {Promise.<Object>}   Promise; resolve(profile); reject() on error
+     *
+     * @return {Promise.<object>}   Promise; resolve(profile); reject() on error
      */
     getUserProfile() {
         return this.kc.loadUserProfile();
@@ -79,6 +85,7 @@ export default class extends Adapter {
 
     /**
      * Returns true if the token has less than minValidity seconds left before it expires (minValidity is optional, if not specified 0 is used).
+     *
      * @param {number} [minValidity=5]
      * @return {boolean}
      */
@@ -88,6 +95,7 @@ export default class extends Adapter {
 
     /**
      * Return auth status
+     *
      * @return {boolean}
      */
     get authenticated() {
@@ -96,6 +104,7 @@ export default class extends Adapter {
 
     /**
      * Return token
+     *
      * @return {string}
      */
     get token() {
@@ -104,7 +113,8 @@ export default class extends Adapter {
 
     /**
      * Return parsed token
-     * @return {?Object}
+     *
+     * @return {?object}
      */
     get tokenParsed() {
         return this.kc.tokenParsed;
@@ -112,6 +122,7 @@ export default class extends Adapter {
 
     /**
      * Returns default config
+     *
      * @return {Record<string, any>}
      */
     // eslint-disable-next-line class-methods-use-this

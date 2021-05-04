@@ -20,6 +20,7 @@ const { EventBusWrapper } = EB;
 
 /**
  * Elem events Lifecycle events
+ *
  * @enum {string}
  */
 const ElemEvent = Object.freeze({
@@ -86,6 +87,7 @@ const ComponentOptions = {
         },
         /**
          * Returns the current store state
+         *
          * @return {Record<string, any>} state
          */
         $storeState() {
@@ -97,6 +99,7 @@ const ComponentOptions = {
         },
         /**
          * Returns the current route
+         *
          * @return {import('./managers/RouteManager').RouteObject} current route object
          */
         $routeCurrent() {
@@ -148,6 +151,7 @@ const ComponentOptions = {
     methods: {
         /**
          * Super method call helper, allows calling super methods when using extends/mixins
+         *
          * @example this.super(ComponentOptions).method.call(this)
          * @param {import('vue').ComponentOptions} componentOptions   component options
          * @return {Record<string, any>}  methods list
@@ -218,14 +222,16 @@ const ComponentOptions = {
         },
         /**
          * Returns component slot names
+         *
          * @NOTE <slot></slot> without name have a 'default' name
-         * @return {array}
+         * @return {Array}
          */
         getSlotNames() {
             return ['default'];
         },
         /**
          * Returns panel components list (used by the editor env)
+         *
          * @return {import('vue/types/options').AsyncComponentPromise[]}   list of panel components
          */
         getPanels() {
@@ -233,6 +239,7 @@ const ComponentOptions = {
         },
         /**
          * Returns true if component accepts children (used by the editor env, dnd)
+         *
          * @param {string} type     elem fulltype to test @example 'Ns/SubNs/ElemExample'
          * @return {boolean}        true if 'type' child is allowed
          */
@@ -278,6 +285,7 @@ const ComponentOptions = {
         /**
          /**
          * Requests a route change by path
+         *
          * @param {import('./managers/RouteManager').NavigateOptions} options
          */
         $routeNavigate({ path, query = {} }) {
@@ -303,7 +311,9 @@ const ComponentOptions = {
             // ... to be implemented
         },
         /**
-         * @private Mounted LC handler
+         * Mounted LC handler
+         *
+         * @private
          * This method is useful for edge-cases when Elem's $el may change
          * Cases:
          * - root domNode has a v-if directive

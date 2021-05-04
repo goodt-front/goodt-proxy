@@ -7,12 +7,12 @@ let REQUEST_ID = 0;
  * @property {number} id
  */
 /**
- * @typedef {Object} RequestRecord
+ * @typedef {object} RequestRecord
  * @property {number} id
  * @property {CancelTokenSource} source
  */
 /**
- * @typedef {Object} RequestConfig
+ * @typedef {object} RequestConfig
  * @property {string} url               url
  * @property {string} [method='get']    request method
  * @property {Record<string, any>} [params={}]       params
@@ -23,13 +23,15 @@ let REQUEST_ID = 0;
  * HTTP Transport Client implementation
  * with Axios HTTP Client underhood
  * and extra service-specific behaviour
+ *
  * @implements {import('./types').ITransportConstructor}
  * @param {AxiosRequestConfig} [options={}]  axios config
  */
 export default class Http {
     /**
      * Constructor
-     * @param {AxiosRequestConfig} [options={}]
+     *
+     * @param {AxiosRequestConfig} [options={}] Transport config
      */
     constructor(options = {}) {
         /** @type {RequestRecord[]} */
@@ -41,11 +43,12 @@ export default class Http {
 
     /**
      * Creates a new request
-     * @param {RequestConfig} config
+     *
+     * @param {RequestConfig} config per-request config
      * @return {RequestPromise}
      */
     request({ url, method = 'get', params = {}, options = {}, responseHandler = null }) {
-        const {CancelToken} = axios;
+        const { CancelToken } = axios;
         const source = CancelToken.source();
         const requestId = REQUEST_ID++;
         const request = {
@@ -64,7 +67,7 @@ export default class Http {
             this._registerRequest(requestId, source);
             this.axios
                 .request(request)
-                .then(response => {
+                .then((response) => {
                     this._unregisterRequest(requestId);
                     if (typeof response.data === 'object' && response.data.error) {
                         reject(response.data.error);
@@ -72,7 +75,7 @@ export default class Http {
                     }
                     resolve(responseHandler ? responseHandler(response) : response);
                 })
-                .catch(error => {
+                .catch((error) => {
                     if (axios.isCancel(error)) {
                         console.log('Request canceled', error);
                     }
@@ -94,10 +97,11 @@ export default class Http {
 
     /**
      * Cancel active RequestPromise
+     *
      * @param {number} id   request id
      */
     cancelRequest(id) {
-        const i = this._requests.findIndex(item => item.id === id);
+        const i = this._requests.findIndex((item) => item.id === id);
         if (i < 0) {
             return;
         }
@@ -110,12 +114,13 @@ export default class Http {
      * Cancel all active RequestPromises
      */
     cancelAllRequests() {
-        this._requests.forEach(item => item.source.cancel('canceled'));
+        this._requests.forEach((item) => item.source.cancel('canceled'));
         this._requests = [];
     }
 
     /**
      * Returns the base url
+     *
      * @return {string}
      */
     getBaseUrl() {
@@ -123,18 +128,20 @@ export default class Http {
     }
 
     /**
-     * @private Registers a new cancel source
+     * Registers a new cancel source
+     *
+     * @private
      * @param {number} id   id
-     * @param {CancelTokenSource} source
+     * @param {CancelTokenSource} cancelTokenSource cancel Token Source
      */
-    _registerRequest(id, source) {
-        this._requests.push({ id, source });
+    _registerRequest(id, cancelTokenSource) {
+        this._requests.push({ id, source: cancelTokenSource });
     }
 
     /**
-     * @private Unregister RequestPromise from the pool
+     * @private
      */
     _unregisterRequest(id) {
-        this._requests = this._requests.filter(item => item.id !== id);
+        this._requests = this._requests.filter((item) => item.id !== id);
     }
 }

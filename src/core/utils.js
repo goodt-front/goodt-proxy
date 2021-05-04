@@ -74,7 +74,7 @@ export const getDescriptorDefaultProps = (descriptor) => {
             ...defaults,
             [propName]: typeof value === 'function' ? value() : value
         };
-    });
+    }, {});
 };
 
 /**

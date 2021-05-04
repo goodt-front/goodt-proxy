@@ -1,3 +1,4 @@
+import { ElemDescriptor } from '../types/core';
 import Vue, { VueConstructor, WatchOptionsWithHandler } from 'vue';
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 
@@ -31,7 +32,7 @@ interface Data {
     /** @mutable elem instance props { key:value } */
     props: {};
     /** @type {ElemDescriptor} elem descriptor */
-    descriptor: Record<string, any>;
+    descriptor: ElemDescriptor;
 }
 
 interface Watch {

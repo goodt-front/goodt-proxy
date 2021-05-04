@@ -17,7 +17,7 @@ const PanelEvent = {
 export { PanelEvent };
 
 /**
- * @typedef {Object} PanelMetaData
+ * @typedef {object} PanelMetaData
  * @property {string} name      panel name
  * @property {string} icon      mdi icon class
  */
@@ -64,6 +64,7 @@ export default {
     methods: {
         /**
          * Notifies env that the 'props' object has changed (used by the editor env)
+         *
          * @param {?string} [propName=null] property to update from the 'props' object or null to replace the whole 'props' object
          */
         propChanged(propName = null) {

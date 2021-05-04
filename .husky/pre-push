@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-./.utils/eslint-committed-short.sh
+npm run lint:committed:short

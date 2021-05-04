@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-./.utils/lint/eslint-staged-short.sh
+npm run lint:staged:short

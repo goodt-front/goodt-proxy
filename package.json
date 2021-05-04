@@ -42,6 +42,7 @@
         "eslint-config-prettier": "^8.3.0",
         "eslint-formatter-friendly": "^7.0.0",
         "eslint-formatter-markdown": "^1.0.4",
+        "eslint-plugin-jsdoc": "^33.0.0",
         "eslint-plugin-vue": "^7.9.0",
         "goodt-framework-css": "^1.1.1",
         "husky": "^6.0.0",

@@ -2,35 +2,33 @@
     <div class="mar-v-l1">
         <div class="row">
             <div class="col">
-                <component
-                    :is="elemDef"
-                    :id="id"
-                    :type="type"
-                    :props="elemProps"
-                    :is-editor-mode="true"
-                    @[ELEM_EVENT_MOUNTED]="onElemMounted"
-                ></component>
+                <widget-render v-bind="renderOpts" v-if="renderOpts"></widget-render>
             </div>
             <div class="col col-auto">
                 <div class="tile scroll-y h-100" :style="panelSidebarStyle">
                     <div class="tile-body">
                         <div class="p cf">
-                            <code class="pull-left text-truncate" :title="type">{{ type }}</code>
+                            <code class="pull-left text-truncate" :title="elemType">
+                                {{ elemType }}
+                            </code>
                         </div>
-                        <ui-collapse class="p" v-for="(p, k) in panels" :key="`${type}-${k}`">
+                        <!-- {elem panels} -->
+                        <ui-collapse class="p" v-for="(p, k) in panels" :key="`${elemType}-${k}`">
                             <template #header>{{ p.meta.name }}</template>
                             <component
                                 :is="p.def"
                                 :init-props="elemProps"
                                 :element-instance="elemInstance"
-                                @change="onPanelChange"
+                                @[panelEvent]="onPanelPropsChange"
                             ></component>
                         </ui-collapse>
+                        <!-- {/elem panels} -->
+                        <!-- {defaults} -->
                         <ui-collapse class="p">
                             <template #header>Style</template>
                             <style-panel
                                 :init-props="elemProps"
-                                @change="onPanelChange"
+                                @[panelEvent]="onPanelPropsChange"
                             ></style-panel>
                         </ui-collapse>
                         <ui-collapse class="p">
@@ -38,9 +36,10 @@
                             <variable-panel
                                 :vars-descriptor="elemDescriptor.vars"
                                 :init-props="elemProps"
-                                @change="onPanelChange"
+                                @[panelEvent]="onPanelPropsChange"
                             ></variable-panel>
                         </ui-collapse>
+                        <!-- {/defaults} -->
                         <ui-collapse class="p">
                             <template #header>elem.props</template>
                             <pre class="pre text-xsmall">{{ elemProps }}</pre>
@@ -56,90 +55,122 @@
     </div>
 </template>
 <script>
-import Vue from 'vue';
-// eslint-disable-next-line import/no-cycle
-import { ElemEvent, getDescriptorDefaultProps } from "..";
-import { UiCollapse } from '../components/panel-ui';
-import { StylePanel, VariablePanel } from '../panels';
+import cloneDeep from 'lodash/cloneDeep';
+import { ElemEvent } from '../Elem.vue';
+import { PanelEvent } from '../Panel.vue';
+import { UiCollapse } from '../components/panel-ui/index';
+import { StylePanel, VariablePanel } from '../panels/index';
+import WidgetRender from './WidgetRender.vue';
 
 let ID = 0;
+
+/**
+ * @typedef {object} ElemInfo
+ * @property {string} type
+ * @property {object} props
+ * @property {string|import('vue').Component|import('vue').AsyncComponent} component
+ * @property {ElemInfo[]} children
+ */
 export default {
     name: 'WidgetPreview',
-    components: { UiCollapse, StylePanel, VariablePanel },
+    components: { UiCollapse, StylePanel, VariablePanel, WidgetRender },
     props: {
+        /** @type {import('vue').PropOptions<ElemInfo>} */
         elem: {
-            type: Promise,
-            default() {
-                return null;
-            }
-        },
-        type: {
-            type: String,
-            default: ''
-        },
-        props: {
             type: Object,
-            default() {
-                return {};
-            }
+            default: null
         },
         panelSidebarStyle: {
             type: Object,
             default() {
                 return { width: '22rem', 'max-height': '100vh' };
             }
+        },
+        isEditorMode: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
         return {
-            elemDef: null,
             elemInstance: null,
-            elemProps: {},
             elemDescriptor: {},
+            elemProps: {},
             panels: [],
-            ELEM_EVENT_MOUNTED: ElemEvent.MOUNTED
+            panelEvent: PanelEvent.PROPS_CHANGE
         };
     },
     computed: {
-        id() {
-            return `demo-${ID++}`;
+        /**
+         * @return {string}
+         */
+        elemType() {
+            const { elem } = this;
+            return elem ? elem.type : '';
+        },
+        /**
+         * @return {object}
+         */
+        renderOpts() {
+            const { elem, elemProps, onElemMounted, isEditorMode } = this;
+            if (!elem) {
+                return null;
+            }
+            const { type, children, component } = this.elem;
+            const id = this.getElemNextId();
+            /** @param {ElemInfo} child */
+            const patch = (child) => ({
+                ...child,
+                id: this.getElemNextId(),
+                children: child.children.map(patch)
+            });
+            return {
+                elem: {
+                    id,
+                    type,
+                    props: elemProps,
+                    children: children.map(patch),
+                    component
+                },
+                dataAddons: {
+                    on: {
+                        [ElemEvent.MOUNTED]: onElemMounted
+                    }
+                },
+                isEditorMode
+            };
         }
     },
     watch: {
-        type: {
+        elemType: {
             handler(val) {
-                const { elem } = this;
-                if (!elem) {
-                    this.reset();
-                    return;
+                if (val) {
+                    this.elemProps = cloneDeep(this.elem.props);
                 }
-                elem.then(m => {
-                    const data = Vue.extend(m.default).options.data();
-                    const { descriptor } = data;
-                    const propsDefault = getDescriptorDefaultProps(descriptor);
-                    this.elemDef = m.default;
-                    this.elemProps = { ...propsDefault, ...this.props };
-                    this.elemDescriptor = descriptor;
-                });
             },
             immediate: true
         }
     },
     methods: {
         reset() {
-            this.elemDef = null;
             this.elemInstance = null;
-            this.elemProps = {};
             this.elemDescriptor = {};
+            this.elemProps = {};
             this.panels = [];
+        },
+        getElemNextId() {
+            ID += 1;
+            return `demo-${ID}`;
         },
         onElemMounted(ci) {
             this.elemInstance = ci;
-            Promise.all(ci.getPanels()).then(m => {
-                this.panels = m.map(mi => ({ def: mi.default, meta: mi.default.data().$meta }));
+            this.elemDescriptor = ci.descriptor;
+
+            Promise.all(ci.getPanels()).then((m) => {
+                this.panels = m.map((mi) => ({ def: mi.default, meta: mi.default.data().$meta }));
             });
         },
-        onPanelChange(newProps, propName = null) {
+        onPanelPropsChange(newProps, propName = null) {
             if (propName != null && Object.prototype.hasOwnProperty.call(newProps, propName)) {
                 this.$set(this.elemProps, propName, newProps[propName]);
             } else {

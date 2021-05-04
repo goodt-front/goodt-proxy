@@ -1,4 +1,4 @@
-import { StoreManager } from '@/core/managers';
+import { StoreManager } from './managers';
 
 const { vo, ValueObject } = StoreManager;
 

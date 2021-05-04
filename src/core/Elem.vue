@@ -44,7 +44,14 @@ const ComponentOptions = {
             default: ''
         },
         /** elem props defined in ElemDescriptor */
-        props: {
+        initProps: {
+            type: Object,
+            default() {
+                return {};
+            }
+        },
+        /** slot scope data if component is inside scoped slot of the parent component */
+        slotData: {
             type: Object,
             default() {
                 return {};
@@ -69,6 +76,15 @@ const ComponentOptions = {
         };
     },
     computed: {
+        /**
+         * Merged props
+         * @return {object}
+         */
+        props() {
+            const { initProps } = this;
+            const defaultProps = getDescriptorDefaultProps(this.descriptor);
+            return { ...defaultProps, ...initProps };
+        },
         /**
          * Returns the current store state
          *

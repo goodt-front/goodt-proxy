@@ -1,11 +1,8 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
-import Elem from './Elem.vue';
 import { PanelUi } from './components/index';
 import { getDescriptorDefaultProps } from './utils';
-
-const descriptor = { ...Elem.data().descriptor };
 
 /**
  * Panel events
@@ -32,6 +29,11 @@ export default {
         initProps: {
             type: Object,
             required: true
+        },
+        /** @type {import('vue').PropOptions<ElemDescriptor>} */
+        descriptor: {
+            type: Object,
+            required: true
         }
     },
     data() {
@@ -39,9 +41,7 @@ export default {
             /** @type {PanelMetaData} panel meta data (used by the editor env) */
             $meta: { name: '', icon: '' },
             /** @muttable elem instance props { key:value } */
-            props: {},
-            /** @type {ElemDescriptor} elem descriptor */
-            descriptor
+            props: {}
         };
     },
     computed: {

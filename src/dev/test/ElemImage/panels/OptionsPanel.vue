@@ -10,15 +10,11 @@
 </template>
 <script>
 import { Panel } from '../../../../core';
-import ElemImage from '../ElemImage.vue';
-
-const { descriptor } = ElemImage.data();
 
 export default {
     extends: Panel,
     data() {
         return {
-            descriptor,
             $meta: { name: 'Настройки виджета', icon: 'widgets' }
         };
     }

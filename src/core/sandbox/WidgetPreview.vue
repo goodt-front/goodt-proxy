@@ -4,6 +4,9 @@
             <div class="col">
                 <widget-render v-bind="renderOpts" v-if="renderOpts"></widget-render>
             </div>
+            <div class="col">
+                <pre class="text-xsmall">{{ elemProps }}</pre>
+            </div>
             <div class="col col-auto">
                 <div class="tile scroll-y h-100" :style="panelSidebarStyle">
                     <div class="tile-body">
@@ -18,6 +21,7 @@
                             <component
                                 :is="p.def"
                                 :init-props="elemProps"
+                                :descriptor="elemDescriptor"
                                 :element-instance="elemInstance"
                                 @[panelEvent]="onPanelPropsChange"
                             ></component>
@@ -28,14 +32,15 @@
                             <template #header>Style</template>
                             <style-panel
                                 :init-props="elemProps"
+                                :descriptor="elemDescriptor"
                                 @[panelEvent]="onPanelPropsChange"
                             ></style-panel>
                         </ui-collapse>
                         <ui-collapse class="p">
                             <template #header>Vars</template>
                             <variable-panel
-                                :vars-descriptor="elemDescriptor.vars"
                                 :init-props="elemProps"
+                                :descriptor="elemDescriptor"
                                 @[panelEvent]="onPanelPropsChange"
                             ></variable-panel>
                         </ui-collapse>
@@ -61,21 +66,38 @@ import { PanelEvent } from '../Panel.vue';
 import { UiCollapse } from '../components/panel-ui/index';
 import { StylePanel, VariablePanel } from '../panels/index';
 import WidgetRender from './WidgetRender.vue';
+import Vue from 'vue';
 
 let ID = 0;
 
 /**
- * @typedef {object} ElemInfo
+ * @param {ElemInfoShort} child
+ * @return {import('../render').ElemInfo}
+ */
+const buildElemInfo = (child) => ({
+    ...child,
+    id: `demo-${ID++}`,
+    children: child.children.map(buildElemInfo)
+});
+
+/**
+ * @typedef {object} ElemInfoShort
  * @property {string} type
  * @property {object} props
- * @property {string|import('vue').Component|import('vue').AsyncComponent} component
- * @property {ElemInfo[]} children
+ * @property {import('vue/types/options').AsyncComponentFactory} component
+ * @property {ElemInfoShort[]} children
+ */
+/**
+ * @typedef {object} RenderOpts
+ * @property {import('../render').ElemInfo} elem
+ * @property {object} dataAddons
+ * @property {boolean} isEditorMode
  */
 export default {
     name: 'WidgetPreview',
     components: { UiCollapse, StylePanel, VariablePanel, WidgetRender },
     props: {
-        /** @type {import('vue').PropOptions<ElemInfo>} */
+        /** @type {import('vue').PropOptions<ElemInfoShort>} */
         elem: {
             type: Object,
             default: null
@@ -83,7 +105,7 @@ export default {
         panelSidebarStyle: {
             type: Object,
             default() {
-                return { width: '22rem', 'max-height': '100vh' };
+                return { width: '22rem', 'max-height': '80vh' };
             }
         },
         isEditorMode: {
@@ -97,7 +119,9 @@ export default {
             elemDescriptor: {},
             elemProps: {},
             panels: [],
-            panelEvent: PanelEvent.PROPS_CHANGE
+            panelEvent: PanelEvent.PROPS_CHANGE,
+            /** @type {RenderOpts} */
+            renderOpts: null
         };
     },
     computed: {
@@ -107,45 +131,18 @@ export default {
         elemType() {
             const { elem } = this;
             return elem ? elem.type : '';
-        },
-        /**
-         * @return {object}
-         */
-        renderOpts() {
-            const { elem, elemProps, onElemMounted, isEditorMode } = this;
-            if (!elem) {
-                return null;
-            }
-            const { type, children, component } = this.elem;
-            const id = this.getElemNextId();
-            /** @param {ElemInfo} child */
-            const patch = (child) => ({
-                ...child,
-                id: this.getElemNextId(),
-                children: child.children.map(patch)
-            });
-            return {
-                elem: {
-                    id,
-                    type,
-                    props: elemProps,
-                    children: children.map(patch),
-                    component
-                },
-                dataAddons: {
-                    on: {
-                        [ElemEvent.MOUNTED]: onElemMounted
-                    }
-                },
-                isEditorMode
-            };
         }
     },
     watch: {
         elemType: {
             handler(val) {
                 if (val) {
-                    this.elemProps = cloneDeep(this.elem.props);
+                    const { elem } = this;
+                    this.elemProps = cloneDeep(elem.props);
+                    this.getElemComponentDescriptor(elem.component).then((descriptor) => {
+                        this.elemDescriptor = descriptor;
+                        this.renderOpts = this.buildRenderOpts(elem);
+                    });
                 }
             },
             immediate: true
@@ -158,13 +155,36 @@ export default {
             this.elemProps = {};
             this.panels = [];
         },
-        getElemNextId() {
-            ID += 1;
-            return `demo-${ID}`;
+        /**
+         * @param {ElemInfoShort} elem
+         * @return {RenderOpts}
+         */
+        buildRenderOpts(elem) {
+            const elemPatched = buildElemInfo(elem);
+            const { props, ...elemAttrs } = elemPatched;
+            const { elemProps, onElemMounted, isEditorMode } = this;
+            return {
+                elem: {
+                    ...elemAttrs,
+                    props: elemProps
+                },
+                dataAddons: {
+                    on: {
+                        [ElemEvent.MOUNTED]: onElemMounted
+                    }
+                },
+                isEditorMode
+            };
+        },
+        /**
+         * @param {import('vue/types/options').AsyncComponentFactory} componentFactory
+         * @return {Promise<ElemDescriptor>}
+         */
+        getElemComponentDescriptor(componentFactory) {
+            return componentFactory().then((m) => Vue.extend(m.default).options.data().descriptor);
         },
         onElemMounted(ci) {
             this.elemInstance = ci;
-            this.elemDescriptor = ci.descriptor;
 
             Promise.all(ci.getPanels()).then((m) => {
                 this.panels = m.map((mi) => ({ def: mi.default, meta: mi.default.data().$meta }));
@@ -175,6 +195,10 @@ export default {
                 this.$set(this.elemProps, propName, newProps[propName]);
             } else {
                 this.elemProps = newProps;
+                // @NOTE set reference as we reassign the props object (for the sake of sandbox)
+                // in a real env there's no need for such approach as the arch differs
+                // vuex --(props)--> panel --(new props)--> vuex --(new props)--> elem
+                this.renderOpts.elem.props = this.elemProps;
             }
         }
     }

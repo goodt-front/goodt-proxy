@@ -1,0 +1,9 @@
+{
+  "name": "scaffold",
+  "version": "1.0.0",
+  "dependencies": {
+    "figlet": "latest",
+    "mustache": "latest",
+    "signale": "latest"
+  }
+}

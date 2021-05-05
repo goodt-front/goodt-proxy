@@ -9,17 +9,18 @@
         "build": "npm run lint && npm run format && npm run build:lib",
         "build:lib": "vue-cli-service build --target lib --formats umd --dest ./dist/ --name goodt-wcore --filename lib ./src/core/index.js --report",
         "lint": "vue-cli-service lint --no-fix src/",
-        "lint:all": ".utils/lint/eslint-all.sh",
+        "lint:all": "scripts/lint/eslint-all.sh",
         "lint:all:fix": "vue-cli-service lint src/",
-        "lint:staged:short": ".utils/lint/eslint-staged-short.sh",
-        "lint:staged": ".utils/lint/eslint-staged.sh",
-        "lint:committed:short": ".utils/lint/eslint-committed-short.sh",
+        "lint:staged:short": "scripts/lint/eslint-staged-short.sh",
+        "lint:staged": "scripts/lint/eslint-staged.sh",
+        "lint:committed:short": "scripts/lint/eslint-committed-short.sh",
         "format": "prettier --write ./src/**/*",
         "test:unit": "vue-cli-service test:unit",
         "docs:panel-ui": "vue-styleguidist server",
         "docs:panel-ui:build": "vue-styleguidist build",
         "prepare": "husky install",
-        "postinstall": "npx patch-package --patch-dir=.patches"
+        "postinstall": "npx patch-package --patch-dir=.patches",
+        "scaffold": "node ./scripts/scaffold/index.js"
     },
     "dependencies": {
         "abc-charts": "^1.6.4",

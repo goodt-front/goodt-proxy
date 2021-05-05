@@ -8,9 +8,10 @@
  * @property {string} trigger
  * @property {import('../managers/StoreManager').ValueObjectMeta} meta
  */
+// eslint-disable-next-line import/no-cycle
 import { StoreManager } from '../managers';
 
-const { store, vo, ValueObject } = StoreManager;
+const { store, buildStoreValue, unwrapStoreValue } = StoreManager;
 const INSTANCE_ACCESSOR_NAME = '$store';
 
 /// /////////////////////////////////
@@ -25,9 +26,14 @@ const INSTANCE_ACCESSOR_NAME = '$store';
  *
  * @param {Record<string, ValueObject>} externalState
  * @param {Record<string, AliasMapMeta>} varAliases
+ * @param {function(valueObject: ValueObject): any} unwrapExternalStateValue
  * @return {Record<string, any>}
  */
-export const buildInternalStateFromExternal = (externalState, varAliases) => {
+export const buildInternalStateFromExternal = (
+    externalState,
+    varAliases,
+    unwrapExternalStateValue = unwrapStoreValue
+) => {
     const internalState = Object.entries(varAliases).reduce((state, [varName, varAliasData]) => {
         const { listen: alias } = varAliasData;
         if (!alias) {
@@ -37,7 +43,7 @@ export const buildInternalStateFromExternal = (externalState, varAliases) => {
             const varValueObject = externalState[alias];
             return {
                 ...state,
-                [varName]: ValueObject.getValue(varValueObject)
+                [varName]: unwrapExternalStateValue(varValueObject)
             };
         }
 
@@ -50,16 +56,20 @@ export const buildInternalStateFromExternal = (externalState, varAliases) => {
 /**
  * @param {Record<string, any>} internalState
  * @param {Record<string, AliasMapMeta>} varAliases
+ * @param {function(value: any, meta: ValueObjectMeta): ValueObject} buildExternalStateValue
  * @return {Record<string, ValueObject>}
  */
-export const buildExternalStateFromInternal = (internalState, varAliases) => {
+export const buildExternalStateFromInternal = (
+    internalState,
+    varAliases = null,
+    buildExternalStateValue = buildStoreValue
+) => {
     const externalState = Object.entries(internalState).reduce((state, [varName, varValue]) => {
         const { trigger: alias, meta } = varAliases[varName] || {};
         if (alias) {
-            const valueObject = vo(varValue, meta);
             return {
                 ...state,
-                [alias]: valueObject
+                [alias]: buildExternalStateValue(varValue, meta)
             };
         }
         return state;
@@ -104,7 +114,11 @@ export const useStore = (useOptions = {}) => {
             [`${$accessorName}State`]() {
                 const varAliases = this.props.varAliases || {};
                 const { state: externalState } = store;
-                const internalState = buildInternalStateFromExternal(externalState, varAliases);
+                const internalState = buildInternalStateFromExternal(
+                    externalState,
+                    varAliases,
+                    unwrapStoreValue
+                );
 
                 return internalState;
             }
@@ -121,7 +135,8 @@ export const useStore = (useOptions = {}) => {
                 const varAliases = this.props.varAliases || {};
                 const externalStatePartial = buildExternalStateFromInternal(
                     internalStatePartial,
-                    varAliases
+                    varAliases,
+                    buildStoreValue
                 );
                 // don't commit if obj is empty
                 if (Object.keys(externalStatePartial).length > 0) {

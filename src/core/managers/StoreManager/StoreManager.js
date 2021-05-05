@@ -1,61 +1,12 @@
 // eslint-disable-next-line max-classes-per-file
 import Vue from 'vue';
-import { filterObject } from '../utils';
+import { filterObject } from '../../utils';
 
 /**
- * @typedef {object} ValueObjectMeta
- * @property {boolean} global   global flag
+ * Reactive state holder symbol identifier
  */
-/**
- * ValueObject class
- */
-class ValueObject {
-    /**
-     * Constructor
-     *
-     * @param {any} value
-     * @param {?ValueObjectMeta} [meta=null]
-     */
-    constructor(value, meta = null) {
-        const def = ValueObject.defaultMeta();
-        /**
-         * @member {any} value
-         */
-        this.value = value;
-        /**
-         * @member {ValueObjectMeta} meta
-         */
-        this.meta = meta ? { ...def, ...meta } : def;
-    }
-}
-/**
- * Default meta factory
- *
- * @static
- * @return {ValueObjectMeta}
- */
-ValueObject.defaultMeta = () => ({ global: true });
-/**
- * Returns 'value' property if 'obj' is instanceof ValueObject; otherwise just returns the obj itself
- *
- * @static
- * @param {any} obj
- * @return {any}
- */
-ValueObject.getValue = (obj) => (obj instanceof ValueObject ? obj.value : obj);
+const stateManagerObservable = Symbol('stateManagerObservable');
 
-/**
- * ValueObject factory method
- *
- * @param {any} value
- * @param {?ValueObjectMeta} [meta=null]
- */
-const vo = (value, meta = null) => new ValueObject(value, meta);
-
-/**
- * Reactive state holder
- */
-const stateOb = Vue.observable({ state: {} });
 /**
  * Store
  */
@@ -69,6 +20,7 @@ class Store {
          * @param {Record<string, any>} statePartial
          */
         /** @type {CommitHandler[]} */
+        this[stateManagerObservable] = Vue.observable({ state: {} });
         this._commitHandlers = [];
     }
 
@@ -79,7 +31,7 @@ class Store {
      */
     // eslint-disable-next-line class-methods-use-this
     get state() {
-        return stateOb.state;
+        return this[stateManagerObservable].state;
     }
 
     /**
@@ -90,10 +42,10 @@ class Store {
      */
     commit(statePartial, isInvokeCommitHandlers = true) {
         const stateNew = filterObject(
-            { ...stateOb.state, ...statePartial },
+            { ...this[stateManagerObservable].state, ...statePartial },
             ([, value]) => value !== undefined
         );
-        stateOb.state = stateNew;
+        this[stateManagerObservable].state = stateNew;
         if (isInvokeCommitHandlers) {
             this._commitHandlers.forEach((h) => {
                 h(statePartial);
@@ -108,7 +60,7 @@ class Store {
      */
     // eslint-disable-next-line class-methods-use-this
     replace(newState) {
-        stateOb.state = newState;
+        this[stateManagerObservable].state = newState;
     }
 
     /**
@@ -129,6 +81,24 @@ class Store {
         this._commitHandlers = this._commitHandlers.filter((h) => h !== handler);
     }
 }
-const store = new Store();
 
-export { store, vo, ValueObject, Store };
+/**
+ * Store instance
+ *
+ * @type {Store}
+ */
+const storeInternal = new Store();
+
+/**
+ * Store factory method
+ *
+ * @return {Store}
+ */
+const createStore = () => new Store();
+
+export { createStore };
+
+/**
+ * @deprecated
+ */
+export const store = storeInternal;

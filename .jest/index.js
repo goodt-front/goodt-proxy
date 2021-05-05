@@ -24,6 +24,6 @@
  * ES-module package names to ignore in jest babel transpile
  * @type {string}
  */
-const esModules = [].join('|');
+const esModules = ['goodt-dremio-sdk'].join('|');
 
 module.exports.transformIgnorePatterns = [`<rootDir>/node_modules/(?!(${esModules})/)`];

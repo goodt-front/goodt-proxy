@@ -2,7 +2,7 @@
     <img :class="cssClass" :style="cssStyle" :src="imageURL" />
 </template>
 <script>
-import { Elem } from "../../../core/index";
+import { Elem } from '../../../core/index';
 
 const descriptor = () => ({
     props: {

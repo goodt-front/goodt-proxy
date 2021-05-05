@@ -202,7 +202,7 @@ export default {
         widthUnits() {
             return this.descriptor.props.widthUnit.options
                 .map(({ value }) => value)
-                .filter(v => !!v);
+                .filter((v) => !!v);
         },
         heightUnits() {
             return this.descriptor.props.heightUnit.options.map(({ value }) => value);
@@ -242,10 +242,12 @@ export default {
             },
             set(v) {
                 const obj = v
-                    .filter(v => v !== '')
+                    .filter((v) => v !== '')
                     .reduce((acc, el) => {
                         const obj = this.getStyleDefObj(el);
-                        acc[obj.key] = obj.value;
+                        if (obj) {
+                            acc[obj.key] = obj.value;
+                        }
                         return acc;
                     }, {});
                 this.props.cssStyle = obj;
@@ -255,7 +257,7 @@ export default {
     methods: {
         getStyleDefObj(def) {
             const [key, value] = def.split(':');
-            return { key: key.trim(), value: value.trim() };
+            return value != null ? { key: key.trim(), value: value.trim() } : null;
         }
     }
 };

@@ -60,21 +60,17 @@ const varAlias = ({ listen = '', trigger = '', meta = null }) => ({
 
 export default {
     extends: Panel,
-    props: {
-        varsDescriptor: {
-            default() {
-                return {};
-            }
-        }
-    },
     computed: {
+        /**
+         * @return {{ name:string, alias:ElemVarAliasDef, description:string }[]}
+         */
         varsInfo() {
-            const { varsDescriptor } = this;
+            const { vars } = this.descriptor;
             const { varAliases } = this.props;
             const arr = [];
-            for (const name in varsDescriptor) {
+            for (const name in vars) {
                 const alias = varAlias(varAliases[name] || {});
-                arr.push({ name, ...varsDescriptor[name], alias });
+                arr.push({ name, ...vars[name], alias });
             }
             return arr.sort((a, b) => {
                 const i = a.sortIndex || 0;

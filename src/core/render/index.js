@@ -3,7 +3,7 @@
  * @property {string} id            id
  * @property {string} type          type
  * @property {object} props         props
- * @property {string|import('vue').Component|import('vue').AsyncComponent} component     component def
+ * @property {import('vue/types/options').AsyncComponentFactory} component     component def
  * @property {ElemInfo[]} children  children
  * @return {import("vue/types/umd").VNode[]}
  */
@@ -30,8 +30,8 @@ export default function render(h, elemInfo, vnodeData = {}, isEditorMode = false
     /** @type {Object.<string, (props:object) => import("vue/types/umd").VNode[]>} */
     const scopedSlots = Object.entries(slots).reduce((obj, [slotName, slotElemInfos]) => {
         // eslint-disable-next-line
-        obj[slotName] = props =>
-            slotElemInfos.map(slotElemInfo =>
+        obj[slotName] = (props) =>
+            slotElemInfos.map((slotElemInfo) =>
                 render(h, slotElemInfo, vnodeData, isEditorMode, props)
             );
         return obj;

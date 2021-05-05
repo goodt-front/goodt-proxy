@@ -15,6 +15,7 @@
         "lint:staged": ".utils/lint/eslint-staged.sh",
         "lint:committed:short": ".utils/lint/eslint-committed-short.sh",
         "format": "prettier --write ./src/**/*",
+        "test:unit": "vue-cli-service test:unit",
         "docs:panel-ui": "vue-styleguidist server",
         "docs:panel-ui:build": "vue-styleguidist build",
         "prepare": "husky install",

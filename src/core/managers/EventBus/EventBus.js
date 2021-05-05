@@ -195,7 +195,7 @@ class EventBus extends EventBusBase {
                 // merge state + stateNew
                 if (this.useStateHistory) {
                     this.setState(
-                        this._removeUndefinedKeys({
+                        removeUndefinedKeys({
                             ...this.getState(),
                             ...this._stateNew
                         })

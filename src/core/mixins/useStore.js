@@ -8,9 +8,10 @@
  * @property {string} trigger
  * @property {import('../managers/StoreManager').ValueObjectMeta} meta
  */
+// eslint-disable-next-line import/no-cycle
 import { StoreManager } from '../managers';
 
-const { store, vo, ValueObject } = StoreManager;
+const { store, buildStoreValue, unwrapStoreValue } = StoreManager;
 const INSTANCE_ACCESSOR_NAME = '$store';
 
 /// /////////////////////////////////
@@ -24,20 +25,35 @@ const INSTANCE_ACCESSOR_NAME = '$store';
  /**
  *
  * @param {Record<string, ValueObject>} externalState
- * @param {Record<string, AliasMapMeta>} varAliases
+ * @param {Record<string, AliasMapMeta>} [varAliases=null]
+ * @param {function(valueObject: ValueObject): any} unwrapExternalStateValue
  * @return {Record<string, any>}
  */
-export const buildInternalStateFromExternal = (externalState, varAliases) => {
+export const buildInternalStateFromExternal = (
+    externalState,
+    varAliases = null,
+    unwrapExternalStateValue = unwrapStoreValue
+) => {
+    if (varAliases === null) {
+        return Object.entries(externalState).reduce(
+            (state, [varName, varValueObject]) => ({
+                ...state,
+                [varName]: unwrapExternalStateValue(varValueObject)
+            }),
+            {}
+        );
+    }
+
     const internalState = Object.entries(varAliases).reduce((state, [varName, varAliasData]) => {
         const { listen: alias } = varAliasData;
-        if (!alias) {
+        if (alias == null || String(alias).length === 0) {
             return state;
         }
         if (alias in externalState) {
             const varValueObject = externalState[alias];
             return {
                 ...state,
-                [varName]: ValueObject.getValue(varValueObject)
+                [varName]: unwrapExternalStateValue(varValueObject)
             };
         }
 
@@ -50,18 +66,35 @@ export const buildInternalStateFromExternal = (externalState, varAliases) => {
 /**
  * @param {Record<string, any>} internalState
  * @param {Record<string, AliasMapMeta>} varAliases
+ * @param {function(value: any, meta: ValueObjectMeta): ValueObject} buildExternalStateValue
  * @return {Record<string, ValueObject>}
  */
-export const buildExternalStateFromInternal = (internalState, varAliases) => {
+export const buildExternalStateFromInternal = (
+    internalState,
+    varAliases = null,
+    buildExternalStateValue = buildStoreValue
+) => {
+    if (varAliases === null) {
+        const externalState = Object.entries(internalState).reduce(
+            (state, [varName, varValue]) => ({
+                ...state,
+                [varName]: buildExternalStateValue(varValue)
+            }),
+            {}
+        );
+
+        return externalState;
+    }
+
     const externalState = Object.entries(internalState).reduce((state, [varName, varValue]) => {
         const { trigger: alias, meta } = varAliases[varName] || {};
-        if (alias) {
-            const valueObject = vo(varValue, meta);
+        if (alias != null && String(alias).length > 0) {
             return {
                 ...state,
-                [alias]: valueObject
+                [alias]: buildExternalStateValue(varValue, meta)
             };
         }
+
         return state;
     }, {});
 
@@ -104,7 +137,11 @@ export const useStore = (useOptions = {}) => {
             [`${$accessorName}State`]() {
                 const varAliases = this.props.varAliases || {};
                 const { state: externalState } = store;
-                const internalState = buildInternalStateFromExternal(externalState, varAliases);
+                const internalState = buildInternalStateFromExternal(
+                    externalState,
+                    varAliases,
+                    unwrapStoreValue
+                );
 
                 return internalState;
             }
@@ -121,7 +158,8 @@ export const useStore = (useOptions = {}) => {
                 const varAliases = this.props.varAliases || {};
                 const externalStatePartial = buildExternalStateFromInternal(
                     internalStatePartial,
-                    varAliases
+                    varAliases,
+                    buildStoreValue
                 );
                 // don't commit if obj is empty
                 if (Object.keys(externalStatePartial).length > 0) {

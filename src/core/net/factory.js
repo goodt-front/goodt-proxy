@@ -37,12 +37,12 @@ TransportFactoryMap.set(HttpAuthTransportSymbol, createHttpAuth);
  * @return {ITransport}
  */
 export const createTransport = (transportId, options) => {
-    const createTransport = TransportFactoryMap.get(transportId);
+    const transportFactory = TransportFactoryMap.get(transportId);
     if (!createTransport) {
         throw new TransportFactoryError(
             `Transport factory for specified identifier '${transportId.toString()}' not exist.`
         );
     }
 
-    return createTransport(options);
+    return transportFactory(options);
 };

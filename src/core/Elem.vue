@@ -15,7 +15,7 @@ import {
     patchComponentRootDomElement
 } from './utils';
 
-const { store, vo, ValueObject } = StoreManager;
+const { store, buildStoreValue, unwrapStoreValue } = StoreManager;
 const { EventBusWrapper } = EB;
 
 /**
@@ -93,7 +93,11 @@ const ComponentOptions = {
         $storeState() {
             const varAliases = this.props.varAliases || {};
             const { state: externalState } = store;
-            const internalState = buildInternalStateFromExternal(externalState, varAliases);
+            const internalState = buildInternalStateFromExternal(
+                externalState,
+                varAliases,
+                unwrapStoreValue
+            );
 
             return internalState;
         },
@@ -104,6 +108,14 @@ const ComponentOptions = {
          */
         $routeCurrent() {
             return RouteManager.instance.route;
+        },
+        /**
+         * Returns event bus instance for further use, after eventBusWrapper would renamed
+         *
+         * @return {null|*}
+         */
+        $eventBus() {
+            return this.eventBusWrapper;
         }
     },
     watch: {
@@ -256,9 +268,8 @@ const ComponentOptions = {
             wrapper.varAliases = this.props.varAliases || {};
             // @NOTE method overloading for compatibility with old widgets that use EventBusWrapper for global state management
             // {compat}
-            wrapper.toVO = (value, meta) =>
-                value instanceof ValueObject ? value : vo(value, meta);
-            wrapper.toValue = (valueObject) => ValueObject.getValue(valueObject);
+            wrapper.toVO = buildStoreValue;
+            wrapper.toValue = unwrapStoreValue;
             // {/compat}
             this.eventBusWrapper = wrapper;
             this.$nextTick(() => this.subscribe());
@@ -273,7 +284,8 @@ const ComponentOptions = {
             const varAliases = this.props.varAliases || {};
             const externalStatePartial = buildExternalStateFromInternal(
                 internalStatePartial,
-                varAliases
+                varAliases,
+                buildStoreValue
             );
 
             // don't commit if obj is empty

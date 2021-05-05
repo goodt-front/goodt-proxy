@@ -2,6 +2,11 @@
  * @typedef {import('./EventBus')} EventBus
  */
 import EventBusEvent from './EventBusEvent';
+// eslint-disable-next-line import/no-cycle
+import {
+    buildExternalStateFromInternal,
+    buildInternalStateFromExternal
+} from '../../mixins/useStoreTransitional';
 
 /**
  * EventBusWrapper class
@@ -34,15 +39,7 @@ class EventBusWrapper {
      */
     getState() {
         const state = this._eb.getState();
-        const stateLoc = {};
-        // eslint-disable-next-line guard-for-in,no-restricted-syntax
-        for (const varName in this.varAliases) {
-            const prop = this.varAliases[varName].listen;
-            if (state[prop] != null) {
-                stateLoc[varName] = this.toValue(state[prop]);
-            }
-        }
-        return { ...stateLoc };
+        return buildInternalStateFromExternal(state, this.varAliases ?? {}, this.toValue);
     }
 
     /**
@@ -109,23 +106,13 @@ class EventBusWrapper {
      */
     listenStateChange(handler, once = false) {
         const decoratedHandler = (e, stateChange) => {
-            const obj = {};
-            // eslint-disable-next-line guard-for-in,no-restricted-syntax
-            for (const name in stateChange) {
-                // replace  aliases[ name ].listen --> 'varName'
-                // eslint-disable-next-line guard-for-in,no-restricted-syntax
-                for (const varName in this.varAliases) {
-                    const alias = this.varAliases[varName];
-                    if (alias && alias.listen === name) {
-                        obj[varName] = this.toValue(stateChange[name]);
-                    }
-                }
-            }
-            if (Object.keys(obj).length) {
+            const obj = buildInternalStateFromExternal(stateChange, this.varAliases ?? {}, this.toValue);
+            if (Object.keys(obj).length > 0) {
                 handler.apply(this, [e, obj]);
             }
         };
         this.listen(EventBusEvent.EVENT_STATE_CHANGE, decoratedHandler, once);
+
         return decoratedHandler;
     }
 
@@ -144,16 +131,8 @@ class EventBusWrapper {
      * @param {object} stateChange     state change object { '<key>': '<value>' }
      */
     triggerStateChange(stateChange) {
-        const obj = {};
-        // eslint-disable-next-line guard-for-in,no-restricted-syntax
-        for (const name in stateChange) {
-            // replace 'name' -> aliases[ name ].trigger
-            const alias = this.varAliases[name];
-            if (alias && alias.trigger) {
-                obj[alias.trigger] = this.toVO(stateChange[name], alias.meta);
-            }
-        }
-        if (Object.keys(obj)) {
+        const obj = buildExternalStateFromInternal(stateChange, this.varAliases ?? {}, this.toVO);
+        if (Object.keys(obj).length > 0) {
             this.trigger(EventBusEvent.EVENT_STATE_CHANGE, obj);
         }
     }
@@ -177,12 +156,8 @@ class EventBusWrapper {
         // instead of listenStateChange()
         if (event.type === EventBusEvent.EVENT_STATE_CHANGE) {
             const handlerCompat = (e, data) => {
-                const obj = {};
-                // eslint-disable-next-line guard-for-in,no-restricted-syntax
-                for (const k in data) {
-                    obj[k] = this.toValue(data[k]);
-                }
-                if (Object.keys(obj).length) {
+                if (Object.keys(data).length > 0) {
+                    const obj = buildInternalStateFromExternal(data, null, this.toValue);
                     handler.apply(this, [e, obj]);
                 }
             };
@@ -226,12 +201,8 @@ class EventBusWrapper {
         // @NOTE compatibility with those, who call trigger(EventBusEvent.EVENT_STATE_CHANGE)
         // instead of triggerStateChange()
         if (event.type === EventBusEvent.EVENT_STATE_CHANGE) {
-            const obj = {};
-            // eslint-disable-next-line guard-for-in,no-restricted-syntax
-            for (const k in data) {
-                obj[k] = this.toVO(data[k]);
-            }
-            if (Object.keys(obj).length) {
+            if (Object.keys(data).length > 0) {
+                const obj = buildExternalStateFromInternal(data, null, this.toVO);
                 this._eb.trigger(event, obj);
             }
         }

@@ -12,8 +12,9 @@ import {
     unwrapStoreValue
 } from '../../src/core/managers/StoreManager';
 
-const STORE_STATE_VARIABLE_NAME = 'test';
-const INTERNAL_STATE_VARIABLE_NAME = 'someVarName';
+// awkward, but valid names
+const STORE_STATE_VARIABLE_NAME = 0;
+const INTERNAL_STATE_VARIABLE_NAME = false;
 const VARIABLE_VALUE = '1';
 
 /**

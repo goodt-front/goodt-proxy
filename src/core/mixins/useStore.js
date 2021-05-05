@@ -25,18 +25,28 @@ const INSTANCE_ACCESSOR_NAME = '$store';
  /**
  *
  * @param {Record<string, ValueObject>} externalState
- * @param {Record<string, AliasMapMeta>} varAliases
+ * @param {Record<string, AliasMapMeta>} [varAliases=null]
  * @param {function(valueObject: ValueObject): any} unwrapExternalStateValue
  * @return {Record<string, any>}
  */
 export const buildInternalStateFromExternal = (
     externalState,
-    varAliases,
+    varAliases = null,
     unwrapExternalStateValue = unwrapStoreValue
 ) => {
+    if (varAliases === null) {
+        return Object.entries(externalState).reduce(
+            (state, [varName, varValueObject]) => ({
+                ...state,
+                [varName]: unwrapExternalStateValue(varValueObject)
+            }),
+            {}
+        );
+    }
+
     const internalState = Object.entries(varAliases).reduce((state, [varName, varAliasData]) => {
         const { listen: alias } = varAliasData;
-        if (!alias) {
+        if (alias == null || String(alias).length === 0) {
             return state;
         }
         if (alias in externalState) {
@@ -64,14 +74,27 @@ export const buildExternalStateFromInternal = (
     varAliases = null,
     buildExternalStateValue = buildStoreValue
 ) => {
+    if (varAliases === null) {
+        const externalState = Object.entries(internalState).reduce(
+            (state, [varName, varValue]) => ({
+                ...state,
+                [varName]: buildExternalStateValue(varValue)
+            }),
+            {}
+        );
+
+        return externalState;
+    }
+
     const externalState = Object.entries(internalState).reduce((state, [varName, varValue]) => {
         const { trigger: alias, meta } = varAliases[varName] || {};
-        if (alias) {
+        if (alias != null && String(alias).length > 0) {
             return {
                 ...state,
                 [alias]: buildExternalStateValue(varValue, meta)
             };
         }
+
         return state;
     }, {});
 

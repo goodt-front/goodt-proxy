@@ -1,4 +1,5 @@
 import Vue from 'vue';
+// eslint-disable-next-line import/no-cycle
 import { EventBusBase, EventBusEvent } from './EventBus';
 
 let routeManager = null;

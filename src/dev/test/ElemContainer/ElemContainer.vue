@@ -13,7 +13,7 @@
     </div>
 </template>
 <script>
-import { Elem } from '../../../core/index';
+import { Elem } from '@goodt/core';
 
 const descriptor = () => ({
     props: {},

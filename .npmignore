@@ -1,0 +1,12 @@
+.husky
+.jest
+.patches
+.utils
+public
+scripts/lint
+src/dev
+src/core/sandbox
+tests
+vite.*
+vue.*
+jest.*

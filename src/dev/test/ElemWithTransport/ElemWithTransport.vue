@@ -5,8 +5,8 @@
     </section>
 </template>
 <script>
-import { Elem } from '../../../core/index';
-import { useTransport, HttpTransportSymbol } from '../../../core/mixins/useTransport';
+import { Elem } from '@goodt/core';
+import { useTransport, HttpTransportSymbol } from '@goodt/core/mixins/useTransport';
 
 /**
  * useTransport example

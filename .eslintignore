@@ -1,6 +1,9 @@
 .vscode
+.utils
+.jest
 dist
 node_modules
 public
+scripts
 tests
 /*.js

@@ -1,5 +1,5 @@
 <script>
-import renderElem from '../render';
+import { render as renderElem } from '../render';
 
 export default {
     props: {

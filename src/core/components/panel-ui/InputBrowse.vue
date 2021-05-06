@@ -24,6 +24,11 @@
         </control-layout>
     </div>
 </template>
+<style lang="less" scoped>
+.form-control {
+    z-index: 0;
+}
+</style>
 <script>
 import { InputAutocomplete } from 'goodteditor-ui';
 import { ControlMixin, getConstants } from './utils';

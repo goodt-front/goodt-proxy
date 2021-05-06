@@ -2,7 +2,7 @@
     "name": "goodt-wcore",
     "version": "1.0.0",
     "private": true,
-    "main": "dist/lib.umd.js",
+    "main": "src/core/index.js",
     "scripts": {
         "dev": "vite",
         "serve": "vue-cli-service serve",

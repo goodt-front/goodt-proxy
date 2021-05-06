@@ -5,5 +5,8 @@
     "figlet": "latest",
     "mustache": "latest",
     "signale": "latest"
+  },
+  "bin": {
+    "goodt-scaffold": "./cli.js"
   }
 }

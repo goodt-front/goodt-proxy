@@ -20,9 +20,10 @@
         "docs:panel-ui:build": "vue-styleguidist build",
         "prepare": "husky install",
         "postinstall": "npx patch-package --patch-dir=.patches",
-        "scaffold": "node ./scripts/scaffold/index.js"
+        "scaffold": "node_modules/@goodt/scaffold/cli.js"
     },
     "dependencies": {
+        "@goodt/core": "file:src/core",
         "abc-charts": "^1.6.4",
         "axios": "^0.21.1",
         "goodt-dremio-sdk": "^1.0.21",
@@ -36,6 +37,7 @@
         "@babel/eslint-parser": "^7.13.14",
         "@commitlint/cli": "^12.1.1",
         "@commitlint/config-conventional": "^12.1.1",
+        "@goodt/scaffold": "file:scripts/scaffold",
         "@vue/cli-plugin-babel": "^4.5.12",
         "@vue/cli-plugin-eslint": "^5.0.0-beta.0",
         "@vue/cli-plugin-unit-jest": "^5.0.0-beta.0",

@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const signale = require('signale');
 const { Input, Select } = require('enquirer');
 const fs = require('fs');
@@ -16,7 +14,7 @@ const config = {
             home: cwd,
             src: `${cwd}/src`,
             lib: `${cwd}/src/lib`,
-            core: `goodt-wcore`
+            core: `@goodt/core`
         }
     }
 };

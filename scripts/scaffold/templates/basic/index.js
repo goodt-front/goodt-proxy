@@ -27,7 +27,8 @@ module.exports = class extends Template {
             name: this.widgetName,
             http: transport === 'http',
             httpAuth: transport === 'httpAuth',
-            httpAny: ['http', 'httpAuth'].includes(transport)
+            httpAny: ['http', 'httpAuth'].includes(transport),
+            hasTransport: ['http', 'httpAuth'].includes(transport)
         };
         const elem = this.compileTpl(`${tplPath}/elem.vue`, tplBinds);
         const panel = this.compileTpl(`${tplPath}/panel.vue`, tplBinds);

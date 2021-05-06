@@ -18,8 +18,8 @@
     </div>
 </template>
 <script>
-import { Elem, getDescriptorDefaultProps } from '[[{core}]]/core';
-import { mixin as DremioMixin, Query } from '[[{core}]]/core/dremio';
+import { Elem, getDescriptorDefaultProps } from '[[{core}]]';
+import { mixin as DremioMixin, Query } from '[[{core}]]/dremio';
 
 const descriptor = () => ({
     props: {

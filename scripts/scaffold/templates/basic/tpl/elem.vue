@@ -8,18 +8,20 @@
     </div>
 </template>
 <script>
-import { Elem, getDescriptorDefaultProps } from '[[{core}]]/core';
-[[#http]]
-import { useTransport, HttpTransportSymbol as TransportSymbol } from '[[{core}]]/core/mixins/useTransport';
-[[/http]]
-[[#httpAuth]]
-import { useTransport, HttpAuthTransportSymbol as TransportSymbol } from '[[{core}]]/core/mixins/useTransport';
-[[/httpAuth]]
+import { Elem, getDescriptorDefaultProps } from '[[{core}]]';
+[[#hasTransport]]
+import {
+    useTransport,
+    [[#http]]HttpTransportSymbol as TransportSymbol[[/http]]
+    [[#httpAuth]]HttpAuthTransportSymbol as TransportSymbol[[/httpAuth]]
+} from '[[{core}]]/mixins/useTransport';
+[[/hasTransport]]
 
 const descriptor = () => ({
     props: {},
     vars: {}
 });
+[[#hasTransport]]
 
 /**
  * useTransport
@@ -34,16 +36,17 @@ const { mixin: TransportMixin } = useTransport(TransportSymbol, {
      */
     options() {
         return {
-            baseURL: this.props.apiURL
+            baseURL: this.someUrlFromProps
         };
     }
 });
 
+[[/hasTransport]]
 export default {
     extends: Elem,
-    [[#http]]
+    [[#hasTransport]]
     mixins: [ TransportMixin ],
-    [[/http]]
+    [[/hasTransport]]
     props: {
         props: {
             default() {
@@ -56,16 +59,14 @@ export default {
     }),
     computed: {
         // to be implemented
-        [[#http]]
-        // http transport instance available
-        // this.$transport
-        [[/http]]
     },
     /*
     watch: {
+        // watching global state changes
         $storeState(state, prevState) {
             // to be implement watch
         },
+        // watching route changes
         $routeCurrent(route, prevRoute) {
             // to be implement watch
         },
@@ -85,14 +86,20 @@ export default {
             return [import('./panels/SettingsPanel.vue')];
         },
         /*
-        sampleStoreCommitMethod() {
+        storeCommitMethod() {
            // ...
            this.$storeCommit(updatedState);
         },
-        sampleRouteNavigateMethod() {
+        routeNavigateMethod() {
            // ...
            this.$routeNavigate({ path, query });
         },
+        [[#hasTransport]]
+        transportUseMethod() {
+           // ...
+           this.$transport.request(requestOptions);
+        },
+        [[/hasTransport]]
         */
     }
 };

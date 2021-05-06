@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import { Panel } from '[[{core}]]/core';
+import { Panel } from '[[{core}]]';
 import [[{name}]] from './../[[{name}]].vue';
 
 const { descriptor } = [[{name}]].data();

@@ -1,5 +1,5 @@
 <script>
-import { getDescriptorDefaultProps } from '[[{core}]]/core';
+import { getDescriptorDefaultProps } from '[[{core}]]';
 import Table, { COLUMN_RENDERS } from '[[{lib}]]/ElemDremioTable/ElemDremioTable.vue';
 import DemoRender from './renders/Render.vue';
 [[#pagination]]

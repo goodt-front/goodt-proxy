@@ -1,10 +1,15 @@
-import RouteManager from '../../src/core/managers/RouteManager';
-import { EventBus, EventBusWrapper, EventBusEvent } from '../../src/core/managers/EventBus';
-import {
-    buildStoreValue,
-    createStore,
-    unwrapStoreValue
-} from '../../src/core/managers/StoreManager';
+import RouteManager from '@goodt/core/managers/RouteManager';
+import { EventBus, EventBusWrapper, EventBusEvent } from '@goodt/core/managers/EventBus';
+import { buildStoreValue, createStore, unwrapStoreValue } from '@goodt/core/managers/StoreManager';
+
+/**
+ * @dictionary
+ *
+ * Publisher – Elem-based widget that publish/trigger/emit Event Bus Event
+ * Subscriber – Elem-based widget that subscribed/listen for Event Bus Event
+ * Store Local State – Elem-based widget Store local State linked with partial of Store Global State
+ * Store Global State – Store Global State
+ */
 
 // awkward, but valid names
 const STORE_STATE_VARIABLE_NAME = 0;
@@ -43,8 +48,8 @@ describe('Event Bus Wrapper State Management Backward Compatibility', () => {
     });
 
     // Backward Compatibility
-    // 3
-    test('3. check publisher `triggerStateChange` with var aliases `trigger` notifies subscribers `listenStateChange` with var aliases `listen`', () => {
+    // 1
+    test('1. Publisher `triggerStateChange` with var aliases `trigger` SHOULD notify subscribers `listenStateChange` with var aliases `listen`', () => {
         // Given
         let subscriberInternalState = null;
         const publisherInternalState = {
@@ -83,7 +88,7 @@ describe('Event Bus Wrapper State Management Backward Compatibility', () => {
     });
 
     // 4
-    test('4. check publisher `triggerStateChange` with var aliases `trigger` notifies subscribers `listen("state-change", ...)`', () => {
+    test('2. Publisher `triggerStateChange` with var aliases `trigger` SHOULD notify subscribers `listen("state-change", ...)`', () => {
         // Given
         let subscriberInternalState = null;
         const publisherInternalState = {
@@ -126,7 +131,7 @@ describe('Event Bus Wrapper State Management Backward Compatibility', () => {
     });
 
     // 5
-    test('5. check publisher `trigger("state-change", ...)` notifies subscribers `listenStateChange`  with `listen`', () => {
+    test('3. Publisher `trigger("state-change", ...)` SHOULD notify subscribers `listenStateChange` with `listen`', () => {
         // Given
         let subscriberInternalState = null;
         const publisherInternalState = {
@@ -161,7 +166,7 @@ describe('Event Bus Wrapper State Management Backward Compatibility', () => {
     });
 
     // 6
-    test('6. check publisher `trigger("state-change", ...)` notifies subscribers `listen("state-change", ...)`', () => {
+    test('4. Publisher `trigger("state-change", ...)` SHOULD notify subscribers `listen("state-change", ...)`', () => {
         // Given
         let subscriberInternalState = null;
         const publisherInternalState = {

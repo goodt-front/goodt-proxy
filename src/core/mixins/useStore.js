@@ -107,25 +107,22 @@ export const buildExternalStateFromInternal = (
  * @return {{ mixin: MixinOptions }}
  */
 export const useStore = (useOptions = {}) => {
-    const { name: $accessorName = INSTANCE_ACCESSOR_NAME } = useOptions;
+    const {
+        name: $accessorName = INSTANCE_ACCESSOR_NAME,
+        store: storeInstance = () => store
+    } = useOptions;
 
     /**
      * @type {MixinOptions}
      */
     const MixinComponentOptions = {
-        props: {
-            type: Object,
-            default: () => ({
-                varAliases: {}
-            })
-        },
         /**
          *
          */
         inject: {
-            $store: {
-                from: '$store',
-                default: () => store
+            __$store: {
+                name: '$store',
+                default: storeInstance
             }
         },
         computed: {
@@ -135,8 +132,8 @@ export const useStore = (useOptions = {}) => {
              * @return {object} state
              */
             [`${$accessorName}State`]() {
-                const varAliases = this.props.varAliases || {};
-                const { state: externalState } = store;
+                const varAliases = this.props?.varAliases || {};
+                const { state: externalState } = this.__$store;
                 const internalState = buildInternalStateFromExternal(
                     externalState,
                     varAliases,
@@ -155,7 +152,7 @@ export const useStore = (useOptions = {}) => {
              * @return {object} transformed 'internalStatePartial' with ValueObjects
              */
             [`${$accessorName}Commit`](internalStatePartial) {
-                const varAliases = this.props.varAliases || {};
+                const varAliases = this.props?.varAliases || {};
                 const externalStatePartial = buildExternalStateFromInternal(
                     internalStatePartial,
                     varAliases,
@@ -163,7 +160,7 @@ export const useStore = (useOptions = {}) => {
                 );
                 // don't commit if obj is empty
                 if (Object.keys(externalStatePartial).length > 0) {
-                    store.commit(externalStatePartial);
+                    this.__$store.commit(externalStatePartial);
                 }
                 return {};
             }

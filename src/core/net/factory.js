@@ -9,14 +9,14 @@ class TransportFactoryError extends Error {}
  * @param {TransportConfig} options
  * @return {Http}
  */
-const createHttp = options => new Http(options);
+const createHttp = (options) => new Http(options);
 
 /**
  * @implements {ITransportFactory}
  * @param {TransportConfig} options
  * @return {HttpAuth}
  */
-const createHttpAuth = options => new HttpAuth(options);
+const createHttpAuth = (options) => new HttpAuth(options);
 
 /** @type {symbol} */
 export const HttpTransportSymbol = Symbol('HttpTransport');
@@ -26,7 +26,7 @@ export const HttpAuthTransportSymbol = Symbol('HttpAuthTransport');
 /**
  * @type {Map<symbol, Function>}
  */
-const TransportFactoryMap = new Map();
+export const TransportFactoryMap = new Map();
 TransportFactoryMap.set(HttpTransportSymbol, createHttp);
 TransportFactoryMap.set(HttpAuthTransportSymbol, createHttpAuth);
 

@@ -1,16 +1,21 @@
-import RouteManager from '../../src/core/managers/RouteManager';
-import { EventBus, EventBusWrapper, EventBusEvent } from '../../src/core/managers/EventBus';
+import RouteManager from '@goodt/core/managers/RouteManager';
+import { EventBus, EventBusWrapper, EventBusEvent } from '@goodt/core/managers/EventBus';
 
 import {
     buildExternalStateFromInternal,
     buildInternalStateFromExternal
-} from '../../src/core/mixins/useStore';
+} from '@goodt/core/mixins/useStore';
 
-import {
-    buildStoreValue,
-    createStore,
-    unwrapStoreValue
-} from '../../src/core/managers/StoreManager';
+import { buildStoreValue, createStore, unwrapStoreValue } from '@goodt/core/managers/StoreManager';
+
+/**
+ * @dictionary
+ *
+ * Publisher – Elem-based widget that publish/trigger/emit Event Bus Event
+ * Subscriber – Elem-based widget that subscribed/listen for Event Bus Event
+ * Store Local State – Elem-based widget Store local State linked with partial of Store Global State
+ * Store Global State – Store Global State
+ */
 
 // awkward, but valid names
 const STORE_STATE_VARIABLE_NAME = 0;
@@ -50,7 +55,7 @@ describe('Event Bus Wrapper State Management Store Cross-Compatibility', () => {
 
     // Cross-compatibility
     // 1
-    test('1. check publisher `triggerStateChange` with empty var aliases not affects Store state', () => {
+    test('1. Publisher `triggerStateChange` with empty var aliases SHOULD NOT affects Store Global State', () => {
         // Given
         eventBusWrapper.varAliases = {};
         const internalState = {
@@ -63,7 +68,7 @@ describe('Event Bus Wrapper State Management Store Cross-Compatibility', () => {
     });
 
     // 2
-    test('2. check publisher `triggerStateChange` with var aliases `trigger` updates Store state', () => {
+    test('2. Publisher `triggerStateChange` with var aliases `trigger` SHOULD update Store Global State', () => {
         // Given
         eventBusWrapper.varAliases = {
             [INTERNAL_STATE_VARIABLE_NAME]: {
@@ -94,7 +99,7 @@ describe('Event Bus Wrapper State Management Store Cross-Compatibility', () => {
     });
 
     // 3
-    test('3. check publisher `trigger("state-change", ...)` updates Store state', () => {
+    test('3. Publisher `trigger("state-change", ...)` SHOULD update Store Global State', () => {
         // Given
         const publisherInternalState = {
             [STORE_STATE_VARIABLE_NAME]: VARIABLE_VALUE
@@ -122,7 +127,7 @@ describe('Event Bus Wrapper State Management Store Cross-Compatibility', () => {
     });
 
     // 4
-    test('4. check publisher `store.commit` with var aliases `trigger` notifies `listenStateChange` subscribers with var aliases `listen`', () => {
+    test('4. Publisher `store.commit` with var aliases `trigger` SHOULD notify subscriber with var aliases `listen` via `listenStateChange`', () => {
         // Given
         // Publisher
         const publisherInternalState = {
@@ -159,7 +164,7 @@ describe('Event Bus Wrapper State Management Store Cross-Compatibility', () => {
     });
 
     // 5
-    test('5. check publisher `store.commit` with var aliases `trigger` notifies `listen("state-change", ...)` subscribers', () => {
+    test('5. Publisher `store.commit` with var aliases `trigger` SHOULD notify subscriber via `listen("state-change", ...)`', () => {
         // Given
         // Publisher
         const publisherInternalState = {

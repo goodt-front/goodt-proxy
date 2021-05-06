@@ -1,6 +1,6 @@
-import RouteManager from '../../src/core/managers/RouteManager';
-import { EventBus, EventBusWrapper, EventBusEvent } from '../../src/core/managers/EventBus';
-import { createStore } from '../../src/core/managers/StoreManager';
+import RouteManager from '@goodt/core/managers/RouteManager';
+import { EventBus, EventBusWrapper, EventBusEvent } from '@goodt/core/managers/EventBus';
+import { createStore } from '@goodt/core/managers/StoreManager';
 
 const url = '/some-url';
 const params = { somePram: 1 };
@@ -24,7 +24,7 @@ describe('Event Bus Wrapper Route Manager Backward Compatibility', () => {
 
     // Backward Compatibility
     // 1
-    test('1. triggerNavigate set RouteManager route to defined', () => {
+    test('1. Publisher `triggerNavigate` SHOULD set RouteManager route to defined', () => {
         // when
         eventBusWrapper.triggerNavigate({
             url,
@@ -40,7 +40,7 @@ describe('Event Bus Wrapper Route Manager Backward Compatibility', () => {
     });
 
     // 2
-    test('2. triggerNavigate set RouteManager.route to defined', () => {
+    test('2. Publisher `triggerNavigate` SHOULD notify subscriber via `listenNavigate`', () => {
         // Given
         let routeCurrent = null;
         eventBusWrapper.listenNavigate((_, route) => {
@@ -61,7 +61,7 @@ describe('Event Bus Wrapper Route Manager Backward Compatibility', () => {
     });
 
     // 3
-    test('3. RouteManager.navigate notify subscriber `listenNavigate`', () => {
+    test('3. RouteManager.navigate SHOULD notify subscriber via `listenNavigate`', () => {
         // Given
         let routeCurrent = null;
         eventBusWrapper.listenNavigate((_, route) => {

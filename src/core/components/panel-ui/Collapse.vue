@@ -35,9 +35,6 @@
 .collapse {
     border: 1px solid var(--color-grey-light);
     &-header {
-        position: sticky;
-        top: 0;
-        z-index: 1;
         overflow: hidden;
         &:before {
             position: absolute;
@@ -51,6 +48,9 @@
             content: '';
         }
         &.open {
+            position: sticky;
+            top: 0;
+            z-index: 1;
             color: var(--color-primary);
             &:before {
                 opacity: 1;

@@ -29,7 +29,7 @@ const decorateEventBusWrapper = (eventBusWrapper) => {
     return eventBusWrapper;
 };
 
-describe('Event Bus Wrapper State Management Backward Compatibility', () => {
+describe('EventBusWrapper + StoreManager: Backward Compatibility', () => {
     let store = null;
     let eventBus = null;
     let eventBusWrapper = null;

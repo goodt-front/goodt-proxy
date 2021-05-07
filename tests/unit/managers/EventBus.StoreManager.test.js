@@ -35,7 +35,7 @@ const decorateEventBusWrapper = (eventBusWrapper) => {
     return eventBusWrapper;
 };
 
-describe('Event Bus Wrapper State Management Store Cross-Compatibility', () => {
+describe('EventBusWrapper + StoreManagement: Cross-Compatibility', () => {
     let store = null;
     let eventBus = null;
     let eventBusWrapper = null;

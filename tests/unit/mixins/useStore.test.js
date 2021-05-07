@@ -17,11 +17,11 @@ const VARIABLE_VALUE = '1';
  * Store Global State – Store Global State
  */
 
-describe('useStore mixin used in component with option { extend: Elem }', () => {
+describe('useStore() mixin with { extend: Elem } component', () => {
     let store;
     let vm;
 
-    const beforeAndAfterEach = () => {
+    beforeEach(() => {
         store = createStore();
 
         const { mixin } = useStore({
@@ -32,20 +32,9 @@ describe('useStore mixin used in component with option { extend: Elem }', () => 
             extends: Elem,
             mixins: [mixin]
         });
-    };
-
-    beforeEach(beforeAndAfterEach);
-
-    // 1  practice
-    // Bad practice – encapsulation
-    test('`Store` is default-INJECTED in Observer/Mutator', () => {
-        // Given
-        // Then
-        expect(vm.__$store).toEqual(store);
     });
 
-    // 2
-
+    // 1
     test('Observer with empty `varAliases` SHOULD NOT OBSERVE Store Global State', () => {
         // Arrange
         // Given
@@ -62,7 +51,7 @@ describe('useStore mixin used in component with option { extend: Elem }', () => 
         expect(vm.$storeState).toEqual({});
     });
 
-    // 3
+    // 2
     test('Observer with defined `varAliases` SHOULD OBSERVE Store Global State', () => {
         // Given
         // Arrange

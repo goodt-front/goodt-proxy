@@ -62,3 +62,44 @@ PR – [Pull Request](https://www.atlassian.com/ru/git/tutorials/making-a-pull-r
  */
  
 ```
+
+#### Enums и Namespaced Constants
+- Объект должен быть (MUST) инициализирован с помощью `const`.
+- Название объекта перечисления / неймспейса должно быть (MUST) в PascalCase.
+- Название полей объекта перечисления / немспейса должны быть (MUST) в UPPER_SNAKE_CASE.
+- Название объекта перечисления / неймспейса должно быть (MUST) в единственном числе.
+- Поскольку в javascript нет встроенного типа `Enum` рекомендуется (SHOULD, RECOMMENDED) последним суффиксом добавлять слово Enum для явного отличия от названия классов. 
+- Может (MAY) присутствовать суффикс категории (`Type`, `Name`, `Mode`) при необходимости.
+- Объект должен быть заморожен с помощью `Object.freeze()`.
+
+Пример
+```
+const TaskStatus = Object.freeze({
+  STAND_BY: 'standBy',
+  PENDING: 'pending',
+  PROCESSING: 'processing',
+  CANCELED: 'canceled',
+  COMPLETED: 'completed',
+  FAILED: 'failed'
+});
+```
+
+#### Module exports
+- Модули должны (MUST) использовать именованные экспорты. 
+- Модули могут (MAY) использовать дефолтный экспорт повторяющий один из именованных экспортов или включающий его члена в неймспейс.
+
+```
+const someConst = ...;
+
+export { someConst };
+export default {
+  someConst
+};
+```
+
+```
+class SomeClass {};
+
+export { SomeClass };
+export default SomeClass;
+```

@@ -1,4 +1,4 @@
-const { transformIgnorePatterns } = require('./.jest');
+const { transformIgnorePatterns } = require('./tests/.jest');
 
 module.exports = {
     verbose: true,

@@ -25,7 +25,7 @@ class ElemEvent extends CustomEvent {
  * @param {string | number} elemId
  * @return {string}
  */
-export const getDomId = (elemId) => `elem-${elemId}`;
+const getDomId = (elemId) => `elem-${elemId}`;
 
 /**
  * Dispatches Elem Vue Component LC-specific Event
@@ -76,12 +76,3 @@ export const getDescriptorDefaultProps = (descriptor) => {
         };
     }, {});
 };
-
-/**
- *
- * @param {Record<string, unknown>} object
- * @param {function([string, unknown]): boolean} filterFn
- * @return {Record<string, unknown>}
- */
-export const filterObject = (object, filterFn) =>
-    Object.fromEntries(Object.entries(object).filter(filterFn));

@@ -71,7 +71,7 @@ import { Portal } from 'portal-vue';
 import QueryEditor from './dremio/QueryEditor.vue';
 import ImportDatasetPopup from './dremio/ImportDatasetPopup.vue';
 import { Query } from '../dremio';
-import Panel from '../Panel.vue';
+import { Panel } from '../Panel';
 import Const from '../Const';
 
 const { KEY } = Query;

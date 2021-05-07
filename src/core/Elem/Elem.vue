@@ -2,32 +2,18 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
-import {
-    buildExternalStateFromInternal,
-    buildInternalStateFromExternal
-} from './mixins/useStoreTransitional';
-
-import { ConstManager, RouteManager, StoreManager, EB } from './managers';
-import descriptor from './Elem.descriptor';
+import { buildExternalStateFromInternal, buildInternalStateFromExternal } from '../mixins/useStore';
+import { ConstManager, RouteManager, StoreManager, EB } from '../managers';
 import {
     dispatchEventByName,
     getDescriptorDefaultProps,
     patchComponentRootDomElement
 } from './utils';
 
+import { descriptor, ElemEvent } from './config';
+
 const { store, buildStoreValue, unwrapStoreValue } = StoreManager;
 const { EventBusWrapper } = EB;
-
-/**
- * Elem events Lifecycle events
- *
- * @enum {string}
- */
-const ElemEvent = Object.freeze({
-    CREATED: 'elem-created',
-    MOUNTED: 'elem-mounted',
-    DESTROYED: 'elem-destroyed'
-});
 
 /**
  * @type {import("./Elem.vue").ComponentOptions}
@@ -342,6 +328,8 @@ const ComponentOptions = {
     }
 };
 
-export { ElemEvent, getDescriptorDefaultProps };
+/**
+ * @type {import("./Elem.vue")}
+ */
 export default ComponentOptions;
 </script>

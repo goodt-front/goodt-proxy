@@ -13,12 +13,12 @@ PR – [Pull Request](https://www.atlassian.com/ru/git/tutorials/making-a-pull-r
 ## Оформление изменений
 
 ### Commit and PR
-Для описания комментариев к commit'ам и PR используется [«Соглашение о коммитах»](https://www.conventionalcommits.org/ru/v1.0.0/),
+Для описания комментариев к commit'ам и PR должно (MUST) использоваться [«Соглашение о коммитах»](https://www.conventionalcommits.org/ru/v1.0.0/),
 проверка соответствия осуществляется линтером [commitlint](https://github.com/conventional-changelog/commitlint#readme).
 
 ## Оформление кода: стиль и соглашения
 ### JSDoc
-Обязательно снабжать `JSDoc` публичные свойства и методы классов и объектов,
+Обязательно (RECOMMENDED) снабжать `JSDoc` публичные свойства и методы классов и объектов,
 экспортируемые из модуля структуры,
 свойства и методы секций дескриптора компонента Vue: `props, data, computed, methods`.
 

@@ -14,7 +14,7 @@ const TRANSPORT_OPTIONS = {
  * @return {{MockTransportSymbol: symbol}}
  */
 const mockTransportConstructorFactory = ({ onDispose }) => {
-    const MockTransportCtor = class {
+    const MockedTransportCtor = class {
         constructor(options) {
             this.options = options;
         }
@@ -22,11 +22,11 @@ const mockTransportConstructorFactory = ({ onDispose }) => {
             onDispose();
         }
     };
-    const MockTransportSymbol = Symbol('MockTransportSymbol');
-    TransportFactoryMap.set(MockTransportSymbol, (options) => new MockTransportCtor(options));
+    const MockedTransportSymbol = Symbol('MockTransportSymbol');
+    TransportFactoryMap.set(MockedTransportSymbol, (options) => new MockedTransportCtor(options));
 
     return {
-        MockTransportSymbol
+        MockedTransportSymbol
     };
 };
 
@@ -38,7 +38,7 @@ describe('useTransport mixin used in component with option { extend: Elem }', ()
         return this.transportOptions;
     };
 
-    const { MockTransportSymbol } = mockTransportConstructorFactory({
+    const { MockedTransportSymbol } = mockTransportConstructorFactory({
         onDispose: () => {
             isTransportWasDisposed = true;
         }
@@ -47,7 +47,7 @@ describe('useTransport mixin used in component with option { extend: Elem }', ()
     const beforeEachFn = () => {
         isTransportWasDisposed = false;
 
-        const { mixin } = useTransport(MockTransportSymbol, {
+        const { mixin } = useTransport(MockedTransportSymbol, {
             name: transportAccessorName,
             options
         });

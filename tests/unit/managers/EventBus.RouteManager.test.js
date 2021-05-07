@@ -5,7 +5,7 @@ import { createStore } from '@goodt/core/managers/StoreManager';
 const url = '/some-url';
 const params = { somePram: 1 };
 
-describe('Event Bus Wrapper Route Manager Backward Compatibility', () => {
+describe('EventBusWrapper + RouteManager: Cross Compatibility', () => {
     let eventBus = null;
     let eventBusWrapper = null;
 

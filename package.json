@@ -58,7 +58,8 @@
         "vite": "^2.1.5",
         "vite-plugin-vue2": "^1.4.3",
         "vue": "^2.6.12",
-        "vue-styleguidist": "4.35.0"
+        "vue-styleguidist": "4.35.0",
+        "webpack": "^4.46.0"
     },
     "lint-staged": {
         "*.(js|jsx|vue|ts)": [

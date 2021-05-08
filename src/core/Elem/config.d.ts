@@ -1,3 +1,4 @@
+import { RecordPropsDefinition } from 'vue/types/vue';
 /**
  * @see {@link file:///./Elem.descriptor.js | BaseElemDescriptor}
  */
@@ -22,3 +23,9 @@ export interface Props {
     varAliases: Record<string, ElemVarAliasDef>;
     slotData: Record<string, any>;
 }
+
+export const descriptor: () => {
+    props: RecordPropsDefinition<Props>;
+};
+
+export const ElemEvent: Readonly<{ CREATED: string; MOUNTED: string; DESTROYED: string }>;

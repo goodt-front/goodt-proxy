@@ -1,11 +1,12 @@
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 import Vue, { AsyncComponent, VueConstructor, ComponentOptions as VueComponentOptions } from 'vue';
 import { ElemDescriptor } from '../types/core';
-import { Props as ElemDescriptorProps } from './Elem.descriptor';
-import { getDescriptorDefaultProps } from './utils';
+import { EventBusWrapper, EventBus } from '../managers/EventBus';
+import { ValueObject } from '../managers/StoreManager';
+import { Props as ElemDescriptorProps } from './config';
 
 interface StoreState {
-    [k as string]: any;
+    [k as string]: ValueObject;
 }
 
 interface RouteManagerRoute {
@@ -13,17 +14,6 @@ interface RouteManagerRoute {
     readonly query: Record<string, null | undefined | string | number | boolean>;
     readonly meta: Record<string, any>;
 }
-
-/**
- * Elem events Lifecycle events
- */
-export type ElemEvent = string;
-export namespace ElemEvent {
-    const CREATED: string;
-    const MOUNTED: string;
-    const DESTROYED: string;
-}
-export { getDescriptorDefaultProps };
 
 /**
  * Component Instance 'data' ComponentOptions descriptor section members
@@ -62,7 +52,8 @@ interface Props extends PropsWithDescriptor<ElemDescriptorProps> {
  */
 interface Computed {
     readonly $storeState: StoreState;
-    readonly $routerCurrent: RouteManagerRoute;
+    readonly $routeCurrent: RouteManagerRoute;
+    readonly $eventBus: EventBusWrapper;
 }
 
 /**
@@ -78,7 +69,7 @@ interface Methods {
     isChildAllowed(): boolean;
     super(componentOptions?: VueComponentOptions | VueConstructor): VueConstructor;
     /* event bus related */
-    setEventBus(): void;
+    setEventBus(eventBus: EventBus): void;
     subscribe(): void;
 
     $storeCommit(state: StoreState): void;
@@ -94,5 +85,7 @@ export type ComponentOptions = ThisTypedComponentOptionsWithRecordProps<
     Props
 >;
 
-declare const _default: VueConstructor<Vue & Data & Methods & Computed & Props>;
+export interface ElemInstance extends Vue, Data, Methods, Computed, Props {}
+
+declare const _default: VueConstructor<ElemInstance>;
 export default _default;

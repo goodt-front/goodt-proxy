@@ -60,13 +60,13 @@
     </div>
 </template>
 <script>
+import Vue from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
-import { ElemEvent } from '../Elem.vue';
-import { PanelEvent } from '../Panel.vue';
+import { ElemEvent } from '../Elem';
+import { PanelEvent } from '../Panel';
 import { UiCollapse } from '../components/panel-ui/index';
 import { StylePanel, VariablePanel } from '../panels/index';
 import WidgetRender from './WidgetRender.vue';
-import Vue from 'vue';
 
 let ID = 0;
 
@@ -115,12 +115,13 @@ export default {
     },
     data() {
         return {
+            /** @type {import('../../core/Elem').Elem} */
             elemInstance: null,
             elemDescriptor: {},
             elemProps: {},
             panels: [],
             panelEvent: PanelEvent.PROPS_CHANGE,
-            /** @type {RenderOpts} */
+            /** @type {?RenderOpts} */
             renderOpts: null
         };
     },
@@ -183,6 +184,10 @@ export default {
         getElemComponentDescriptor(componentFactory) {
             return componentFactory().then((m) => Vue.extend(m.default).options.data().descriptor);
         },
+        /**
+         *
+         * @param {import('@goodt/core/Elem').ElemInstance} ci
+         */
         onElemMounted(ci) {
             this.elemInstance = ci;
 
@@ -190,16 +195,21 @@ export default {
                 this.panels = m.map((mi) => ({ def: mi.default, meta: mi.default.data().$meta }));
             });
         },
+        /**
+         *
+         * @param {Record<string, any>} newProps
+         * @param {?string} [propName=null]
+         */
         onPanelPropsChange(newProps, propName = null) {
             if (propName != null && Object.prototype.hasOwnProperty.call(newProps, propName)) {
                 this.$set(this.elemProps, propName, newProps[propName]);
-            } else {
-                this.elemProps = newProps;
-                // @NOTE set reference as we reassign the props object (for the sake of sandbox)
-                // in a real env there's no need for such approach as the arch differs
-                // vuex --(props)--> panel --(new props)--> vuex --(new props)--> elem
-                this.renderOpts.elem.props = this.elemProps;
+                return;
             }
+            this.elemProps = newProps;
+            // @NOTE set reference as we reassign the props object (for the sake of sandbox)
+            // in a real env there's no need for such approach as the arch differs
+            // vuex --(props)--> panel --(new props)--> vuex --(new props)--> elem
+            this.renderOpts.elem.props = this.elemProps;
         }
     }
 };

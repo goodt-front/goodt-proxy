@@ -167,7 +167,7 @@
 </style>
 <script>
 import { Badge as UiBadge } from 'goodteditor-ui';
-import Panel from '../Panel.vue';
+import { Panel } from '../Panel';
 
 export default {
     components: { UiBadge },

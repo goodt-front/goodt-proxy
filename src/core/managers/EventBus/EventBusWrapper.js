@@ -6,7 +6,7 @@ import EventBusEvent from './EventBusEvent';
 import {
     buildExternalStateFromInternal,
     buildInternalStateFromExternal
-} from '../../mixins/useStoreTransitional';
+} from '../../mixins/useStore';
 
 /**
  * EventBusWrapper class

@@ -1,16 +1,17 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
-import { PanelUi } from './components/index';
-import { getDescriptorDefaultProps } from './utils';
+import { getDescriptorDefaultProps } from '../Elem';
+import { PanelUi } from '../components';
 
 /**
  * Panel events
  * @enum {string}
  */
-const PanelEvent = {
+const PanelEvent = Object.freeze({
     PROPS_CHANGE: 'props-change'
-};
+});
+
 export { PanelEvent };
 
 /**
@@ -22,10 +23,12 @@ export default {
     components: { ...PanelUi },
     props: {
         /** elem component instance reference */
+        /** @type {import('vue').PropOptions<import('vue')>} */
         elementInstance: {
             type: Object
         },
-        /** elem instance props { key:value } */
+        /** elem instance props { key: value } */
+        /** @type {import('vue').PropOptions<Record<string, any>>} */
         initProps: {
             type: Object,
             required: true
@@ -40,7 +43,7 @@ export default {
         return {
             /** @type {PanelMetaData} panel meta data (used by the editor env) */
             $meta: { name: '', icon: '' },
-            /** @muttable elem instance props { key:value } */
+            /** @mutable elem instance props { key: value } */
             props: {}
         };
     },
@@ -71,6 +74,7 @@ export default {
             const { props, propsDefault } = this;
             const propsDif = Object.keys(propsDefault).reduce((obj, key) => {
                 if (!isEqual(propsDefault[key], props[key])) {
+                    // eslint-disable-next-line no-param-reassign
                     obj[key] = props[key];
                 }
                 return obj;

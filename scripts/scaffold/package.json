@@ -5,7 +5,9 @@
     "figlet": "latest",
     "mustache": "latest",
     "signale": "latest",
-    "yargs": "^17.0.1"
+    "yargs": "^17.0.1",
+    "jscodeshift": "^0.12.0",
+    "vue-ast-editor": "^0.1.1"
   },
   "bin": {
     "goodt-scaffold": "./cli.js"

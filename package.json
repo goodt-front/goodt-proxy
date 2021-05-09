@@ -23,7 +23,6 @@
         "scaffold": "node_modules/@goodt/scaffold/cli.js"
     },
     "dependencies": {
-        "@goodt/common": "file:src/common",
         "@goodt/core": "file:src/core",
         "@goodt/scaffold": "file:scripts/scaffold",
         "abc-charts": "^1.6.4",
@@ -39,13 +38,11 @@
         "@goodt/core-config": "file:.config",
         "@goodt/scaffold": "file:scripts/scaffold",
         "goodt-framework-css": "^1.1.1",
-        "jscodeshift": "^0.12.0",
         "less": "^4.1.1",
         "less-loader": "^6.0.0",
         "vite": "^2.1.5",
         "vite-plugin-vue2": "^1.4.3",
         "vue": "^2.6.12",
-        "vue-ast-editor": "^0.1.1",
         "vue-styleguidist": "4.35.0"
     },
     "lint-staged": {

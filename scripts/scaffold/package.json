@@ -1,7 +1,7 @@
 {
-  "name": "scaffold",
+  "name": "goodt-scaffold",
   "version": "1.0.0",
-  "dependencies": {
+  "devDependencies": {
     "figlet": "latest",
     "mustache": "latest",
     "signale": "latest"

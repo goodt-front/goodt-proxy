@@ -8,8 +8,8 @@ import * as Panels from './panels';
 import * as Render from './render';
 import * as Sandbox from './sandbox';
 import Const from './Const';
-import Elem, { ElemEvent, getDescriptorDefaultProps } from './Elem';
-import Panel from './Panel';
+import { Elem, ElemEvent, getDescriptorDefaultProps } from './Elem';
+import { Panel } from './Panel';
 
 export {
     // packages
@@ -26,5 +26,6 @@ export {
     Elem,
     ElemEvent,
     Panel,
-    getDescriptorDefaultProps
+    getDescriptorDefaultProps,
+    definePanel
 };

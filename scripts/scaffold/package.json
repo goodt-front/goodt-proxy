@@ -4,7 +4,8 @@
   "devDependencies": {
     "figlet": "latest",
     "mustache": "latest",
-    "signale": "latest"
+    "signale": "latest",
+    "yargs": "^17.0.1"
   },
   "bin": {
     "goodt-scaffold": "./cli.js"

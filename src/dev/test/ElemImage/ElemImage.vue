@@ -3,15 +3,16 @@
 </template>
 <script>
 import { Elem } from '@goodt/core';
+import { defineDescriptor, InputString, CheckboxBoolean } from '@goodt/core/common';
 
-const descriptor = () => ({
+const descriptor = defineDescriptor({
     props: {
         url: {
-            type: String,
+            type: InputString,
             default: ''
         },
         responsive: {
-            type: Boolean,
+            type: CheckboxBoolean,
             default: true
         }
     },

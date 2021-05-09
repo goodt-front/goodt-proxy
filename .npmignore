@@ -5,7 +5,6 @@
 public
 scripts/lint
 src/dev
-src/core/sandbox
 tests
 babel.config.js
 vite.*

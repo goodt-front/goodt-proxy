@@ -7,6 +7,12 @@ scripts/lint
 src/dev
 src/core/sandbox
 tests
+babel.config.js
 vite.*
 vue.*
 jest.*
+commitlint.*
+jsconfig.json
+.prettierignore
+.prettierrc
+.eslintignore

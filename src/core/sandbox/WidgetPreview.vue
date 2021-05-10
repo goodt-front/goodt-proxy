@@ -192,7 +192,10 @@ export default {
             this.elemInstance = ci;
 
             Promise.all(ci.getPanels()).then((m) => {
-                this.panels = m.map((mi) => ({ def: mi.default, meta: mi.default.data().$meta }));
+                this.panels = m.map((mi) => ({
+                    def: mi.default,
+                    meta: Vue.extend(mi.default).options.data().$meta
+                }));
             });
         },
         /**

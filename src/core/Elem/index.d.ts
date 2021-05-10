@@ -1,4 +1,4 @@
-import ElemCtor, { ElemInstance } from './Elem.vue';
-export { ElemInstance };
-export const Elem: ElemCtor;
-export default Elem;
+export { default as Elem } from './Elem.vue';
+export { getDescriptorDefaultProps } from './utils';
+export { ElemEvent } from './config';
+export * from './Elem';

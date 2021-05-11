@@ -1,41 +1,67 @@
 const path = require('path');
 const fs = require('fs');
-const $ = require('jscodeshift');
+
 const cloneDeep = require('lodash/cloneDeep');
 
+const $ = require('jscodeshift');
 const compiler = require('vue-template-compiler');
 const VueAstEditor = require('vue-ast-editor');
-const yargs = require('yargs');
 
-const PANEL_TPL_PATH = 'SettingsPanel.vue';
-const PANEL_TARGET_PATH = 'SettingsPanel.vue';
-const REFERENCE_CONTROL_TAG_MATCHER = 'ui-input';
-const DESCRIPTOR_TOKEN_MATCHER = {
-    callee: {
-        name: 'defineDescriptor'
+const {
+    TypeToComponentMap,
+    PANEL_TARGET_PATH,
+    PANEL_TPL_PATH,
+    REFERENCE_CONTROL_TAG_MATCHER,
+    DESCRIPTOR_TOKEN_MATCHER,
+    DEFAULT_UI_CONTROL_ATTRS,
+    getCliOptions,
+    CliArgOptions
+} = require('./config');
+
+const argv = getCliOptions(process.argv.slice(2));
+
+/**
+ *
+ * @param {string} srcFilePath
+ * @return {string}
+ */
+const loadDescriptorSource = (srcFilePath = argv[CliArgOptions.DESCRIPTOR]) => {
+    const descriptorSourcePath = path.resolve(srcFilePath);
+    const descriptorSource = fs.readFileSync(descriptorSourcePath, 'utf8');
+
+    if (descriptorSourcePath.endsWith('vue')) {
+        const sfcDescriptor = compiler.parseComponent(source);
+        return sfcDescriptor.script.content;
     }
+
+    return descriptorSource;
 };
 
-const TypeToComponentMap = Object.freeze({
-    String: 'ui-input',
-    Boolean: 'ui-checkbox',
-    InputString: 'ui-input',
-    TextareaString: 'ui-input',
-    FileString: 'ui-input-browse',
-    CheckboxBoolean: 'ui-checkbox',
-    SwitchBoolean: 'ui-switch',
-    SelectString: 'ui-select',
-    TimeString: 'ui-input-tp'
-});
+/**
+ *
+ * @param {string} srcFilePath
+ * @return {string}
+ */
+const loadPanelSource = (srcFilePath = argv[CliArgOptions.PANEL]) => {
+    if (!srcFilePath) {
+        srcFilePath = path.resolve(__dirname, PANEL_TPL_PATH);
+    }
+    const panelSource = fs.readFileSync(srcFilePath, 'utf8');
 
-const argv = yargs(process.argv.slice(2))
-    .option('source', {
-        alias: 's',
-        description: 'Source file of descriptor',
-        type: 'string'
-    })
-    .help()
-    .alias('help', 'h').argv;
+    return panelSource;
+};
+
+/**
+ *
+ */
+const savePanelSource = ({ source }) => {
+    const targetPath =
+        argv[CliArgOptions.TARGET] ??
+        argv[CliArgOptions.PANEL] ??
+        path.resolve(path.dirname(argv[CliArgOptions.DESCRIPTOR]), PANEL_TARGET_PATH);
+
+    fs.writeFileSync(targetPath, source);
+};
 
 /**
  *
@@ -44,21 +70,21 @@ const argv = yargs(process.argv.slice(2))
  */
 async function buildPanelDataFromDescriptor(source) {
     const { CallExpression } = $;
-    const sfcDescriptor = compiler.parseComponent(source);
-
-    const root = $(sfcDescriptor.script.content);
-    const nodePath = root.find(CallExpression, DESCRIPTOR_TOKEN_MATCHER).get(0);
-    const props = nodePath.node.arguments[0].properties[0].value;
+    const root = $(source);
+    const nodePaths = root.find(CallExpression, DESCRIPTOR_TOKEN_MATCHER);
+    if (nodePaths.length === 0) {
+        throw new Error(`No matching descriptor '${DESCRIPTOR_TOKEN_MATCHER.callee.name}' found.`);
+    }
+    const props = nodePaths.get(0).node.arguments[0].properties[0].value;
 
     const controlTypes = props.properties.reduce(
         (result, { key: { name }, value: { properties } }) => {
             const {
                 value: { name: type }
             } = properties.find(({ key: { name } }) => name === 'type');
-            const { value: { name: options = [] } = {} } =
-                properties.find(({ key: { name } }) => name === 'options') ?? {};
+            const hasOptions = properties.some(({ key: { name } }) => name === 'options') ?? {};
 
-            return [...result, { name, type, options }];
+            return [...result, { name, type, hasOptions }];
         },
         []
     );
@@ -66,6 +92,11 @@ async function buildPanelDataFromDescriptor(source) {
     return { controlTypes };
 }
 
+/**
+ *
+ * @param type
+ * @return {*}
+ */
 function getTagName(type) {
     return TypeToComponentMap[type];
 }
@@ -79,16 +110,25 @@ function getTagName(type) {
 async function generatePanel(source, { controlTypes }) {
     const cmp = new VueAstEditor(source);
     await cmp.ready();
-    const referenceNode = cmp.filterHAST({ tag: REFERENCE_CONTROL_TAG_MATCHER })[0];
 
-    controlTypes.forEach(({ name, type, options }) => {
+    const rootNode = cmp.template.content.find(({ tag }) => tag !== undefined);
+    if (!rootNode) {
+        throw new Error('No root node detected in <template>...</template>');
+    }
+    const referenceNode = rootNode.content.find(({ tag }) => tag && tag.startsWith('ui-'));
+
+    controlTypes.forEach(({ name, type, hasOptions }) => {
         const targetNode = cloneDeep(referenceNode);
         targetNode.tag = getTagName(type);
         targetNode.attrs = {
             ...targetNode.attrs,
+            ...DEFAULT_UI_CONTROL_ATTRS,
             'v-model': `props.${name}`,
             '@change': `propChanged('${name}')`
         };
+        if (hasOptions) {
+            targetNode.attrs[':options'] = `descriptor.props.${name}.options`;
+        }
         cmp.insertBefore(targetNode, referenceNode);
     });
 
@@ -101,15 +141,13 @@ async function generatePanel(source, { controlTypes }) {
  *
  */
 async function init() {
-    const descriptorSourcePath = path.resolve(argv.source);
-    const descriptorSource = fs.readFileSync(descriptorSourcePath, 'utf8');
+    const descriptorSource = loadDescriptorSource();
     const { controlTypes } = await buildPanelDataFromDescriptor(descriptorSource);
 
-    const panelPath = path.resolve(__dirname, PANEL_TPL_PATH);
-    const panelSource = fs.readFileSync(panelPath, 'utf8');
+    const panelSource = loadPanelSource();
     const { source } = await generatePanel(panelSource, { controlTypes });
-    const targetPath = path.resolve(path.dirname(argv.source), PANEL_TARGET_PATH);
-    fs.writeFileSync(targetPath, source);
+
+    savePanelSource({ source });
 }
 
 init();

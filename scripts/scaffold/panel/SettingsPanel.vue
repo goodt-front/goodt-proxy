@@ -1,9 +1,10 @@
 <template>
-    <div>
+    <ui-panel-container>
+        <!-- your panel goes here -->
         <ui-input class="p" v-model="props.prop" @change="propChanged('prop')">
             Label
         </ui-input>
-    </div>
+    </ui-panel-container>
 </template>
 <script>
 import { Panel } from '@goodt/core';

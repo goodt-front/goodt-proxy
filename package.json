@@ -20,7 +20,8 @@
         "docs:panel-ui:build": "vue-styleguidist build",
         "prepare": "husky install",
         "postinstall": "npm dedupe --force && npx patch-package --patch-dir=.patches",
-        "scaffold": "npx goodt-scaffold"
+        "scaffold": "npx goodt-scaffold",
+        "scaffold:panel": "node ./scripts/scaffold/panel/index.js panel"
     },
     "dependencies": {
         "@goodt/core": "file:src/core",

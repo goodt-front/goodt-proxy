@@ -1,7 +1,8 @@
 import { RecordPropsDefinition } from 'vue/types/vue';
 import { ElemDescriptor } from '../../types/core';
 
-export function defineDescriptor<T extends ElemDescriptor>(descriptor: T): () => typeof descriptor;
+type ThunkFn<T> = () => T;
+export function defineDescriptor(descriptor: ElemDescriptor): ThunkFn<ElemDescriptor>;
 
 export const DescriptorTypes: Readonly<{
     InputString: String;
@@ -13,8 +14,16 @@ export const DescriptorTypes: Readonly<{
     SwitchBoolean: Boolean;
 }>;
 
+type Primitive<T> = T extends String
+    ? string
+    : T extends Number
+    ? number
+    : T extends Boolean
+    ? boolean
+    : Record<string, any>;
+
 export interface IDescriptorProps<T> {
     props: {
-        [P in keyof T['props']]?: InstanceType<T['props'][P]['type']>;
+        [P in keyof T['props']]?: Primitive<T['props'][P]['type']>;
     };
 }

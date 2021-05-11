@@ -2,7 +2,7 @@
     <img :class="cssClass" :style="cssStyle" :src="imageURL" />
 </template>
 <script>
-import { Elem, DescriptorTypes } from '@goodt/core';
+import { Elem } from '@goodt/core';
 import { descriptor } from './descriptor';
 
 const placeholderImageBase64 =

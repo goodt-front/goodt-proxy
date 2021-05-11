@@ -69,13 +69,14 @@ const savePanelSource = ({ source }) => {
  * @return {Promise<{controlTypes}>}
  */
 async function buildPanelDataFromDescriptor(source) {
-    const { CallExpression } = $;
+    const { ArrowFunctionExpression } = $;
     const root = $(source);
-    const nodePaths = root.find(CallExpression, DESCRIPTOR_TOKEN_MATCHER);
+    const nodePaths = root.find(ArrowFunctionExpression);
     if (nodePaths.length === 0) {
         throw new Error(`No matching descriptor '${DESCRIPTOR_TOKEN_MATCHER.callee.name}' found.`);
     }
-    const props = nodePaths.get(0).node.arguments[0].properties[0].value;
+    const DescriptorObject = nodePaths.get(0).node.body;
+    const props = DescriptorObject.properties[0].value;
 
     const controlTypes = props.properties.reduce(
         (result, { key: { name }, value: { properties } }) => {
@@ -116,6 +117,7 @@ async function generatePanel(source, { controlTypes }) {
         throw new Error('No root node detected in <template>...</template>');
     }
     const referenceNode = rootNode.content.find(({ tag }) => tag && tag.startsWith('ui-'));
+    cmp.insertAfter('<!-- </generated code> -->', referenceNode);
 
     controlTypes.forEach(({ name, type, hasOptions }) => {
         const targetNode = cloneDeep(referenceNode);
@@ -129,10 +131,9 @@ async function generatePanel(source, { controlTypes }) {
         if (hasOptions) {
             targetNode.attrs[':options'] = `descriptor.props.${name}.options`;
         }
-        cmp.insertBefore(targetNode, referenceNode);
+        cmp.insertAfter(targetNode, referenceNode);
     });
-
-    cmp.removeNode(referenceNode);
+    cmp.insertAfter('<!-- <generated code> -->', referenceNode);
 
     return { source: cmp.toString() };
 }

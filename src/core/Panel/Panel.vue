@@ -58,7 +58,7 @@ export default {
     watch: {
         initProps: {
             handler(val) {
-                this.props = { ...this.propsDefault, ...cloneDeep(val) };
+                this.props = cloneDeep({ ...this.propsDefault, ...val });
             },
             deep: true,
             immediate: true

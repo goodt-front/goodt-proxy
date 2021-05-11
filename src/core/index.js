@@ -9,8 +9,8 @@ import * as Render from './render';
 import * as Sandbox from './sandbox';
 import Const from './Const';
 import { Elem, ElemEvent, getDescriptorDefaultProps } from './Elem';
-import { Panel } from './Panel';
 
+export { Panel, PanelEvent } from './Panel';
 export * from './utils';
 
 export {
@@ -27,6 +27,5 @@ export {
     Const,
     Elem,
     ElemEvent,
-    Panel,
     getDescriptorDefaultProps
 };

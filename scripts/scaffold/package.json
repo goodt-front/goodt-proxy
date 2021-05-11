@@ -1,5 +1,5 @@
 {
-  "name": "goodt-scaffold",
+  "name": "@goodt/scaffold",
   "version": "1.0.0",
   "devDependencies": {
     "figlet": "latest",

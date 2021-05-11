@@ -22,7 +22,6 @@ module.exports = class extends Template {
                 message
             }))
         }).run();
-        console.log({ TransportType });
         const tplPath = `${__dirname}/tpl`;
         const hasTransport = [TransportType.HTTP, TransportType.HTTP_AUTH].includes(transport);
         const tplBinds = {

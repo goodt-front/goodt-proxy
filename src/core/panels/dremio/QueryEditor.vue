@@ -187,9 +187,9 @@ export default {
                     }.bind(this),
                     componentEvents: function() {
                         return {
-                            change: val => (this.fields = val),
-                            generate: val => {
-                                val.forEach(metric => {
+                            change: (val) => (this.fields = val),
+                            generate: (val) => {
+                                val.forEach((metric) => {
                                     const metricNames = Query.queryMetricNames(this.query);
                                     if (!metricNames.includes(Query.getMetricName(metric))) {
                                         this.query[KEY.METRICS].push(metric);
@@ -214,7 +214,7 @@ export default {
                     }.bind(this),
                     componentEvents: function() {
                         return {
-                            change: val => (this.metrics = val)
+                            change: (val) => (this.metrics = val)
                         };
                     }.bind(this)
                 },
@@ -232,7 +232,7 @@ export default {
                     }.bind(this),
                     componentEvents: function() {
                         return {
-                            change: val => (this.dimensionList = val)
+                            change: (val) => (this.dimensionList = val)
                         };
                     }.bind(this)
                 },
@@ -251,7 +251,7 @@ export default {
                     }.bind(this),
                     componentEvents: function() {
                         return {
-                            change: val => (this.filters = val)
+                            change: (val) => (this.filters = val)
                         };
                     }.bind(this)
                 },
@@ -269,7 +269,7 @@ export default {
                     }.bind(this),
                     componentEvents: function() {
                         return {
-                            change: val => (this.sort = val)
+                            change: (val) => (this.sort = val)
                         };
                     }.bind(this)
                 },
@@ -285,7 +285,7 @@ export default {
                     }.bind(this),
                     componentEvents: function() {
                         return {
-                            change: val => (this.limit = val)
+                            change: (val) => (this.limit = val)
                         };
                     }.bind(this)
                 }
@@ -301,7 +301,7 @@ export default {
             return this.sidebarTiles.filter(handler);
         },
         metricTypes() {
-            return Object.keys(Query.METRIC_TYPE).map(k => ({
+            return Object.keys(Query.METRIC_TYPE).map((k) => ({
                 name: k,
                 type: Query.METRIC_TYPE[k]
             }));
@@ -405,7 +405,7 @@ export default {
             immediate: true
         }
     },
-    created() {
+    beforeCreate() {
         this.dremioSdk = SDKFactory({ admin: true });
     },
     mounted() {
@@ -473,7 +473,7 @@ export default {
             if (!this.from.length) {
                 this.loading.catalog = true;
                 this.getCatalogRootEntities()
-                    .then(res => (this.catalog = res))
+                    .then((res) => (this.catalog = res))
                     .catch(() => {})
                     .finally(() => (this.loading.catalog = false));
             }

@@ -11,6 +11,8 @@ import Const from './Const';
 import { Elem, ElemEvent, getDescriptorDefaultProps } from './Elem';
 import { Panel } from './Panel';
 
+export * from './utils';
+
 export {
     // packages
     AbcCharts,
@@ -26,6 +28,5 @@ export {
     Elem,
     ElemEvent,
     Panel,
-    getDescriptorDefaultProps,
-    definePanel
+    getDescriptorDefaultProps
 };

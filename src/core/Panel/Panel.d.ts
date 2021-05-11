@@ -1,8 +1,9 @@
+import Vue, { VueConstructor } from 'vue';
 import { ElemDescriptor } from '../types/core';
-import Vue, { VueConstructor, WatchOptionsWithHandler } from 'vue';
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
+import VuePanel, { PanelEvent } from './Panel.vue';
 
-type PanelMetaData = {
+interface PanelMetaData {
     /**
      * panel name
      */
@@ -11,35 +12,46 @@ type PanelMetaData = {
      * mdi icon class
      */
     icon: string;
-};
+}
 
-interface Methods {
+interface Methods<T = {}> extends T {
     /**
      * Notifies env that the 'props' object has changed (used by the editor env)
-     * @param {?String} [propName=null]     property to update from the 'props' object or null to replace the whole 'props' object
+     * @param {?string} [propName=null]     property to update from the 'props' object or null to replace the whole 'props' object
      */
-    propChanged(propName?: string): void;
+    propChanged?(propName?: string): void;
 }
 
-interface Props {
-    elementInstance: Vue;
-    initProps: boolean;
+interface Props<T = {}> extends T {
+    elementInstance?: Vue;
+    initProps?: boolean;
 }
 
-interface Data {
+interface Computed<T = {}> extends T {}
+
+interface Data<T = {}> extends T {
     /** @type {PanelMetaData} panel meta data (used by the editor env) */
-    $meta: PanelMetaData;
+    $meta?: PanelMetaData;
     /** @mutable elem instance props { key:value } */
-    props: {};
+    props?: {};
     /** @type {ElemDescriptor} elem descriptor */
-    descriptor: ElemDescriptor;
+    descriptor?: ElemDescriptor;
 }
 
-interface Watch {
-    initProps: WatchOptionsWithHandler;
-}
+export interface IPanelInstance extends Vue, Data, Methods, Computed, Props {}
 
-export type ComponentOptions = ThisTypedComponentOptionsWithRecordProps<Vue, Data, Methods, Props>;
+export interface IPanelComponentOptions<D, M, C, P>
+    extends ThisTypedComponentOptionsWithRecordProps<
+        Vue,
+        Data & D,
+        IPanelInstance & D & M & C & P,
+        IPanelInstance & D & M & C & P,
+        Props & P
+    > {}
 
-declare const _default: VueConstructor<Vue & Data & Methods & Computed & Props>;
+export type TPanelConstructor = VueConstructor<Data>;
+
+declare const _default: VuePanel;
 export default _default;
+
+export const PanelEvent;

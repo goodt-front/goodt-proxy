@@ -38,12 +38,9 @@ export const useTransport = (transportId, useOptions = {}) => {
      * @this {VueInstance}
      * @return {ITransport}
      */
-    function createTransportInstance() {
+    function createTransportInstance(vm) {
         const transportOptionsResolved =
-            typeof transportOptions === 'function'
-                ? // @ts-ignore
-                  transportOptions.call(this)
-                : transportOptions;
+            typeof transportOptions === 'function' ? transportOptions(vm) : transportOptions;
 
         return createTransport(transportId, transportOptionsResolved);
     }
@@ -58,7 +55,7 @@ export const useTransport = (transportId, useOptions = {}) => {
              */
             [$transport]() {
                 if (!this[PRIVATE_ACCESSOR_NAME]) {
-                    this[PRIVATE_ACCESSOR_NAME] = createTransportInstance.call(this);
+                    this[PRIVATE_ACCESSOR_NAME] = createTransportInstance(this);
                 }
                 return this[PRIVATE_ACCESSOR_NAME];
             }

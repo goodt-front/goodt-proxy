@@ -1,7 +1,6 @@
 import { RecordPropsDefinition } from 'vue/types/vue';
-/**
- * @see {@link file:///./Elem.descriptor.js | BaseElemDescriptor}
- */
+import { ElemDescriptor } from '../../types/core';
+
 export interface Props {
     slot: string;
     position: string;
@@ -24,8 +23,6 @@ export interface Props {
     slotData: Record<string, any>;
 }
 
-export const descriptor: () => {
-    props: RecordPropsDefinition<Props>;
-};
+export const descriptor: () => ElemDescriptor<Props>;
 
 export const ElemEvent: Readonly<{ CREATED: string; MOUNTED: string; DESTROYED: string }>;

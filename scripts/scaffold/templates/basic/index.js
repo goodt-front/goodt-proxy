@@ -1,10 +1,11 @@
 const Template = require('../template.js');
+const { TransportType } = require('../template.js');
 const { Select } = require('enquirer');
 
-const TRANSPORTS = {
-    none: 'none (no transport)',
-    http: 'http (no authorization)',
-    httpAuth: 'http-auth (with authorization support)'
+const TRANSPORT_OPTION_TITLES = {
+    [TransportType.NONE]: 'none (no transport)',
+    [TransportType.HTTP]: 'http (no authorization)',
+    [TransportType.HTTP_AUTH]: 'http-auth (with authorization support)'
 };
 
 module.exports = class extends Template {
@@ -16,22 +17,31 @@ module.exports = class extends Template {
 
         const transport = await new Select({
             message: 'Select rest-api transport',
-            choices: Object.entries(TRANSPORTS).map(([value, message]) => ({ value, message }))
+            choices: Object.entries(TRANSPORT_OPTION_TITLES).map(([value, message]) => ({
+                value,
+                message
+            }))
         }).run();
-
         const tplPath = `${__dirname}/tpl`;
+        const hasTransport = [TransportType.HTTP, TransportType.HTTP_AUTH].includes(transport);
         const tplBinds = {
             core: this.corePath,
             lib: this.corePath,
             path: this.widgetPath,
             name: this.widgetName,
-            http: transport === 'http',
-            httpAuth: transport === 'httpAuth',
-            httpAny: ['http', 'httpAuth'].includes(transport),
-            hasTransport: ['http', 'httpAuth'].includes(transport)
+            http: transport === TransportType.HTTP,
+            httpAuth: transport === TransportType.HTTP_AUTH,
+            httpAny: hasTransport,
+            hasTransport: hasTransport,
+            panelName: this.config.panel.name,
+            panelPath: this.config.panel.path
         };
         const elem = this.compileTpl(`${tplPath}/elem.vue`, tplBinds);
+        const elemDT = this.compileTpl(`${tplPath}/elem.d.ts`, tplBinds);
         const panel = this.compileTpl(`${tplPath}/panel.vue`, tplBinds);
-        return this.createWidget({ elem, panel });
+        const panelDT = this.compileTpl(`${tplPath}/panel.d.ts`, tplBinds);
+        const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
+
+        return this.createWidget({ elem, panel, elemDT, panelDT, descriptor });
     }
 };

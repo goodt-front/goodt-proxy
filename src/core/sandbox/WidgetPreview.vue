@@ -4,9 +4,6 @@
             <div class="col">
                 <widget-render v-bind="renderOpts" v-if="renderOpts"></widget-render>
             </div>
-            <div class="col">
-                <pre class="text-xsmall">{{ elemProps }}</pre>
-            </div>
             <div class="col col-auto">
                 <div class="tile scroll-y h-100" :style="panelSidebarStyle">
                     <div class="tile-body">
@@ -72,7 +69,7 @@ let ID = 0;
 
 /**
  * @param {ElemInfoShort} child
- * @return {import('../render').ElemInfo}
+ * @return {import('../render/render').ElemInfo}
  */
 const buildElemInfo = (child) => ({
     ...child,

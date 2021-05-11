@@ -1,22 +1,30 @@
 <template>
-    <div>
+    <ui-panel-container>
         <ui-input-browse class="p" v-model="props.url" @change="propChanged('url')">
             image url
         </ui-input-browse>
         <ui-switch class="p" v-model="props.responsive" @change="propChanged('responsive')">
             responsive
         </ui-switch>
-    </div>
+    </ui-panel-container>
 </template>
 <script>
-import { Panel } from '../../../../core';
+import { Panel } from '@goodt/core';
 
-export default {
+/**
+ * @typedef {import('./OptionsPanel').IComponentOptions} IComponentOptions
+ * @typedef {import('./OptionsPanel').IInstance} IInstance
+ */
+
+/**
+ * @type {IComponentOptions}
+ */
+export default ({
     extends: Panel,
     data() {
         return {
             $meta: { name: 'Настройки виджета', icon: 'widgets' }
         };
     }
-};
+});
 </script>

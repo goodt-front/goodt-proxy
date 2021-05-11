@@ -5,8 +5,8 @@ const { InputString, CheckboxBoolean } = DescriptorTypes;
 export const descriptor = () => ({
     props: {
         url: {
-            type: Boolean,
-            default: 0
+            type: InputString,
+            default: ''
         },
         responsive: {
             type: CheckboxBoolean,
@@ -15,3 +15,5 @@ export const descriptor = () => ({
     },
     vars: {}
 });
+
+export default descriptor;

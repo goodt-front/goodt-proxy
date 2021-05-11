@@ -1,17 +1,39 @@
 const fs = require('fs');
 const mustache = require('mustache');
+const merge = require('lodash.merge');
 mustache.tags = ['[[', ']]'];
+
+const cwd = process.cwd();
+const DEFAULT_CONFIG = {
+    path: {
+        home: __dirname,
+        project: {
+            home: cwd,
+            src: `${cwd}/src`,
+            lib: `${cwd}/src/lib`
+        }
+    },
+    panel: {
+        name: 'SettingsPanel',
+        path: './panels'
+    }
+};
 
 module.exports = class {
     /**
      * Constructor
-     * @param {String} widgetNameFull   widget name @example 'MyCompany/Project/ElemTest'
-     * @param {Object} config           config
+     * @param {string} widgetNameFull   widget name @example 'MyCompany/Project/ElemTest'
+     * @param {object} config           [config={}]
      */
-    constructor(widgetNameFull, config) {
-        this.config = config;
-        this.libPath = config.path.project.lib;
-        this.corePath = config.path.project.core;
+    constructor(widgetNameFull, config = {}) {
+        this.config = merge(DEFAULT_CONFIG, config);
+        const {
+            path: {
+                project: { lib, core }
+            }
+        } = this.config;
+        this.libPath = lib;
+        this.corePath = core;
         this.widgetPath = widgetNameFull;
         this.widgetName = widgetNameFull.substring(
             widgetNameFull.lastIndexOf('/') + 1,
@@ -41,11 +63,24 @@ module.exports = class {
      * @param {Object} tpl  compiled vue template files
      * @return {Boolean|Error}  true if success; else error
      */
-    createWidget({ elem, panel }) {
+    createWidget({ elem, panel, panelDT, elemDT, descriptor }) {
         this.createWidgetDir();
-        ['components', 'panels', 'panels/components'].forEach((dir) => this.createWidgetDir(dir));
+        const { path: panelPath, name: panelName } = this.config.panel;
+        ['components', panelPath, `${panelPath}/components`].forEach((dir) =>
+            this.createWidgetDir(dir)
+        );
         this.createWidgetFile(`${this.widgetName}.vue`, elem);
-        this.createWidgetFile(`panels/SettingsPanel.vue`, panel);
+        this.createWidgetFile(`${panelPath}/${panelName}.vue`, panel);
+
+        if (panelDT) {
+            this.createWidgetFile(`${panelPath}/${panelName}.d.ts`, panelDT);
+        }
+        if (elemDT) {
+            this.createWidgetFile(`${this.widgetName}.d.ts`, elemDT);
+        }
+        if (descriptor) {
+            this.createWidgetFile(`descriptor.js`, descriptor);
+        }
         return true;
     }
     /**
@@ -84,3 +119,14 @@ module.exports = class {
         return mustache.render(tpl, binds);
     }
 };
+
+/**
+ *
+ * @type {{DREMIO: string, HTTP_AUTH: string, HTTP: string}}
+ */
+module.exports.TransportType = Object.freeze({
+    NONE: 'none',
+    HTTP: 'http',
+    HTTP_AUTH: 'httpAuth',
+    DREMIO: 'http'
+});

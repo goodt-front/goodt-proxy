@@ -1,10 +1,10 @@
 import { VueConstructor } from 'vue';
 import { ITransport } from '../net/types';
 
-type TransportOptions = Record<string, any> | (() => Record<string, any>);
+export type TransportOptions = Record<string, any> | (() => Record<string, any>);
 
 type UseTransportOptions = {
-    name: string | symbol;
+    name?: string | symbol;
     options?: TransportOptions;
 };
 
@@ -13,6 +13,9 @@ interface TransportMixinComputed {
 }
 
 declare const HttpTransportSymbol: symbol;
+declare const HttpAuthTransportSymbol: symbol;
+
+export interface ITransportMixin extends VueConstructor<Vue & TransportMixinComputed> {}
 
 /**
  * Creates Vue Mixin with specified Transport and extra component transport-related behaviour
@@ -22,5 +25,5 @@ export function useTransport(
     transportId: string | symbol,
     useOptions?: UseTransportOptions = {}
 ): {
-    mixin: VueConstructor<Vue & TransportMixinComputed>;
+    mixin: ITransportMixin;
 };

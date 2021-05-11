@@ -7,7 +7,7 @@ const DremioTemplate = require('./templates/dremio/index.js');
 const DremioTableTemplate = require('./templates/dremio-table/index.js');
 
 const cwd = process.cwd();
-const config = {
+const CONFIG = {
     path: {
         home: __dirname,
         project: {
@@ -16,6 +16,10 @@ const config = {
             lib: `${cwd}/src/lib`,
             core: `@goodt/core`
         }
+    },
+    panel: {
+        name: 'SettingsPanel',
+        path: './panels'
     }
 };
 const templates = [
@@ -70,7 +74,7 @@ const logo = () => {
             if (!ns.length) {
                 return 'Name must contain a namespace with at least one "/"';
             }
-            if (ns[0].toLowerCase() == 'core') {
+            if (ns[0].toLowerCase() === 'core') {
                 return '"Core" namespace is reserved';
             }
             if (ns[0].match(/^[a-z]/)) {
@@ -79,18 +83,18 @@ const logo = () => {
             if (name.indexOf('Elem') !== 0) {
                 return 'Name must start with "Elem" prefix';
             }
-            if (name.toLowerCase() == 'elem') {
+            if (name.toLowerCase() === 'elem') {
                 return 'Name can not be just "Elem"';
             }
-            if (fs.existsSync(`${config.path.project.lib}/${val}`)) {
+            if (fs.existsSync(`${CONFIG.path.project.lib}/${val}`)) {
                 return 'Already exists';
             }
             return true;
         }
     }).run();
 
-    let tpl = templates.find(({ name }) => name == widget.template);
-    let result = await new tpl.class(widget.name, config).build();
+    let tpl = templates.find(({ name }) => name === widget.template);
+    let result = await new tpl.class(widget.name, CONFIG).build();
     if (result === true) {
         signale.log('------------------------------------------------');
         signale.success(`widget created: ${widget.name}`);

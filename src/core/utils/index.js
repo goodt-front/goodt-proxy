@@ -6,3 +6,5 @@
  */
 export const filterObject = (object, filterFn) =>
     Object.fromEntries(Object.entries(object).filter(filterFn));
+
+export * from './descriptor';

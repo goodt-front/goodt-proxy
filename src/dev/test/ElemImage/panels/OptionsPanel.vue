@@ -3,7 +3,7 @@
         <ui-input-browse class="p" v-model="props.url" @change="propChanged('url')">
             image url
         </ui-input-browse>
-        <ui-switch class="p" v-model="props.responsive" @change="propChanged('responsive')">
+        <ui-switch class="p" v-model="descriptor.responsive" @change="propChanged('responsive')">
             responsive
         </ui-switch>
     </ui-panel-container>

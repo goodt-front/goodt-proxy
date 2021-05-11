@@ -15,6 +15,7 @@ import UiSwitch from './Switch.vue';
 import UiTextarea from './Textarea.vue';
 import UiHasTwoColumns from './HasTwoColumns.vue';
 import UiHasPanel from './HasPanel.vue';
+import UiPanelContainer from './PanelContainer.vue';
 
 export {
     UiButton,
@@ -33,5 +34,6 @@ export {
     UiSwitch,
     UiTextarea,
     UiHasTwoColumns,
-    UiHasPanel
+    UiHasPanel,
+    UiPanelContainer
 };

@@ -1,4 +1,5 @@
 import '../defs';
+import { defineDescriptor } from '../utils';
 
 const cssOptions = {
     height: [{ value: '', label: 'inherit' }],
@@ -44,7 +45,7 @@ const cssOptions = {
  *
  * @return {ElemDescriptor}
  */
-const descriptor = () => ({
+const descriptor = defineDescriptor({
     props: {
         slot: {
             type: String,

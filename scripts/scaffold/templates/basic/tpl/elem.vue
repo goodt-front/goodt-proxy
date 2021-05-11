@@ -8,52 +8,48 @@
     </div>
 </template>
 <script>
-import { Elem, getDescriptorDefaultProps } from '[[{core}]]';
+/**
+ * @typedef {import('./[[{name}]]').IComponentOptions} IComponentOptions
+ * @typedef {import('./[[{name}]]').IInstance} IInstance
+ */
+import { Elem } from '[[{core}]]';
 [[#hasTransport]]
 import {
     useTransport,
-    [[#http]]HttpTransportSymbol as TransportSymbol[[/http]]
-    [[#httpAuth]]HttpAuthTransportSymbol as TransportSymbol[[/httpAuth]]
+    [[#http]]HttpTransportSymbol[[/http]][[#httpAuth]]HttpAuthTransportSymbol[[/httpAuth]] as TransportSymbol
 } from '[[{core}]]/mixins/useTransport';
 [[/hasTransport]]
+import { descriptor } from './descriptor';
 
-const descriptor = () => ({
-    props: {},
-    vars: {}
-});
 [[#hasTransport]]
 
 /**
- * useTransport
+ * Create transport mixin with useTransport
+ * @member {import('[[{core}]]/mixins/useTransport').ITransportMixin} TransportMixin
  */
 const { mixin: TransportMixin } = useTransport(TransportSymbol, {
     /**
-     * overrides transport instance accessor name, default: '$transport'
+     * @param {import('vue/types/vue').Vue} vm component instance
+     * @return {import('[[{core}]]/mixins/useTransport').TransportOptions}
      */
-    // name: '$transport',
-    /**
-     * bind to vue component instance context
-     */
-    options() {
-        return {
-            baseURL: this.someUrlFromProps
-        };
+    options: (vm) => ({ baseURL: vm.$props })
+    /*
+    // or
+    options: {
+        baseURL: process.env.API_STATIC_URL
     }
+    */
 });
-
 [[/hasTransport]]
-export default {
+
+/**
+ * @type {IComponentOptions}
+ */
+export default ({
     extends: Elem,
     [[#hasTransport]]
     mixins: [ TransportMixin ],
     [[/hasTransport]]
-    props: {
-        props: {
-            default() {
-                return getDescriptorDefaultProps(descriptor());
-            }
-        }
-    },
     data: () => ({
         descriptor: descriptor()
     }),
@@ -72,18 +68,27 @@ export default {
         },
     },
     */
-    mounted() {
+    /**
+     * @this {IInstance}
+     */
+    created() {
         // to be implemented
     },
     methods: {
+        /**
+         * @return {string[]}
+         */
         getSlotNames() {
             return ['default'];
         },
-        isChildAllowed(type) {
+        /**
+         * @return {boolean}
+         */
+        isChildAllowed(/* type */) {
             return true;
         },
         getPanels() {
-            return [import('./panels/SettingsPanel.vue')];
+            return [import('[[{panelPath}]]/[[{panelName}]].vue')];
         },
         /*
         storeCommitMethod() {
@@ -102,5 +107,5 @@ export default {
         [[/hasTransport]]
         */
     }
-};
+});
 </script>

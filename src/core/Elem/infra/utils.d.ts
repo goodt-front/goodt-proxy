@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { ElemDescriptor } from '../../types/core';
+import { ElemDescriptor } from '@goodt/core/types';
 
 /**
  * Dispatches Elem Vue Component LC-specific Event

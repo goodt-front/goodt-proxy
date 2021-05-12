@@ -18,7 +18,7 @@ export type ElemRecordVarsDefinition = {
     readonly [K as string]?: ElemVarDef;
 };
 
-export interface ElemDescriptor<P extends Record<string, ElemPropDef>, V extends Record<string, ElemVarDef> = {}> {
+export interface ElemDescriptor<P extends Record<string, ElemPropDef>, V extends Record<string, ElemVarDef>> {
     readonly props?: ElemRecordPropsDefinition<P>;
     readonly vars?: ElemRecordVarsDefinition<V>;
 }

@@ -1,5 +1,5 @@
 import { RecordPropsDefinition } from 'vue/types/vue';
-import { ElemDescriptor } from '../../types/core';
+import { ElemDescriptor } from '@goodt/core/types';
 
 type ThunkFn<T> = () => T;
 export function defineDescriptor(descriptor: ElemDescriptor): ThunkFn<ElemDescriptor>;

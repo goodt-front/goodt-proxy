@@ -8,15 +8,16 @@ import {
     dispatchEventByName,
     getDescriptorDefaultProps,
     patchComponentRootDomElement
-} from './utils';
+} from './infra/utils';
 
-import { descriptor, ElemEvent } from './config';
+import { descriptor } from './descriptor';
+import { ElemEvent } from './infra/config';
 
 const { store, buildStoreValue, unwrapStoreValue } = StoreManager;
 const { EventBusWrapper } = EB;
 
 /**
- * @type {import("./Elem.vue").ComponentOptions}
+ * @type {import("./Elem").IElemComponentOptionsInternal}
  */
 const ComponentOptions = {
     props: {
@@ -69,6 +70,7 @@ const ComponentOptions = {
         props() {
             const { initProps } = this;
             const defaultProps = getDescriptorDefaultProps(this.descriptor);
+
             return { ...defaultProps, ...initProps };
         },
         /**
@@ -90,7 +92,7 @@ const ComponentOptions = {
         /**
          * Returns the current route
          *
-         * @return {import('./managers/RouteManager').RouteObject} current route object
+         * @return {import('../managers/RouteManager').RouteObject} current route object
          */
         $routeCurrent() {
             return RouteManager.instance.route;
@@ -118,6 +120,9 @@ const ComponentOptions = {
             immediate: true
         }
     },
+    /**
+     * @this {import("./Elem").IElemInstance}
+     */
     created() {
         if (this.isEditorMode) {
             this.$watch('props.varAliases', (val) => {
@@ -134,9 +139,15 @@ const ComponentOptions = {
         // emit 'created' event via vue/dom
         dispatchEventByName.call(this, ElemEvent.CREATED);
     },
+    /**
+     * @this {import("./Elem").IElemInstance}
+     */
     mounted() {
         this._mounted();
     },
+    /**
+     * @this {import("./Elem").IElemInstance}
+     */
     beforeDestroy() {
         // teardown eventbus wrapper
         if (this.eventBusWrapper) {
@@ -151,7 +162,7 @@ const ComponentOptions = {
          * Super method call helper, allows calling super methods when using extends/mixins
          *
          * @example this.super(ComponentOptions).method.call(this)
-         * @param {import('vue').ComponentOptions} componentOptions   component options
+         * @param {any} componentOptions  component options
          * @return {Record<string, any>}  methods list
          */
         super(componentOptions = ComponentOptions) {
@@ -247,7 +258,7 @@ const ComponentOptions = {
         /**
          * Creates a new event bus wrapper
          * @invoked after @see ElemEvent.MOUNTED
-         * @param {import('./managers/EventBus').EventBus} eventBus
+         * @param {import('../managers/EventBus').EventBus} eventBus
          */
         setEventBus(eventBus) {
             const wrapper = new EventBusWrapper(eventBus);
@@ -263,8 +274,8 @@ const ComponentOptions = {
         /**
          * Transforms 'internalStatePartial' object to Object.< string, ValueObject>
          * and commits internalStatePartial to the store's state
+         *
          * @param {Record<string, any>} internalStatePartial
-         * @return {Record<string, any>} transformed 'internalStatePartial' with ValueObjects
          */
         $storeCommit(internalStatePartial) {
             const varAliases = this.props.varAliases || {};
@@ -278,13 +289,12 @@ const ComponentOptions = {
             if (Object.keys(externalStatePartial).length > 0) {
                 store.commit(externalStatePartial);
             }
-            return {};
         },
         /**
          /**
          * Requests a route change by path
          *
-         * @param {import('./managers/RouteManager').NavigateOptions} options
+         * @param {import('../managers/RouteManager').NavigateOptions} options
          */
         $routeNavigate({ path, query = {} }) {
             RouteManager.instance.navigate({ path, query });

@@ -26,6 +26,7 @@
     "dependencies": {
         "@goodt/core": "file:src/core",
         "@goodt/scaffold": "file:scripts/scaffold",
+        "@goodt/panels": "file:src/core/panels",
         "abc-charts": "^1.6.4",
         "axios": "^0.21.1",
         "goodt-dremio-sdk": "^1.0.21",

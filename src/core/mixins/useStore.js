@@ -8,10 +8,8 @@
  * @property {string} trigger
  * @property {import('../managers/StoreManager').ValueObjectMeta} meta
  */
-// eslint-disable-next-line import/no-cycle
-import { StoreManager } from '../managers';
+import { store, buildStoreValue, unwrapStoreValue } from '../managers/StoreManager';
 
-const { store, buildStoreValue, unwrapStoreValue } = StoreManager;
 const INSTANCE_ACCESSOR_NAME = '$store';
 
 /// /////////////////////////////////

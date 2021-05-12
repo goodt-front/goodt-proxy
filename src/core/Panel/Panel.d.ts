@@ -1,5 +1,5 @@
 import Vue, { VueConstructor } from 'vue';
-import { ElemDescriptor } from '../types/core';
+import { ElemDescriptor } from '@goodt/core/types';
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 import VuePanel, { PanelEvent } from './Panel.vue';
 
@@ -22,32 +22,34 @@ interface Methods<T = {}> extends T {
     propChanged?(propName?: string): void;
 }
 
-interface Props<T = {}> extends T {
+interface Props {
     elementInstance?: Vue;
     initProps?: boolean;
 }
 
-interface Computed<T = {}> extends T {}
+interface Computed { }
 
-interface Data<T = {}> extends T {
+interface Data {
     /** @type {PanelMetaData} panel meta data (used by the editor env) */
     $meta?: PanelMetaData;
-    /** @mutable elem instance props { key:value } */
+    /** @mutable elem instance props { key: value } */
     props?: {};
     /** @type {ElemDescriptor} elem descriptor */
     descriptor?: ElemDescriptor;
 }
 
-export interface IPanelInstance extends Vue, Data, Methods, Computed, Props {}
+export interface IPanelInstance extends Vue, Data, Methods, Computed, Props { }
 
 export interface IPanelComponentOptions<D, M, C, P>
     extends ThisTypedComponentOptionsWithRecordProps<
-        Vue,
-        Data & D,
-        IPanelInstance & D & M & C & P,
-        IPanelInstance & D & M & C & P,
-        Props & P
-    > {}
+    Vue,
+    Data & D,
+    IPanelInstance & D & M & C & P,
+    IPanelInstance & D & M & C & P,
+    Props & P
+    > {
+    computed?: IPanelInstance & D & M & C & P;
+}
 
 export type TPanelConstructor = VueConstructor<Data>;
 

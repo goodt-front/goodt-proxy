@@ -1,6 +1,6 @@
 <template>
     <div :class="cssClass" :style="cssStyle">
-        <!-- {demo} -->
+        <!-- {demo} @todo: DELETE COMMENTS -->
         <code>{{ type }}</code>
         <div v-if="isEditorMode">running in editor</div>
         <div>{{ props }}</div>
@@ -24,21 +24,16 @@ import { descriptor } from './descriptor';
 [[#hasTransport]]
 
 /**
- * Create transport mixin with useTransport
+ * Creates transport mixin with useTransport
  * @member {import('[[{core}]]/mixins/useTransport').ITransportMixin} TransportMixin
  */
 const { mixin: TransportMixin } = useTransport(TransportSymbol, {
     /**
-     * @param {import('vue/types/vue').Vue} vm component instance
-     * @return {import('[[{core}]]/mixins/useTransport').TransportOptions}
+     * @type {import('[[{core}]]/mixins/useTransport').TransportOptions}
      */
-    options: (vm) => ({ baseURL: vm.$props })
-    /*
-    // or
     options: {
-        baseURL: process.env.API_STATIC_URL
+        baseURL: 'http://localhost:3000'
     }
-    */
 });
 [[/hasTransport]]
 
@@ -56,6 +51,7 @@ export default ({
     computed: {
         // to be implemented
     },
+    // @todo: DELETE UNUSED
     /*
     watch: {
         // watching global state changes
@@ -69,6 +65,7 @@ export default ({
     },
     */
     /**
+     * @todo: DELETE UNUSED
      * @this {IInstance}
      */
     created() {
@@ -90,17 +87,18 @@ export default ({
         getPanels() {
             return [import('[[{panelPath}]]/[[{panelName}]].vue')];
         },
+        // @todo: DELETE UNUSED STUFF
         /*
-        storeCommitMethod() {
+        sampleStoreCommitMethod() {
            // ...
            this.$storeCommit(updatedState);
         },
-        routeNavigateMethod() {
+        sampleRouteNavigateMethod() {
            // ...
            this.$routeNavigate({ path, query });
         },
         [[#hasTransport]]
-        transportUseMethod() {
+        sampleTransportUseMethod() {
            // ...
            this.$transport.request(requestOptions);
         },

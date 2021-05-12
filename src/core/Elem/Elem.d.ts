@@ -1,14 +1,20 @@
 import Vue, { AsyncComponent, VueConstructor, ComponentOptions as VueComponentOptions } from 'vue';
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
-import { ElemDescriptor } from '../types/core';
+
 import { EventBusWrapper, EventBus } from '../managers/EventBus';
 import { Computed as StoreMixinComputed, Methods as StoreMixinMethods } from '../mixins/useStore';
 import {
     Computed as RouterMixinComputed,
     Methods as RouterMixinMethods
 } from '../mixins/useRouter';
+
 import VueElem from './Elem.vue';
-import { descriptor, Props as DescriptorProps } from './config';
+import { descriptor } from './descriptor';
+import { DescriptorProps } from './infra/types';
+
+interface Injected {
+    eventBusWrapper: EventBusWrapper;
+}
 
 /**
  * Component Instance 'data' ComponentOptions descriptor section members
@@ -18,24 +24,10 @@ interface Data {
     cssClass: Record<string, string>;
     cssStyle: Record<string, string>;
     slotDefault: string;
-    descriptor: typeof descriptor;
+    descriptor: ReturnType<typeof descriptor>;
 }
 
-/**
- * @interface PropsWithDescriptor
- */
-export interface PropsWithDescriptor<P extends Record<string, any>, V extends Record<string, any>> {
-    readonly props: P;
-    readonly vars: V;
-}
-
-/**
- * Component Instance 'props' ComponentOptions descriptor section members
- * @interface Props
- * @extends PropsWithDescriptor<ElemDescriptorProps>
- * @see ElemDescriptorProps
- */
-interface Props extends ElemDescriptor {
+interface Props {
     readonly id: string;
     readonly type: string;
     readonly initProps: object;
@@ -47,7 +39,8 @@ interface Props extends ElemDescriptor {
  * Component Instance 'computed' ComponentOptions descriptor section members
  */
 interface Computed extends StoreMixinComputed, RouterMixinComputed {
-    props: DescriptorProps;
+    readonly props?: DescriptorProps;
+    readonly varAliases: Record<string, any>;
     readonly $eventBus: EventBusWrapper;
 }
 
@@ -56,14 +49,14 @@ interface Computed extends StoreMixinComputed, RouterMixinComputed {
  * @interface {Methods}
  */
 interface Methods extends StoreMixinMethods, RouterMixinMethods {
-    super(componentOptions?: VueComponentOptions | VueConstructor): IElemInstance;
+    super(componentOptions?: VueComponentOptions): IElemInstance;
     _mounted(triggerEvents: boolean = true): void;
 
     genCssClass(): void;
     genCssStyle(): void;
     getSlotNames(): string[];
     getPanels(): AsyncComponent[];
-    isChildAllowed(): boolean;
+    isChildAllowed(type: string): boolean;
 
     /* event bus related */
     setEventBus(eventBus: EventBus): void;
@@ -72,7 +65,12 @@ interface Methods extends StoreMixinMethods, RouterMixinMethods {
     $c<T extends unknown>(constantName: T): T;
 }
 
-export interface IElemInstance extends Vue, Data, Methods, Computed, Props {}
+export interface IElemInstance extends Vue, Data, Methods, Computed, Props, Injected {}
+
+export interface IElemComponentOptionsInternal
+    extends ThisTypedComponentOptionsWithRecordProps<Vue, Data, IElemInstance, Computed, Props> {
+    computed?: IElemInstance;
+}
 
 export interface IElemComponentOptions<D, M, C, P>
     extends ThisTypedComponentOptionsWithRecordProps<
@@ -84,7 +82,6 @@ export interface IElemComponentOptions<D, M, C, P>
     > {
     computed?: IElemInstance & D & M & C & P;
 }
-
 export type TElemConstructor = VueConstructor<IElemInstance>;
 
 declare const _default: VueElem;

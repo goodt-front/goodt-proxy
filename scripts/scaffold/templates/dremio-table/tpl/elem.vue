@@ -1,11 +1,15 @@
 <script>
-import { getDescriptorDefaultProps } from '[[{core}]]';
+/**
+ * @typedef {import('./[[{name}]]').IComponentOptions} IComponentOptions
+ * @typedef {import('./[[{name}]]').IInstance} IInstance
+ */
 import Table, { COLUMN_RENDERS } from '[[{lib}]]/ElemDremioTable/ElemDremioTable.vue';
 import DemoRender from './renders/Render.vue';
 [[#pagination]]
 import DemoPagination from './components/Pagination.vue';
 [[/pagination]]
 import DemoTableRow from './components/TableRow.vue';
+import { descriptor } from './descriptor';
 
 const renders = {
     ...COLUMN_RENDERS,
@@ -15,31 +19,12 @@ const renders = {
     }
 };
 
-const descriptor = () => ({
-    props: {
-        [[#pagination]]
-        // pagination settings
-        pagination: {
-            type: Object,
-            default() {
-                return {
-                    showArrows: true
-                };
-            }
-        }
-        [[/pagination]]
-    },
-    vars: {}
-});
-
-export default {
+/**
+ * @type {IComponentOptions}
+ */
+export default ({
     extends: Table,
     props: {
-        props: {
-            default() {
-                return getDescriptorDefaultProps(descriptor());
-            }
-        },
         columnRenders: {
             default() {
                 return renders;
@@ -58,40 +43,51 @@ export default {
             }
         }
     },
-    data() {
-        return {
-            descriptor: descriptor()
-        };
+    data: () => ({
+        descriptor: descriptor()
+    }),
+    // @todo: DELETE UNUSED STUFF
+    /*
+    watch: {
+        $storeState(state, prevState) {
+            // to be implement watch
+        },
+        $routeCurrent(route, prevRoute) {
+            // to be implement watch
+        },
     },
-    computed: {
-        // to be implemented
-    },
+    */
+    /**
+     * @todo: DELETE UNUSED STUFF
+     * @this {IInstance}
+     */
     created() {
-        // to be implemented
-    },
-    mounted() {
-        // to be implemented
-    },
-    destroyed() {
         // to be implemented
     },
     methods: {
         getPanels() {
             const panels = this.super(Table).getPanels.call(this);
-            return [...panels, import('./panels/SettingsPanel.vue')];
+            return [
+                ...panels,
+                import('[[{panelPath}]]/[[{panelName}]].vue')
+            ];
         },
         [[#pagination]]
         getPaginationPanel() {
             return import('./panels/PaginationPanel.vue');
         },
         [[/pagination]]
-        subscribe() {
-            /*
-            this.eventBusWrapper.listenStateChange((e, state) => {
-                console.log(this.type, 'subscribe()', 'listenStateChange()', e, state);
-            });
-            */
-        }
+        // @todo: DELETE UNUSED STUFF
+        /*
+        sampleStoreCommitMethod() {
+           // ...
+           this.$storeCommit(updatedState);
+        },
+        sampleRouteNavigateMethod() {
+           // ...
+           this.$routeNavigate({ path, query });
+        },
+        */
     }
-};
+});
 </script>

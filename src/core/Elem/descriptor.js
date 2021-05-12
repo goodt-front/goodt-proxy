@@ -1,5 +1,4 @@
 import '../defs';
-import { defineDescriptor } from '../utils';
 
 const cssOptions = {
     height: [{ value: '', label: 'inherit' }],
@@ -42,10 +41,8 @@ const cssOptions = {
 };
 /**
  * Returns base elem descriptor
- *
- * @return {ElemDescriptor}
  */
-const descriptor = defineDescriptor({
+export const descriptor = () => ({
     props: {
         slot: {
             type: String,
@@ -188,21 +185,4 @@ const descriptor = defineDescriptor({
     vars: {}
 });
 
-/**
- * /**
- * Elem events Lifecycle events
- * @enum {string}
- * @type {Readonly<{CREATED: string, MOUNTED: string, DESTROYED: string}>}
- */
-const ElemEvent = Object.freeze({
-    CREATED: 'elem-created',
-    MOUNTED: 'elem-mounted',
-    DESTROYED: 'elem-destroyed'
-});
-
-export { descriptor, ElemEvent };
-
-export default {
-    descriptor,
-    ElemEvent
-};
+export default descriptor;

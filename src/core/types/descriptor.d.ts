@@ -1,15 +1,16 @@
 import { PropOptions } from 'vue';
 
-export declare interface ElemPropDef extends PropOptions {
+export interface ElemPropDef extends PropOptions {
+    type?: String | Boolean | Number | Object | Array | Function;
     enum?: string[];
     options?: { value: unknown; label: string }[];
 }
 
-export declare interface ElemVarDef {
+export interface ElemVarDef {
     description?: string;
 }
 
-export type ElemRecordPropsDefinition<T> = {
+export interface ElemRecordPropsDefinition<T> {
     readonly [K in keyof T]: ElemPropDef<T[K]>;
 };
 
@@ -17,7 +18,7 @@ export type ElemRecordVarsDefinition = {
     readonly [K as string]?: ElemVarDef;
 };
 
-export interface ElemDescriptor<P extends Record<string, any>, V extends Record<string, any> = {}> {
+export interface ElemDescriptor<P extends Record<string, ElemPropDef>, V extends Record<string, ElemVarDef>> {
     readonly props?: ElemRecordPropsDefinition<P>;
     readonly vars?: ElemRecordVarsDefinition<V>;
 }

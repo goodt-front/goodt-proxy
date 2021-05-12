@@ -1,7 +1,7 @@
-import { RecordPropsDefinition } from 'vue/types/vue';
-import { ElemDescriptor } from '../../types/core';
+// import { IDescriptorProps } from '@goodt/core';
+// import { descriptor } from './descriptor';
 
-export interface Props {
+export interface DescriptorProps {
     slot: string;
     position: string;
     display: string;
@@ -19,10 +19,11 @@ export interface Props {
     paddingL: string;
     cssClass: string;
     cssStyle: string;
-    varAliases: Record<string, ElemVarAliasDef>;
     slotData: Record<string, any>;
 }
 
-export const descriptor: () => ElemDescriptor<Props>;
-
-export const ElemEvent: Readonly<{ CREATED: string; MOUNTED: string; DESTROYED: string }>;
+/*
+// check try to extract from `descriptor`
+export interface DescriptorProps extends IDescriptorProps<ReturnType<typeof descriptor>> {
+}
+*/

@@ -20,11 +20,17 @@ module.exports = class extends Template {
             lib: this.widgetLibPath,
             path: this.widgetPath,
             name: this.widgetName,
-            pagination: paginationEnabled
+            pagination: paginationEnabled,
+            panelName: this.config.panel.name,
+            panelPath: this.config.panel.path
         };
         const elem = this.compileTpl(`${tplPath}/elem.vue`, tplBinds);
+        const elemDT = this.compileTpl(`${tplPath}/elem.d.ts`, tplBinds);
         const panel = this.compileTpl(`${tplPath}/panel.vue`, tplBinds);
-        this.createWidget({ elem, panel });
+        const panelDT = this.compileTpl(`${tplPath}/panel.d.ts`, tplBinds);
+        const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
+
+        this.createWidget({ elem, panel, elemDT, panelDT, descriptor });
         // render
         const render = this.compileTpl(`${tplPath}/renders/render.vue`, tplBinds);
         this.createWidgetDir('renders');

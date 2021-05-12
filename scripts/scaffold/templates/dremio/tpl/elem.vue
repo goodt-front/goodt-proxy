@@ -18,29 +18,20 @@
     </div>
 </template>
 <script>
-import { Elem, getDescriptorDefaultProps } from '[[{core}]]';
-import { mixin as DremioMixin, Query } from '[[{core}]]/dremio';
+/**
+ * @typedef {import('./[[{name}]]').IComponentOptions} IComponentOptions
+ * @typedef {import('./[[{name}]]').IInstance} IInstance
+ */
+import { Elem } from '[[{core}]]';
+import { mixin as DremioMixin } from '[[{core}]]/dremio';
+import { descriptor } from './descriptor';
 
-const descriptor = () => ({
-    props: {
-        dremio: {
-            type: Object,
-            default: null
-        }
-    },
-    vars: {}
-});
-
-export default {
+/**
+ * @type {IComponentOptions}
+ */
+export default ({
     extends: Elem,
     mixins: [DremioMixin],
-    props: {
-        props: {
-            default() {
-                return getDescriptorDefaultProps(descriptor());
-            }
-        }
-    },
     data() {
         return {
             descriptor: descriptor(),
@@ -62,6 +53,7 @@ export default {
             error: null
         };
     },
+    // @todo: DELETE UNUSED STUFF
     /*
     watch: {
         $storeState(state, prevState) {
@@ -72,16 +64,15 @@ export default {
         },
     },
     */
+    /**
+     * @todo: DELETE UNUSED STUFF
+     * @this {IInstance}
+     */
     created() {
         // to be implemented
     },
-    mounted() {
-        // to be implemented
-    },
-    destroyed() {
-        // to be implemented
-    },
     methods: {
+        // @todo: DELETE UNUSED STUFF
         /*
         sampleStoreCommitMethod() {
            // ...
@@ -95,20 +86,19 @@ export default {
         getSlotNames() {
             return ['default'];
         },
-        isChildAllowed(type) {
+        isChildAllowed(/* type */) {
             return true;
         },
         getPanels() {
-            return [import('[[{lib}]]/DremioPanel.vue'), import('./panels/SettingsPanel.vue')];
-        },
-        subscribe() {
-            // call mixin subscribe()
-            this.super(DremioMixin).subscribe.call(this);
+            return [
+                import('[[{lib}]]/DremioPanel.vue'),
+                import('[[{panelPath}]]/[[{panelName}]].vue')
+            ];
         },
         loadDataPage(page) {
             this.page = page;
             this.loadData();
         }
     }
-};
+});
 </script>

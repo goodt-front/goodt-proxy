@@ -1,21 +1,25 @@
 <template>
-    <div>
+    <ui-panel-container>
         <!-- your panel goes here -->
-    </div>
+        <ui-input class="p" v-model="props.prop" @change="propChanged('prop')">
+            Label
+        </ui-input>
+    </ui-panel-container>
 </template>
 <script>
+/**
+ * @typedef {import('./[[{panelName}]]').IComponentOptions} IComponentOptions
+ * @typedef {import('./[[{panelName}]]').IInstance} IInstance
+ */
 import { Panel } from '[[{core}]]';
-import [[{name}]] from './../[[{name}]].vue';
 
-const { descriptor } = [[{name}]].data();
-
-export default {
+/**
+ * @type {IComponentOptions}
+ */
+export default ({
     extends: Panel,
-    data() {
-        return {
-            $meta: { name: 'SettingsPanel', icon: '' },
-            descriptor
-        };
-    }
-};
+    data: () => ({
+        $meta: { name: '[[{panelName}]]', icon: '' }
+    })
+});
 </script>

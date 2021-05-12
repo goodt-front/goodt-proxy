@@ -14,17 +14,17 @@ export const Vars = Object.freeze({
  */
 export const descriptor = () => ({
     props: {
-        // @todo: DELETE UNUSED STUFF
-        /*
-        themes: {
-            type: String,
-            default: 'light',
-            options: [
-                { label: 'Light theme', value: 'light' },
-                { label: 'Dark theme', value: 'dark' }
-            ]
+        [[#pagination]]
+        // pagination settings
+        pagination: {
+            type: Object,
+            default() {
+                return {
+                    showArrows: true
+                };
+            }
         }
-        */
+        [[/pagination]]
     },
     vars: {
         // @todo: DELETE UNUSED STUFF

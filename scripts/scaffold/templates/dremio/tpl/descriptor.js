@@ -14,17 +14,10 @@ export const Vars = Object.freeze({
  */
 export const descriptor = () => ({
     props: {
-        // @todo: DELETE UNUSED STUFF
-        /*
-        themes: {
-            type: String,
-            default: 'light',
-            options: [
-                { label: 'Light theme', value: 'light' },
-                { label: 'Dark theme', value: 'dark' }
-            ]
+        dremio: {
+            type: Object,
+            default: null
         }
-        */
     },
     vars: {
         // @todo: DELETE UNUSED STUFF

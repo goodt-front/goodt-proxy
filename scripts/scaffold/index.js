@@ -13,8 +13,12 @@ const CONFIG = {
         project: {
             home: cwd,
             src: `${cwd}/src`,
-            lib: `${cwd}/src/lib`,
-            core: `@goodt/core`
+            lib: `${cwd}/src/lib`
+        },
+        core: {
+            root: `@goodt/core`,
+            panels: `@goodt/panels`,
+            mixins: `@goodt/core/mixins`
         }
     },
     panel: {
@@ -22,7 +26,7 @@ const CONFIG = {
         path: './panels'
     }
 };
-const templates = [
+const TEMPLATES = [
     {
         name: 'widget basic',
         descr: 'basic widget (optional rest-api datasource)',
@@ -58,7 +62,7 @@ const logo = () => {
     };
     widget.template = await new Select({
         message: 'Select widget template',
-        choices: templates.map(({ name, descr }, i) => ({
+        choices: TEMPLATES.map(({ name, descr }, i) => ({
             message: `[${i + 1}] ${name} - ${descr}`,
             value: name
         }))
@@ -93,7 +97,7 @@ const logo = () => {
         }
     }).run();
 
-    let tpl = templates.find(({ name }) => name === widget.template);
+    let tpl = TEMPLATES.find(({ name }) => name === widget.template);
     let result = await new tpl.class(widget.name, CONFIG).build();
     if (result === true) {
         signale.log('------------------------------------------------');

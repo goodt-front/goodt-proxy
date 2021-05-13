@@ -13,27 +13,35 @@
  * @typedef {import('./[[{name}]]').IInstance} IInstance
  */
 import { Elem } from '[[{core}]]';
+import { [{{panelName}}]Async } from '[{{panelPath}}]';
 [[#hasTransport]]
 import {
     useTransport,
     [[#http]]HttpTransportSymbol[[/http]][[#httpAuth]]HttpAuthTransportSymbol[[/httpAuth]] as TransportSymbol
-} from '[[{core}]]/mixins/useTransport';
+} from '[[{coreMixins}]]/useTransport';
 [[/hasTransport]]
 import { descriptor } from './descriptor';
 
 [[#hasTransport]]
 
 /**
- * Creates transport mixin with useTransport
- * @member {import('[[{core}]]/mixins/useTransport').ITransportMixin} TransportMixin
+ * Creates transport mixin, that adds $transport (http, httpAuth) instance
+ * @member {import('[[{coreMixins}]]useTransport').ITransportMixin} TransportMixin
  */
 const { mixin: TransportMixin } = useTransport(TransportSymbol, {
     /**
-     * @type {import('[[{core}]]/mixins/useTransport').TransportOptions}
+     * @type {import('[[{coreMixins}]]/useTransport').TransportOptions}
      */
     options: {
         baseURL: 'http://localhost:3000'
-    }
+    },
+    /*
+    // @todo: DELETE UNUSED
+    // or using component's instance context
+    options: (vm) => ({
+        baseURL: vm.someUrlProp
+    })
+    */
 });
 [[/hasTransport]]
 
@@ -85,7 +93,7 @@ export default ({
             return true;
         },
         getPanels() {
-            return [import('[[{panelPath}]]/[[{panelName}]].vue')];
+            return [[{{panelName}}]Async];
         },
         // @todo: DELETE UNUSED STUFF
         /*

@@ -3,7 +3,7 @@
  * @type {Readonly<Record<string, string>>}
  */
 export const Vars = Object.freeze({
-    // @todo: DELETE COMMENTED STUFF
+    // @todo: DELETE UNUSED STUFF
     /*
     DUMMY_VAR_NAME: 'dummyVarName'
     */

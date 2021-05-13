@@ -9,7 +9,7 @@
     "mustache": "latest",
     "signale": "latest",
     "vue-ast-editor": "^0.1.1",
-    "yargs": "^17.0.1"
+    "yargs": ">16.0.0"
   },
   "bin": {
     "goodt-scaffold": "./cli.js",

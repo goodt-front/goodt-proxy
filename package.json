@@ -16,8 +16,8 @@
         "lint:committed:short": "scripts/lint/eslint-committed-short.sh",
         "format": "prettier --write ./src/**/*",
         "test:unit": "vue-cli-service test:unit",
-        "docs:panel-ui": "vue-styleguidist server",
-        "docs:panel-ui:build": "vue-styleguidist build",
+        "docs:panel-ui": "vue-styleguidist server --config ./node_modules/@goodt/styleguide/styleguide.config.js",
+        "docs:panel-ui:build": "vue-styleguidist build --config ./node_modules/@goodt/styleguide/styleguide.config.js",
         "prepare": "husky install",
         "postinstall": "npm dedupe --force && npx patch-package --patch-dir=.patches",
         "scaffold": "npx goodt-scaffold",
@@ -25,8 +25,9 @@
     },
     "dependencies": {
         "@goodt/core": "file:src/core",
-        "@goodt/scaffold": "file:scripts/scaffold",
         "@goodt/panels": "file:src/core/panels",
+        "@goodt/scaffold": "file:scripts/scaffold",
+        "@goodt/styleguide": "file:scripts/styleguide",
         "abc-charts": "^1.6.4",
         "axios": "^0.21.1",
         "goodt-dremio-sdk": "^1.0.21",
@@ -45,7 +46,6 @@
         "vite": "^2.1.5",
         "vite-plugin-vue2": "^1.4.3",
         "vue": "^2.6.12",
-        "vue-styleguidist": "4.35.0",
         "webpack": "^4.46.0"
     },
     "workspaces": [

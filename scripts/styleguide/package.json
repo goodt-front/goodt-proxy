@@ -1,0 +1,9 @@
+{
+  "name": "@goodt/styleguidist",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "vue-styleguidist": "4.35.0",
+    "goodt-framework-css": "^1.1.1",
+    "lodash.kebabcase": "latest"
+  }
+}

@@ -18,20 +18,19 @@
         "test:unit": "vue-cli-service test:unit",
         "docs:panel-ui": "vue-styleguidist server --config ./node_modules/@goodt/styleguide/styleguide.config.js",
         "docs:panel-ui:build": "vue-styleguidist build --config ./node_modules/@goodt/styleguide/styleguide.config.js",
-        "prepare": "husky install",
-        "postinstall": "npm dedupe --force && npx patch-package --patch-dir=.patches",
+        "prepare": "husky install && npm dedupe --force && npx patch-package --patch-dir=.patches",
         "scaffold": "npx goodt-scaffold",
-        "scaffold:panel": "node ./scripts/scaffold/panel/index.js panel"
+        "scaffold:panel": "npx goodt-scaffold-panel"
     },
     "dependencies": {
         "@goodt/core": "file:src/core",
         "@goodt/panels": "file:src/core/panels",
+        "@goodt/scaffold": "file:scripts/scaffold",
+        "@goodt/styleguide": "file:scripts/styleguide",
         "abc-charts": "^1.6.4",
         "goodt-dremio-sdk": "^1.0.21"
     },
     "devDependencies": {
-        "@goodt/scaffold": "file:scripts/scaffold",
-        "@goodt/styleguide": "file:scripts/styleguide",
         "@vue/cli-plugin-babel": "^4.5.13",
         "@vue/cli-service": "^4.5.13",
         "less": "^4.1.1",

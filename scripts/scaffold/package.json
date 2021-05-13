@@ -12,6 +12,7 @@
     "yargs": "^17.0.1"
   },
   "bin": {
-    "goodt-scaffold": "./cli.js"
+    "goodt-scaffold": "./cli.js",
+    "goodt-scaffold-panel": "./panel/cli.js"
   }
 }

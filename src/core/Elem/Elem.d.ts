@@ -72,15 +72,15 @@ export interface IElemComponentOptionsInternal
     computed?: IElemInstance;
 }
 
-export interface IElemComponentOptions<D, M, C, P>
+export interface IElemComponentOptions<IInstance, D, M, C, P>
     extends ThisTypedComponentOptionsWithRecordProps<
-        Vue,
+        IElemInstance & IInstance,
         Data & D,
-        IElemInstance & D & M & C & P,
+        IElemInstance & IInstance & D & M & C & P,
         Computed & C,
         Props & P
     > {
-    computed?: IElemInstance & D & M & C & P;
+    computed?: IElemInstance & IInstance & D & M & C & P;
 }
 export type TElemConstructor = VueConstructor<IElemInstance>;
 

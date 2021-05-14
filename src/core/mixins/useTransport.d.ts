@@ -12,10 +12,11 @@ interface TransportMixinComputed {
     $transport: ITransport;
 }
 
+export interface ITransportMixinInstance extends TransportMixinComputed {}
+export interface ITransportMixin extends VueConstructor<Vue & ITransportMixinInstance> {}
+
 declare const HttpTransportSymbol: symbol;
 declare const HttpAuthTransportSymbol: symbol;
-
-export interface ITransportMixin extends VueConstructor<Vue & TransportMixinComputed> {}
 
 /**
  * Creates Vue Mixin with specified Transport and extra component transport-related behaviour

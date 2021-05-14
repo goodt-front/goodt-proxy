@@ -24,7 +24,8 @@
  */
 import { Elem } from '[[{core}]]';
 import { mixin as DremioMixin } from '[[{core}]]/dremio';
-import { descriptor } from './descriptor';
+import { DremioPanelAsync, [[{panelName}]]Async } from '[[{panelPath}]]';
+import { descriptor, Vars } from './descriptor';
 
 /**
  * @type {IComponentOptions}
@@ -91,8 +92,8 @@ export default ({
         },
         getPanels() {
             return [
-                import('[[{lib}]]/DremioPanel.vue'),
-                import('[[{panelPath}]]/[[{panelName}]].vue')
+                DremioPanelAsync,
+                [[{panelName}]]Async
             ];
         },
         loadDataPage(page) {

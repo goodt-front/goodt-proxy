@@ -1,4 +1,4 @@
-import { SDK } from 'goodt-dremio-sdk';
+import { DremioResult, Query, SDK } from './sdk';
 
 /**
  * Dremio sdk factory
@@ -16,11 +16,11 @@ interface Data {
     /**
      * @property {DremioResult}
      */
-    result: any;
+    result: DremioResult;
     /**
      * @property {Query}
      */
-    queryHelper: any;
+    queryHelper: Query;
     /**
      * loadData() method hooks
      *
@@ -80,8 +80,8 @@ interface Methods {
 }
 
 interface Injected {
-    dremioSDK: InstanceType<typeof SDK>;
-    dremioVars: Array;
+    dremioSDK: SDK;
+    dremioVars: string[];
 }
 
 export interface IDremioMixinInstance extends Data, Methods, Computed, Injected {}

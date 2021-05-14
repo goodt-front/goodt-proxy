@@ -2,9 +2,9 @@ const path = require('path');
 const kebab = require('lodash.kebabcase');
 
 module.exports = {
-    components: '../../@goodt/core/components/panel-ui/[A-Z]*.vue',
+    components: 'src/core/components/panel-ui/[A-Z]*.vue',
     title: 'panel ui',
-    version: require('../../@goodt/core/../../package.json').version,
+    version: require('./package.json').version,
     styleguideDir: 'docs/panel-ui/',
     require: ['goodt-framework-css'],
     copyCodeButton: true,

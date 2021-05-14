@@ -26,7 +26,6 @@
         "@goodt/core": "file:src/core",
         "@goodt/panels": "file:src/core/panels",
         "@goodt/scaffold": "file:scripts/scaffold",
-        "abc-charts": "^1.6.4",
         "goodt-dremio-sdk": "^1.0.21"
     },
     "devDependencies": {

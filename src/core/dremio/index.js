@@ -16,7 +16,7 @@ const SDKFactory = (config = {}) => {
     };
     const instance = new SDK({ ...configDefault, ...config });
     instance.beforeRequest = () =>
-        new Promise(resolve => {
+        new Promise((resolve) => {
             const { adapter } = AuthManager.instance;
             if (adapter) {
                 adapter
@@ -125,13 +125,21 @@ const mixin = {
             }
         }
     },
+    watch: {
+        $storeState(state) {
+            if (this.applyDremioFilters(state)) {
+                this.offset = 0;
+            }
+            this.loadData();
+        }
+    },
     created() {
         /**
          * @property {SDK}
          */
         this.dremioSdk = SDKFactory();
         /**
-         * @property {Array.<string>}
+         * @property {string[]}
          */
         this.dremioVars = [];
 
@@ -145,17 +153,6 @@ const mixin = {
         this.dremioSdk.cancelActiveRequests();
     },
     methods: {
-        /**
-         * subscribe() lc override
-         */
-        subscribe() {
-            this.eventBusWrapper.listenStateChange((e, state) => {
-                if (this.applyDremioFilters(state)) {
-                    this.offset = 0;
-                }
-                this.loadData();
-            });
-        },
         /**
          * Loads data via dremio sdk
          */
@@ -236,7 +233,7 @@ const mixin = {
          * Creates a new dremio query filter
          *
          * @param {string} name         metric/dimension/field name
-         * @param {string|Array} value  value
+         * @param {string|string[]} value  value
          * @return {Record<string, any>} filter
          */
         createDremioFilter(name, value) {
@@ -244,7 +241,7 @@ const mixin = {
             return Query.createFilter({
                 name,
                 type: isArray ? Query.FILTER_TYPE.IN : Query.FILTER_TYPE.EQ,
-                value: isArray ? value : [value]
+                value: [].concat(value)
             });
         },
         /**

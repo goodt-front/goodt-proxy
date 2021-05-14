@@ -23,10 +23,11 @@
  * @typedef {import('./[[{name}]]').IInstance} IInstance
  */
 import { Elem } from '[[{core}]]';
-import { mixin as DremioMixin } from '[[{core}]]/dremio';
+import { useDremio } from '[[{coreMixins}]]';
 import { DremioPanelAsync, [[{panelName}]]Async } from '[[{panelPath}]]';
 import { descriptor, Vars } from './descriptor';
 
+const { mixin: DremioMixin } = useDremio();
 /**
  * @type {IComponentOptions}
  */

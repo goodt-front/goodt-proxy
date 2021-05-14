@@ -1,5 +1,4 @@
 import { createTransport } from '../net';
-import './types';
 
 export { HttpTransportSymbol, HttpAuthTransportSymbol } from '../net';
 

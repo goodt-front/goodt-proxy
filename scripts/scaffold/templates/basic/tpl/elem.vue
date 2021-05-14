@@ -18,7 +18,7 @@ import { [[{panelName}]]Async } from '[[{panelPath}]]';
 import {
     useTransport,
     [[#http]]HttpTransportSymbol[[/http]][[#httpAuth]]HttpAuthTransportSymbol[[/httpAuth]] as TransportSymbol
-} from '[[{coreMixins}]]/useTransport';
+} from '[[{coreMixins}]]';
 [[/hasTransport]]
 import { descriptor, /* Vars */ } from './descriptor';
 

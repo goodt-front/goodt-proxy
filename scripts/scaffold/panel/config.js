@@ -19,9 +19,6 @@ const DEFAULT_UI_CONTROL_ATTRS = {
 const PANEL_TPL_PATH = 'SettingsPanel.vue';
 const PANEL_TARGET_PATH = './panels/SettingsPanel.vue';
 const REFERENCE_CONTROL_TAG_MATCHER = 'ui-input';
-// const DESCRIPTOR_TOKEN_MATCHER = {
-//     name: 'descriptor'
-// };
 
 const CliArgOptions = Object.freeze({
     DESCRIPTOR: 'descriptor',
@@ -60,7 +57,6 @@ module.exports = {
     PANEL_TARGET_PATH,
     PANEL_TPL_PATH,
     REFERENCE_CONTROL_TAG_MATCHER,
-    DESCRIPTOR_TOKEN_MATCHER,
     DEFAULT_UI_CONTROL_ATTRS,
     CliArgOptions
 };

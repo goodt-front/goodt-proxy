@@ -1,3 +1,3 @@
 export { default, default as Elem } from './Elem.vue';
-export { ElemEvent } from './config';
-export { getDescriptorDefaultProps } from './utils';
+export { ElemEvent } from './infra/config';
+export { getDescriptorDefaultProps } from './infra/utils';

@@ -2,7 +2,7 @@ import { IDescriptorProps } from '[[{core}]]';
 import Elem, { IElemComponentOptions, IElemInstance } from '[[{core}]]/Elem';
 import { descriptor } from './descriptor';
 [[#hasTransport]]
-import { ITransportMixinInstance } from '[[{coreMixins}]]/useTransport';
+import { ITransportMixinInstance } from '[[{coreMixins}]]';
 [[/hasTransport]]
 
 interface Data {}

@@ -16,8 +16,8 @@
         "lint:committed:short": "scripts/lint/eslint-committed-short.sh",
         "format": "prettier --write ./src/**/*",
         "test:unit": "vue-cli-service test:unit",
-        "docs:panel-ui": "vue-styleguidist server --config ./node_modules/@goodt/styleguide/styleguide.config.js",
-        "docs:panel-ui:build": "vue-styleguidist build --config ./node_modules/@goodt/styleguide/styleguide.config.js",
+        "docs:panel-ui": "vue-styleguidist server --config ./styleguide.config.js",
+        "docs:panel-ui:build": "vue-styleguidist build --config --config ./styleguide.config.js",
         "prepare": "husky install && npm dedupe --force && npx patch-package --patch-dir=.patches",
         "scaffold": "npx goodt-scaffold",
         "scaffold:panel": "npx goodt-scaffold-panel"

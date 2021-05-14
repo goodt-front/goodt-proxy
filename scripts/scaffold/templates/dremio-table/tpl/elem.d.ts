@@ -8,6 +8,6 @@ interface Props {}
 interface Computed extends IDescriptorProps<ReturnType<typeof descriptor>> {}
 
 export interface IInstance extends IElemInstance, Data, Methods, Computed, Props {}
-export interface IComponentOptions extends IElemComponentOptions<Data, Methods, Computed, Props> {
+export interface IComponentOptions extends IElemComponentOptions<IInstance, Data, Methods, Computed, Props> {
     extends: typeof Elem;
 }

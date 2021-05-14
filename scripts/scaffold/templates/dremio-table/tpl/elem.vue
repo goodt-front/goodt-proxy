@@ -9,7 +9,9 @@ import DemoRender from './renders/Render.vue';
 import DemoPagination from './components/Pagination.vue';
 [[/pagination]]
 import DemoTableRow from './components/TableRow.vue';
-import { descriptor } from './descriptor';
+import { PaginationPanelAsync, [[{panelName}]]Async } from '[[{panelPath}]]';
+import { descriptor, /* Vars */ } from './descriptor';
+
 
 const renders = {
     ...COLUMN_RENDERS,
@@ -69,12 +71,12 @@ export default ({
             const panels = this.super(Table).getPanels.call(this);
             return [
                 ...panels,
-                import('[[{panelPath}]]/[[{panelName}]].vue')
+                [[{panelName}]]Async
             ];
         },
         [[#pagination]]
         getPaginationPanel() {
-            return import('./panels/PaginationPanel.vue');
+            return PaginationPanelAsync;
         },
         [[/pagination]]
         // @todo: DELETE UNUSED STUFF

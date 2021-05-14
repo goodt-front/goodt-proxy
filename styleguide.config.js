@@ -1,5 +1,5 @@
 const path = require('path');
-const kebab = require('lodash/kebabCase');
+const kebab = require('lodash.kebabcase');
 
 module.exports = {
     components: 'src/core/components/panel-ui/[A-Z]*.vue',

@@ -27,7 +27,7 @@ interface Props {
     initProps?: boolean;
 }
 
-interface Computed { }
+interface Computed {}
 
 interface Data {
     /** @type {PanelMetaData} panel meta data (used by the editor env) */
@@ -38,17 +38,17 @@ interface Data {
     descriptor?: ElemDescriptor;
 }
 
-export interface IPanelInstance extends Vue, Data, Methods, Computed, Props { }
+export interface IPanelInstance extends Vue, Data, Methods, Computed, Props {}
 
-export interface IPanelComponentOptions<D, M, C, P>
+export interface IPanelComponentOptions<IInstance, D, M, C, P>
     extends ThisTypedComponentOptionsWithRecordProps<
-    Vue,
-    Data & D,
-    IPanelInstance & D & M & C & P,
-    IPanelInstance & D & M & C & P,
-    Props & P
+        IPanelInstance & IInstance,
+        Data & D,
+        IPanelInstance & IInstance & D & M & C & P,
+        Computed & C,
+        Props & P
     > {
-    computed?: IPanelInstance & D & M & C & P;
+    computed?: IPanelInstance & IInstance & D & M & C & P;
 }
 
 export type TPanelConstructor = VueConstructor<Data>;

@@ -3,21 +3,7 @@ const mustache = require('mustache');
 const merge = require('lodash.merge');
 mustache.tags = ['[[', ']]'];
 
-const cwd = process.cwd();
-const DEFAULT_CONFIG = {
-    path: {
-        home: __dirname,
-        project: {
-            home: cwd,
-            src: `${cwd}/src`,
-            lib: `${cwd}/src/lib`
-        }
-    },
-    panel: {
-        name: 'SettingsPanel',
-        path: './panels'
-    }
-};
+const DEFAULT_CONFIG = {};
 
 module.exports = class {
     /**
@@ -29,11 +15,14 @@ module.exports = class {
         this.config = merge(DEFAULT_CONFIG, config);
         const {
             path: {
-                project: { lib, core }
+                project: { lib },
+                core: { root: coreRootPath, panels: corePanelsPath, mixins: coreMixinsPath }
             }
         } = this.config;
         this.libPath = lib;
-        this.corePath = core;
+        this.corePath = coreRootPath;
+        this.corePanelsPath = corePanelsPath;
+        this.coreMixinsPath = coreMixinsPath;
         this.widgetPath = widgetNameFull;
         this.widgetName = widgetNameFull.substring(
             widgetNameFull.lastIndexOf('/') + 1,
@@ -60,10 +49,10 @@ module.exports = class {
     }
     /**
      * Create widget files (elem, panel, dirs)
-     * @param {Object} tpl  compiled vue template files
-     * @return {Boolean|Error}  true if success; else error
+     * @param {object} tpl  compiled vue template files
+     * @return {boolean|Error}  true if success; else error
      */
-    createWidget({ elem, panel, panelDT, elemDT, descriptor }) {
+    createWidget({ elem, panel, panelDT, elemDT, descriptor, panelsIndex }) {
         this.createWidgetDir();
         const { path: panelPath, name: panelName } = this.config.panel;
         ['components', panelPath, `${panelPath}/components`].forEach((dir) =>
@@ -75,6 +64,9 @@ module.exports = class {
         if (panelDT) {
             this.createWidgetFile(`${panelPath}/${panelName}.d.ts`, panelDT);
         }
+        if (panelsIndex) {
+            this.createWidgetFile(`${panelPath}/index.js`, panelsIndex);
+        }
         if (elemDT) {
             this.createWidgetFile(`${this.widgetName}.d.ts`, elemDT);
         }
@@ -85,8 +77,8 @@ module.exports = class {
     }
     /**
      * Create a dir relative to the widget home dir
-     * @param {String} [dirPathRel=null]   dir relative path @example 'components'
-     * @return {Boolean|Error}
+     * @param {?string} [dirPathRel=null]   dir relative path @example 'components'
+     * @return {boolean|Error}
      */
     createWidgetDir(dirPathRel = null) {
         const path = dirPathRel ? `${this.widgetDirPath}/${dirPathRel}` : this.widgetDirPath;
@@ -95,8 +87,8 @@ module.exports = class {
     }
     /**
      * Create a file relative to the widget home dir
-     * @param {String} pathRel   relative path @example 'components/readme.txt'
-     * @return {Boolean|Error}
+     * @param {string} pathRel   relative path @example 'components/readme.txt'
+     * @return {boolean|Error}
      */
     createWidgetFile(pathRel, data) {
         fs.writeFileSync(`${this.widgetDirPath}/${pathRel}`, data);
@@ -104,15 +96,15 @@ module.exports = class {
     }
     /**
      * Checks whether widget home dir exists
-     * @return {Boolean}
+     * @return {boolean}
      */
     widgetExists() {
         return fs.existsSync(this.widgetDirPath);
     }
     /**
      * Compile
-     * @param {String} path
-     * @param {Object} binds
+     * @param {string} path
+     * @param {object} binds
      */
     compileTpl(path, binds) {
         const tpl = fs.readFileSync(path, 'utf8');

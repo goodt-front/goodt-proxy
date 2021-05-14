@@ -26,7 +26,6 @@
         "@goodt/core": "file:src/core",
         "@goodt/panels": "file:src/core/panels",
         "@goodt/scaffold": "file:scripts/scaffold",
-        "@goodt/styleguide": "file:scripts/styleguide",
         "abc-charts": "^1.6.4",
         "goodt-dremio-sdk": "^1.0.21"
     },
@@ -50,7 +49,8 @@
         "vuedraggable": "^2.24.3"
     },
     "workspaces": [
-        ".config"
+        ".config",
+        "scripts/styleguide"
     ],
     "lint-staged": {
         "*.(js|jsx|vue|ts)": [

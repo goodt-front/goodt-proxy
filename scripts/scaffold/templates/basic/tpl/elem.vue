@@ -13,20 +13,20 @@
  * @typedef {import('./[[{name}]]').IInstance} IInstance
  */
 import { Elem } from '[[{core}]]';
-import { [{{panelName}}]Async } from '[{{panelPath}}]';
+import { [[{panelName}]]Async } from '[[{panelPath}]]';
 [[#hasTransport]]
 import {
     useTransport,
     [[#http]]HttpTransportSymbol[[/http]][[#httpAuth]]HttpAuthTransportSymbol[[/httpAuth]] as TransportSymbol
 } from '[[{coreMixins}]]/useTransport';
 [[/hasTransport]]
-import { descriptor } from './descriptor';
+import { descriptor, /* Vars */ } from './descriptor';
 
 [[#hasTransport]]
 
 /**
  * Creates transport mixin, that adds $transport (http, httpAuth) instance
- * @member {import('[[{coreMixins}]]useTransport').ITransportMixin} TransportMixin
+ * @member {import('[[{coreMixins}]]/useTransport').ITransportMixin} TransportMixin
  */
 const { mixin: TransportMixin } = useTransport(TransportSymbol, {
     /**
@@ -93,7 +93,7 @@ export default ({
             return true;
         },
         getPanels() {
-            return [[{{panelName}}]Async];
+            return [[{panelName}]]Async;
         },
         // @todo: DELETE UNUSED STUFF
         /*

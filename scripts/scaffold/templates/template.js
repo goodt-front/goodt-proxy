@@ -16,7 +16,7 @@ module.exports = class {
         const {
             path: {
                 project: { lib },
-                core: { core: coreRootPath, panels: corePanelsPath, mixins: coreMixinsPath }
+                core: { root: coreRootPath, panels: corePanelsPath, mixins: coreMixinsPath }
             }
         } = this.config;
         this.libPath = lib;

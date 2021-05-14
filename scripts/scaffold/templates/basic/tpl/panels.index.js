@@ -1,1 +1,1 @@
-export const [{{panelName}}]Async = () => import('./[{{panelName}}].vue');
+export const [[{panelName}]]Async = () => import('./[[{panelName}]].vue');

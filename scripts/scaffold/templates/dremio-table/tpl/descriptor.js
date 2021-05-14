@@ -2,38 +2,29 @@
  * @enum {string}
  * @type {Readonly<Record<string, string>>}
  */
-export const Vars = Object.freeze({
-    // @todo: DELETE UNUSED STUFF
-    /*
-    DUMMY_VAR_NAME: 'dummyVarName'
-    */
-});
+export const Vars = Object.freeze({});
 
 /**
  * @description Don't change `descriptor` exported name
  */
 export const descriptor = () => ({
     props: {
-        [[#pagination]]
-        // pagination settings
-        pagination: {
-            type: Object,
-            default() {
-                return {
-                    showArrows: true
-                };
-            }
-        }
-        [[/pagination]]
-    },
-    vars: {
         // @todo: DELETE UNUSED STUFF
         /*
-        [Vars.DUMMY_VAR_NAME]: {
-            description: 'some description'
+        themes: {
+            type: String,
+            default: 'light',
+            options: [
+                { label: 'Light theme', value: 'light' },
+                { label: 'Dark theme', value: 'dark' }
+            ]
         }
         */
-    }
+    },
+    vars: Object.values(Vars).reduce(
+        (acc, varName) => ({ ...acc, [varName]: { description: varName } }),
+        {}
+    )
 });
 
 export default descriptor;

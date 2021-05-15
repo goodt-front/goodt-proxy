@@ -18,7 +18,8 @@
         "test:unit": "vue-cli-service test:unit",
         "docs:panel-ui": "npx vue-styleguidist server --config ./styleguide.config.js",
         "docs:panel-ui:build": "npx vue-styleguidist build --config --config ./styleguide.config.js",
-        "prepare": "husky install && npm dedupe --force && npx patch-package --patch-dir=.patches",
+        "postinstall": "npm dedupe",
+        "prepare": "husky install && npx patch-package --patch-dir=.patches",
         "scaffold": "npx goodt-scaffold",
         "scaffold:panel": "npx goodt-scaffold-panel"
     },

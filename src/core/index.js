@@ -7,10 +7,12 @@ import * as Panels from './panels';
 import * as Render from './render';
 import * as Sandbox from './sandbox';
 import Const from './Const';
-import { Elem, ElemEvent, getDescriptorDefaultProps } from './Elem';
 
+export { Elem, ElemEvent, getDescriptorDefaultProps } from './Elem';
 export { Panel, PanelEvent } from './Panel';
 export * from './utils';
+export * from './mixins';
+export * from './net';
 
 export {
     // packages
@@ -22,8 +24,5 @@ export {
     Render,
     Sandbox,
     //
-    Const,
-    Elem,
-    ElemEvent,
-    getDescriptorDefaultProps
+    Const
 };

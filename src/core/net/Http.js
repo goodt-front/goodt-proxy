@@ -25,13 +25,12 @@ let REQUEST_ID = 0;
  * and extra service-specific behaviour
  *
  * @implements {import('./types').ITransportConstructor}
- * @param {AxiosRequestConfig} [options={}]  axios config
  */
-export default class Http {
+class Http {
     /**
      * Constructor
      *
-     * @param {AxiosRequestConfig} [options={}] Transport config
+     * @param {import('./types').ITransportOptions} [options={}]  transport config
      */
     constructor(options = {}) {
         /** @type {RequestRecord[]} */
@@ -145,3 +144,5 @@ export default class Http {
         this._requests = this._requests.filter((item) => item.id !== id);
     }
 }
+
+export { Http, Http as default };

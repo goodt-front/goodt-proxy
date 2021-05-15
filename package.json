@@ -17,9 +17,8 @@
         "format": "prettier --write ./src/**/*",
         "test:unit": "vue-cli-service test:unit",
         "docs:panel-ui": "npx vue-styleguidist server --config ./styleguide.config.js",
-        "docs:panel-ui:build": "npx vue-styleguidist build --config --config ./styleguide.config.js",
-        "postinstall": "npm dedupe",
-        "prepare": "husky install && npx patch-package --patch-dir=.patches",
+        "docs:panel-ui:build": "vue-styleguidist build --config ./styleguide.config.js",
+        "prepare": "npm dedupe --force && husky install && npx patch-package --patch-dir=.patches",
         "scaffold": "npx goodt-scaffold",
         "scaffold:panel": "npx goodt-scaffold-panel"
     },

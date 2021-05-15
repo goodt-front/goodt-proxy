@@ -12,7 +12,6 @@ export { Elem, ElemEvent, getDescriptorDefaultProps } from './Elem';
 export { Panel, PanelEvent } from './Panel';
 export * from './utils';
 export * from './mixins';
-export * from './net';
 
 export {
     // packages

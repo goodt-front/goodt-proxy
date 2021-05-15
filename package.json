@@ -16,8 +16,8 @@
         "lint:committed:short": "scripts/lint/eslint-committed-short.sh",
         "format": "prettier --write ./src/**/*",
         "test:unit": "vue-cli-service test:unit",
-        "docs:panel-ui": "vue-styleguidist server --config ./styleguide.config.js",
-        "docs:panel-ui:build": "vue-styleguidist build --config --config ./styleguide.config.js",
+        "docs:panel-ui": "npx vue-styleguidist server --config ./styleguide.config.js",
+        "docs:panel-ui:build": "npx vue-styleguidist build --config --config ./styleguide.config.js",
         "prepare": "husky install && npm dedupe --force && npx patch-package --patch-dir=.patches",
         "scaffold": "npx goodt-scaffold",
         "scaffold:panel": "npx goodt-scaffold-panel"
@@ -26,6 +26,7 @@
         "@goodt/core": "file:src/core",
         "@goodt/panels": "file:src/core/panels",
         "@goodt/scaffold": "file:scripts/scaffold",
+        "@goodt/styleguide": "file:scripts/styleguide",
         "goodt-dremio-sdk": "^1.0.21"
     },
     "devDependencies": {
@@ -48,8 +49,7 @@
         "vuedraggable": "^2.24.3"
     },
     "workspaces": [
-        ".config",
-        "scripts/styleguide"
+        ".config"
     ],
     "lint-staged": {
         "*.(js|jsx|vue|ts)": [

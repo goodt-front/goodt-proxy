@@ -34,9 +34,7 @@ describe('useTransport mixin used in component with option { extend: Elem }', ()
     let vm;
     let isTransportWasDisposed;
     const transportAccessorName = undefined;
-    const options = function() {
-        return this.transportOptions;
-    };
+    const options = (vm) => vm.transportOptions;
 
     const { MockedTransportSymbol } = mockTransportConstructorFactory({
         onDispose: () => {
@@ -73,7 +71,7 @@ describe('useTransport mixin used in component with option { extend: Elem }', ()
     // 2
     test('`Transport` instance SHOULD have specified options', () => {
         // Then
-        expect(vm.$transport.options).toEqual(options.call(vm));
+        expect(vm.$transport.options).toEqual(options(vm));
     });
 
     // 3

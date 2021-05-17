@@ -8,7 +8,7 @@ const PRIVATE_ACCESSOR_NAME = Symbol('$transport');
 /**
  * @typedef {import('vue/types/vue').Vue} VueInstance
  * @typedef {Record<string, unknown>} UseTransportOptions
- * @property {string} [name='$state'] instance property name
+ * @property {string} [name='$transport'] instance property name
  * @property {TransportConfig} [options={}] instance property name
  */
 

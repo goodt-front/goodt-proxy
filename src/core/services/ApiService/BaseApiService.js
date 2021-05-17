@@ -6,7 +6,7 @@ class BaseApiService {
     _client = null;
 
     constructor({ client, transport }) {
-        if (this._client) {
+        if (client) {
             this._client = client;
             return;
         }

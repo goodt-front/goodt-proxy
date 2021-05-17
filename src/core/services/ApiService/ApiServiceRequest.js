@@ -42,6 +42,15 @@ class ApiServiceRequest {
     }
 
     /**
+     * @public
+     * @readonly
+     * @member {object} payload
+     */
+    get options() {
+        return this._options;
+    }
+
+    /**
      * Request constructor.
      *
      * @param {string} operation
@@ -52,8 +61,7 @@ class ApiServiceRequest {
     constructor(operation, payload, options = {}) {
         this._operation = operation;
         this._payload = payload;
-
-        this._options = {};
+        this._options = options;
     }
 }
 

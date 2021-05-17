@@ -59,10 +59,10 @@
 <script>
 import Vue from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
-import { ElemEvent } from '../Elem';
-import { PanelEvent } from '../Panel';
-import { UiCollapse } from '../components/panel-ui/index';
-import { StylePanel, VariablePanel } from '../panels/index';
+import { ElemEvent } from '@goodt/core/Elem';
+import { PanelEvent } from '@goodt/core/Panel';
+import { UiCollapse } from '@goodt/core/components/panel-ui/index';
+import { StylePanel, VariablePanel } from '@goodt/panels';
 import WidgetRender from './WidgetRender.vue';
 
 let ID = 0;
@@ -187,8 +187,10 @@ export default {
          */
         onElemMounted(ci) {
             this.elemInstance = ci;
-
-            Promise.all(ci.getPanels()).then((m) => {
+            const panels = ci
+                .getPanels()
+                .map((panel) => (typeof panel === 'function' ? panel() : panel));
+            Promise.all(panels).then((m) => {
                 this.panels = m.map((mi) => ({
                     def: mi.default,
                     meta: Vue.extend(mi.default).options.data().$meta

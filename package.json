@@ -20,9 +20,11 @@
         "docs:panel-ui:build": "vue-styleguidist build --config ./styleguide.config.js",
         "prepare": "npm dedupe --force && husky install && npx patch-package --patch-dir=.patches",
         "scaffold": "npx goodt-scaffold",
-        "scaffold:panel": "npx goodt-scaffold-panel"
+        "scaffold:panel": "npx goodt-scaffold-panel",
+        "@goodt/tools:install": "npm i --no-save @goodt/scaffold @goodt/styleguide"
     },
     "dependencies": {
+        "@goodt/common": "file:src/common",
         "@goodt/core": "file:src/core",
         "@goodt/panels": "file:src/core/panels",
         "@goodt/scaffold": "file:scripts/scaffold",

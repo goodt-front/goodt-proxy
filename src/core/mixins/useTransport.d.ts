@@ -24,7 +24,7 @@ declare const HttpAuthTransportSymbol: symbol;
  */
 export function useTransport(
     transportId: string | symbol,
-    useOptions?: UseTransportOptions = {}
+    useOptions?: UseTransportOptions
 ): {
     mixin: ITransportMixin;
 };

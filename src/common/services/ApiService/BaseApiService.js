@@ -1,7 +1,10 @@
-import { success, fail } from '@/core/utils/either';
+import { success, fail } from '@/common/utils/either';
 import { ApiServiceError, ApiHttpClientError } from './error';
 import { create as createApiHttpClient } from './ApiHttpClient';
 
+/**
+ * @type {import('./BaseApiService').IService}
+ */
 class BaseApiService {
     _client = null;
 

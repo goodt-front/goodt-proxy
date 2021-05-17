@@ -19,6 +19,10 @@ const CONFIG = {
             root: `@goodt/core`,
             panels: `@goodt/panels`,
             mixins: `@goodt/core/mixins`
+        },
+        common: {
+            utils: `@goodt/common/utils`,
+            mixins: `@goodt/common/mixins`
         }
     },
     panel: {

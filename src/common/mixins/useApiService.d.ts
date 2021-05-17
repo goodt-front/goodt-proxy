@@ -5,12 +5,12 @@ interface IServiceFactory {
     (options: any): IService;
 }
 
-interface ServiceMixinComputed {
-    $apiService: IService;
+interface ServiceMixinComputed<T> {
+    $apiService: IService & T;
 }
 
-export interface IServiceMixinInstance extends ServiceMixinComputed {}
-export interface IServiceMixin extends VueConstructor<Vue & IServiceMixinInstance> {}
+export interface IServiceMixinInstance<T> extends ServiceMixinComputed<T> {}
+export interface IServiceMixin<T> extends VueConstructor<Vue & IServiceMixinInstance<T>> {}
 
 /**
  * Creates Vue Mixin with specified Transport and extra component transport-related behaviour

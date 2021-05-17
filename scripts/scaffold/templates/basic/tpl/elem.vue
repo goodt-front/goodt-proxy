@@ -13,20 +13,22 @@
  * @typedef {import('./[[{name}]]').IInstance} IInstance
  */
 import { Elem } from '[[{core}]]';
-import { [[{panelName}]]Async } from '[[{panelPath}]]';
 [[#hasTransport]]
 import {
     useTransport,
     [[#http]]HttpTransportSymbol[[/http]][[#httpAuth]]HttpAuthTransportSymbol[[/httpAuth]] as TransportSymbol
 } from '[[{coreMixins}]]';
+import { useApiService } from '[[{commonMixins}]]';
+import { create as createApiService } from './api/[[{name}]]Service';
 [[/hasTransport]]
 import { descriptor, /* Vars */ } from './descriptor';
+import { [[{panelName}]]Async } from '[[{panelPath}]]';
 
 [[#hasTransport]]
 
 /**
  * Creates transport mixin, that adds $transport (http, httpAuth) instance
- * @member {import('[[{coreMixins}]]/useTransport').ITransportMixin} TransportMixin
+ * @member {import('[[{coreMixins}]]/useTransport').ITransportMixin} ServiceMixin
  */
 const { mixin: TransportMixin } = useTransport(TransportSymbol, {
     /**
@@ -43,6 +45,11 @@ const { mixin: TransportMixin } = useTransport(TransportSymbol, {
     })
     */
 });
+/**
+ * useApiService
+ */
+const { mixin: ServiceMixin } = useApiService(createApiService);
+
 [[/hasTransport]]
 
 /**
@@ -51,7 +58,7 @@ const { mixin: TransportMixin } = useTransport(TransportSymbol, {
 export default ({
     extends: Elem,
     [[#hasTransport]]
-    mixins: [ TransportMixin ],
+    mixins: [ TransportMixin, ServiceMixin ],
     [[/hasTransport]]
     data: () => ({
         descriptor: descriptor()
@@ -93,7 +100,7 @@ export default ({
             return true;
         },
         getPanels() {
-            return [[{panelName}]]Async;
+            return [ [[{panelName}]]Async ];
         },
         // @todo: DELETE UNUSED STUFF
         /*

@@ -28,6 +28,8 @@ module.exports = class extends Template {
             core: this.corePath,
             corePanels: this.corePanelsPath,
             coreMixins: this.coreMixinsPath,
+            commonMixins: this.commonMixinsPath,
+            commonUtils: this.commonUtilsPath,
             lib: this.libPath,
             path: this.widgetPath,
             name: this.widgetName,
@@ -45,6 +47,19 @@ module.exports = class extends Template {
         const panelsIndex = this.compileTpl(`${tplPath}/panels.index.js`, tplBinds);
         const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
 
-        return this.createWidget({ elem, panel, elemDT, panelDT, panelsIndex, descriptor });
+        //
+        const service = this.compileTpl(`${tplPath}/api/service.js`, tplBinds);
+        this.createWidgetDir('api');
+        this.createWidgetFile(`api/${this.widgetName}Service.js`, service);
+
+        return this.createWidget({
+            elem,
+            panel,
+            elemDT,
+            panelDT,
+            panelsIndex,
+            descriptor,
+            service
+        });
     }
 };

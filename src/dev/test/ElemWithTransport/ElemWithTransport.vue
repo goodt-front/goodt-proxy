@@ -2,56 +2,58 @@
     <section>
         <h1>Transport</h1>
         <div>BaseURL: {{ transportBaseUrl }}</div>
+        <div>API response result: {{ apiResponseResult }}</div>
     </section>
 </template>
 <script>
 import { Elem } from '@goodt/core';
-import { useTransport, HttpTransportSymbol } from '@goodt/core/mixins/useTransport';
+import { useTransport, HttpAuthTransportSymbol, useApiService } from '@goodt/core/mixins';
+import { descriptor } from './descriptor';
+import { create as createApiService } from './service/ExampleApiService';
 
 /**
  * useTransport example
  */
-const { mixin: TransportMixin } = useTransport(HttpTransportSymbol, {
-    options() {
+const { mixin: TransportMixin } = useTransport(HttpAuthTransportSymbol, {
+    options(vm) {
         return {
-            baseURL: this.props.apiURL
+            baseURL: vm.props.apiURL
         };
     }
 });
 
 /**
- *
+ * useTransport example
  */
-const descriptor = () => ({
-    props: {
-        apiURL: {
-            type: String,
-            default: 'https://goodt-dev.goodt.me:8425/api/'
-        }
-    },
-    vars: {}
-});
+const { mixin: ServiceMixin } = useApiService(createApiService);
 
 /**
- * @this {VueInstance & TransportMixinInstance}
- * @type {ComponentOptions & TransportMixin}
+ * @typedef {import('./ElemWithTransport').IComponentOptions} IComponentOptions
+ * @typedef {import('./ElemWithTransport').IInstance} IInstance
+ */
+
+/**
+ * @type {IComponentOptions}
  */
 export default {
     extends: Elem,
     data() {
         return {
-            descriptor: descriptor()
+            descriptor: descriptor(),
+            apiResponseResult: null
         };
     },
-    mixins: [TransportMixin],
+    mixins: [TransportMixin, ServiceMixin],
     computed: {
-        /**
-         * @this {VueInstance & { $transport: ITransport }}
-         * @return {string}
-         */
         transportBaseUrl() {
             return this.$transport.getBaseUrl();
         }
+    },
+    /**
+     * @this {IInstance}
+     */
+    mounted() {
+        this.doApiRequest();
     },
     methods: {
         isChildAllowed(type) {
@@ -63,8 +65,18 @@ export default {
         getPanels() {
             return [];
         },
-        genCssClass() {
-            this.super(Elem).genCssClass.call(this);
+        /**
+         *
+         */
+        async doApiRequest() {
+            this.apiResponseResult = null;
+            const response = await this.$apiService.getPollInfoDto(3);
+            const { isFail, error, result } = response;
+            if (isFail) {
+                this.apiResponseResult = error.message;
+                return;
+            }
+            this.apiResponseResult = result;
         }
     }
 };

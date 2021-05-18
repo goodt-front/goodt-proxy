@@ -60,12 +60,16 @@ const varAlias = ({ listen = '', trigger = '', meta = null }) => ({
 
 export default {
     extends: Panel,
+    data() {
+        return { $meta: { name: 'Variables', icon: '' } };
+    },
     computed: {
         /**
          * @return {{ name:string, alias:ElemVarAliasDef, description:string }[]}
          */
         varsInfo() {
-            const { vars } = this.descriptor;
+            const varsInstance = this.elementInstance?.descriptor.vars ?? {};
+            const vars = { ...this.descriptor.vars, ...varsInstance };
             const { varAliases } = this.props;
             const arr = [];
             for (const name in vars) {

@@ -12,7 +12,7 @@
                                 {{ elemType }}
                             </code>
                         </div>
-                        <!-- {elem panels} -->
+                        <!-- {panels} -->
                         <ui-collapse class="p" v-for="(p, k) in panels" :key="`${elemType}-${k}`">
                             <template #header>{{ p.meta.name }}</template>
                             <component
@@ -23,25 +23,7 @@
                                 @[panelEvent]="onPanelPropsChange"
                             ></component>
                         </ui-collapse>
-                        <!-- {/elem panels} -->
-                        <!-- {defaults} -->
-                        <ui-collapse class="p">
-                            <template #header>Style</template>
-                            <style-panel
-                                :init-props="elemProps"
-                                :descriptor="elemDescriptor"
-                                @[panelEvent]="onPanelPropsChange"
-                            ></style-panel>
-                        </ui-collapse>
-                        <ui-collapse class="p">
-                            <template #header>Vars</template>
-                            <variable-panel
-                                :init-props="elemProps"
-                                :descriptor="elemDescriptor"
-                                @[panelEvent]="onPanelPropsChange"
-                            ></variable-panel>
-                        </ui-collapse>
-                        <!-- {/defaults} -->
+                        <!-- {/panels} -->
                         <ui-collapse class="p">
                             <template #header>elem.props</template>
                             <pre class="pre text-xsmall">{{ elemProps }}</pre>
@@ -92,7 +74,7 @@ const buildElemInfo = (child) => ({
  */
 export default {
     name: 'WidgetPreview',
-    components: { UiCollapse, StylePanel, VariablePanel, WidgetRender },
+    components: { UiCollapse, WidgetRender },
     props: {
         /** @type {import('vue').PropOptions<ElemInfoShort>} */
         elem: {
@@ -189,10 +171,17 @@ export default {
             this.elemInstance = ci;
 
             Promise.all(ci.getPanels()).then((m) => {
-                this.panels = m.map((mi) => ({
+                // widget specific panels
+                const panels = m.map((mi) => ({
                     def: mi.default,
                     meta: Vue.extend(mi.default).options.data().$meta
                 }));
+                // default panels
+                const panelsDefault = [StylePanel, VariablePanel].map((def) => ({
+                    def,
+                    meta: Vue.extend(def).options.data().$meta
+                }));
+                this.panels = [...panels, ...panelsDefault];
             });
         },
         /**

@@ -127,10 +127,15 @@ const mixin = {
     },
     watch: {
         $storeState(state) {
-            if (this.applyDremioFilters(state)) {
-                this.offset = 0;
+            if (!Object.keys(state).length) {
+                return;
             }
-            this.loadData();
+            this.$nextTick(() => {
+                if (this.applyDremioFilters(state)) {
+                    this.offset = 0;
+                }
+                this.loadData();
+            });
         }
     },
     created() {

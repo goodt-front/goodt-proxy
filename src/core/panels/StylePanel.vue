@@ -181,6 +181,7 @@ export default {
     },
     data() {
         return {
+            $meta: { name: 'Style', icon: '' },
             marginDirectionId: '',
             paddingDirectionId: '',
             directions: [

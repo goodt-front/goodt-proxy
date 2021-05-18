@@ -41,13 +41,13 @@
 <script>
 import Vue from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
-import { ElemEvent } from '../Elem';
-import { PanelEvent } from '../Panel';
-import { UiCollapse } from '../components/panel-ui/index';
+import { ElemEvent, PanelEvent, Components } from '../index';
 import { StylePanel, VariablePanel } from '../panels/index';
 import WidgetRender from './WidgetRender.vue';
 
 let ID = 0;
+
+const { UiCollapse } = Components.PanelUi;
 
 /**
  * @param {ElemInfoShort} child
@@ -169,10 +169,12 @@ export default {
          */
         onElemMounted(ci) {
             this.elemInstance = ci;
-
-            Promise.all(ci.getPanels()).then((m) => {
-                // widget specific panels
-                const panels = m.map((mi) => ({
+            const panels = ci
+                .getPanels()
+                .map((panel) => (typeof panel === 'function' ? panel() : panel));
+            Promise.all(panels).then((m) => {
+                // widget panels
+                const panelsWidget = m.map((mi) => ({
                     def: mi.default,
                     meta: Vue.extend(mi.default).options.data().$meta
                 }));
@@ -181,7 +183,7 @@ export default {
                     def,
                     meta: Vue.extend(def).options.data().$meta
                 }));
-                this.panels = [...panels, ...panelsDefault];
+                this.panels = [...panelsWidget, ...panelsDefault];
             });
         },
         /**

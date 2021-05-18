@@ -13,7 +13,6 @@
  * @typedef {import('./[[{name}]]').IInstance} IInstance
  */
 import { Elem } from '[[{core}]]';
-import { [[{panelName}]]Async } from '[[{panelPath}]]';
 [[#hasTransport]]
 import {
     useTransport,
@@ -21,6 +20,7 @@ import {
 } from '[[{coreMixins}]]';
 [[/hasTransport]]
 import { descriptor, /* Vars */ } from './descriptor';
+import { [[{panelName}]]Async } from '[[{panelPath}]]';
 
 [[#hasTransport]]
 
@@ -93,7 +93,7 @@ export default ({
             return true;
         },
         getPanels() {
-            return [[{panelName}]]Async;
+            return [ [[{panelName}]]Async ];
         },
         // @todo: DELETE UNUSED STUFF
         /*

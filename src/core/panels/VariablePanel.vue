@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <ui-panel-container>
         <ui-has-panel v-for="variable in varsInfo" :key="variable.name" class="pad-v-1">
             <ui-checkbox
                 v-model.lazy="variable.alias.meta.global"
@@ -41,7 +41,7 @@
                 </ui-panel>
             </template>
         </ui-has-panel>
-    </div>
+    </ui-panel-container>
 </template>
 <script>
 import isEqual from 'lodash/isEqual';

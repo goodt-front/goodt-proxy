@@ -19,7 +19,8 @@
         "docs:panel-ui": "npx vue-styleguidist server --config ./styleguide.config.js",
         "docs:panel-ui:build": "vue-styleguidist build --config ./styleguide.config.js",
         "scaffold": "npx goodt-scaffold",
-        "scaffold:panel": "npx goodt-scaffold-panel"
+        "scaffold:panel": "npx goodt-scaffold-panel",
+        "prepare": "npx husky install"
     },
     "dependencies": {
         "@goodt/core": "file:src/core",

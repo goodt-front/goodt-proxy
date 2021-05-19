@@ -24,6 +24,7 @@
     },
     "dependencies": {
         "@goodt/core": "file:src/core",
+        "@goodt/dev-deps": "file:src/.config",
         "@goodt/panels": "file:src/core/panels",
         "@goodt/scaffold": "file:scripts/scaffold",
         "@goodt/styleguide": "file:scripts/styleguide",
@@ -48,9 +49,6 @@
         "goodteditor-ui": "^0.0.32",
         "vue": "^2.6.12"
     },
-    "workspaces": [
-        ".config"
-    ],
     "lint-staged": {
         "*.(js|jsx|vue|ts)": [
             "npm run lint"

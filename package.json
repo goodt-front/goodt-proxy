@@ -23,6 +23,7 @@
         "prepare": "npx husky install"
     },
     "dependencies": {
+        "@goodt/browserslist-config": "file:.config/browserslist-config",
         "@goodt/core": "file:src/core",
         "@goodt/dev-deps": "file:.config",
         "@goodt/panels": "file:src/core/panels",

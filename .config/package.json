@@ -1,7 +1,10 @@
 {
   "name": "@goodt/dev-deps",
   "version": "1.0.0",
-  "devDependencies": {
+  "scripts": {
+    "postinstall": "npx husky install && npx patch-package --patch-dir=.patches"
+  },
+  "dependencies": {
     "@babel/eslint-parser": "^7.13.14",
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",

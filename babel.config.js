@@ -1,3 +1,3 @@
 module.exports = {
-    presets: ['@vue/app']
+    extends: '@goodt/dev-deps/babel.config.js'
 };

@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "@goodt/core": "file:src/core",
-        "@goodt/dev-deps": "file:src/.config",
+        "@goodt/dev-deps": "file:.config",
         "@goodt/panels": "file:src/core/panels",
         "@goodt/scaffold": "file:scripts/scaffold",
         "@goodt/styleguide": "file:scripts/styleguide",

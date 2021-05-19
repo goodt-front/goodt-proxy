@@ -16,7 +16,7 @@ const initConfig = {
     responseMode: 'fragment'
 };
 
-export default class extends Adapter {
+class Keycloak extends Adapter {
     /** @type {import('keycloak-js').KeycloakInstance} */
     kc;
 
@@ -130,3 +130,5 @@ export default class extends Adapter {
         return { ...configDefault };
     }
 }
+
+export default Keycloak;

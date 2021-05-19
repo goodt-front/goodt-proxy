@@ -3,6 +3,7 @@
  * @param {EventBusEvent} event
  * @param {any} data
  */
+
 /**
  * @typedef {object} ListenerInfo
  * @property {EventBusEvent} event

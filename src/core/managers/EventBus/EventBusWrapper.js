@@ -2,11 +2,11 @@
  * @typedef {import('./EventBus')} EventBus
  */
 import EventBusEvent from './EventBusEvent';
-// eslint-disable-next-line import/no-cycle
+
 import {
     buildExternalStateFromInternal,
     buildInternalStateFromExternal
-} from '../../mixins/useStore';
+} from '../../mixins';
 
 /**
  * EventBusWrapper class
@@ -106,7 +106,11 @@ class EventBusWrapper {
      */
     listenStateChange(handler, once = false) {
         const decoratedHandler = (e, stateChange) => {
-            const obj = buildInternalStateFromExternal(stateChange, this.varAliases ?? {}, this.toValue);
+            const obj = buildInternalStateFromExternal(
+                stateChange,
+                this.varAliases ?? {},
+                this.toValue
+            );
             if (Object.keys(obj).length > 0) {
                 handler.apply(this, [e, obj]);
             }

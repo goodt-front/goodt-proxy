@@ -1,10 +1,10 @@
-import { ITransportFactory, ITransportFactoryOptions } from './types';
-
+/** @type {symbol} */
 export const HttpTransportSymbol: symbol;
+/** @type {symbol} */
 export const HttpAuthTransportSymbol: symbol;
+/**
+ * @type {Map<symbol, Function>}
+ */
+export const TransportFactoryMap: Map<symbol, Function>;
 
-export const TransportFactoryMap: Map<symbol, ITransportFactory>;
-export function createTransport(
-    transportId: symbol,
-    ...options: ITransportFactoryOptions
-): ReturnType<ITransportFactory>;
+export function createTransport(transportId: symbol, options: Function | Record<string, any>): any;

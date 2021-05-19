@@ -15,7 +15,7 @@ import EventBusBase from './EventBusBase';
 
 /**
  * @private
- * @param {object} obj     object
+ * @param {object} obj object
  * @return {object}
  */
 function removeUndefinedKeys(obj) {

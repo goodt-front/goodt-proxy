@@ -1,6 +1,6 @@
 import merge from 'lodash/merge';
+import Http from '@goodt/core/net/Http';
 import Adapter from './Adapter';
-import Http from '../../../net/Http';
 
 const configDefault = {
     tokenParam: 'token',
@@ -14,7 +14,7 @@ const configDefault = {
     }
 };
 
-export default class extends Adapter {
+class URLToken extends Adapter {
     /**
      * Constructor
      * @param {Record<string, any>} [config={}]
@@ -109,3 +109,5 @@ export default class extends Adapter {
         return { ...configDefault };
     }
 }
+
+export default URLToken;

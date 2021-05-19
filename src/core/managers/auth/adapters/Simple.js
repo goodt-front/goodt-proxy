@@ -1,6 +1,6 @@
 import Adapter from './Adapter';
 
-export default class extends Adapter {
+class Simple extends Adapter {
     /**
      * Constructor
      * @param {Record<string, any>} [config={}]
@@ -38,3 +38,5 @@ export default class extends Adapter {
         return this._authenticated;
     }
 }
+
+export default Simple;

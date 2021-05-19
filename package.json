@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "main": "src/core/index.js",
+    "types": "src/core/index.d.ts",
     "scripts": {
         "dev": "vite",
         "serve": "vue-cli-service serve",

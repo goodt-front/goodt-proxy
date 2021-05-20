@@ -1,4 +1,4 @@
-import KeycloakJs from 'keycloak-js';
+import KeycloakJS from 'keycloak-js';
 import Adapter from './Adapter';
 
 const href = window.location.href.replace(window.location.hash, '');
@@ -31,7 +31,7 @@ class Keycloak extends Adapter {
          */
         const configFinal = { ...configDefault, ...config };
         super(configFinal);
-        this.kc = KeycloakJs(configFinal);
+        this.kc = KeycloakJS(configFinal);
     }
 
     /**

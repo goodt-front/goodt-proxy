@@ -15,3 +15,7 @@ export function patchComponentRootDomElement(context: Vue);
  * Returns descriptor props hash with default values
  */
 export function getDescriptorDefaultProps(descriptor: ElemDescriptor);
+/**
+ * Returns generated Constructor-specific dom id
+ */
+export function getElemDomId(elemId: string): string;

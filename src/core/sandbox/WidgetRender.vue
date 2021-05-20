@@ -7,7 +7,7 @@ export default {
             type: Object
         },
         dataAddons: {
-            type: Object,
+            type: [Object, Function],
             default() {
                 return {};
             }

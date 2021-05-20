@@ -11,7 +11,7 @@
  * Recursively renders elems' collection
  * @param {import('vue').CreateElement} h                   createElement function provided by vue
  * @param {ElemInfo} elemInfo                               elem info
- * @param {import('vue').VNodeData} [vnodeData={}]          vnode data addon options
+ * @param {import('vue').VNodeData|((ei:ElemInfo) => import('vue').VNodeData)} [vnodeData={}]          vnode data addon options
  * @param {boolean} [isEditorMode=false]                    editor mode
  * @param {object} [slotData={}]                            slot data object (holds the scoped slot context)
  * @return {import("vue/types/umd").VNode}
@@ -37,11 +37,12 @@ const render = (h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}
         return obj;
     }, {});
     const { id, type, props } = elemInfo;
+    const dataAddon = typeof vnodeData === 'function' ? vnodeData(elemInfo) : vnodeData;
     const data = {
         props: { id, type, initProps: props, slotData, isEditorMode },
         scopedSlots,
         key: elemInfo.id,
-        ...vnodeData
+        ...dataAddon
     };
     // create vnode
     return h(elemInfo.component, data);

@@ -21,7 +21,9 @@
         "docs:panel-ui:build": "vue-styleguidist build --config ./styleguide.config.js",
         "scaffold": "npx goodt-scaffold",
         "scaffold:panel": "npx goodt-scaffold-panel",
-        "prepare": "npx husky install"
+        "prepare": "npm run dev-run -- dev-run_husky-install",
+        "dev-run": "scripts/run-local.js",
+        "dev-run_husky-install": "npx husky install"
     },
     "dependencies": {
         "@goodt/browserslist-config": "file:.config/browserslist-config",
@@ -43,6 +45,7 @@
         "goodt-framework-css": "^1.1.1",
         "less": "^4.1.1",
         "less-loader": "^6.0.0",
+        "npm-commands": "^1.1.0",
         "vite": "^2.1.5",
         "vite-plugin-vue2": "^1.4.3",
         "webpack": "^4.46.0"

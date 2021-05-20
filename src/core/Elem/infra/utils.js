@@ -25,7 +25,7 @@ class ElemEvent extends CustomEvent {
  * @param {string | number} elemId
  * @return {string}
  */
-const getDomId = (elemId) => `elem-${elemId}`;
+export const getElemDomId = (elemId) => `elem-${elemId}`;
 
 /**
  * Dispatches Elem Vue Component LC-specific Event
@@ -55,7 +55,7 @@ export const patchComponentRootDomElement = (context) => {
     $el.__elem__ = context;
     // set id/data-elem attrs
     if ($el.setAttribute) {
-        $el.setAttribute('id', getDomId(id));
+        $el.setAttribute('id', getElemDomId(id));
         $el.setAttribute('data-elem', type);
     }
 };

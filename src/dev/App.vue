@@ -1,18 +1,20 @@
 <template>
     <env-emulator class="w-100 h-100" v-bind="envEmulatorCfg">
-        <div class="pad-l3">
-            <div class="p">
-                <select class="select select-small" v-model="widgetSelected">
-                    <option :value="null"></option>
-                    <option v-for="w in widgets" :key="w.type" :value="w">{{ w.type }}</option>
-                </select>
-            </div>
+        <template #default="{ initialized }">
+            <div class="pad-l3">
+                <div class="p">
+                    <select class="select select-small" v-model="widgetSelected">
+                        <option :value="null"></option>
+                        <option v-for="w in widgets" :key="w.type" :value="w">{{ w.type }}</option>
+                    </select>
+                </div>
 
-            <widget-preview
-                v-bind="{ elem: widgetSelected }"
-                v-if="widgetSelected"
-            ></widget-preview>
-        </div>
+                <widget-preview
+                    v-bind="{ elem: widgetSelected }"
+                    v-if="widgetSelected"
+                ></widget-preview>
+            </div>
+        </template>
     </env-emulator>
 </template>
 <script>

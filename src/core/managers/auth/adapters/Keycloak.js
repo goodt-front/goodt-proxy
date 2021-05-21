@@ -32,6 +32,7 @@ class Keycloak extends Adapter {
         const configFinal = { ...configDefault, ...config };
         super(configFinal);
         this.kc = KeycloakJS(configFinal);
+        this.initPromise = null;
     }
 
     /**
@@ -40,7 +41,10 @@ class Keycloak extends Adapter {
      * @return {Promise}
      */
     init() {
-        return this.kc.init(initConfig);
+        if (!this.initPromise) {
+            this.initPromise = this.kc.init(initConfig);
+        }
+        return this.initPromise;
     }
 
     /**

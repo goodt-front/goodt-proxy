@@ -10,7 +10,7 @@
                 </div>
             </div>
         </div>
-        <slot v-bind="{ authenticated }"></slot>
+        <slot v-bind="{ authenticated, initialized }"></slot>
         <popup :visible.sync="showConsole" :dialog="consolePopupDialog">
             <template #body>
                 <div class="p">
@@ -129,7 +129,8 @@ export default {
             consolePopupDialog: {
                 class: {},
                 style: { width: '100%', 'max-width': '1000px' }
-            }
+            },
+            initialized: false
         };
     },
     computed: {
@@ -151,13 +152,15 @@ export default {
         }
     },
     created() {
-        this.initConst();
-        this.initEventBus();
-        this.initAuthManager();
-        this.initConstManager();
-        this.initFileManager();
-        this.initRouteManager();
-        this.initStoreManager();
+        Promise.all([
+            this.initConst(),
+            this.initEventBus(),
+            this.initAuthManager(),
+            this.initConstManager(),
+            this.initFileManager(),
+            this.initRouteManager(),
+            this.initStoreManager()
+        ]).finally(() => (this.initialized = true));
     },
     methods: {
         /**

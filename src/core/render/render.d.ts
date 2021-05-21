@@ -47,3 +47,11 @@ export function render(
     isEditorMode?: boolean,
     slotData?: object
 ): VNode;
+
+export function createRenderThunk(
+    h: CreateElement,
+    elemInfo: ElemInfo,
+    vnodeData?: VNodeData,
+    isEditorMode?: boolean,
+    slotData?: object
+): () => VNode;

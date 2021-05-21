@@ -1,3 +1,5 @@
+const identity = (x) => x;
+
 /**
  * @typedef {object} ElemInfo
  * @property {string} id            id
@@ -16,7 +18,9 @@
  * @param {object} [slotData={}]                            slot data object (holds the scoped slot context)
  * @return {import("vue/types/umd").VNode}
  */
-const render = (h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}) => {
+
+const createRenderThunk = (h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}) => {
+    const cache = new Map();
     // we are mapping our nodes array to a hash keyed by 'slot'
     /** @type {Object.<string, ElemInfo[]>} */
     const slots = elemInfo.children.reduce((obj, child) => {
@@ -28,13 +32,30 @@ const render = (h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}
     }, {});
     // next we need to transform our hash values a factory methods
     /** @type {Object.<string, (props:object) => import("vue/types/umd").VNode[]>} */
-    const scopedSlots = Object.entries(slots).reduce((obj, [slotName, slotElemInfos]) => {
-        // eslint-disable-next-line
-        obj[slotName] = (props) =>
-            slotElemInfos.map((slotElemInfo) =>
-                render(h, slotElemInfo, vnodeData, isEditorMode, props)
-            );
-        return obj;
+    const scopedSlots = Object.entries(slots).reduce((slotsAccum, [slotName, slotElemInfos]) => {
+        const slotElemRenderFns = slotElemInfos.map((slotElemInfo) =>
+            createRenderThunk(h, slotElemInfo, vnodeData, isEditorMode)
+        );
+
+        const scopedSlot = (props) => {
+            const mergeFn = (data) => ({
+                ...data,
+                props: {
+                    ...data.props,
+                    slotData: {
+                        ...data.props.slotData,
+                        props
+                    }
+                }
+            });
+
+            return slotElemRenderFns.map((render) => render({ mergeFn }));
+        };
+
+        return {
+            ...slotsAccum,
+            [slotName]: scopedSlot
+        };
     }, {});
     const { id, type, props } = elemInfo;
     const dataAddon = typeof vnodeData === 'function' ? vnodeData(elemInfo) : vnodeData;
@@ -44,8 +65,11 @@ const render = (h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}
         key: elemInfo.id,
         ...dataAddon
     };
+
     // create vnode
-    return h(elemInfo.component, data);
+    return ({ mergeFn = identity } = {}) => h(elemInfo.component, mergeFn(data));
 };
 
-export { render };
+const render = (...args) => createRenderThunk(...args).call();
+
+export { createRenderThunk, render };

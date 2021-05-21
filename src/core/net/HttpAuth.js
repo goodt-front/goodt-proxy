@@ -16,7 +16,7 @@ class HttpAuth extends Http {
             }
             return adapter
                 .init()
-                .updateToken()
+                .then(() => adapter.updateToken())
                 .then(() => {
                     const configFinal = { ...config };
                     configFinal.headers.Authorization = `Bearer ${adapter.token}`;

@@ -29,7 +29,7 @@
         "@goodt/browserslist-config": "file:.config/browserslist-config",
         "@goodt/core": "file:src/core",
         "@goodt/dev-deps": "file:.config",
-        "@goodt/lint": "file:scripts/lint",
+        "@goodt/eslint-config-base": "file:scripts/lint",
         "@goodt/panels": "file:src/core/panels",
         "@goodt/scaffold": "file:scripts/scaffold",
         "@goodt/styleguide": "file:scripts/styleguide",

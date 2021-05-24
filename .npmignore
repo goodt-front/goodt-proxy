@@ -3,7 +3,6 @@
 .patches
 .utils
 public
-scripts/lint
 src/dev
 tests
 vite.*

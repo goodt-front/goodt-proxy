@@ -40,7 +40,8 @@ ValueObject.defaultMeta = () => ({ global: true });
  * @param {any} obj
  * @return {any}
  */
-ValueObject.getValue = (obj) => (obj instanceof ValueObject ? obj.value : obj);
+ValueObject.getValue = (valueObject) =>
+    valueObject instanceof ValueObject ? valueObject.value : valueObject;
 
 /**
  * ValueObject factory method

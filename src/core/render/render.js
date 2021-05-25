@@ -20,25 +20,25 @@ const identity = (x) => x;
  */
 
 const createRenderThunk = (h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}) => {
-    const cache = new Map();
     // we are mapping our nodes array to a hash keyed by 'slot'
     /** @type {Object.<string, ElemInfo[]>} */
-    const slots = elemInfo.children.reduce((obj, child) => {
+    const slots = elemInfo.children.reduce((slotsAcc, child) => {
         const slotName = child.props.slot || 'default';
         // eslint-disable-next-line
-        obj[slotName] = obj[slotName] ?? [];
-        obj[slotName].push(child);
-        return obj;
+        slotsAcc[slotName] = slotsAcc[slotName] ?? [];
+        slotsAcc[slotName].push(child);
+
+        return slotsAcc;
     }, {});
     // next we need to transform our hash values a factory methods
-    /** @type {Object.<string, (props:object) => import("vue/types/umd").VNode[]>} */
-    const scopedSlots = Object.entries(slots).reduce((slotsAccum, [slotName, slotElemInfos]) => {
+    /** @type {Record<string, function (props: object): import("vue/types/vue").VNode[]>} */
+    const scopedSlots = Object.entries(slots).reduce((accSlots, [slotName, slotElemInfos]) => {
         const slotElemRenderFns = slotElemInfos.map((slotElemInfo) =>
             createRenderThunk(h, slotElemInfo, vnodeData, isEditorMode)
         );
 
         const scopedSlot = (props) => {
-            const mergeFn = (data) => ({
+            const buildData = (data) => ({
                 ...data,
                 props: {
                     ...data.props,
@@ -49,14 +49,15 @@ const createRenderThunk = (h, elemInfo, vnodeData = {}, isEditorMode = false, sl
                 }
             });
 
-            return slotElemRenderFns.map((render) => render({ mergeFn }));
+            return slotElemRenderFns.map((render) => render({ buildData }));
         };
 
         return {
-            ...slotsAccum,
+            ...accSlots,
             [slotName]: scopedSlot
         };
     }, {});
+
     const { id, type, props } = elemInfo;
     const dataAddon = typeof vnodeData === 'function' ? vnodeData(elemInfo) : vnodeData;
     const data = {
@@ -67,7 +68,7 @@ const createRenderThunk = (h, elemInfo, vnodeData = {}, isEditorMode = false, sl
     };
 
     // create vnode
-    return ({ mergeFn = identity } = {}) => h(elemInfo.component, mergeFn(data));
+    return ({ buildData = identity } = {}) => h(elemInfo.component, buildData(data));
 };
 
 const render = (...args) => createRenderThunk(...args).call();

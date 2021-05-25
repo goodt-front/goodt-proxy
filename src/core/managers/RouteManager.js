@@ -103,7 +103,7 @@ export default class RouteManager {
     // eslint-disable-next-line class-methods-use-this
     onNavigate(handler) {
         const event = new EventBusEvent(RouteManagerEvent.NAVIGATE);
-        return eventBusInstance.listen(event, (e, data) => handler(data));
+        return eventBusInstance.listen(event, (_, data) => handler(data));
     }
 
     /**

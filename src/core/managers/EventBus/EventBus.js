@@ -18,15 +18,15 @@ import EventBusBase from './EventBusBase';
  * @param {object} obj object
  * @return {object}
  */
-function removeUndefinedKeys(obj) {
-    const out = { ...obj };
+function removeUndefinedKeys(initialObject) {
+    const result = { ...initialObject };
     // eslint-disable-next-line guard-for-in,no-restricted-syntax
-    for (const k in out) {
-        if (Object.prototype.hasOwnProperty.call(out, k) && out[k] === undefined) {
-            delete out[k];
+    for (const key in result) {
+        if (Object.prototype.hasOwnProperty.call(result, key) && result[key] === undefined) {
+            delete result[key];
         }
     }
-    return out;
+    return result;
 }
 
 /**

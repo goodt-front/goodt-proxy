@@ -33,11 +33,11 @@ class URLToken extends Adapter {
      */
     init() {
         return new Promise((resolve) => {
-            let p = new URLSearchParams(window.location.search);
-            this._token = p.get(this.config.tokenParam);
+            let searchParams = new URLSearchParams(window.location.search);
+            this._token = searchParams.get(this.config.tokenParam);
             if (!this._token) {
-                p = new URLSearchParams(window.location.hash.replace(/^.*#.*\?/, ''));
-                this._token = p.get(this.config.tokenParam);
+                searchParams = new URLSearchParams(window.location.hash.replace(/^.*#.*\?/, ''));
+                this._token = searchParams.get(this.config.tokenParam);
             }
             resolve(this._authenticated);
         });

@@ -52,20 +52,21 @@ class EventBusBase {
      * @return {boolean}                true if ayn handler unregistered
      */
     unlisten(event, handler) {
-        const arr = this._listeners[event.type];
-        if (!arr) {
+        const listeners = this._listeners[event.type];
+        if (!listeners) {
             return false;
         }
-        let n = 0;
-        for (let i = 0; i < arr.length; ++i) {
-            const obj = arr[i];
-            if (obj.event.fullType === event.fullType && obj.handler === handler) {
-                arr.splice(i, 1);
+        let unlistenedCount = 0;
+        for (let i = 0; i < listeners.length; ++i) {
+            const listener = listeners[i];
+            if (listener.event.fullType === event.fullType && listener.handler === handler) {
+                listeners.splice(i, 1);
                 i--;
-                n++;
+                unlistenedCount++;
             }
         }
-        return n > 0;
+
+        return unlistenedCount > 0;
     }
 
     /**
@@ -94,16 +95,16 @@ class EventBusBase {
      * @param {*} data                  data
      */
     trigger(event, data) {
-        const arr = this._listeners[event.type];
-        if (!arr) {
+        const listeners = this._listeners[event.type];
+        if (!listeners) {
             return;
         }
-        for (let i = 0; i < arr.length; ++i) {
-            const info = arr[i];
+        for (let i = 0; i < listeners.length; ++i) {
+            const info = listeners[i];
             if (info.event.fullType === event.fullType) {
                 this.callEventHandler(info.handler, event, data);
                 if (info.once) {
-                    arr.splice(i, 1);
+                    listeners.splice(i, 1);
                     i--;
                 }
             }

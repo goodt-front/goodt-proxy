@@ -10,7 +10,7 @@ declare class EventBusWrapper {
      * Constructor
      * @param {EventBus} eb
      */
-    constructor(eb: EventBus);
+    constructor(eventBus: EventBus);
 
     /**
      * @type {EventBus}

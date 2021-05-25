@@ -26,18 +26,13 @@ const ControlMixin = {
         colSize: {
             type: String,
             default: '12-12',
-            validation(val) {
-                const m = val.match(/^(\d+)-(\d+)$/);
-                if (!m) {
+            validation(input) {
+                const matches = input.match(/^(\d+)-(\d+)$/);
+                if (!matches) {
                     return false;
                 }
-                m.shift();
-                for (const n of m) {
-                    if (n < 1 || n > 12) {
-                        return false;
-                    }
-                }
-                return true;
+                matches.shift();
+                return matches.every((frCount) => frCount >= 1 || frCount <= 12);
             }
         },
         /**
@@ -69,13 +64,13 @@ const ControlMixin = {
         }
     },
     methods: {
-        onInput(e) {
+        onInput(event) {
             /**
              * Input event
              *
              * @property {any} value
              */
-            this.$emit('input', e.target.value);
+            this.$emit('input', event.target.value);
         },
         /**
          *
@@ -89,6 +84,7 @@ const ControlMixin = {
 
 const getConstants = () => Object.keys(ConstManager.instance.getConstantsHash());
 
-const isConstant = (v) => v != null && typeof v === 'string' && !!v.match(/^%([\w-])+%$/);
+const isConstant = (value) =>
+    value != null && typeof value === 'string' && value.match(/^%([\w-])+%$/) !== null;
 
 export { ControlMixin, getConstants, isConstant };

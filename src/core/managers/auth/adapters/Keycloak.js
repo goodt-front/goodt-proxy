@@ -18,7 +18,7 @@ const initConfig = {
 
 class Keycloak extends Adapter {
     /** @type {import('keycloak-js').KeycloakInstance} */
-    kc;
+    keycloakInstance;
 
     /**
      * Constructor
@@ -31,7 +31,7 @@ class Keycloak extends Adapter {
          */
         const configFinal = { ...configDefault, ...config };
         super(configFinal);
-        this.kc = KeycloakJS(configFinal);
+        this.keycloakInstance = KeycloakJS(configFinal);
         this.initPromise = null;
     }
 
@@ -42,7 +42,7 @@ class Keycloak extends Adapter {
      */
     init() {
         if (!this.initPromise) {
-            this.initPromise = this.kc.init(initConfig);
+            this.initPromise = this.keycloakInstance.init(initConfig);
         }
         return this.initPromise;
     }
@@ -54,7 +54,7 @@ class Keycloak extends Adapter {
      * @return {Promise}
      */
     login(credentials = {}) {
-        this.kc.login();
+        this.keycloakInstance.login();
         return super.login(credentials);
     }
 
@@ -64,7 +64,7 @@ class Keycloak extends Adapter {
      * @return {Promise}
      */
     logout() {
-        this.kc.logout();
+        this.keycloakInstance.logout();
         return super.logout();
     }
 
@@ -75,7 +75,7 @@ class Keycloak extends Adapter {
      * @return {Promise<boolean>}  Promise; resolve(refreshed) if token is valid/update; reject() if session expired
      */
     updateToken(minValidity = 5) {
-        return this.kc.updateToken(minValidity);
+        return this.keycloakInstance.updateToken(minValidity);
     }
 
     /**
@@ -84,7 +84,7 @@ class Keycloak extends Adapter {
      * @return {Promise.<object>}   Promise; resolve(profile); reject() on error
      */
     getUserProfile() {
-        return this.kc.loadUserProfile();
+        return this.keycloakInstance.loadUserProfile();
     }
 
     /**
@@ -94,7 +94,7 @@ class Keycloak extends Adapter {
      * @return {boolean}
      */
     isTokenExpired(minValidity = 5) {
-        return this.kc.isTokenExpired(minValidity);
+        return this.keycloakInstance.isTokenExpired(minValidity);
     }
 
     /**
@@ -103,7 +103,7 @@ class Keycloak extends Adapter {
      * @return {boolean}
      */
     get authenticated() {
-        return this.kc.authenticated;
+        return this.keycloakInstance.authenticated;
     }
 
     /**
@@ -112,7 +112,7 @@ class Keycloak extends Adapter {
      * @return {string}
      */
     get token() {
-        return this.kc.token;
+        return this.keycloakInstance.token;
     }
 
     /**
@@ -121,7 +121,7 @@ class Keycloak extends Adapter {
      * @return {?object}
      */
     get tokenParsed() {
-        return this.kc.tokenParsed;
+        return this.keycloakInstance.tokenParsed;
     }
 
     /**

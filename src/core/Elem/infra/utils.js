@@ -35,9 +35,9 @@ export const getElemDomId = (elemId) => `elem-${elemId}`;
  * @this {VueInstance}
  */
 export function dispatchEventByName(eventName) {
-    const e = new ElemEvent(eventName, this);
-    this.$emit(e.type, this);
-    document.dispatchEvent(e);
+    const event = new ElemEvent(eventName, this);
+    this.$emit(event.type, this);
+    document.dispatchEvent(event);
 }
 
 /**

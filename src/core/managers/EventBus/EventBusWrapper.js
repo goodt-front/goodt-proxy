@@ -2,11 +2,8 @@
  * @typedef {import('./EventBus')} EventBus
  */
 import EventBusEvent from './EventBusEvent';
-// eslint-disable-next-line import/no-cycle
-import {
-    buildExternalStateFromInternal,
-    buildInternalStateFromExternal
-} from '../../mixins/useStore';
+
+import { buildExternalStateFromInternal, buildInternalStateFromExternal } from '../../mixins';
 
 /**
  * EventBusWrapper class
@@ -15,13 +12,13 @@ import {
 class EventBusWrapper {
     /**
      * Constructor
-     * @param {EventBus} eb
+     * @param {EventBus} eventBus
      */
-    constructor(eb) {
+    constructor(eventBus) {
         /**
          * @type {EventBus}
          */
-        this._eb = eb;
+        this._eb = eventBus;
         /**
          * @type {Function[]}
          */
@@ -30,7 +27,7 @@ class EventBusWrapper {
         this.varAliases = {};
         //
         this.toVO = (value, meta) => value;
-        this.toValue = (vo) => vo;
+        this.toValue = (x) => x;
     }
 
     /**
@@ -81,15 +78,15 @@ class EventBusWrapper {
      * @return {boolean}        whether the event was triggered or not
      */
     triggerNavigate({ url, params = {} }) {
-        const r = new RegExp('^(?:\\w*:(//)?)+', 'i');
-        if (r.test(url) === false) {
+        const regExp = new RegExp('^(?:\\w*:(//)?)+', 'i');
+        if (regExp.test(url) === false) {
             this.trigger(EventBusEvent.EVENT_NAVIGATE, { url, params });
             return true;
         }
         if (window) {
             const esc = encodeURIComponent;
             const query = Object.keys(params)
-                .map((k) => `${k}=${esc(params[k])}`)
+                .map((key) => `${key}=${esc(params[key])}`)
                 .join('&');
             const sign = url.indexOf('?') >= 0 ? '&' : '?';
             window.location = query.length ? `${url}${sign}${query}` : url;
@@ -105,10 +102,14 @@ class EventBusWrapper {
      * @return {EventHandler}           decorated handler
      */
     listenStateChange(handler, once = false) {
-        const decoratedHandler = (e, stateChange) => {
-            const obj = buildInternalStateFromExternal(stateChange, this.varAliases ?? {}, this.toValue);
-            if (Object.keys(obj).length > 0) {
-                handler.apply(this, [e, obj]);
+        const decoratedHandler = (event, stateChange) => {
+            const state = buildInternalStateFromExternal(
+                stateChange,
+                this.varAliases ?? {},
+                this.toValue
+            );
+            if (Object.keys(state).length > 0) {
+                handler.apply(this, [event, state]);
             }
         };
         this.listen(EventBusEvent.EVENT_STATE_CHANGE, decoratedHandler, once);
@@ -131,9 +132,9 @@ class EventBusWrapper {
      * @param {object} stateChange     state change object { '<key>': '<value>' }
      */
     triggerStateChange(stateChange) {
-        const obj = buildExternalStateFromInternal(stateChange, this.varAliases ?? {}, this.toVO);
-        if (Object.keys(obj).length > 0) {
-            this.trigger(EventBusEvent.EVENT_STATE_CHANGE, obj);
+        const state = buildExternalStateFromInternal(stateChange, this.varAliases ?? {}, this.toVO);
+        if (Object.keys(state).length > 0) {
+            this.trigger(EventBusEvent.EVENT_STATE_CHANGE, state);
         }
     }
 
@@ -155,10 +156,10 @@ class EventBusWrapper {
         // @NOTE compatibility with those, who call listen(EventBusEvent.EVENT_STATE_CHANGE)
         // instead of listenStateChange()
         if (event.type === EventBusEvent.EVENT_STATE_CHANGE) {
-            const handlerCompat = (e, data) => {
+            const handlerCompat = (_event, data) => {
                 if (Object.keys(data).length > 0) {
-                    const obj = buildInternalStateFromExternal(data, null, this.toValue);
-                    handler.apply(this, [e, obj]);
+                    const state = buildInternalStateFromExternal(data, null, this.toValue);
+                    handler.apply(this, [_event, state]);
                 }
             };
             dispose = this._eb.listen(event, handlerCompat, once);
@@ -202,8 +203,8 @@ class EventBusWrapper {
         // instead of triggerStateChange()
         if (event.type === EventBusEvent.EVENT_STATE_CHANGE) {
             if (Object.keys(data).length > 0) {
-                const obj = buildExternalStateFromInternal(data, null, this.toVO);
-                this._eb.trigger(event, obj);
+                const state = buildExternalStateFromInternal(data, null, this.toVO);
+                this._eb.trigger(event, state);
             }
         }
         // {/block}

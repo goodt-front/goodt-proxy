@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <ui-panel-container>
         <template v-if="datasetName">
             <div class="row row-collapse">
                 <div class="col col-10-12">
@@ -64,7 +64,7 @@
             @close="showDatasetImportPopup = false"
             @import="importDataset"
         />
-    </div>
+    </ui-panel-container>
 </template>
 <script>
 import { Portal } from 'portal-vue';

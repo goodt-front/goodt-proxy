@@ -1,8 +1,9 @@
-// @ts-ignore
-import DremioPanel from './DremioPanel.vue';
-// @ts-ignore
-import StylePanel from './StylePanel.vue';
-// @ts-ignore
-import VariablePanel from './VariablePanel.vue';
+export { default as DremioPanel } from './DremioPanel.vue';
+export { default as StylePanel } from './StylePanel.vue';
+export { default as VariablePanel } from './VariablePanel.vue';
 
-export { DremioPanel, StylePanel, VariablePanel };
+const DremioPanelAsync = () => import('./DremioPanel.vue');
+const StylePanelAsync = () => import('./StylePanel.vue');
+const VariablePanelAsync = () => import('./VariablePanel.vue');
+
+export { DremioPanelAsync, VariablePanelAsync, StylePanelAsync };

@@ -34,7 +34,7 @@ export const useTransport = (transportId, useOptions = {}) => {
     const { name: $transport = PUBLIC_ACCESSOR_NAME, options: transportOptions } = useOptions;
 
     /**
-     * @this {VueInstance}
+     * @param {VueInstance} vm
      * @return {ITransport}
      */
     function createTransportInstance(vm) {

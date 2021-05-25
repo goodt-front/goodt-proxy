@@ -1,4 +1,4 @@
-export default class {
+class Adapter {
     /**
      * Constructor
      *
@@ -143,3 +143,5 @@ export default class {
         return {};
     }
 }
+
+export default Adapter;

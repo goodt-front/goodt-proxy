@@ -12,7 +12,7 @@
                                 {{ elemType }}
                             </code>
                         </div>
-                        <!-- {elem panels} -->
+                        <!-- {panels} -->
                         <ui-collapse class="p" v-for="(p, k) in panels" :key="`${elemType}-${k}`">
                             <template #header>{{ p.meta.name }}</template>
                             <component
@@ -23,25 +23,7 @@
                                 @[panelEvent]="onPanelPropsChange"
                             ></component>
                         </ui-collapse>
-                        <!-- {/elem panels} -->
-                        <!-- {defaults} -->
-                        <ui-collapse class="p">
-                            <template #header>Style</template>
-                            <style-panel
-                                :init-props="elemProps"
-                                :descriptor="elemDescriptor"
-                                @[panelEvent]="onPanelPropsChange"
-                            ></style-panel>
-                        </ui-collapse>
-                        <ui-collapse class="p">
-                            <template #header>Vars</template>
-                            <variable-panel
-                                :init-props="elemProps"
-                                :descriptor="elemDescriptor"
-                                @[panelEvent]="onPanelPropsChange"
-                            ></variable-panel>
-                        </ui-collapse>
-                        <!-- {/defaults} -->
+                        <!-- {/panels} -->
                         <ui-collapse class="p">
                             <template #header>elem.props</template>
                             <pre class="pre text-xsmall">{{ elemProps }}</pre>
@@ -59,13 +41,13 @@
 <script>
 import Vue from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
-import { ElemEvent } from '@goodt/core/Elem';
-import { PanelEvent } from '@goodt/core/Panel';
-import { UiCollapse } from '@goodt/core/components/panel-ui/index';
-import { StylePanel, VariablePanel } from '@goodt/panels';
+import { ElemEvent, PanelEvent, Components } from '../index';
+import { StylePanel, VariablePanel } from '../panels/index';
 import WidgetRender from './WidgetRender.vue';
 
 let ID = 0;
+
+const { UiCollapse } = Components.PanelUi;
 
 /**
  * @param {ElemInfoShort} child
@@ -92,7 +74,7 @@ const buildElemInfo = (child) => ({
  */
 export default {
     name: 'WidgetPreview',
-    components: { UiCollapse, StylePanel, VariablePanel, WidgetRender },
+    components: { UiCollapse, WidgetRender },
     props: {
         /** @type {import('vue').PropOptions<ElemInfoShort>} */
         elem: {
@@ -191,10 +173,17 @@ export default {
                 .getPanels()
                 .map((panel) => (typeof panel === 'function' ? panel() : panel));
             Promise.all(panels).then((m) => {
-                this.panels = m.map((mi) => ({
+                // widget panels
+                const panelsWidget = m.map((mi) => ({
                     def: mi.default,
                     meta: Vue.extend(mi.default).options.data().$meta
                 }));
+                // default panels
+                const panelsDefault = [StylePanel, VariablePanel].map((def) => ({
+                    def,
+                    meta: Vue.extend(def).options.data().$meta
+                }));
+                this.panels = [...panelsWidget, ...panelsDefault];
             });
         },
         /**

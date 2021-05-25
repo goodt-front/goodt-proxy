@@ -61,10 +61,10 @@ const mixin = {
                 before: () => {
                     this.loading = true;
                 },
-                then: (r) => r,
-                catch: (e) => {
-                    if (!e.isCancel) {
-                        this.error = e;
+                then: (x) => x,
+                catch: (error) => {
+                    if (!error.isCancel) {
+                        this.error = error;
                     }
                 },
                 finally: () => {
@@ -117,20 +117,26 @@ const mixin = {
         /**
          * @return {?string}
          */
+        // eslint-disable-next-line unicorn/prevent-abbreviations
         dremioStr() {
             try {
                 return JSON.stringify(this.props.dremio);
-            } catch (e) {
+            } catch {
                 return null;
             }
         }
     },
     watch: {
         $storeState(state) {
-            if (this.applyDremioFilters(state)) {
-                this.offset = 0;
+            if (!Object.keys(state).length) {
+                return;
             }
-            this.loadData();
+            this.$nextTick(() => {
+                if (this.applyDremioFilters(state)) {
+                    this.offset = 0;
+                }
+                this.loadData();
+            });
         }
     },
     created() {
@@ -190,13 +196,13 @@ const mixin = {
         setDremioVars() {
             const dremioParams = this.getDremioQueryParamNames();
 
-            this.dremioVars = this.dremioVars.reduce((arr, name) => {
+            this.dremioVars = this.dremioVars.reduce((varsAcc, name) => {
                 if (dremioParams.includes(name)) {
-                    arr.push(name);
-                    return arr;
+                    varsAcc.push(name);
+                    return varsAcc;
                 }
                 this.$delete(this.descriptor.vars, name);
-                return arr;
+                return varsAcc;
             }, []);
 
             dremioParams.forEach((name) => {

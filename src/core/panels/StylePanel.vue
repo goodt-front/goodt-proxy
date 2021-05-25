@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <ui-panel-container>
         <ui-has-two-columns class="p">
             <template #left>
                 <ui-select
@@ -133,7 +133,7 @@
         >
             Render slot
         </ui-select>
-    </div>
+    </ui-panel-container>
 </template>
 <style lang="less" scoped>
 .grid-3-3 {
@@ -181,6 +181,7 @@ export default {
     },
     data() {
         return {
+            $meta: { name: 'Style', icon: '' },
             marginDirectionId: '',
             paddingDirectionId: '',
             directions: [

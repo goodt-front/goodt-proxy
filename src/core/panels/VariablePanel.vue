@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <ui-panel-container>
         <ui-has-panel v-for="variable in varsInfo" :key="variable.name" class="pad-v-1">
             <ui-checkbox
                 v-model.lazy="variable.alias.meta.global"
@@ -41,7 +41,7 @@
                 </ui-panel>
             </template>
         </ui-has-panel>
-    </div>
+    </ui-panel-container>
 </template>
 <script>
 import isEqual from 'lodash/isEqual';
@@ -60,12 +60,16 @@ const varAlias = ({ listen = '', trigger = '', meta = null }) => ({
 
 export default {
     extends: Panel,
+    data() {
+        return { $meta: { name: 'Variables', icon: '' } };
+    },
     computed: {
         /**
          * @return {{ name:string, alias:ElemVarAliasDef, description:string }[]}
          */
         varsInfo() {
-            const { vars } = this.descriptor;
+            const varsInstance = this.elementInstance?.descriptor.vars ?? {};
+            const vars = { ...this.descriptor.vars, ...varsInstance };
             const { varAliases } = this.props;
             const arr = [];
             for (const name in vars) {

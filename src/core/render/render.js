@@ -1,3 +1,5 @@
+const identity = (x) => x;
+
 /**
  * @typedef {object} ElemInfo
  * @property {string} id            id
@@ -11,40 +13,64 @@
  * Recursively renders elems' collection
  * @param {import('vue').CreateElement} h                   createElement function provided by vue
  * @param {ElemInfo} elemInfo                               elem info
- * @param {import('vue').VNodeData} [vnodeData={}]          vnode data addon options
+ * @param {import('vue').VNodeData|((ei:ElemInfo) => import('vue').VNodeData)} [vnodeData={}]          vnode data addon options
  * @param {boolean} [isEditorMode=false]                    editor mode
  * @param {object} [slotData={}]                            slot data object (holds the scoped slot context)
  * @return {import("vue/types/umd").VNode}
  */
-const render = (h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}) => {
+
+const createRenderThunk = (h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}) => {
     // we are mapping our nodes array to a hash keyed by 'slot'
     /** @type {Object.<string, ElemInfo[]>} */
-    const slots = elemInfo.children.reduce((obj, child) => {
+    const slots = elemInfo.children.reduce((slotsAcc, child) => {
         const slotName = child.props.slot || 'default';
         // eslint-disable-next-line
-        obj[slotName] = obj[slotName] ?? [];
-        obj[slotName].push(child);
-        return obj;
+        slotsAcc[slotName] = slotsAcc[slotName] ?? [];
+        slotsAcc[slotName].push(child);
+
+        return slotsAcc;
     }, {});
     // next we need to transform our hash values a factory methods
-    /** @type {Object.<string, (props:object) => import("vue/types/umd").VNode[]>} */
-    const scopedSlots = Object.entries(slots).reduce((obj, [slotName, slotElemInfos]) => {
-        // eslint-disable-next-line
-        obj[slotName] = (props) =>
-            slotElemInfos.map((slotElemInfo) =>
-                render(h, slotElemInfo, vnodeData, isEditorMode, props)
-            );
-        return obj;
+    /** @type {Record<string, function (props: object): import("vue/types/vue").VNode[]>} */
+    const scopedSlots = Object.entries(slots).reduce((accSlots, [slotName, slotElemInfos]) => {
+        const slotElemRenderFns = slotElemInfos.map((slotElemInfo) =>
+            createRenderThunk(h, slotElemInfo, vnodeData, isEditorMode)
+        );
+
+        const scopedSlot = (props) => {
+            const buildData = (data) => ({
+                ...data,
+                props: {
+                    ...data.props,
+                    slotData: {
+                        ...data.props.slotData,
+                        props
+                    }
+                }
+            });
+
+            return slotElemRenderFns.map((render) => render({ buildData }));
+        };
+
+        return {
+            ...accSlots,
+            [slotName]: scopedSlot
+        };
     }, {});
+
     const { id, type, props } = elemInfo;
+    const dataAddon = typeof vnodeData === 'function' ? vnodeData(elemInfo) : vnodeData;
     const data = {
         props: { id, type, initProps: props, slotData, isEditorMode },
         scopedSlots,
         key: elemInfo.id,
-        ...vnodeData
+        ...dataAddon
     };
+
     // create vnode
-    return h(elemInfo.component, data);
+    return ({ buildData = identity } = {}) => h(elemInfo.component, buildData(data));
 };
 
-export { render };
+const render = (...args) => createRenderThunk(...args).call();
+
+export { createRenderThunk, render };

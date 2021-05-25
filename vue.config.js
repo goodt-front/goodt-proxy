@@ -19,20 +19,6 @@ module.exports = {
         extract: false
     },
     configureWebpack: (config) => {
-        if (isProd) {
-            config.externals = {
-                ...config.externals
-                /*
-                lodash: {
-                    commonjs: 'lodash',
-                    commonjs2: 'lodash',
-                    amd: 'lodash',
-                    root: '_'
-                }
-                */
-            };
-        }
-        // we have a named export lib
         //config.output.libraryExport = 'default';
         config.plugins.push(
             new webpack.DefinePlugin({

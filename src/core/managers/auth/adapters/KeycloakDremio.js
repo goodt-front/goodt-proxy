@@ -1,8 +1,7 @@
+import { SDKFactory } from '@goodt/core/dremio';
 import Keycloak from './Keycloak';
-// eslint-disable-next-line import/no-cycle
-import { SDKFactory } from '../../../dremio';
 
-export default class extends Keycloak {
+class KeycloakDremio extends Keycloak {
     /**
      * Constructor
      * @param {Record<string, any>} [config={}]
@@ -72,6 +71,9 @@ export default class extends Keycloak {
         });
     }
 
+    /**
+     * @private
+     */
     _clearCache() {
         this._cache = {
             permissions: null,
@@ -79,3 +81,5 @@ export default class extends Keycloak {
         };
     }
 }
+
+export default KeycloakDremio;

@@ -76,6 +76,6 @@ export default class FileManager {
     // eslint-disable-next-line class-methods-use-this
     onBrowse(handler) {
         const event = new EventBusEvent(FileManagerEvent.BROWSE);
-        return eventBusInstance.listen(event, (e, data) => handler(data));
+        return eventBusInstance.listen(event, (_, data) => handler(data));
     }
 }

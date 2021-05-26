@@ -1,3 +1,3 @@
 module.exports = {
-    extends: '@goodt/dev-deps/babel.config.js'
+    extends: '@goodt/config/babel.config.js'
 };

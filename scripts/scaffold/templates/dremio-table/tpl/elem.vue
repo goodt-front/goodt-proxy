@@ -12,7 +12,6 @@ import DemoTableRow from './components/TableRow.vue';
 import { PaginationPanelAsync, [[{panelName}]]Async } from '[[{panelPath}]]';
 import { descriptor, /* Vars */ } from './descriptor';
 
-
 const renders = {
     ...COLUMN_RENDERS,
     DEMO_RENDER: {

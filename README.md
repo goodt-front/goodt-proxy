@@ -28,10 +28,8 @@
 - [Vue CLI 4](https://cli.vuejs.org/)
 - 📦 Bundler: [Webpack 4](https://webpack.js.org/)
 - Code Linting Vue.JS: [ESLint](https://eslint.vuejs.org/)
-- Tests Vue.JS: [Jest](https://eslint.vuejs.org/)
 
 ### Tests
-
 - Unit Tests: [Jest](http://jestjs.io/)
 
 ### Styles
@@ -61,7 +59,7 @@
 │                    # 
 ├── tests            # tests deps, config and core-related tests
 ...                  # 
-└── CONTRIBUTING.md  # 
+├── CONTRIBUTING.md  # 
 └── README.md        # 
 ```
 
@@ -158,6 +156,8 @@ panel** IPanel                                                                  
 | `@goodt/tests`                | Содержит переиспользуемый конфиг для jest и связанные зависимости для его работы |
 | `@goodt/scaffold`             | Содержит скрипты для автогенерации кода шаблона виджетов |
 | `@goodt/styleguide`           | Содержит зависимости для работа stylguide |
+
+#### Особенности установки
 
 ### См. также
 

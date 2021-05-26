@@ -1,6 +1,6 @@
 #!/bin/sh
 # we only want to lint differed from master
-for file in $(git diff --stat --cached --name-only origin/master | grep -E '\.(js|jsx|vue|ts|tsx)$')
+for file in $(git diff --stat --cached --name-only origin/master | grep -E 'src/.+\.(js|jsx|vue|ts|tsx)$')
 
 do
   git show ":$file" | npx eslint --format friendly --stdin --stdin-filename "$file"

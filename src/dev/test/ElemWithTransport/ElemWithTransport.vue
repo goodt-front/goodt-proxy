@@ -7,7 +7,8 @@
 </template>
 <script>
 import { Elem } from '@goodt/core';
-import { useTransport, HttpAuthTransportSymbol, useApiService } from '@goodt/core/mixins';
+import { useTransport, HttpAuthTransportSymbol } from '@goodt/core/mixins';
+import { useApiService } from '@goodt/common/mixins';
 import { descriptor } from './descriptor';
 import { create as createApiService } from './service/ExampleApiService';
 

@@ -5,22 +5,22 @@ const PRIVATE_ACCESSOR_NAME = Symbol('$apiService');
  */
 
 /**
- * Creates Vue Mixin with specified Transport and extra component transport-related behaviour
+ * Creates Vue Mixin with specified service factory or identifier and service-related behaviour
  */
-export const useApiService = (serviceFactory, useOptions = {}) => {
+export const useApiService = (service, useOptions = {}) => {
     const { name: $apiService = PUBLIC_ACCESSOR_NAME } = useOptions;
 
     /**
      * @return {IService}
      */
-    const createServiceInstance = (vm) => serviceFactory({ transport: vm.$transport });
+    const createServiceInstance = (vm) => service({ transport: vm.$transport });
 
     /**
      */
     const VueMixinComponentOptions = {
         computed: {
             /**
-             * @this {ITransportMixinInstance}
+             * @this {IServiceMixinInstance}
              */
             [$apiService]() {
                 if (!this[PRIVATE_ACCESSOR_NAME]) {
@@ -30,7 +30,7 @@ export const useApiService = (serviceFactory, useOptions = {}) => {
             }
         },
         /**
-         * @this {ITransportMixinInstance}
+         * @this {IServiceMixinInstance}
          */
         destroyed() {
             if (this[PRIVATE_ACCESSOR_NAME]) {

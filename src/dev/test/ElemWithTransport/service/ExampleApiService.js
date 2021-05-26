@@ -1,4 +1,4 @@
-import { BaseApiService, createApiServiceRequest } from '@goodt/core/services/ApiService';
+import { BaseApiService, createApiServiceRequest } from '@goodt/common/services/ApiService';
 
 const API_ENDPOINTS_PATH = {
     POLL_STRUCT: '/poll/:id/struct'

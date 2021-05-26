@@ -1,4 +1,4 @@
-const ResultSafeType = {
+const ResultType = {
     FAIL: Symbol('Fail'),
     SUCCESS: Symbol('Success')
 };
@@ -20,11 +20,11 @@ export class SafeResult {
     _value;
 
     static success(value) {
-        return new SafeResult(ResultSafeType.SUCCESS, value);
+        return new SafeResult(ResultType.SUCCESS, value);
     }
 
     static fail(value) {
-        return new SafeResult(ResultSafeType.FAIL, value);
+        return new SafeResult(ResultType.FAIL, value);
     }
 
     constructor(type, value) {
@@ -33,11 +33,11 @@ export class SafeResult {
     }
 
     get isFail() {
-        return this._type === ResultSafeType.FAIL;
+        return this._type === ResultType.FAIL;
     }
 
     get isSuccess() {
-        return this._type === ResultSafeType.SUCCESS;
+        return this._type === ResultType.SUCCESS;
     }
 
     get value() {

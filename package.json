@@ -16,7 +16,7 @@
         "lint:staged": "scripts/lint/eslint-staged.sh",
         "lint:committed:short": "scripts/lint/eslint-committed-short.sh",
         "format": "prettier --write ./src/**/*",
-        "test:unit": "vue-cli-service test:unit",
+        "test:unit": "VUE_CLI_CONTEXT=./tests vue-cli-service test:unit",
         "docs:panel-ui": "npx vue-styleguidist server --config ./styleguide.config.js",
         "docs:panel-ui:build": "vue-styleguidist build --config ./styleguide.config.js",
         "scaffold": "npx goodt-scaffold",
@@ -33,6 +33,7 @@
         "@goodt/panels": "file:src/core/panels",
         "@goodt/scaffold": "file:scripts/scaffold",
         "@goodt/styleguide": "file:scripts/styleguide",
+        "@goodt/tests": "file:tests",
         "axios": "^0.21.1",
         "goodt-dremio-sdk": "^1.0.21",
         "keycloak-js": "^10.0.0",
@@ -59,8 +60,5 @@
         "*.(js|jsx|vue|ts)": [
             "npm run lint"
         ]
-    },
-    "vuePlugins": {
-        "resolveFrom": ".config"
     }
 }

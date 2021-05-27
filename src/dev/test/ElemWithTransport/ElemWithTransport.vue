@@ -71,10 +71,15 @@ export default {
          */
         async doApiRequest() {
             this.apiResponseResult = null;
-            const response = await this.$apiService.getPollInfoDto(3);
+            const response = await this.$apiService.getPollInfoDto(100);
             const { isFail, error, result } = response;
             if (isFail) {
+                if (error.code === 'not_found') {
+                    this.apiResponseResult = error.constructor.Codes.NOT_FOUND;
+                    return;
+                }
                 this.apiResponseResult = error.message;
+
                 return;
             }
             this.apiResponseResult = result;

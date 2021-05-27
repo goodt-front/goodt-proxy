@@ -4,13 +4,24 @@
  * @param {Error} exception
  * @throw {ApiServiceError|Error}
  */
-import { ApiHttpClientError } from '../error';
+import { ApiHttpClientError, ApiClientRequestCancel } from '../error';
 
-export const processTransportException = (exception) => {
-    const { isAxiosError, message } = exception;
-    // If non-axios exception
-    if (isAxiosError === false) {
-        return new ApiHttpClientError(message, { reason: exception });
+/**
+ *
+ * @param error
+ * @param {ITransport} transport
+ * @return {Error}
+ */
+export const processTransportError = (error, transport) => {
+    const { message } = error;
+    // If non-transport error
+    if (transport.constructor.isTransportError(error) === false) {
+        return new ApiHttpClientError(message, { reason: error });
+    }
+
+    // mute cancel error
+    if (transport.constructor.isCancel(error)) {
+        return new ApiClientRequestCancel();
     }
 
     // The request was made and the server responded with a status code
@@ -19,7 +30,7 @@ export const processTransportException = (exception) => {
         response,
         request,
         config: { url, data: requestData, method }
-    } = exception;
+    } = error;
 
     const reason = { url, data: requestData, method };
 
@@ -45,15 +56,15 @@ export const processTransportException = (exception) => {
     // Something happened in setting up the request that triggered an Error
     return new ApiHttpClientError(message, {
         code: 0,
-        reason: exception
+        reason: error
     });
 };
 
 /**
- * Билдит конфиг реквеста для транспорта из FrontendApiRequest
+ * Билдит конфиг реквеста для транспорта из ITransportRequest
  *
  * @param {ApiServiceRequest} request
- * @return {AxiosRequestConfig}
+ * @return {import('@goodt/core/net').ITransportRequest} ITransportRequest
  */
 export const buildTransportRequest = (request) => {
     const {
@@ -75,8 +86,7 @@ export const buildTransportRequest = (request) => {
 
 /**
  * Обрабатывает ответа Axios и возвращает целевые данные для HttpApiClient
- * @typedef { import('axios').AxiosResponse } TransportResponse
- * @param {TransportResponse} transportResponse
+ * @param {import('@goodt/core/net').ITransportResponse} transportResponse
  * @return {*}
  */
 export const processTransportResponse = (transportResponse) => {

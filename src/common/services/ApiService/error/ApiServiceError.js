@@ -1,13 +1,29 @@
+import { BaseError } from '@/common/errors';
+
+/**
+ * Enum ошибок апи-сервиса
+ *
+ * @readonly
+ * @enum string
+ */
+export const ApiServiceErrorCode = Object.freeze({
+    INTERNAL: 'internal',
+    FORBIDDEN: 'forbidden',
+    NOT_FOUND: 'not_found',
+    UNAUTHORIZED: 'unauthorized',
+    UNKNOWN: 'unknown'
+});
+
 /**
  * Класс-исключение транспортного уровня для запросов к api
  * @class ApiServiceError
  */
-class ApiServiceError extends Error {
+class ApiServiceError extends BaseError {
     /**
      * @private
-     * @member {number}
+     * @member {number|string}
      */
-    _code;
+    _code = ApiServiceErrorCode.UNKNOWN;
 
     /**
      * @private
@@ -25,15 +41,17 @@ class ApiServiceError extends Error {
     /**
      *
      * @param {string} [message]
-     * @param {number} [code]
+     * @param {number|string} [code]
      * @param {*} [data]
      * @param {Object} [reason]
      * @constructs Service
      */
-    constructor(message, { code = 0, data, reason } = {}) {
+    constructor(message, { code, data, reason } = {}) {
         super(message);
-        this.name = this.constructor.name;
-        this._code = code;
+
+        if (code) {
+            this._code = code;
+        }
         this._data = data;
         this._reason = reason;
     }

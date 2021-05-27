@@ -1,13 +1,9 @@
-import {
-    buildTransportRequest,
-    processTransportException,
-    processTransportResponse
-} from './utils';
+import { buildTransportRequest, processTransportError, processTransportResponse } from './utils';
 
 /**
- * @typedef { import('axios').AxiosInstance } AxiosInstance
- * @typedef { import('FrontendApiRequest') } FrontendApiRequest
- * @typedef { import('axios').AxiosRequestConfig } AxiosRequestConfig
+ * @typedef { import('@goodt/core/net').ITransport } ITransport
+ * @typedef { import('../ApiServiceRequest').ApiServiceRequest } ApiServiceRequest
+ * @typedef { import('@goodt/core/net').ITransportOptions } ITransportOptions
  */
 
 /**
@@ -17,12 +13,12 @@ class ApiHttpClient {
     /**
      * Transport client instance
      * @private
-     * @member {AxiosInstance}
+     * @member {ITransport}
      */
     _transport;
 
     /**
-     * @param {AxiosInstance} [transport=defaultTransportInstance]
+     * @param {ITransport} [transport]
      * @constructs ApiHttpClient
      */
     constructor(transport) {
@@ -33,7 +29,7 @@ class ApiHttpClient {
      * @public
      * @async
      * @method ApiHttpClient#request
-     * @param {FrontendApiRequest} request
+     * @param {ApiServiceRequest} request
      *
      * @throw {ApiHttpClientError|Error}
      * @return {Promise<*>}
@@ -43,8 +39,8 @@ class ApiHttpClient {
         try {
             const response = await this._transport.request(requestConfig);
             return processTransportResponse(response);
-        } catch (e) {
-            const exception = processTransportException(e);
+        } catch (error) {
+            const exception = processTransportError(error, this._transport);
             throw exception;
         }
     }
@@ -59,7 +55,7 @@ class ApiHttpClient {
 /**
  * Creates ApiHttpClient instance
  *
- * @param {AxiosInstance} [transport] Transport client instance
+ * @param {ITransport} [transport] Transport client instance
  * @return {ApiHttpClient}
  */
 const create = (transport) => new ApiHttpClient(transport);

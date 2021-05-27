@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "@goodt/common": "file:src/common",
+        "@goodt/config": "file:.config",
         "@goodt/browserslist-config": "file:.config/browserslist-config",
         "@goodt/core": "file:src/core",
         "@goodt/dev-deps": "file:.config",
@@ -60,8 +61,5 @@
         "*.(js|jsx|vue|ts)": [
             "npm run lint"
         ]
-    },
-    "vuePlugins": {
-        "resolveFrom": ".config"
     }
 }

@@ -1,2 +1,3 @@
+export { ApiClientRequestCancel } from './ApiClientRequestCancel';
 export { ApiHttpClientError } from './ApiClientError';
-export { ApiServiceError } from './ApiServiceError';
+export { ApiServiceError, ApiServiceErrorCode } from './ApiServiceError';

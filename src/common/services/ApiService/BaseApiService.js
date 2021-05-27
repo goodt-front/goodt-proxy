@@ -1,13 +1,24 @@
 import { success, fail } from '@/common/utils/either';
-import { ApiServiceError, ApiHttpClientError } from './error';
 import { create as createApiHttpClient } from './ApiHttpClient';
+import { processError } from './utils';
+import { ApiServiceError, ApiServiceErrorCode } from './error';
 
 /**
  * @type {import('./BaseApiService').IService}
  */
 class BaseApiService {
+    /**
+     * @private
+     * @type {import('./ApiHttpClient').ApiHttpClient}
+     */
     _client = null;
 
+    /**
+     *
+     * @param client
+     * @param transport
+     * @throws ApiServiceError
+     */
     constructor({ client, transport }) {
         if (client) {
             this._client = client;
@@ -15,7 +26,13 @@ class BaseApiService {
         }
         if (transport) {
             this._client = createApiHttpClient(transport);
+            return;
         }
+
+        throw new ApiServiceError(
+            'Neither `client` nor `transport` was specified in constructor options',
+            { code: ApiServiceErrorCode.INTERNAL }
+        );
     }
 
     /**
@@ -28,12 +45,9 @@ class BaseApiService {
             const result = await this._client.request(request);
             return success(result);
         } catch (error) {
-            if (error instanceof ApiHttpClientError) {
-                const { message, code, data, reason } = error;
-                const serviceError = new ApiServiceError(message, { code, data, reason });
-                return fail(serviceError);
-            }
-            throw error;
+            const processedError = processError(error);
+            processedError.captureStackTrace(this.request);
+            return fail(processedError);
         }
     }
 

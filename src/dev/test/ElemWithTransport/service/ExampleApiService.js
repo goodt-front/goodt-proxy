@@ -17,6 +17,7 @@ class ExampleApiService extends BaseApiService {
 
         const { isFail, error } = response;
         if (isFail) {
+            // some extra logic for error service specific transform
             console.error(error);
         }
 

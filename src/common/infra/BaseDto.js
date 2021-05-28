@@ -1,15 +1,23 @@
 export class BaseDto {
-    constructor(dto) {
-        this._validate(dto);
-        return Object.freeze(dto);
+    /**
+     * @typedef {Record<string, any>} DtoJson
+     * @param {DtoJson} dtoJson
+     * @return {Readonly<DtoJson>}
+     */
+    constructor(dtoJson) {
+        this._validate(dtoJson);
+
+        return Object.freeze(dtoJson);
     }
 
     /**
+     *
+     * @param {DtoJson} dtoJson
      * @private
-     * @throws {TypeError}
+     * @throws {Error}
      */
     // eslint-disable-next-line class-methods-use-this
-    _validate() {
+    _validate(dtoJson) {
         // to be implemented
     }
 }

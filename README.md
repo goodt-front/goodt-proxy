@@ -7,7 +7,7 @@
 ## Термины
 - **component** — `Vue.js` компонент, выполняющий требуемую бизнес логику.
 - **widget** — совокупность **component** + **panel.**
-- **panel** — `Vue.js`-компонент, настраивающий с помощью ui элементов управления свойства **component**,
+- **panel** — `Vue.js` компонент, настраивающий с помощью ui элементов управления свойства **component**,
   которые описаны в дескрипторе.
   
 ## Ключевые технологии
@@ -165,6 +165,156 @@ npm-пакеты, которые используются как самим яд
 
 ```bash
 npm i --no-save @goodt/config @goodt/browserslist-config @goodt/eslint-config-base @goodt/scaffold @goodt/styleguide
+```
+
+# @goodt/common
+## BaseApiService
+API-сервис – функциональность, ответственностью которой является совершение запросов к серверному API, 
+ подготовка запросов в формате ожидаемом серверным API и обработка ответов,
+ приведение формата ответа к контрактным DTO,
+ в том числе обработка ошибок транспортного уровня, проверка валидности типа и формата данных, прав доступа клиента к ресурсам. 
+
+`BaseApiService` – Базовый класс для наследования собственным API-сервисом.
+```js
+class BaseApiService extends IService {
+    /**
+     * Make async request and returns response promise
+     */
+    request(request: IServiceRequest): Promise<IServiceResponse>;
+    /**
+     * Disposes transport-related resources
+     * (cancel requests, close connections, streams, release memory, sending abort signals and etc.)
+     */
+    dispose(): void;
+}
+```
+
+Пример
+```js
+// services/ExampleApiService.js
+import { buildDtoSafeResult } from '@/common/infra/utils';
+import { BaseApiService, createApiServiceRequest } from '@goodt/common/services/ApiService';
+import { ItemDto } from './dto';
+
+const API_ENDPOINTS_PATH = {
+    POLL_STRUCT: '/poll/:id/struct'
+};
+
+class ExampleApiService extends BaseApiService {
+    /**
+     * Получить итем по id
+     
+     * @param {number} itemId
+     * @return {Promise<SafeResult<ItemDto, ApiServiceError>>}
+     */
+    async getItemDtoById(itemId) {
+        const url = API_ENDPOINTS_PATH.POLL_STRUCT.replace(':id', String(itemId));
+        const itemDtoRequest = createApiServiceRequest(url);
+        const itemDtoJsonResult = await this.request(itemDtoRequest);
+
+      /**
+       * @member {ApiServiceError} error
+       * // error.code =
+       * // ApiServiceErrorCode.INTERNAL |      - сервер не смог обработать запрос (HTTP status code 500 для REST)
+       * // ApiServiceErrorCode.INVALID |       - сервер не смог обработать запрос из-за неверного формата или
+       * // сервер ответил, но клиент не смог обработать ответ 
+       * // ApiServiceErrorCode.FORBIDDEN |     - сервер ответил, что у нас нет прав доступа к ресурсу
+       * // ApiServiceErrorCode.NOT_FOUND |     - сервер ответил, что ресурс не найден или не существует
+       * // ApiServiceErrorCode.UNAUTHORIZED |  - сервер ответил, что мы не авторизованы для совершения запросов
+       * // ApiServiceErrorCode.UNKNOWN |       - сломалось что-то при работеклиента
+       */
+      const { isError, result: itemDtoJson, error } = itemDtoJsonResult;
+        if (isError) {
+            // прокидываем ошибочный ответ дальше
+            return itemDtoJsonResult;
+        }
+        // пытаемся создать Dto-инстанс класса `BaseDto` для полученного json
+        // в случае ошибки проверки типа и формата json, можем получить 
+        // ApiServiceError с кодом ApiServiceErrorCode.VALIDATION.
+        const itemDtoResult = buildDtoSafeResult(ItemDto, itemDtoJson);
+      
+        return itemDtoResult;
+    }
+}
+
+export { ExampleApiService, create };
+```
+
+```js
+// ElemWidget.vue
+import { Elem } from '@goodt/core';
+import { useTransport, HttpAuthTransportSymbol } from '@goodt/core/mixins';
+import { PresentableError } from '@goodt/common/errors';
+import { ExampleApiService } from './services/ExampleApiService';
+import { descriptor } from './descriptor';
+
+/**
+ * useTransport example
+ */
+const { mixin: TransportMixin } = useTransport(HttpAuthTransportSymbol, {
+    options(vm) {
+        return {
+            baseURL: vm.props.apiURL
+        };
+    }
+});
+
+/**
+ * @param {ApiServiceError} error
+ */
+/**
+ * @param {ApiServiceError} error
+ * @return {PresentableErroe}
+ */
+const processApiServiceError = (error) => {
+    if (error.code === error.constructor.Code.NOT_FOUND) {
+        return new PresentableError('Ресурс не найден');
+    }
+
+    if (error.code === error.constructor.Code.FORBIDDEN) {
+        return new PresentableError('У вас нет прав доступа к этому ресурсу');
+    }
+
+    return new PresentableError('Неизвестная ошибка');
+};
+
+// ...
+/**
+ * @type {IComponentOptions}
+ */
+export default {
+    // ...
+    mixins: [TransportMixin],
+    data() {
+        return {
+            descriptor: descriptor(),
+            apiResponseResult: null
+        };
+    },
+    created() {
+        this.itemApiService = new ExampleApiService({ transport: this.$transport });
+    },
+    /**
+     * @this {IInstance}
+     */
+    mounted() {
+        this.doApiRequest();
+    },
+    methods: {
+        // ...
+        async doApiRequest() {
+            const itemDtoSafeResult = await this.itemApiService.getItemDtoById(1);
+            const { isError, error, result: itemDto } = itemDtoSafeResult;
+            if (isError) {
+                const presentableError = processApiServiceError(error);
+                this.apiResponseResult = fail(presentableError);
+                return;
+            }
+
+            this.apiResponseResult = pollInfo;
+        }
+    }
+};
 ```
 
 ### См. также

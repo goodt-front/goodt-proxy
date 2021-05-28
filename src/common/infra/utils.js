@@ -1,6 +1,12 @@
 import { success, fail } from '@/common/utils/either';
 import { throwUncaughtError } from '@/common/errors/utils';
 
+/**
+ *
+ * @param {ObjectConstructor} DtoConstructor
+ * @param {DtoJson} dtoJson
+ * @return {SafeResult}
+ */
 export const buildDtoSafeResult = (DtoConstructor, dtoJson) => {
     try {
         const dto = new DtoConstructor(dtoJson);

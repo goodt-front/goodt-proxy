@@ -1,4 +1,4 @@
-export type IApiServiceRequestType = string;
+import { IServiceRequest } from './BaseApiService';
 
 export type ApiServiceRequestTypeEnum = Readonly<{
     READ: 'read';
@@ -7,9 +7,6 @@ export type ApiServiceRequestTypeEnum = Readonly<{
     UPDATE: 'update';
 }>;
 
-export interface IApiServiceRequest {
-    operation: string;
-    payload?: Record<string, any> | {};
+export interface IApiServiceRequest extends IServiceRequest {
     type?: ApiServiceRequestTypeEnum[keyof ApiServiceRequestTypeEnum];
-    options?: Record<string, any> | {};
 }

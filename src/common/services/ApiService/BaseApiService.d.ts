@@ -7,9 +7,8 @@ export interface IServiceResponse extends ISafeResult {}
 
 export interface IServiceRequest {
     operation: string;
-    payload: string;
-    type: string;
-    options: ITransportOptions;
+    payload?: Record<string, any>;
+    options?: ITransportOptions;
 }
 
 export interface IService {

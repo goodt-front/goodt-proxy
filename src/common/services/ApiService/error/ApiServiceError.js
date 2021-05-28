@@ -21,6 +21,7 @@ export const ApiServiceErrorCode = Object.freeze({
  */
 class ApiServiceError extends BaseError {
     static Code = ApiServiceErrorCode;
+
     /**
      * @private
      * @member {number|string}

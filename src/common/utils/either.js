@@ -36,6 +36,10 @@ export class SafeResult {
         return this._type === ResultType.FAIL;
     }
 
+    get isError() {
+        return this.isFail;
+    }
+
     get isSuccess() {
         return this._type === ResultType.SUCCESS;
     }

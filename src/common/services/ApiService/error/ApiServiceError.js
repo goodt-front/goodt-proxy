@@ -8,6 +8,7 @@ import { BaseError } from '@/common/errors';
  */
 export const ApiServiceErrorCode = Object.freeze({
     INTERNAL: 'internal',
+    VALIDATION: 'validation',
     FORBIDDEN: 'forbidden',
     NOT_FOUND: 'not_found',
     UNAUTHORIZED: 'unauthorized',
@@ -19,6 +20,7 @@ export const ApiServiceErrorCode = Object.freeze({
  * @class ApiServiceError
  */
 class ApiServiceError extends BaseError {
+    static Code = ApiServiceErrorCode;
     /**
      * @private
      * @member {number|string}

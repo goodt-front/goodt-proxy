@@ -11,7 +11,7 @@ class BaseApiService {
      * @private
      * @type {import('./ApiHttpClient').ApiHttpClient}
      */
-    _client = null;
+    _client;
 
     /**
      *

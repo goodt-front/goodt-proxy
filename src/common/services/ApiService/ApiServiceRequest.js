@@ -1,32 +1,52 @@
 /**
- *
+ * @type {import('./ApiServiceRequest').ApiServiceRequestTypeEnum}
+ */
+export const ApiServiceRequestType = Object.freeze({
+    CREATE: 'create',
+    READ: 'read',
+    UPDATE: 'update',
+    DELETE: 'delete'
+});
+
+/**
+ * @typedef {import('./ApiServiceRequest').IApiServiceRequest} IApiServiceRequest
+ * @type {IApiServiceRequest}
  */
 class ApiServiceRequest {
     /**
      * Название операции
      *
      * @private
-     * @member {string} operation
+     * @type  {IApiServiceRequest.operation}
      */
     _operation;
 
     /**
-     * Данные для
+     * Данные для операции
      *
      * @private
-     * @member {object} payload
+     * @member {IApiServiceRequest.payload} payload
      */
     _payload;
 
     /**
+     * Тип операции
      *
+     * @private
+     * @member {IApiServiceRequest.type} type
+     */
+    _type;
+
+    /**
+     * @private
+     * @member {IApiServiceRequest.options} type
      */
     _options = {};
 
     /**
      * @public
      * @readonly
-     * @member {string} operation
+     * @type {IApiServiceRequest.operation}
      */
     get operation() {
         return this._operation;
@@ -35,7 +55,7 @@ class ApiServiceRequest {
     /**
      * @public
      * @readonly
-     * @member {object} payload
+     * @type {IApiServiceRequest.payload}
      */
     get payload() {
         return this._payload;
@@ -44,23 +64,34 @@ class ApiServiceRequest {
     /**
      * @public
      * @readonly
-     * @member {object} payload
+     * @type {IApiServiceRequest.options}
      */
     get options() {
         return this._options;
     }
 
     /**
+     * @public
+     * @readonly
+     * @type {IApiServiceRequest.type}
+     */
+    get type() {
+        return this._type;
+    }
+
+    /**
      * Request constructor.
      *
-     * @param {string} operation
-     * @param {object} [payload]
-     * @param {{ method: string }} [options={}]
-     * @constructs FrontendApiRequest
+     * @param {IApiServiceRequest.operation} operation
+     * @param {IApiServiceRequest.payload} payload?
+     * @param {IApiServiceRequest.type} [type=ApiServiceRequestTypeEnum.READ]
+     * @param {IApiServiceRequest.options} [options={}]
+     * @constructs ApiServiceRequest
      */
-    constructor(operation, payload, options = {}) {
+    constructor(operation, payload, type, options = {}) {
         this._operation = operation;
         this._payload = payload;
+        this._type = type ?? ApiServiceRequestType.READ;
         this._options = options;
     }
 }

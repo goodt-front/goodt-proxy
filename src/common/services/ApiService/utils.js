@@ -1,5 +1,10 @@
-import { ApiClientRequestCancel, ApiServiceError, ApiServiceErrorCode } from './error';
-import { ApiHttpClientError } from './error/ApiClientError';
+import { throwUncaughtError } from '@/common/errors/utils';
+import {
+    ApiHttpClientError,
+    ApiClientRequestCancel,
+    ApiServiceError,
+    ApiServiceErrorCode
+} from './error';
 
 /**
  *
@@ -51,9 +56,7 @@ export const processError = (error) => {
     /**
      * async uncaught error throw for top level error tracking service
      */
-    setTimeout(() => {
-        throw error;
-    });
+    throwUncaughtError(error, processError);
 
     return error;
 };

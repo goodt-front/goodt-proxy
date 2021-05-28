@@ -16,7 +16,8 @@ export const processTransportError = (error, transport) => {
     const { message } = error;
     // If non-transport error
     if (transport.constructor.isTransportError(error) === false) {
-        return new ApiHttpClientError(message, { reason: error });
+        // return new ApiHttpClientError(message, { reason: error });
+        return error;
     }
 
     // mute cancel error

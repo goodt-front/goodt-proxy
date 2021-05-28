@@ -19,7 +19,7 @@ const identity = (x) => x;
  * @return {import("vue/types/umd").VNode}
  */
 
-const createRenderThunk = (h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}) => {
+const createRenderFactory = (h, elemInfo, vnodeData = {}, isEditorMode = false, slotData = {}) => {
     // we are mapping our nodes array to a hash keyed by 'slot'
     /** @type {Object.<string, ElemInfo[]>} */
     const slots = elemInfo.children.reduce((slotsAcc, child) => {
@@ -34,7 +34,7 @@ const createRenderThunk = (h, elemInfo, vnodeData = {}, isEditorMode = false, sl
     /** @type {Record<string, function (props: object): import("vue/types/vue").VNode[]>} */
     const scopedSlots = Object.entries(slots).reduce((accSlots, [slotName, slotElemInfos]) => {
         const slotElemRenderFns = slotElemInfos.map((slotElemInfo) =>
-            createRenderThunk(h, slotElemInfo, vnodeData, isEditorMode)
+            createRenderFactory(h, slotElemInfo, vnodeData, isEditorMode)
         );
 
         const scopedSlot = (props) => {
@@ -71,6 +71,6 @@ const createRenderThunk = (h, elemInfo, vnodeData = {}, isEditorMode = false, sl
     return ({ buildData = identity } = {}) => h(elemInfo.component, buildData(data));
 };
 
-const render = (...args) => createRenderThunk(...args).call();
+const render = (...args) => createRenderFactory(...args).call();
 
-export { createRenderThunk, render };
+export { createRenderFactory, render };

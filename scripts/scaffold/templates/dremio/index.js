@@ -24,7 +24,16 @@ module.exports = class extends Template {
         const panelDT = this.compileTpl(`${tplPath}/panel.d.ts`, tplBinds);
         const panelsIndex = this.compileTpl(`${tplPath}/panels.index.js`, tplBinds);
         const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
+        const readmeMd = this.compileTpl(`${tplPath}/README.MD`, tplBinds);
 
-        return this.createWidget({ elem, panel, elemDT, panelDT, panelsIndex, descriptor });
+        return this.createWidget({
+            elem,
+            panel,
+            elemDT,
+            panelDT,
+            panelsIndex,
+            descriptor,
+            readmeMd
+        });
     }
 };

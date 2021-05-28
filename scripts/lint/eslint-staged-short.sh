@@ -1,6 +1,6 @@
 #!/bin/bash
 # we only want to lint the staged
-for file in $(git diff --cached --name-only | grep -E '\.(js|jsx|vue)$')
+for file in $(git diff --cached --name-only | grep -E 'src/.+\.(js|jsx|vue)$')
 do
   git show ":$file" | npx eslint --format node_modules/eslint-formatter-markdown/markdown.js --stdin --stdin-filename "$file" -o ".todo/${file}.lint.md"
 done

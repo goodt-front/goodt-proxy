@@ -48,7 +48,7 @@ export function render(
     slotData?: object
 ): VNode;
 
-export function createRenderThunk(
+export function createRenderFactory(
     h: CreateElement,
     elemInfo: ElemInfo,
     vnodeData?: VNodeData,

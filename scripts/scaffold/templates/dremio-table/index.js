@@ -32,8 +32,9 @@ module.exports = class extends Template {
         const panelDT = this.compileTpl(`${tplPath}/panel.d.ts`, tplBinds);
         const panelsIndex = this.compileTpl(`${tplPath}/panels/index.js`, tplBinds);
         const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
+        const readmeMd = this.compileTpl(`${tplPath}/README.MD`, tplBinds);
 
-        this.createWidget({ elem, panel, elemDT, panelDT, panelsIndex, descriptor });
+        this.createWidget({ elem, panel, elemDT, panelDT, panelsIndex, descriptor, readmeMd });
         // render
         const render = this.compileTpl(`${tplPath}/renders/render.vue`, tplBinds);
         this.createWidgetDir('renders');

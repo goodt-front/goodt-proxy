@@ -1,12 +1,7 @@
 {
   "name": "@goodt/dev-deps",
   "version": "1.0.0",
-  "scripts": {
-    "prepare": "npx patch-package --patch-dir=.patches"
-  },
   "dependencies": {
-    "@vue/cli-plugin-unit-jest": "^4.5.13",
-    "webpack": "^4.46.0",
     "prettier": "^2.3.0"
   }
 }

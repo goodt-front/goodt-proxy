@@ -42,7 +42,7 @@
 import Vue from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
 import { ElemEvent, PanelEvent, Components } from '../index';
-import { StylePanel, VariablePanel } from '../panels/index';
+import { StylePanelAsync, VariablePanelAsync } from '../panels/index';
 import WidgetRender from './WidgetRender.vue';
 
 let ID = 0;
@@ -169,21 +169,15 @@ export default {
          */
         onElemMounted(ci) {
             this.elemInstance = ci;
-            const panels = ci
-                .getPanels()
-                .map((panel) => (typeof panel === 'function' ? panel() : panel));
+            const panels = [...ci.getPanels(), StylePanelAsync, VariablePanelAsync].map((panel) =>
+                typeof panel === 'function' ? panel() : panel
+            );
             Promise.all(panels).then((m) => {
                 // widget panels
-                const panelsWidget = m.map((mi) => ({
+                this.panels = m.map((mi) => ({
                     def: mi.default,
                     meta: Vue.extend(mi.default).options.data().$meta
                 }));
-                // default panels
-                const panelsDefault = [StylePanel, VariablePanel].map((def) => ({
-                    def,
-                    meta: Vue.extend(def).options.data().$meta
-                }));
-                this.panels = [...panelsWidget, ...panelsDefault];
             });
         },
         /**

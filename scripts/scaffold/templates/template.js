@@ -56,7 +56,7 @@ module.exports = class {
      * @param {object} tpl  compiled vue template files
      * @return {boolean|Error}  true if success; else error
      */
-    createWidget({ elem, panel, panelDT, elemDT, descriptor, panelsIndex }) {
+    createWidget({ elem, panel, panelDT, elemDT, descriptor, panelsIndex, readmeMd }) {
         this.createWidgetDir();
         const { path: panelPath, name: panelName } = this.config.panel;
         ['components', panelPath, `${panelPath}/components`].forEach((dir) =>
@@ -76,6 +76,9 @@ module.exports = class {
         }
         if (descriptor) {
             this.createWidgetFile(`descriptor.js`, descriptor);
+        }
+        if (readmeMd) {
+            this.createWidgetFile(`README.MD`, readmeMd);
         }
         return true;
     }

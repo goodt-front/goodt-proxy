@@ -14,12 +14,7 @@
  */
 import { Elem } from '[[{core}]]';
 [[#hasTransport]]
-import {
-    useTransport,
-    [[#http]]HttpTransportSymbol[[/http]][[#httpAuth]]HttpAuthTransportSymbol[[/httpAuth]] as TransportSymbol
-} from '[[{coreMixins}]]';
-import { useApiService } from '[[{commonMixins}]]';
-import { create as createApiService } from './api/[[{name}]]Service';
+import { useApiService } from '[[{coreMixins}]]';
 [[/hasTransport]]
 import { descriptor, /* Vars */ } from './descriptor';
 import { [[{panelName}]]Async } from '[[{panelPath}]]';
@@ -30,10 +25,7 @@ import { [[{panelName}]]Async } from '[[{panelPath}]]';
  * Creates transport mixin, that adds $transport (http, httpAuth) instance
  * @member {import('[[{coreMixins}]]/useTransport').ITransportMixin} ServiceMixin
  */
-const { mixin: TransportMixin } = useTransport(TransportSymbol, {
-    /**
-     * @type {import('[[{coreMixins}]]/useTransport').TransportOptions}
-     */
+const { mixin: ApiServiceMixin } = useApiService({
     options: {
         baseURL: 'http://localhost:3000'
     },
@@ -41,15 +33,10 @@ const { mixin: TransportMixin } = useTransport(TransportSymbol, {
     // @todo: DELETE UNUSED
     // or using component's instance context
     options: (vm) => ({
-        baseURL: vm.someUrlProp
+        apiBaseURL: vm.someUrlProp
     })
     */
 });
-/**
- * useApiService
- */
-const { mixin: ServiceMixin } = useApiService(createApiService);
-
 [[/hasTransport]]
 
 /**
@@ -57,9 +44,6 @@ const { mixin: ServiceMixin } = useApiService(createApiService);
  */
 export default ({
     extends: Elem,
-    [[#hasTransport]]
-    mixins: [ TransportMixin, ServiceMixin ],
-    [[/hasTransport]]
     data: () => ({
         descriptor: descriptor()
     }),
@@ -111,13 +95,7 @@ export default ({
         sampleRouteNavigateMethod() {
            // ...
            this.$routeNavigate({ path, query });
-        },
-        [[#hasTransport]]
-        sampleTransportUseMethod() {
-           // ...
-           this.$transport.request(requestOptions);
-        },
-        [[/hasTransport]]
+        }
         */
     }
 });

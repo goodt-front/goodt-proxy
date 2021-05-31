@@ -7,6 +7,8 @@ export type ApiServiceRequestTypeEnum = Readonly<{
     UPDATE: 'update';
 }>;
 
+export const ApiServiceRequestType: ApiServiceRequestTypeEnum;
+
 export interface IApiServiceRequest extends IServiceRequest {
     type?: ApiServiceRequestTypeEnum[keyof ApiServiceRequestTypeEnum];
 }

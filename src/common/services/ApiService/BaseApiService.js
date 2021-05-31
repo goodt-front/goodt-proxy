@@ -1,7 +1,13 @@
 import { success, fail } from '@/common/utils/either';
-import { create as createApiHttpClient } from './ApiHttpClient';
-import { processError } from './utils';
+import './typedefs';
+import {
+    ApiClientRequestCancel,
+    ApiHttpClientError,
+    ApiHttpClientErrorCode,
+    create as createApiHttpClient
+} from './ApiHttpClient';
 import { ApiServiceError, ApiServiceErrorCode } from './error';
+import { getMethodByType } from './utils';
 
 /**
  * @type {import('./BaseApiService').IService}
@@ -14,25 +20,74 @@ class BaseApiService {
     _client;
 
     /**
-     *
-     * @param client
-     * @param transport
+     * @private
+     * @type {IServiceOptions}
+     */
+    _options = {};
+
+    /**
+     * @param {import('./ApiHttpClient').ApiHttpClient} client?
+     * @param {ITransport} transport?
+     * @param {IServiceOptions} [options={}]
      * @throws ApiServiceError
      */
-    constructor({ client, transport }) {
-        if (client) {
-            this._client = client;
-            return;
+    constructor({ client, transport, options }) {
+        if (options) {
+            this._options = options;
         }
-        if (transport) {
-            this._client = createApiHttpClient(transport);
+
+        if (client) {
+            const { apiBaseURL } = this._options;
+            if (apiBaseURL) {
+                // eslint-disable-next-line no-param-reassign
+                client.baseURL = apiBaseURL;
+            }
+
+            this._options.apiBaseURL = client.baseURL;
+            this.setClient(client);
             return;
         }
 
-        throw new ApiServiceError(
-            'Neither `client` nor `transport` was specified in constructor options',
-            { code: ApiServiceErrorCode.INTERNAL }
-        );
+        if (transport) {
+            const newClient = createApiHttpClient(transport);
+            const { apiBaseURL } = this._options;
+            if (apiBaseURL) {
+                newClient.baseURL = apiBaseURL;
+            }
+
+            this._options.apiBaseURL = newClient.baseURL;
+            this.setClient(newClient);
+        }
+    }
+
+    /**
+     * @return {string}
+     */
+    get apiBaseURL() {
+        return this._options.apiBaseURL;
+    }
+
+    /**
+     *
+     * @param {string} url
+     */
+    set apiBaseURL(url) {
+        this._options.apiBaseURL = url;
+        this._client.baseURL = url;
+    }
+
+    /**
+     * @param {import('./ApiHttpClient').ApiHttpClient} client
+     */
+    setClient(client) {
+        this.client = client;
+    }
+
+    /**
+     * @param options
+     */
+    setOptions(options) {
+        this._options = options;
     }
 
     /**
@@ -41,21 +96,108 @@ class BaseApiService {
      * @return {Promise<SafeResult>}
      */
     async request(request) {
+        if (!this._client) {
+            throw new ApiServiceError('Server API `client` was not set', {
+                code: ApiServiceErrorCode.INTERNAL
+            });
+        }
+
         try {
-            const result = await this._client.request(request);
+            const apiClientRequest = this._buildApiClientRequest(request);
+            const result = await this._client.request(apiClientRequest);
             return success(result);
         } catch (error) {
-            const processedError = processError(error);
+            /**
+             * async uncaught error throw for top level error tracking service
+             */
+            // throwUncaughtError(error);
+            const processedError = this._processError(error);
             processedError.captureStackTrace(this.request);
+
             return fail(processedError);
         }
     }
 
     /**
-     *
+     * Освобождает ресурсы, используемые сервисом
      */
     dispose() {
         this._client.dispose();
+    }
+
+    /**
+     * Билдит конфиг реквеста для клиента
+     *
+     * @param {IApiServiceRequest} request
+     * @return {import('@goodt/core/net').ITransportRequest} ITransportRequest
+     */
+    // eslint-disable-next-line class-methods-use-this
+    _buildApiClientRequest(request) {
+        const { operation: url, payload: params, type, options } = request;
+
+        if (!url) {
+            throw new ApiHttpClientError('Empty url or pathname');
+        }
+
+        const method = getMethodByType(type);
+
+        return {
+            url,
+            method,
+            ...(params && { params }),
+            ...options
+        };
+    }
+
+    /**
+     *
+     * @param {Error} error
+     * @return {ApiServiceError|Error|null}
+     */
+    _processError(error) {
+        if (error instanceof ApiHttpClientError) {
+            const apiServiceError = this._buildApiServiceError(error);
+            return apiServiceError;
+        }
+        if (error instanceof ApiClientRequestCancel) {
+            return null;
+        }
+
+        return error;
+    }
+
+    /**
+     *
+     * @param {Error} error
+     * @return {ApiServiceError}
+     */
+    // eslint-disable-next-line class-methods-use-this
+    _buildApiServiceError(error) {
+        const { message, code, data, reason } = error;
+
+        const apiServiceErrorCode = (() => {
+            switch (code) {
+                case ApiHttpClientErrorCode.UNAUTHORIZED:
+                    return ApiServiceErrorCode.UNAUTHORIZED;
+                case ApiHttpClientErrorCode.NOT_FOUND:
+                    return ApiServiceErrorCode.NOT_FOUND;
+                case ApiHttpClientErrorCode.FORBIDDEN:
+                    return ApiServiceErrorCode.FORBIDDEN;
+                case ApiHttpClientErrorCode.BAD_REQUEST:
+                case ApiHttpClientErrorCode.INTERNAL_SERVER_ERROR:
+                    return ApiServiceErrorCode.INTERNAL;
+                default:
+                    return ApiServiceErrorCode.UNKNOWN;
+            }
+        })();
+
+        const apiServiceError = new ApiServiceError(message, {
+            code: apiServiceErrorCode,
+            data,
+            reason
+        });
+
+        return apiServiceError;
     }
 }
 

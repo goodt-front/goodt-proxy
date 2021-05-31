@@ -1,5 +1,4 @@
 const PUBLIC_ACCESSOR_NAME = '$apiService';
-const PRIVATE_ACCESSOR_NAME = Symbol('$apiService');
 /**
  * @typedef {import('@goodt/core/mixins').ITransportMixinInstance} ITransportMixinInstance
  */
@@ -7,34 +6,36 @@ const PRIVATE_ACCESSOR_NAME = Symbol('$apiService');
 /**
  * Creates Vue Mixin with specified service factory or identifier and service-related behaviour
  */
-export const useApiService = (service, useOptions = {}) => {
-    const { name: $apiService = PUBLIC_ACCESSOR_NAME } = useOptions;
+export const useApiService = (serviceFactory, useOptions = {}) => {
+    const { name: $apiService = PUBLIC_ACCESSOR_NAME, apiBaseURL } = useOptions;
 
     /**
      * @return {IService}
      */
-    const createServiceInstance = (vm) => service({ transport: vm.$transport });
+    const createServiceInstance = (vm) => {
+        return serviceFactory({
+            options: { apiBaseURL: apiBaseURL.call(vm) }
+        });
+    };
 
     /**
      */
     const VueMixinComponentOptions = {
-        computed: {
-            /**
-             * @this {IServiceMixinInstance}
-             */
-            [$apiService]() {
-                if (!this[PRIVATE_ACCESSOR_NAME]) {
-                    this[PRIVATE_ACCESSOR_NAME] = createServiceInstance(this);
-                }
-                return this[PRIVATE_ACCESSOR_NAME];
-            }
+        created() {
+            this[$apiService] = createServiceInstance(this);
+            this.$watch(apiBaseURL.bind(this), (baseURL) => {
+                this[$apiService].apiBaseURL = baseURL;
+            });
         },
         /**
          * @this {IServiceMixinInstance}
          */
         destroyed() {
-            if (this[PRIVATE_ACCESSOR_NAME]) {
-                this[PRIVATE_ACCESSOR_NAME].dispose();
+            this[$apiService].dispose();
+        },
+        methods: {
+            [`${$apiService}SetOptions`](options) {
+                this[$apiService].setOptions(options);
             }
         }
     };

@@ -1,62 +1,15 @@
-import { throwUncaughtError } from '@/common/errors/utils';
-import {
-    ApiHttpClientError,
-    ApiClientRequestCancel,
-    ApiServiceError,
-    ApiServiceErrorCode
-} from './error';
+import { ApiServiceRequestType } from './ApiServiceRequest';
+import { ApiClientMethod } from './ApiHttpClient';
+
+const Type2MethodMap = {
+    [ApiServiceRequestType.READ]: ApiClientMethod.GET,
+    [ApiServiceRequestType.CREATE]: ApiClientMethod.POST,
+    [ApiServiceRequestType.UPDATE]: ApiClientMethod.POST,
+    [ApiServiceRequestType.DELETE]: ApiClientMethod.DELETE
+};
 
 /**
  *
- * @param {Error} error
- * @return {ApiServiceError}
+ * @param {string} type
  */
-const buildApiServiceError = (error) => {
-    const { message, code, data, reason } = error;
-
-    const apiServiceErrorCode = (() => {
-        if (code === 401) {
-            return ApiServiceErrorCode.UNAUTHORIZED;
-        }
-        if (code === 404) {
-            return ApiServiceErrorCode.NOT_FOUND;
-        }
-        if (code === 403) {
-            return ApiServiceErrorCode.FORBIDDEN;
-        }
-        if (code >= 400) {
-            return ApiServiceErrorCode.INTERNAL;
-        }
-
-        return ApiServiceErrorCode.UNKNOWN;
-    })();
-
-    const apiServiceError = new ApiServiceError(message, {
-        code: apiServiceErrorCode,
-        data,
-        reason
-    });
-
-    return apiServiceError;
-};
-/**
- *
- * @param {Error} error
- * @return {ApiServiceError|Error|null}
- */
-export const processError = (error) => {
-    if (error instanceof ApiHttpClientError) {
-        const apiServiceError = buildApiServiceError(error);
-        return apiServiceError;
-    }
-    if (error instanceof ApiClientRequestCancel) {
-        return null;
-    }
-
-    /**
-     * async uncaught error throw for top level error tracking service
-     */
-    throwUncaughtError(error, processError);
-
-    return error;
-};
+export const getMethodByType = (type) => Type2MethodMap[type];

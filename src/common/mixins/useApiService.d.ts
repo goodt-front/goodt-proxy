@@ -17,7 +17,8 @@ export interface IServiceMixin<T> extends VueConstructor<Vue & IServiceMixinInst
  * and returns meta object with it
  */
 export function useApiService(
-    serviceFactory: IServiceFactory
+    serviceFactory: IServiceFactory,
+    options: IServiceMixinOptions
 ): {
     mixin: IServiceMixin;
 };

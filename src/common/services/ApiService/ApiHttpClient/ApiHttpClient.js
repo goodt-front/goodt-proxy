@@ -13,11 +13,6 @@ const ApiClientMethod = Object.freeze({
  */
 class ApiHttpClient {
     /**
-     * @type {string}
-     */
-    baseURL;
-
-    /**
      * Transport client instance
      * @private
      * @member {ITransport}
@@ -30,20 +25,22 @@ class ApiHttpClient {
      */
     constructor(transport) {
         this._transport = transport;
-        this.init();
     }
 
     /**
      *
+     * @return {string}
      */
-    init() {
-        this.baseURL = this._transport.getBaseUrl();
-        this._transport.axios.interceptors.request.use(async (config) => {
-            return {
-                ...config,
-                baseURL: this.baseURL
-            };
-        });
+    get baseURL() {
+        return this._transport.baseURL;
+    }
+
+    /**
+     *
+     * @param baseURL
+     */
+    set baseURL(baseURL) {
+        this._transport.baseURL = baseURL;
     }
 
     /**

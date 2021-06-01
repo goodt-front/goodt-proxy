@@ -1,5 +1,4 @@
 import { success, fail } from '@/common/utils/either';
-import './typedefs';
 import {
     ApiClientRequestCancel,
     ApiHttpClientError,
@@ -7,7 +6,7 @@ import {
     create as createApiHttpClient
 } from './ApiHttpClient';
 import { ApiServiceError, ApiServiceErrorCode } from './error';
-import { getMethodByType } from './utils';
+import './typedefs';
 
 /**
  * @type {import('./BaseApiService').IApiService}
@@ -64,7 +63,7 @@ class BaseApiService {
      * @return {string}
      */
     get apiBaseURL() {
-        return this._options.apiBaseURL;
+        return this._client?.baseURL ?? null;
     }
 
     /**
@@ -72,8 +71,9 @@ class BaseApiService {
      * @param {string} url
      */
     set apiBaseURL(url) {
-        this._options.apiBaseURL = url;
-        this._client.baseURL = url;
+        if (this._client) {
+            this._client.baseURL = url;
+        }
     }
 
     /**
@@ -97,7 +97,7 @@ class BaseApiService {
      */
     async request(request) {
         if (!this._client) {
-            throw new ApiServiceError('Server API `client` was not set', {
+            throw new ApiServiceError('Server API `client` did not set', {
                 code: ApiServiceErrorCode.INTERNAL
             });
         }
@@ -129,24 +129,11 @@ class BaseApiService {
      * Билдит конфиг реквеста для клиента
      *
      * @param {IApiServiceRequest} request
-     * @return {import('@goodt/core/net').ITransportRequest} ITransportRequest
+     * @return {import('./ApiHttpClient').IApiClientRequest} IApiClientRequest
      */
     // eslint-disable-next-line class-methods-use-this
     _buildApiClientRequest(request) {
-        const { operation: url, payload: params, type, options } = request;
-
-        if (!url) {
-            throw new ApiHttpClientError('Empty url or pathname');
-        }
-
-        const method = getMethodByType(type);
-
-        return {
-            url,
-            method,
-            ...(params && { params }),
-            ...options
-        };
+        return request;
     }
 
     /**

@@ -133,12 +133,28 @@ class Http {
     }
 
     /**
+     *
+     * @return {string}
+     */
+    get baseURL() {
+        return this.axios.defaults.baseURL;
+    }
+
+    /**
+     *
+     * @param baseURL
+     */
+    set baseURL(baseURL) {
+        this.axios.defaults.baseURL = baseURL;
+    }
+
+    /**
      * Returns the base url
      *
      * @return {string}
      */
     getBaseUrl() {
-        return this.options.baseURL;
+        return this.baseURL;
     }
 
     /**

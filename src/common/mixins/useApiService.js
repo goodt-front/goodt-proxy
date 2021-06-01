@@ -34,7 +34,7 @@ export const useApiService = (serviceFactory, useOptions = {}) => {
     const VueMixinComponentOptions = {
         created() {
             this[$apiService] = createServiceInstance(this);
-            if (apiBaseURL) {
+            if (this.isEditorMode && apiBaseURL) {
                 this.$watch(getApiBaseURLFunction(this), (baseURL) => {
                     this[$apiService].apiBaseURL = baseURL;
                 });
@@ -45,11 +45,6 @@ export const useApiService = (serviceFactory, useOptions = {}) => {
          */
         destroyed() {
             this[$apiService].dispose();
-        },
-        methods: {
-            [`${$apiService}SetOptions`](options) {
-                this[$apiService].setOptions(options);
-            }
         }
     };
 

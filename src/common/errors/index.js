@@ -1,4 +1,4 @@
 export { BaseError } from './BaseError';
-export { InfrastructureException } from './InfrastructureException';
+export { InfrastructureError } from './InfrastructureError';
 export { UncaughtTrackableError } from './UncaughtTrackableError';
 export { PresentableError } from './PresentableError';

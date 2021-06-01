@@ -1,26 +1,68 @@
-import { SafeResult } from '@goodt/common/utils';
-import { ITransportOptions } from '@goodt/core/net';
+/**
+ * @type {import('./BaseApiService').IApiService}
+ */
+import {
+    IApiService,
+    IApiServiceConstructorOptions,
+    IApiServiceOptions,
+    IApiServiceRequest
+} from './types';
+import { ApiHttpClient } from './ApiHttpClient';
+import { ApiServiceError } from './error';
 
-interface ISafeResult extends InstanceType<typeof SafeResult> {}
-
-export interface IServiceResponse extends ISafeResult {}
-
-export interface IServiceRequest {
-    operation: string;
-    payload?: Record<string, any>;
-    options?: ITransportOptions;
-}
-
-export interface IService {
+export class BaseApiService implements IApiService {
     /**
-     * Make async request and returns response promise
+     * @throws ApiServiceError
      */
-    request(request: IServiceRequest): Promise<IServiceResponse>;
+    constructor({ client, transport, options }: IApiServiceConstructorOptions);
     /**
-     * Disposes transport-related resources
-     * (cancel requests, close connections, streams, release memory, sending abort signals and etc.)
+     * @private
+     */
+    private _client: ApiHttpClient;
+    /**
+     * @private
+     */
+    private _options: IApiServiceOptions;
+    /**
+     *
+     * @param {string} url
+     */
+    apiBaseURL: string | undefined;
+    /**
+     * @param {import('./ApiHttpClient').ApiHttpClient} client
+     */
+    setClient(client: ApiHttpClient): void;
+    /**
+     * @param {IApiServiceOptions} options
+     */
+    setOptions(options: IApiServiceOptions): void;
+    /**
+     *
+     * @param {import('./ApiServiceRequest')} request
+     * @return {Promise<SafeResult>}
+     */
+    request(request: IApiServiceRequest): Promise<any>;
+    /**
+     * Освобождает ресурсы, используемые сервисом
      */
     dispose(): void;
+    /**
+     * Билдит конфиг реквеста для клиента
+     *
+     * @param {IApiServiceRequest} request
+     * @return {import('@goodt/core/net').ITransportRequest} ITransportRequest
+     */
+    _buildApiClientRequest(request: IApiServiceRequest): ITransportRequest;
+    /**
+     *
+     * @param {Error} error
+     * @return {ApiServiceError|Error|null}
+     */
+    _processError(error: Error): ApiServiceError | Error | null;
+    /**
+     *
+     * @param {Error} error
+     * @return {ApiServiceError}
+     */
+    _buildApiServiceError(error: Error): ApiServiceError;
 }
-
-export const BaseApiService: IService;

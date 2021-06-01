@@ -7,4 +7,4 @@ export const HttpAuthTransportSymbol: symbol;
  */
 export const TransportFactoryMap: Map<symbol, Function>;
 
-export function createTransport(transportId: symbol, options: Function | Record<string, any>): any;
+export function createTransport(transportId: symbol, options?: Function | Record<string, any>): any;

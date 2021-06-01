@@ -1,6 +1,7 @@
 import { buildDtoSafeResult } from '@/common/infra/utils';
 import { BaseApiService, createApiServiceRequest } from '@goodt/common/services/ApiService';
 import { PollInfoDto } from './dtos';
+import { createTransport, HttpAuthTransportSymbol } from '@goodt/core/net';
 
 const API_ENDPOINTS_PATH = {
     POLL_STRUCT: '/poll/:id/struct'
@@ -21,6 +22,7 @@ class ExampleApiService extends BaseApiService {
         if (isFail) {
             // some extra logic for error service specific transform
             console.error(error);
+            return responseResult;
         }
 
         const pollInfoDtoSafeResult = buildDtoSafeResult(PollInfoDto, pollInfoDtoJson);
@@ -28,6 +30,11 @@ class ExampleApiService extends BaseApiService {
     }
 }
 
-const create = (...args) => new ExampleApiService(...args);
+const create = ({ options }) => {
+    const transport = createTransport(HttpAuthTransportSymbol);
+    const apiService = new ExampleApiService({ transport, options });
+
+    return apiService;
+};
 
 export { ExampleApiService, create };

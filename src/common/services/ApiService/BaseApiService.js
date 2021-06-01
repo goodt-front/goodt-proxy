@@ -10,7 +10,7 @@ import { ApiServiceError, ApiServiceErrorCode } from './error';
 import { getMethodByType } from './utils';
 
 /**
- * @type {import('./BaseApiService').IService}
+ * @type {import('./BaseApiService').IApiService}
  */
 class BaseApiService {
     /**
@@ -21,14 +21,14 @@ class BaseApiService {
 
     /**
      * @private
-     * @type {IServiceOptions}
+     * @type {IApiServiceOptions}
      */
     _options = {};
 
     /**
      * @param {import('./ApiHttpClient').ApiHttpClient} client?
      * @param {ITransport} transport?
-     * @param {IServiceOptions} [options={}]
+     * @param {IApiServiceOptions} [options={}]
      * @throws ApiServiceError
      */
     constructor({ client, transport, options }) {
@@ -80,7 +80,7 @@ class BaseApiService {
      * @param {import('./ApiHttpClient').ApiHttpClient} client
      */
     setClient(client) {
-        this.client = client;
+        this._client = client;
     }
 
     /**

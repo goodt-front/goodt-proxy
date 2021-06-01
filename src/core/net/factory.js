@@ -32,11 +32,11 @@ TransportFactoryMap.set(HttpAuthTransportSymbol, createHttpAuth);
 
 /**
  * @param {symbol} transportId
- * @param {Function|Record<string, any>} options
+ * @param {Function|Record<string, any>} [options={}]
  * @throws {TransportFactoryError}
  * @return {ITransport}
  */
-export const createTransport = (transportId, options) => {
+export const createTransport = (transportId, options = {}) => {
     const transportFactory = TransportFactoryMap.get(transportId);
     if (!createTransport) {
         throw new TransportFactoryError(

@@ -25,7 +25,7 @@ class ApiHttpClient {
     _transport;
 
     /**
-     * @param {ITransport} [transport]
+     * @param {ITransport} transport
      * @constructs ApiHttpClient
      */
     constructor(transport) {

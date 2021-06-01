@@ -1,4 +1,4 @@
-import { IServiceRequest } from './BaseApiService';
+import { IApiServiceRequest } from './BaseApiService';
 
 export type ApiServiceRequestTypeEnum = Readonly<{
     READ: 'read';
@@ -9,6 +9,6 @@ export type ApiServiceRequestTypeEnum = Readonly<{
 
 export const ApiServiceRequestType: ApiServiceRequestTypeEnum;
 
-export interface IApiServiceRequest extends IServiceRequest {
+export interface IApiServiceRequest extends IApiServiceRequest {
     type?: ApiServiceRequestTypeEnum[keyof ApiServiceRequestTypeEnum];
 }

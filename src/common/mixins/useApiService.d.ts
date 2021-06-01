@@ -1,24 +1,29 @@
-import { IService } from '@goodt/common/services';
+import { IApiService } from '@goodt/common/services';
 import { VueConstructor } from 'vue';
 
-interface IServiceFactory {
-    (options: any): IService;
+interface IApiServiceFactory {
+    (options: any): IApiService;
 }
 
 interface ServiceMixinComputed<T> {
-    $apiService: IService & T;
+    $apiService: IApiService & T;
 }
 
-export interface IServiceMixinInstance<T> extends ServiceMixinComputed<T> {}
-export interface IServiceMixin<T> extends VueConstructor<Vue & IServiceMixinInstance<T>> {}
+export interface IApiServiceMixinOptions {
+    name?: string;
+    apiBaseURL?: string | (() => string);
+}
+
+export interface IApiServiceMixinInstance<T> extends ServiceMixinComputed<T> {}
+export interface IApiServiceMixin<T> extends VueConstructor<Vue & IApiServiceMixinInstance<T>> {}
 
 /**
  * Creates Vue Mixin with specified Transport and extra component transport-related behaviour
  * and returns meta object with it
  */
 export function useApiService(
-    serviceFactory: IServiceFactory,
-    options: IServiceMixinOptions
+    serviceFactory: IApiServiceFactory,
+    options: IApiServiceMixinOptions
 ): {
-    mixin: IServiceMixin;
+    mixin: IApiServiceMixin;
 };

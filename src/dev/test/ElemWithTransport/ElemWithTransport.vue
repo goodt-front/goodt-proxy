@@ -32,7 +32,7 @@ const processApiServiceError = (error) => {
 };
 
 /**
- * useTransport example
+ * useApiService example
  */
 const { mixin: ServiceMixin } = useApiService(createApiService, {
     name: '$apiService',

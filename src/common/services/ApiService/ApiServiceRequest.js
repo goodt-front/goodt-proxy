@@ -96,6 +96,6 @@ class ApiServiceRequest {
     }
 }
 
-export const create = (...args) => new ApiServiceRequest(...args);
+export const createApiServiceRequest = (...args) => new ApiServiceRequest(...args);
 
 export { ApiServiceRequest, ApiServiceRequest as default };

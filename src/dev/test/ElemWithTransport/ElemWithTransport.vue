@@ -12,7 +12,7 @@ import { useApiService } from '@goodt/common/mixins';
 import { fail, success } from '@goodt/common/utils';
 import { PresentableError } from '@goodt/common/errors';
 import { descriptor } from './descriptor';
-import { create as createApiService } from './service/ExampleApiService';
+import { useApiServiceMixin } from './service/ExampleApiService';
 // import { ExampleDomainService } from './service/ExampleDomainService';
 
 /**
@@ -32,14 +32,6 @@ const processApiServiceError = (error) => {
 };
 
 /**
- * useApiService example
- */
-const { mixin: ServiceMixin } = useApiService(createApiService, {
-    name: '$apiService',
-    apiBaseURL: 'apiURL'
-});
-
-/**
  * @type {IComponentOptions}
  */
 export default {
@@ -51,7 +43,7 @@ export default {
             apiURL: null
         };
     },
-    mixins: [ServiceMixin],
+    mixins: [useApiServiceMixin({ name: '$apiService', apiBaseURL: 'apiURL' })],
 
     created() {
         this.apiURL = this.props.apiURL;

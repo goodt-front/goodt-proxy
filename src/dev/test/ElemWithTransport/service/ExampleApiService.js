@@ -1,10 +1,7 @@
 import { buildDtoSafeResult } from '@/common/infra/utils';
+import { useApiService } from '@goodt/common/mixins';
 import { createTransport, HttpAuthTransportSymbol } from '@goodt/core/net';
-import {
-    BaseApiService,
-    createApiServiceRequest,
-    ApiServiceRequestType
-} from '@goodt/common/services/ApiService';
+import { BaseApiService } from '@goodt/common/services/ApiService';
 import { PollInfoDto } from './dtos';
 
 const API_ENDPOINTS_PATH = {
@@ -21,9 +18,9 @@ class ExampleApiService extends BaseApiService {
      * @return {Promise<{PollInfoDto}>}
      */
     async getPollInfo(pollId) {
-        const url = API_ENDPOINTS_PATH.POLL_STRUCT.replace(':id', String(pollId));
-        const request = createApiServiceRequest(url);
-        const responseResult = await this.request(request);
+        const responseResult = await this.request({
+            url: API_ENDPOINTS_PATH.POLL_STRUCT.replace(':id', String(pollId))
+        });
 
         const { isFail, result: pollInfoDtoJson, error } = responseResult;
         if (isFail) {
@@ -37,36 +34,35 @@ class ExampleApiService extends BaseApiService {
     }
 
     async createItem(dto) {
-        const createItemRequest = createApiServiceRequest(
-            API_ENDPOINTS_PATH.CREATE_ITEM,
-            dto,
-            ApiServiceRequestType.CREATE
-        );
-        const itemDtoJsonResult = await this.request(createItemRequest);
+        const itemDtoJsonResult = await this.request({
+            url: API_ENDPOINTS_PATH.CREATE_ITEM,
+            params: dto,
+            options: { method: 'post' }
+        });
         // ...
+        // const itemSafeResult = buildDtoSafeResult(ItemDto, itemDtoJsonResult);
+        //
+        // return itemSafeResult;
     }
 
     async updateItem(id, dto) {
-        const updateItemRequest = createApiServiceRequest(
-            API_ENDPOINTS_PATH.UPDATE_ITEM.replace(
-                ':id',
-                String(id),
-                dto,
-                ApiServiceRequestType.UPDATE
-            )
-        );
-        const itemDtoJsonResult = await this.request(updateItemRequest);
+        const itemDtoJsonResult = await this.request({
+            url: API_ENDPOINTS_PATH.UPDATE_ITEM.replace(':id'),
+            params: dto,
+            options: { method: 'put' }
+        });
         // ...
+        // const itemSafeResult = buildDtoSafeResult(ItemDto, itemDtoJsonResult);
+        //
+        // return itemSafeResult;
     }
 
     async deleteItem(id) {
-        const deleteItemRequest = createApiServiceRequest(
-            API_ENDPOINTS_PATH.DELETE_ITEM.replace(':id', String(id)),
-            null,
-            ApiServiceRequestType.DELETE
-        );
-        const deleteResult = await this.request(deleteItemRequest);
         // ...
+        const deleteResult = await this.request({
+            url: API_ENDPOINTS_PATH.DELETE_ITEM.replace(':id', String(id)),
+            options: { method: 'delete' }
+        });
     }
 }
 
@@ -77,4 +73,20 @@ const create = ({ options }) => {
     return apiService;
 };
 
-export { ExampleApiService, create };
+/**
+ *
+ * @return {IApiServiceMixin}
+ */
+const useApiServiceMixin = ({ name, apiBaseURL }) => {
+    const { mixin: ServiceMixin } = useApiService(create, {
+        name,
+        apiBaseURL
+    });
+
+    return ServiceMixin;
+};
+
+/**
+ *
+ */
+export { create, useApiServiceMixin };

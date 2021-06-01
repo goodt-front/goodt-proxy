@@ -169,13 +169,15 @@ npm i --no-save @goodt/config @goodt/browserslist-config @goodt/eslint-config-ba
 
 # @goodt/common
 ## BaseApiService
-API-сервис – функциональность, ответственностью которой является: подготовка запросов в формате ожидаемом серверным API,
-совершение запросов к серверному API, 
- обработка ответов от серверного API:
- проверка валидности типа и формата данных ответа, 
- прав доступа клиента к ресурсам,
- приведение формата валидного ответа к контрактным DTO,
- обработка ошибок транспортного / уровня HTTP клиента и приведение к ошибкам Application Layer. 
+API-сервис – функциональность, ответственностями которой являются:
+* подготовка запросов для серверного API в требуемом формате;
+* совершение запросов к серверному API;
+* обработка ответов от серверного API:
+  - проверка валидности служебного формата представление данных ответа; 
+  - приведение формата валидного ответа к контрактным DTO,
+* обработка ошибок транспортного / уровня HTTP клиента
+  - ошибок прав доступа клиента к ресурсам;
+  - приведение ошибок инфраструктурного слоя к ошибкам слоя приложения. 
 
 `BaseApiService` – Базовый класс для наследования собственным API-сервисом.
 ```js
@@ -214,13 +216,10 @@ class BaseApiService extends IApiService {
 Пример
 ```js
 // services/ExampleApiService.js
-import { buildDtoSafeResult } from '@/common/infra/utils';
 import { createTransport, HttpAuthTransportSymbol } from '@goodt/core/net';
-import {
-  BaseApiService,
-  createApiServiceRequest,
-  ApiServiceRequestType
-} from '@goodt/common/services/ApiService';
+import { buildDtoSafeResult } from '@/common/infra/utils';
+import { useApiService } from '@goodt/common/mixins';
+import { BaseApiService } from '@goodt/common/services/ApiService';
 import { ItemDto } from './dto';
 
 const API_ENDPOINTS_PATH = {
@@ -267,47 +266,62 @@ class ExampleApiService extends BaseApiService {
   }
 
   async createItem(dto) {
-    const createItemRequest = createApiServiceRequest(
-            API_ENDPOINTS_PATH.CREATE_ITEM,
-            dto,
-            ApiServiceRequestType.CREATE
-    );
-    const itemDtoJsonResult = await this.request(createItemRequest);
+    const itemDtoJsonResult = await this.request({
+      url: API_ENDPOINTS_PATH.CREATE_ITEM,
+      params: dto,
+      options: { method: 'post' }
+    });
     // ...
+    // const itemSafeResult = buildDtoSafeResult(ItemDto, itemDtoJsonResult);
+    //
+    // return itemSafeResult;
   }
 
   async updateItem(id, dto) {
-    const updateItemRequest = createApiServiceRequest(
-            API_ENDPOINTS_PATH.UPDATE_ITEM.replace(
-                    ':id',
-                    String(id),
-                    dto,
-                    ApiServiceRequestType.UPDATE
-            )
-    );
-    const itemDtoJsonResult = await this.request(updateItemRequest);
+    const itemDtoJsonResult = await this.request({
+      url: API_ENDPOINTS_PATH.UPDATE_ITEM.replace(':id'),
+      params: dto,
+      options: { method: 'put' }
+    });
     // ...
+    // const itemSafeResult = buildDtoSafeResult(ItemDto, itemDtoJsonResult);
+    //
+    // return itemSafeResult;
   }
 
   async deleteItem(id) {
-    const deleteItemRequest = createApiServiceRequest(
-            API_ENDPOINTS_PATH.DELETE_ITEM.replace(':id', String(id)),
-            null,
-            ApiServiceRequestType.DELETE
-    );
-    const deleteResult = await this.request(deleteItemRequest);
     // ...
+    const deleteResult = await this.request({
+      url: API_ENDPOINTS_PATH.DELETE_ITEM.replace(':id', String(id)),
+      options: { method: 'delete' }
+    });
   }
 }
 
 const create = ({ options }) => {
-    const transport = createTransport(HttpAuthTransportSymbol);
-    const apiService = new ExampleApiService({ transport, options });
+  const transport = createTransport(HttpAuthTransportSymbol);
+  const apiService = new ExampleApiService({ transport, options });
 
-    return apiService;
+  return apiService;
 };
 
-export { ExampleApiService, create };
+/**
+ *
+ * @return {IApiServiceMixin}
+ */
+const useApiServiceMixin = ({ name, apiBaseURL }) => {
+  const { mixin: ServiceMixin } = useApiService(create, {
+    name,
+    apiBaseURL
+  });
+
+  return ServiceMixin;
+};
+
+/**
+ *
+ */
+export { create, useApiServiceMixin };
 ```
 
 ```js
@@ -317,17 +331,7 @@ import { useApiService } from '@goodt/common/mixins';
 import { fail, success } from '@goodt/common/utils';
 import { PresentableError } from '@goodt/common/errors';
 import { descriptor } from './descriptor';
-import { create as createApiService } from './service/ExampleApiService';
-
-
-/**
- * useApiService example
- */
-const { mixin: ServiceMixin } = useApiService(createApiService, {
-    name: '$apiService',
-    apiBaseURL: 'apiURL'
-});
-
+import { useApiServiceMixin } from './service/ExampleApiService';
 
 /**
  * @param {ApiServiceError} error
@@ -362,7 +366,7 @@ export default {
             apiURL: null
         };
     },
-    mixins: [ServiceMixin],
+    mixins: [useApiServiceMixin({ name: '$apiService', apiBaseURL: 'apiURL' })],
 
     created() {
         this.apiURL = this.props.apiURL;

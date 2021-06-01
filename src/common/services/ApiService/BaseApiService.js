@@ -1,4 +1,4 @@
-import { success, fail } from '@/common/utils/either';
+import { success, fail } from '@goodt/common/utils/either';
 import './typedefs';
 import {
     ApiClientRequestCancel,

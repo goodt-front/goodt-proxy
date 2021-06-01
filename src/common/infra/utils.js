@@ -1,5 +1,5 @@
-import { success, fail } from '@/common/utils/either';
-import { throwUncaughtError } from '@/common/errors/utils';
+import { success, fail, SafeResult } from '@goodt/common/utils/either';
+import { throwUncaughtError } from '@goodt/common/errors/utils';
 
 /**
  *

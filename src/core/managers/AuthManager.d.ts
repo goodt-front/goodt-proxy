@@ -3,7 +3,7 @@
  * @property {string} name      name
  * @property {Record<string, any>} config default config
  */
-import Adapter from '@/core/managers/auth/adapters/Adapter';
+import Adapter from './auth/adapters/Adapter';
 
 export default class AuthManager {
     /**

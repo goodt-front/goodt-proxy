@@ -1,4 +1,4 @@
-import { InfrastructureError } from '@/common/errors';
+import { InfrastructureError } from '@goodt/common/errors';
 
 /**
  * Класс-исключение транспортного уровня для запросов к api

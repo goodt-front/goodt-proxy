@@ -1,10 +1,11 @@
-import { buildDtoSafeResult } from '@/common/infra/utils';
+import { buildDtoSafeResult } from '@goodt/common/infra/utils';
 import { createTransport, HttpAuthTransportSymbol } from '@goodt/core/net';
 import {
     BaseApiService,
     createApiServiceRequest,
     ApiServiceRequestType
 } from '@goodt/common/services/ApiService';
+import { SafeResult } from '@goodt/common/utils';
 import { PollInfoDto } from './dtos';
 
 const API_ENDPOINTS_PATH = {
@@ -18,7 +19,7 @@ class ExampleApiService extends BaseApiService {
     /**
      * Получить опрос по id
      * @param {number} pollId
-     * @return {Promise<{PollInfoDto}>}
+     * @return {Promise<SafeResult>}
      */
     async getPollInfo(pollId) {
         const url = API_ENDPOINTS_PATH.POLL_STRUCT.replace(':id', String(pollId));

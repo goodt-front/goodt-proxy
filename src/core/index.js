@@ -11,6 +11,7 @@ export { Elem, ElemEvent, getDescriptorDefaultProps, getElemDomId } from './Elem
 export { Panel, PanelEvent } from './Panel';
 export * from './utils';
 export * from './mixins';
+export { Http, HttpAuth, createTransport } from './net';
 
 export {
     // packages

@@ -7,7 +7,7 @@
 ## Термины
 - **component** — `Vue.js` компонент, выполняющий требуемую бизнес логику.
 - **widget** — совокупность **component** + **panel.**
-- **panel** — `Vue.js`-компонент, настраивающий с помощью ui элементов управления свойства **component**,
+- **panel** — `Vue.js` компонент, настраивающий с помощью ui элементов управления свойства **component**,
   которые описаны в дескрипторе.
   
 ## Ключевые технологии
@@ -165,6 +165,227 @@ npm-пакеты, которые используются как самим яд
 
 ```bash
 npm i --no-save @goodt/config @goodt/browserslist-config @goodt/eslint-config-base @goodt/scaffold @goodt/styleguide
+```
+
+# @goodt/common
+## BaseApiService
+API-сервис – функциональность, ответственностью которой является: подготовка запросов в формате ожидаемом серверным API,
+совершение запросов к серверному API, 
+ обработка ответов от серверного API:
+ проверка валидности типа и формата данных ответа, 
+ прав доступа клиента к ресурсам,
+ приведение формата валидного ответа к контрактным DTO,
+ обработка ошибок транспортного / уровня HTTP клиента и приведение к ошибкам Application Layer. 
+
+`BaseApiService` – Базовый класс для наследования собственным API-сервисом.
+```js
+class BaseApiService extends IApiService {
+    /**
+     * @param {string} url
+     */
+    apiBaseURL: string | undefined;
+    /**
+     * @param {import('./ApiHttpClient').ApiHttpClient} client
+     */
+    setClient(client: ApiHttpClient): void;
+    /**
+     * @param {IApiServiceOptions} options
+     */
+    setOptions(options: IApiServiceOptions): void;
+    /**
+     *
+     * @param {import('./ApiServiceRequest')} request
+     * @return {Promise<SafeResult>}
+     */
+    request(request: IApiServiceRequest): Promise<any>;
+    /**
+     * Освобождает ресурсы, используемые сервисом
+     */
+    dispose(): void;
+    /**
+     * Билдит конфиг реквеста для клиента
+     *
+     * @param {IApiServiceRequest} request
+     * @return {import('@goodt/core/net').ITransportRequest} ITransportRequest
+     */
+}
+```
+
+Пример
+```js
+// services/ExampleApiService.js
+import { buildDtoSafeResult } from '@/common/infra/utils';
+import { createTransport, HttpAuthTransportSymbol } from '@goodt/core/net';
+import {
+  BaseApiService,
+  createApiServiceRequest,
+  ApiServiceRequestType
+} from '@goodt/common/services/ApiService';
+import { ItemDto } from './dto';
+
+const API_ENDPOINTS_PATH = {
+    GET_ITEM: '/item/:id',
+    CREATE_ITEM: '/item',
+    UPDATE_ITEM: '/item/:id',
+    DELETE_ITEM: '/item/:id',
+};
+
+class ExampleApiService extends BaseApiService {
+  /**
+   * Получить итем по id
+
+   * @param {number} itemId
+   * @return {Promise<SafeResult<ItemDto, ApiServiceError>>}
+   */
+  async getItemDtoById(itemId) {
+    const url = API_ENDPOINTS_PATH.GET_ITEM.replace(':id', String(itemId));
+    const itemDtoRequest = createApiServiceRequest(url);
+    const itemDtoJsonResult = await this.request(itemDtoRequest);
+
+    /**
+     * @member {ApiServiceError} error
+     * // error.code =
+     * // ApiServiceErrorCode.INTERNAL |      - сервер не смог обработать запрос (HTTP status code 500 для REST)
+     * // ApiServiceErrorCode.INVALID |       - сервер не смог обработать запрос из-за неверного формата или
+     * // сервер ответил, но клиент не смог обработать ответ
+     * // ApiServiceErrorCode.FORBIDDEN |     - сервер ответил, что у нас нет прав доступа к ресурсу
+     * // ApiServiceErrorCode.NOT_FOUND |     - сервер ответил, что ресурс не найден или не существует
+     * // ApiServiceErrorCode.UNAUTHORIZED |  - сервер ответил, что мы не авторизованы для совершения запросов
+     * // ApiServiceErrorCode.UNKNOWN |       - сломалось что-то при работеклиента
+     */
+    const { isError, result: itemDtoJson, error } = itemDtoJsonResult;
+    if (isError) {
+      // прокидываем ошибочный ответ дальше
+      return itemDtoJsonResult;
+    }
+    // пытаемся создать Dto-инстанс класса `BaseDto` для полученного json
+    // в случае ошибки проверки типа и формата json, можем получить 
+    // ApiServiceError с кодом ApiServiceErrorCode.VALIDATION.
+    const itemDtoResult = buildDtoSafeResult(ItemDto, itemDtoJson);
+
+    return itemDtoResult;
+  }
+
+  async createItem(dto) {
+    const createItemRequest = createApiServiceRequest(
+            API_ENDPOINTS_PATH.CREATE_ITEM,
+            dto,
+            ApiServiceRequestType.CREATE
+    );
+    const itemDtoJsonResult = await this.request(createItemRequest);
+    // ...
+  }
+
+  async updateItem(id, dto) {
+    const updateItemRequest = createApiServiceRequest(
+            API_ENDPOINTS_PATH.UPDATE_ITEM.replace(
+                    ':id',
+                    String(id),
+                    dto,
+                    ApiServiceRequestType.UPDATE
+            )
+    );
+    const itemDtoJsonResult = await this.request(updateItemRequest);
+    // ...
+  }
+
+  async deleteItem(id) {
+    const deleteItemRequest = createApiServiceRequest(
+            API_ENDPOINTS_PATH.DELETE_ITEM.replace(':id', String(id)),
+            null,
+            ApiServiceRequestType.DELETE
+    );
+    const deleteResult = await this.request(deleteItemRequest);
+    // ...
+  }
+}
+
+const create = ({ options }) => {
+    const transport = createTransport(HttpAuthTransportSymbol);
+    const apiService = new ExampleApiService({ transport, options });
+
+    return apiService;
+};
+
+export { ExampleApiService, create };
+```
+
+```js
+// ElemWidget.vue
+import { Elem } from '@goodt/core';
+import { useApiService } from '@goodt/common/mixins';
+import { fail, success } from '@goodt/common/utils';
+import { PresentableError } from '@goodt/common/errors';
+import { descriptor } from './descriptor';
+import { create as createApiService } from './service/ExampleApiService';
+
+
+/**
+ * useApiService example
+ */
+const { mixin: ServiceMixin } = useApiService(createApiService, {
+    name: '$apiService',
+    apiBaseURL: 'apiURL'
+});
+
+
+/**
+ * @param {ApiServiceError} error
+ */
+/**
+ * @param {ApiServiceError} error
+ * @return {PresentableErroe}
+ */
+const processApiServiceError = (error) => {
+    if (error.code === error.constructor.Code.NOT_FOUND) {
+        return new PresentableError('Ресурс не найден');
+    }
+
+    if (error.code === error.constructor.Code.FORBIDDEN) {
+        return new PresentableError('У вас нет прав доступа к этому ресурсу');
+    }
+
+    return new PresentableError('Неизвестная ошибка');
+};
+
+// ...
+/**
+ * @type {IComponentOptions}
+ */
+export default {
+    // ...
+    extends: Elem,
+    data() {
+        return {
+            descriptor: descriptor(),
+            apiResponseResult: success(null),
+            apiURL: null
+        };
+    },
+    mixins: [ServiceMixin],
+
+    created() {
+        this.apiURL = this.props.apiURL;
+    },
+    mounted() {
+        this.doApiRequest();
+    },
+    methods: {
+        async doApiRequest() {
+            this.apiResponseResult = success(null);
+
+            const safeResult = await this.$apiService.getPollInfo(1);
+            const { isFail, error, result: pollInfo } = safeResult;
+            if (isFail) {
+                const presentableError = processApiServiceError(error);
+                this.apiResponseResult = fail(presentableError);
+                return;
+            }
+
+            this.apiResponseResult = pollInfo;
+        }
+    }
+};
 ```
 
 ### См. также

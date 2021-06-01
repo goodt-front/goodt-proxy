@@ -27,6 +27,8 @@
         "dev-run_husky-install": "npx husky install"
     },
     "dependencies": {
+        "@goodt/common": "file:src/common",
+        "@goodt/config": "file:.config",
         "@goodt/browserslist-config": "file:.config/browserslist-config",
         "@goodt/core": "file:src/core",
         "@goodt/dev-deps": "file:.config",

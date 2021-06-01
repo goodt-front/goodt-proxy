@@ -83,6 +83,12 @@ export default {
                     type: 'ElemNavigate',
                     props: {},
                     children: []
+                },
+                {
+                    component: () => import('./test/ElemWithTransport/ElemWithTransport.vue'),
+                    type: 'ElemWithTransport',
+                    props: {},
+                    children: []
                 }
             ]
         };

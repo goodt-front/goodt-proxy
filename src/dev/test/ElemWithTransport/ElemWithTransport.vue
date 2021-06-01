@@ -1,57 +1,67 @@
 <template>
     <section>
-        <h1>Transport</h1>
-        <div>BaseURL: {{ transportBaseUrl }}</div>
+        <h1 @click="doApiRequest">Transport</h1>
+        <div @click="changeApiURL">BaseURL: {{ $apiService.apiBaseURL }}</div>
+        <div v-if="apiResponseResult.isError">{{ apiResponseResult.value }}</div>
+        <div v-else>API response result: {{ apiResponseResult.value }}</div>
     </section>
 </template>
 <script>
 import { Elem } from '@goodt/core';
-import { useTransport, HttpTransportSymbol } from '@goodt/core/mixins/useTransport';
+import { useApiService } from '@goodt/common/mixins';
+import { fail, success } from '@goodt/common/utils';
+import { PresentableError } from '@goodt/common/errors';
+import { descriptor } from './descriptor';
+import { create as createApiService } from './service/ExampleApiService';
+// import { ExampleDomainService } from './service/ExampleDomainService';
 
 /**
- * useTransport example
+ * @param {ApiServiceError} error
  */
-const { mixin: TransportMixin } = useTransport(HttpTransportSymbol, {
-    options() {
-        return {
-            baseURL: this.props.apiURL
-        };
+const processApiServiceError = (error) => {
+    if (error.code === error.constructor.Code.NOT_FOUND) {
+        return new PresentableError('Ресурс не найден');
     }
-});
+
+    if (error.code === error.constructor.Code.FORBIDDEN) {
+        this.apiResponseResult = 'У вас нет прав доступа к этому ресурсу';
+        return new PresentableError('Ресурс не найден');
+    }
+
+    return new PresentableError('Неизвестная ошибка');
+};
 
 /**
- *
+ * useApiService example
  */
-const descriptor = () => ({
-    props: {
-        apiURL: {
-            type: String,
-            default: 'https://goodt-dev.goodt.me:8425/api/'
-        }
-    },
-    vars: {}
+const { mixin: ServiceMixin } = useApiService(createApiService, {
+    name: '$apiService',
+    apiBaseURL: 'apiURL'
 });
 
 /**
- * @this {VueInstance & TransportMixinInstance}
- * @type {ComponentOptions & TransportMixin}
+ * @type {IComponentOptions}
  */
 export default {
     extends: Elem,
     data() {
         return {
-            descriptor: descriptor()
+            descriptor: descriptor(),
+            apiResponseResult: success(null),
+            apiURL: null
         };
     },
-    mixins: [TransportMixin],
-    computed: {
-        /**
-         * @this {VueInstance & { $transport: ITransport }}
-         * @return {string}
-         */
-        transportBaseUrl() {
-            return this.$transport.getBaseUrl();
-        }
+    mixins: [ServiceMixin],
+
+    created() {
+        this.apiURL = this.props.apiURL;
+        // this.useCases = new ExampleDomainService({ apiService: this.$apiService });
+    },
+    /**
+     * @this {IInstance}
+     */
+    mounted() {
+        this.doApiRequest();
     },
     methods: {
         isChildAllowed(type) {
@@ -63,8 +73,26 @@ export default {
         getPanels() {
             return [];
         },
-        genCssClass() {
-            this.super(Elem).genCssClass.call(this);
+        changeApiURL() {
+            this.apiURL += '1';
+        },
+        /**
+         *
+         */
+        async doApiRequest() {
+            this.apiResponseResult = success(null);
+
+            // const safeResult = await this.useCases.getPollInfo(200);
+            const safeResult = await this.$apiService.getPollInfo(1);
+            const { isFail, error, result: pollInfo } = safeResult;
+            if (isFail) {
+                const presentableError = processApiServiceError(error);
+                this.apiResponseResult = fail(presentableError);
+                return;
+            }
+
+            this.apiResponseResult = pollInfo;
+            // this.useCases.savePollInfo(pollInfo);
         }
     }
 };

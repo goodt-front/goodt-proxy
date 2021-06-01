@@ -1,8 +1,9 @@
 import './types';
+import { InfrastructureError } from '@goodt/common/errors';
 import { Http } from './Http';
 import { HttpAuth } from './HttpAuth';
 
-class TransportFactoryError extends Error {}
+class TransportFactoryError extends InfrastructureError {}
 
 /**
  * @implements {ITransportFactory}
@@ -32,15 +33,15 @@ TransportFactoryMap.set(HttpAuthTransportSymbol, createHttpAuth);
 
 /**
  * @param {symbol} transportId
- * @param {Function|Record<string, any>} options
+ * @param {Function|Record<string, any>} [options={}]
  * @throws {TransportFactoryError}
  * @return {ITransport}
  */
-export const createTransport = (transportId, options) => {
+export const createTransport = (transportId, options = {}) => {
     const transportFactory = TransportFactoryMap.get(transportId);
     if (!createTransport) {
         throw new TransportFactoryError(
-            `Transport factory for specified identifier '${transportId.toString()}' not exist.`
+            `Transport factory for specified identifier '${transportId.toString()}' does not exist.`
         );
     }
 

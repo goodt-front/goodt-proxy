@@ -16,13 +16,17 @@ module.exports = class {
         const {
             path: {
                 project: { lib },
-                core: { root: coreRootPath, panels: corePanelsPath, mixins: coreMixinsPath }
+                core: { root: coreRootPath, panels: corePanelsPath, mixins: coreMixinsPath },
+                common: { mixins: commonMixinsPath, utils: commonUtilsPath }
             }
         } = this.config;
         this.libPath = lib;
         this.corePath = coreRootPath;
         this.corePanelsPath = corePanelsPath;
         this.coreMixinsPath = coreMixinsPath;
+        this.commonUtilsPath = commonUtilsPath;
+        this.commonMixinsPath = commonMixinsPath;
+
         this.widgetPath = widgetNameFull;
         this.widgetName = widgetNameFull.substring(
             widgetNameFull.lastIndexOf('/') + 1,

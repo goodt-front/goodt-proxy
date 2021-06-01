@@ -28,9 +28,28 @@ let REQUEST_ID = 0;
  */
 class Http {
     /**
+     * Checks if specified error is transport-related
+     *
+     * @param {Error} error
+     * @return {boolean}
+     */
+    static isTransportError(error) {
+        return axios.isAxiosError(error);
+    }
+
+    /**
+     * Checks if specified error is cancel request-related
+     * @param {Error} error
+     * @return {boolean}
+     */
+    static isCancel(error) {
+        return axios.isCancel(error);
+    }
+
+    /**
      * Constructor
      *
-     * @param {import('./types').ITransportOptions} [options={}]  transport config
+     * @param {import('./types').ITransportOptions} [options={}] transport config
      */
     constructor(options = {}) {
         /** @type {RequestRecord[]} */
@@ -47,8 +66,7 @@ class Http {
      * @return {RequestPromise}
      */
     request({ url, method = 'get', params = {}, options = {}, responseHandler = null }) {
-        const { CancelToken } = axios;
-        const source = CancelToken.source();
+        const source = axios.CancelToken.source();
         const requestId = REQUEST_ID++;
         const request = {
             method,
@@ -56,7 +74,7 @@ class Http {
             cancelToken: source.token,
             ...options
         };
-        if (method === 'get') {
+        if (method.toLocaleLowerCase() === 'get') {
             request.params = params;
         } else {
             request.data = params;
@@ -75,9 +93,6 @@ class Http {
                     resolve(responseHandler ? responseHandler(response) : response);
                 })
                 .catch((error) => {
-                    if (axios.isCancel(error)) {
-                        console.log('Request canceled', error);
-                    }
                     this._unregisterRequest(requestId);
                     reject(error);
                 });

@@ -9,6 +9,8 @@ import {
 } from './types';
 import { ApiHttpClient, IApiClientRequest } from './ApiHttpClient';
 import { ApiServiceError } from './error';
+import { SafeResult } from '../../utils';
+import { ITransportRequest } from '@goodt/core/net';
 
 export class BaseApiService implements IApiService {
     /**
@@ -41,7 +43,7 @@ export class BaseApiService implements IApiService {
      * @param {import('./ApiServiceRequest')} request
      * @return {Promise<SafeResult>}
      */
-    request(request: IApiServiceRequest): Promise<any>;
+    request(request: IApiServiceRequest): Promise<SafeResult>;
     /**
      * Освобождает ресурсы, используемые сервисом
      */

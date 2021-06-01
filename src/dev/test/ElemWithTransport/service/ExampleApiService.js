@@ -1,4 +1,4 @@
-import { buildDtoSafeResult } from '@/common/infra/utils';
+import { buildDtoSafeResult } from '@goodt/common/infra/utils';
 import { useApiService } from '@goodt/common/mixins';
 import { createTransport, HttpAuthTransportSymbol } from '@goodt/core/net';
 import { BaseApiService } from '@goodt/common/services/ApiService';
@@ -15,7 +15,7 @@ class ExampleApiService extends BaseApiService {
     /**
      * Получить опрос по id
      * @param {number} pollId
-     * @return {Promise<{PollInfoDto}>}
+     * @return {Promise<{import('@goodt/common/utils').SafeResult}>}
      */
     async getPollInfo(pollId) {
         const responseResult = await this.request({

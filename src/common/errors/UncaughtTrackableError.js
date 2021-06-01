@@ -1,4 +1,4 @@
-import { BaseError } from '@/common/errors/BaseError';
+import { BaseError } from '@goodt/common/errors/BaseError';
 
 export class UncaughtTrackableError extends BaseError {
     context;

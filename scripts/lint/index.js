@@ -35,7 +35,7 @@ module.exports = {
             'error',
             {
                 min: 3,
-                max: 30,
+                max: 40,
                 exceptions: [
                     '_',
                     'x',

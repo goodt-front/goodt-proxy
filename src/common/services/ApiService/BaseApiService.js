@@ -1,5 +1,4 @@
 import { success, fail } from '@goodt/common/utils/either';
-import './typedefs';
 import {
     ApiClientRequestCancel,
     ApiHttpClientError,
@@ -28,34 +27,33 @@ class BaseApiService {
     /**
      * @param {import('./ApiHttpClient').ApiHttpClient} client?
      * @param {ITransport} transport?
-     * @param {IApiServiceOptions} [options={}]
+     * @param {IApiServiceOptions} options?
      * @throws ApiServiceError
      */
     constructor({ client, transport, options }) {
-        if (options) {
-            this._options = options;
+        const { apiBaseURL, ...serviceOptions } = options;
+
+        if (serviceOptions) {
+            this._options = {
+                ...this._options,
+                ...serviceOptions
+            };
         }
 
         if (client) {
-            const { apiBaseURL } = this._options;
             if (apiBaseURL) {
                 // eslint-disable-next-line no-param-reassign
                 client.baseURL = apiBaseURL;
             }
-
-            this._options.apiBaseURL = client.baseURL;
             this.setClient(client);
             return;
         }
 
         if (transport) {
             const newClient = createApiHttpClient(transport);
-            const { apiBaseURL } = this._options;
             if (apiBaseURL) {
                 newClient.baseURL = apiBaseURL;
             }
-
-            this._options.apiBaseURL = newClient.baseURL;
             this.setClient(newClient);
         }
     }

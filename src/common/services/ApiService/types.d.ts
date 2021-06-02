@@ -9,9 +9,9 @@ export interface IApiServiceRequest {
     options?: ITransportOptions;
 }
 
-export interface IApiServiceOptions {
-    apiBaseURL?: string;
+export interface IApiServiceOptions extends Record<string, unknown> {
     ttl?: number;
+    apiBaseURL?: string;
 }
 
 export interface IApiServiceConstructor {

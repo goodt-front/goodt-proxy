@@ -1,27 +1,27 @@
 /**
  * Enum ошибок апи-сервиса
  */
-export type ApiServiceErrorCode = string;
+export type TApiServiceErrorCode = Readonly<{
+    INTERNAL: 'internal';
+    VALIDATION: 'validation';
+    FORBIDDEN: 'forbidden';
+    NOT_FOUND: 'not_found';
+    UNAUTHORIZED: 'unauthorized';
+    UNKNOWN: 'unknown';
+}>;
 /**
  * Enum ошибок апи-сервиса
  *
  * @readonly
  * @enum string
  */
-export const ApiServiceErrorCode: Readonly<{
-    INTERNAL: string;
-    VALIDATION: string;
-    FORBIDDEN: string;
-    NOT_FOUND: string;
-    UNAUTHORIZED: string;
-    UNKNOWN: string;
-}>;
+export const ApiServiceErrorCode: TApiServiceErrorCode;
 /**
  * Класс-исключение транспортного уровня для запросов к api
  * @class ApiServiceError
  */
 export class ApiServiceError {
-    static Code: ApiServiceErrorCode;
+    static Code: TApiServiceErrorCode;
     /**
      *
      * @param {string} [message]

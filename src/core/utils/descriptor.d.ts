@@ -10,13 +10,17 @@ export const DescriptorTypes: Readonly<{
     SwitchBoolean: Boolean;
 }>;
 
-type Primitive<T> = T extends String
+type Primitive<T> = T extends String | StringConstructor
     ? string
-    : T extends Number
+    : T extends Number | NumberConstructor
     ? number
-    : T extends Boolean
+    : T extends Boolean | BooleanConstructor
     ? boolean
-    : Record<string, any>;
+    : T extends Array | ArrayConstructor
+    ? Array
+    : T extends Object | ObjectConstructor
+    ? Record<string, any>
+    : T;
 
 export interface IDescriptorProps<T> {
     props: {

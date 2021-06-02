@@ -15,7 +15,7 @@ export interface IApiServiceMixinOptions {
 }
 
 export interface IApiServiceMixinInstance<T> extends ServiceMixinComputed<T> {}
-export interface IApiServiceMixin<T> extends VueConstructor<Vue & IApiServiceMixinInstance<T>> {}
+export interface IApiServiceMixin extends VueConstructor<Vue & IApiServiceMixinInstance> {}
 
 /**
  * Creates Vue Mixin with specified Transport and extra component transport-related behaviour

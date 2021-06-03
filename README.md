@@ -222,7 +222,7 @@ import { useApiService } from '@goodt/common/mixins';
 import { BaseApiService } from '@goodt/common/services/ApiService';
 import { ItemDto } from './dto';
 
-const API_ENDPOINTS_PATH = {
+const ApiEndpointsPath = {
     GET_ITEM: '/item/:id',
     CREATE_ITEM: '/item',
     UPDATE_ITEM: '/item/:id',
@@ -236,8 +236,8 @@ class ExampleApiService extends BaseApiService {
    * @param {number} itemId
    * @return {Promise<SafeResult<ItemDto, ApiServiceError>>}
    */
-  async getItemDtoById(itemId) {
-    const url = API_ENDPOINTS_PATH.GET_ITEM.replace(':id', String(itemId));
+  async getItemById(itemId) {
+    const url = ApiEndpointsPath.GET_ITEM.replace(':id', String(itemId));
     const itemDtoRequest = createApiServiceRequest(url);
     const itemDtoJsonResult = await this.request(itemDtoRequest);
 
@@ -267,7 +267,7 @@ class ExampleApiService extends BaseApiService {
 
   async createItem(dto) {
     const itemDtoJsonResult = await this.request({
-      url: API_ENDPOINTS_PATH.CREATE_ITEM,
+      url: ApiEndpointsPath.CREATE_ITEM,
       params: dto,
       options: { method: 'post' }
     });
@@ -277,9 +277,9 @@ class ExampleApiService extends BaseApiService {
     // return itemSafeResult;
   }
 
-  async updateItem(id, dto) {
+  async updateItemById(id, dto) {
     const itemDtoJsonResult = await this.request({
-      url: API_ENDPOINTS_PATH.UPDATE_ITEM.replace(':id'),
+      url: ApiEndpointsPath.UPDATE_ITEM.replace(':id'),
       params: dto,
       options: { method: 'put' }
     });
@@ -289,10 +289,10 @@ class ExampleApiService extends BaseApiService {
     // return itemSafeResult;
   }
 
-  async deleteItem(id) {
+  async deleteItemById(id) {
     // ...
     const deleteResult = await this.request({
-      url: API_ENDPOINTS_PATH.DELETE_ITEM.replace(':id', String(id)),
+      url: ApiEndpointsPath.DELETE_ITEM.replace(':id', String(id)),
       options: { method: 'delete' }
     });
   }
@@ -391,6 +391,8 @@ export default {
     }
 };
 ```
+
+См. также [Внесение изменений](CONTRIBUTING.md#common-api-services)
 
 ### См. также
 

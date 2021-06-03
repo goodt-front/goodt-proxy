@@ -5,7 +5,7 @@ import {
     ApiHttpClientErrorCode,
     create as createApiHttpClient
 } from './ApiHttpClient';
-import { ApiServiceError, ApiServiceErrorCode } from './error';
+import { ApiServiceError, ApiServiceErrorCode } from './errors';
 import './typedefs';
 
 /**

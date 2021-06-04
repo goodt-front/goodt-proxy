@@ -27,12 +27,10 @@
         "dev-run_husky-install": "npx husky install"
     },
     "dependencies": {
+        "@goodt/browserslist-config": "file:.config/browserslist-config",
         "@goodt/common": "file:src/common",
         "@goodt/config": "file:.config",
-        "@goodt/browserslist-config": "file:.config/browserslist-config",
         "@goodt/core": "file:src/core",
-        "@goodt/dev-deps": "file:.config",
-        "@goodt/config": "file:.config",
         "@goodt/eslint-config-base": "file:scripts/lint",
         "@goodt/panels": "file:src/core/panels",
         "@goodt/scaffold": "file:scripts/scaffold",
@@ -64,5 +62,9 @@
         "*.(js|jsx|vue|ts)": [
             "npm run lint"
         ]
+    },
+    "engines": {
+        "node": ">=14",
+        "npm": ">=7"
     }
 }

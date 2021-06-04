@@ -1,6 +1,7 @@
 {
   "name": "@goodt/eslint-config-base",
   "version": "1.0.0",
+  "description": "SUP: Linting. Shared code linting configs and package dependencies config for reuse in SUP projects.",
   "scripts": {
     "prepare": "npx patch-package --patch-dir=.patches"
   },

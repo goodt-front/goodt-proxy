@@ -1,6 +1,8 @@
+import { BaseError } from '@goodt/common/errors';
+
 /**
  * @class ApiClientCancelError
  */
-class ApiClientRequestCancel extends Error {}
+class ApiClientRequestCancel extends BaseError {}
 
 export { ApiClientRequestCancel };

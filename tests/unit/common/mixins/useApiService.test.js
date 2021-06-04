@@ -8,7 +8,7 @@ const API_BASE_URL_ACCESSOR = 'apiURL';
 const API_BASE_URL_VALUE = 'http://localhost:8080';
 
 /**
- * Creates Fake Api Service
+ * Creates Mock Api Service Factory
  *
  * @param onDispose
  * @return {function(): BaseApiService }

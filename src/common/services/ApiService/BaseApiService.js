@@ -1,4 +1,5 @@
 import { success, fail } from '@goodt/common/utils/either';
+import { BaseError } from '@/common/errors';
 import {
     ApiClientRequestCancel,
     ApiHttpClientError,
@@ -30,7 +31,7 @@ class BaseApiService {
      * @param {IApiServiceOptions} options?
      * @throws ApiServiceError
      */
-    constructor({ client, transport, options }) {
+    constructor({ client, transport, options = {} } = {}) {
         const { apiBaseURL, ...serviceOptions } = options;
 
         if (serviceOptions) {
@@ -91,27 +92,26 @@ class BaseApiService {
 
     /**
      *
-     * @param {import('./ApiServiceRequest')} request
+     * @param {import('./types').IApiServiceRequest} request
      * @return {Promise<SafeResult>}
      */
     async request(request) {
-        if (!this._client) {
-            throw new ApiServiceError('Server API `client` did not set', {
-                code: ApiServiceErrorCode.INTERNAL
-            });
-        }
-
         try {
+            if (!this._client) {
+                throw new ApiServiceError('Server API `client` did not set', {
+                    code: ApiServiceErrorCode.INTERNAL
+                });
+            }
             const apiClientRequest = this._buildApiClientRequest(request);
             const result = await this._client.request(apiClientRequest);
+
             return success(result);
         } catch (error) {
-            /**
-             * async uncaught error throw for top level error tracking service
-             */
             // throwUncaughtError(error);
             const processedError = this._processError(error);
-            processedError.captureStackTrace(this.request);
+            if (processedError instanceof BaseError) {
+                processedError.captureStackTrace(this.request);
+            }
 
             return fail(processedError);
         }
@@ -149,7 +149,10 @@ class BaseApiService {
             return null;
         }
 
-        return error;
+        return new ApiServiceError(error.message, {
+            code: ApiServiceErrorCode.INTERNAL,
+            reason: error
+        });
     }
 
     /**
@@ -180,7 +183,7 @@ class BaseApiService {
         const apiServiceError = new ApiServiceError(message, {
             code: apiServiceErrorCode,
             data,
-            reason
+            reason: error
         });
 
         return apiServiceError;

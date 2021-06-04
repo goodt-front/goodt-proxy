@@ -40,7 +40,7 @@ export class BaseApiService implements IApiService {
     setOptions(options: IApiServiceOptions): void;
     /**
      *
-     * @param {import('./ApiServiceRequest')} request
+     * @param {IApiServiceRequest} request
      * @return {Promise<SafeResult>}
      */
     request(request: IApiServiceRequest): Promise<SafeResult>;

@@ -2,7 +2,8 @@
     "name": "@goodt/common",
     "version": "1.0.0",
     "private": true,
-    "dependencies": {
+    "description": "SUP: Common. Folder-based package with shared `core common` functionality to reuse in SUP projects.",
+    "peerDependencies": {
         "axios": "^0.21.1",
         "inflection": "^1.13.1"
     }

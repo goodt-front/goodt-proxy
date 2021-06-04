@@ -1,0 +1,6 @@
+{
+    "name": "@goodt/core",
+    "version": "1.0.0",
+    "private": true,
+    "description": "SUP: Core (goodt-wcore). Folder-based package is the alias for `core` folder structure."
+}

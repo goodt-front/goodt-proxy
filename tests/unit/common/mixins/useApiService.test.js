@@ -87,7 +87,7 @@ describe(`'useApiService' mixin in component`, () => {
             // Then
             // Assert
             created() {
-                expect(this[API_SERVICE_ACCESSOR]).not.toBeNull();
+                expect(this[API_SERVICE_ACCESSOR]).toBeInstanceOf(BaseApiService);
             }
         });
     });
@@ -108,7 +108,7 @@ describe(`'useApiService' mixin in component`, () => {
             // Then
             // Assert
             created() {
-                expect(this[API_SERVICE_ACCESSOR]).not.toBeNull();
+                expect(this[API_SERVICE_ACCESSOR]).toBeInstanceOf(BaseApiService);
             }
         });
     });

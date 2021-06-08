@@ -1,3 +1,5 @@
+import { InfrastructureError } from '@goodt/common/errors';
+
 /**
  * Enum ошибок апи-сервиса
  *
@@ -10,6 +12,7 @@ export const ApiHttpClientErrorCode: Readonly<{
     UNAUTHORIZED: 401;
     INTERNAL_SERVER_ERROR: 500;
     BAD_REQUEST: 400;
+    INTERNAL: 0;
 }>;
 
 /**
@@ -20,33 +23,36 @@ export type TApiHttpClientErrorCode = typeof ApiHttpClientErrorCode[keyof typeof
  * Класс-исключение транспортного уровня для запросов к api
  * @class ApiHttpClientError
  */
-export class ApiHttpClientError {
-    static Code: typeof ApiHttpClientErrorCode;
+export class ApiHttpClientError extends InfrastructureError {
+    static Code: typeof ApiHttpClientErrorCode = ApiHttpClientErrorCode;
     /**
      *
      * @param {string} [message]
-     * @param {number} [code]
+     * @param {TApiHttpClientErrorCode} [code]
      * @param {*} [data]
      * @param {Object} [reason]
      * @constructs Service
      */
-    constructor(message?: string, { code, data, reason }?: number);
+    constructor(
+        message?: string,
+        { code, data, reason }?: { code?: string; data?: any; reason?: any }
+    );
     /**
      * @private
-     * @member {number}
+     * @type {TApiHttpClientErrorCode}
      */
-    private _code: TApiHttpClientErrorCode;
+    private _code: TApiHttpClientErrorCode = ApiHttpClientErrorCode.INTERNAL;
     /**
      * @private
      * @member {*}
      */
-    private _data;
+    private _data: any;
     /**
      * Ошибка вызвавшая exception
      * @private
      * @member {Object}
      */
-    private _reason;
+    private _reason: any;
     name: string;
     /**
      * Данные пришедшие в ответе в
@@ -70,4 +76,5 @@ export class ApiHttpClientError {
      */
     public get reason(): any;
 }
+
 export { ApiHttpClientError as default };

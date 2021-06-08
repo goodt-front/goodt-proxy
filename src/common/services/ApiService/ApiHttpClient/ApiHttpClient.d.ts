@@ -60,7 +60,7 @@ export interface IApiClientRequest extends ITransportRequest {}
 /**
  * Creates ApiHttpClient instance
  *
- * @param {ITransport} [transport] Transport client instance
+ * @param {ITransport} transport Transport client instance
  * @return {ApiHttpClient}
  */
-export function create(transport?: ITransport): ApiHttpClient;
+export function create(transport: ITransport): ApiHttpClient;

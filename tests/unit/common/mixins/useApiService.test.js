@@ -2,6 +2,9 @@ import Vue from 'vue';
 import { Elem } from '@goodt/core';
 import { useApiService } from '@goodt/common/mixins';
 import { BaseApiService } from '@goodt/common/services/ApiService';
+import { wrapTestWithAaa } from '../../utils';
+
+const test = wrapTestWithAaa(it);
 
 const API_SERVICE_ACCESSOR = '$apiService';
 const API_BASE_URL_ACCESSOR = 'apiURL';
@@ -13,28 +16,40 @@ const API_BASE_URL_VALUE = 'http://localhost:8080';
  * @param onDispose
  * @return {function(): BaseApiService }
  */
-const mockApiServiceFactory = ({ onDispose }) => {
-    const MockedApiService = class extends BaseApiService {
-        apiBaseURL;
+const mockApiServiceFactory = () => {
+    const disposeSpy = jest.spyOn(BaseApiService.prototype, 'dispose').mockImplementation(() => {});
 
-        dispose() {
-            onDispose();
-        }
-    };
+    jest.spyOn(BaseApiService.prototype, 'apiBaseURL', 'get').mockImplementation(function() {
+        return this._apiBaseURL;
+    });
+    jest.spyOn(BaseApiService.prototype, 'apiBaseURL', 'set').mockImplementation(function(value) {
+        this._apiBaseURL = value;
+    });
 
-    return ({ options }) => {
-        const api = new MockedApiService({ options });
-        api.apiBaseURL = options.apiBaseURL;
-        return api;
-    };
+    return [
+        ({ options }) => {
+            const baseApi = new BaseApiService({ options });
+            baseApi.apiBaseURL = options.apiBaseURL;
+            return baseApi;
+        },
+        disposeSpy
+    ];
 };
 
+/**
+ *
+ * @param apiServiceFactory
+ * @param name
+ * @param apiBaseURL
+ * @param isEditorMode
+ * @param componentOptions
+ * @return {*&{mixins: IApiServiceMixin[], extends: IElemComponentOptionsInternal, data: (function(): {'[API_BASE_URL_ACCESSOR]': string}), props: {isEditorMode: {default: boolean, type: BooleanConstructor}}}}
+ */
 const createComponentOptions = ({
     apiServiceFactory,
     name = API_SERVICE_ACCESSOR,
     apiBaseURL = API_BASE_URL_ACCESSOR,
-    isEditorMode = false,
-    componentOptions
+    isEditorMode = false
 }) => {
     const { mixin } = useApiService(apiServiceFactory, {
         name,
@@ -52,156 +67,207 @@ const createComponentOptions = ({
         data: () => ({
             [API_BASE_URL_ACCESSOR]: API_BASE_URL_VALUE
         }),
-        mixins: [mixin],
-        ...componentOptions
+        mixins: [mixin]
     };
 };
 
 describe(`'useApiService' mixin in component`, () => {
-    let vm;
-    let isServiceWasDisposed;
+    let apiServiceFactory;
+    let disposeSpy;
 
-    const apiServiceFactory = mockApiServiceFactory({
-        onDispose: () => {
-            isServiceWasDisposed = true;
-        }
+    beforeAll(() => {
+        [apiServiceFactory, disposeSpy] = mockApiServiceFactory();
     });
 
-    beforeEach(() => {
-        isServiceWasDisposed = false;
-        const componentOptions = createComponentOptions({
-            apiServiceFactory
-        });
-        vm = new Vue(componentOptions);
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
     // 1
-    test(`'ApiService' instance SHOULD be created and accessed with default '${API_SERVICE_ACCESSOR}'`, () => {
+    test(`'ApiService' instance SHOULD be created and accessed with default '${API_SERVICE_ACCESSOR}'`, (done, {
+        arrange,
+        act,
+        assert
+    }) => {
         // Arrange
-        const componentOptions = createComponentOptions({
-            name: API_SERVICE_ACCESSOR,
-            apiServiceFactory
+        arrange(() => {
+            const componentOptions = createComponentOptions({
+                name: API_SERVICE_ACCESSOR,
+                apiServiceFactory
+            });
+
+            return { componentOptions };
         });
-        vm = new Vue({
-            ...componentOptions,
-            // Then
-            // Assert
-            created() {
-                expect(this[API_SERVICE_ACCESSOR]).toBeInstanceOf(BaseApiService);
-            }
+
+        act(({ componentOptions }, assert) => {
+            new Vue({
+                ...componentOptions,
+                // Then
+                // Assert
+                created() {
+                    assert({ $apiService: this[API_SERVICE_ACCESSOR] });
+                }
+            });
+        });
+
+        assert(({ $apiService }) => {
+            expect($apiService).toBeInstanceOf(BaseApiService);
         });
     });
 
     // 2
-    test(`'ApiService' instance SHOULD be created and accessed with specified accessor`, () => {
+    test(`'ApiService' instance SHOULD be created and accessed with specified accessor`, (done, {
+        arrange,
+        act,
+        assert
+    }) => {
         // Arrange
         const API_SERVICE_ACCESSOR = '$myApiService';
-        const componentOptions = createComponentOptions({
-            apiServiceFactory,
-            name: API_SERVICE_ACCESSOR
+        arrange(() => {
+            const componentOptions = createComponentOptions({
+                apiServiceFactory,
+                name: API_SERVICE_ACCESSOR
+            });
+            return { componentOptions };
         });
 
         // When
-        // Act
-        vm = new Vue({
-            ...componentOptions,
-            // Then
-            // Assert
-            created() {
-                expect(this[API_SERVICE_ACCESSOR]).toBeInstanceOf(BaseApiService);
-            }
+        act(({ componentOptions }, next) => {
+            new Vue({
+                ...componentOptions,
+                // Then
+                // Assert
+                created() {
+                    next({ $apiService: this[API_SERVICE_ACCESSOR] });
+                }
+            });
+        });
+
+        assert(({ $apiService }) => {
+            expect($apiService).toBeInstanceOf(BaseApiService);
         });
     });
 
     // 3
-    test(`'ApiService' SHOULD have in CREATED LC hook initial 'apiBaseURL' defined in '${API_SERVICE_ACCESSOR}'`, () => {
+    test(`'ApiService' SHOULD have in CREATED LC hook initial 'apiBaseURL' defined in '${API_SERVICE_ACCESSOR}'`, (done, {
+        arrange,
+        act,
+        assert
+    }) => {
         // Arrange
-        const componentOptions = createComponentOptions({
-            apiServiceFactory,
-            apiBaseURL: API_BASE_URL_ACCESSOR
+        arrange(() => {
+            const componentOptions = createComponentOptions({
+                apiServiceFactory,
+                apiBaseURL: API_BASE_URL_ACCESSOR
+            });
+
+            return { componentOptions };
         });
-        // When
-        // Act
-        vm = new Vue({
-            ...componentOptions,
-            created() {
-                // Then
-                // Assert
-                expect(this[API_SERVICE_ACCESSOR].apiBaseURL).toEqual(API_BASE_URL_VALUE);
-            }
+
+        act(({ componentOptions }, next) => {
+            new Vue({
+                ...componentOptions,
+                created() {
+                    next({ apiBaseURL: this[API_SERVICE_ACCESSOR].apiBaseURL });
+                }
+            });
+        });
+
+        assert(({ apiBaseURL }) => {
+            expect(apiBaseURL).toEqual(API_BASE_URL_VALUE);
         });
     });
 
     // 4
-    test(`'ApiService' '${API_BASE_URL_ACCESSOR}' change SHOULD NOT change ApiService 'apiBaseURL' in non-editor env`, (done) => {
-        // Given
-        // Arrange
-        const API_BASE_URL_VALUE_CHANGED = null;
-        const componentOptions = createComponentOptions({
-            apiServiceFactory,
-            apiBaseURL: API_BASE_URL_ACCESSOR,
-            isEditorMode: false
+    test(`'ApiService' '${API_BASE_URL_ACCESSOR}' change SHOULD NOT change ApiService 'apiBaseURL' in non-editor env`, (done, {
+        arrange,
+        act,
+        assert
+    }) => {
+        arrange(() => {
+            const componentOptions = createComponentOptions({
+                apiServiceFactory,
+                apiBaseURL: API_BASE_URL_ACCESSOR,
+                isEditorMode: false
+            });
+            return { componentOptions };
         });
 
-        // Then
-        // Assert
-        new Vue({
-            ...componentOptions,
-            created() {
-                this.$watch(API_BASE_URL_ACCESSOR, () => {
-                    expect(this[API_SERVICE_ACCESSOR].apiBaseURL).toEqual(API_BASE_URL_VALUE);
-                    done();
-                });
-                this[API_BASE_URL_ACCESSOR] = API_BASE_URL_VALUE_CHANGED;
-            }
+        act(({ componentOptions }, assert) => {
+            new Vue({
+                ...componentOptions,
+                created() {
+                    this.$watch(API_BASE_URL_ACCESSOR, () => {
+                        assert({ apiBaseURL: this[API_SERVICE_ACCESSOR].apiBaseURL });
+                    });
+                    this[API_BASE_URL_ACCESSOR] = null;
+                }
+            });
+        });
+
+        assert(({ apiBaseURL }) => {
+            expect(apiBaseURL).toEqual(API_BASE_URL_VALUE);
         });
     });
 
     // 5
-    test(`'${API_BASE_URL_ACCESSOR}' change SHOULD change ApiServices 'apiBaseURL' in editor env`, (done) => {
-        // Arrange
+    test(`'${API_BASE_URL_ACCESSOR}' change SHOULD change ApiServices 'apiBaseURL' in editor env`, (done, {
+        arrange,
+        act,
+        assert
+    }) => {
         const API_BASE_URL_VALUE_CHANGED = 'https://host.com';
-        const componentOptions = createComponentOptions({
-            apiServiceFactory,
-            isEditorMode: true,
-            apiBaseURL: API_BASE_URL_ACCESSOR
+        arrange(() => {
+            const componentOptions = createComponentOptions({
+                apiServiceFactory,
+                isEditorMode: true,
+                apiBaseURL: API_BASE_URL_ACCESSOR
+            });
+
+            return { componentOptions };
         });
 
-        // Then
-        new Vue({
-            ...componentOptions,
-            created() {
-                this.$watch(API_BASE_URL_ACCESSOR, () => {
-                    expect(this[API_SERVICE_ACCESSOR].apiBaseURL).toEqual(
-                        API_BASE_URL_VALUE_CHANGED
-                    );
-                    done();
-                });
-                this[API_BASE_URL_ACCESSOR] = API_BASE_URL_VALUE_CHANGED;
-            }
+        act(({ componentOptions }, assert) => {
+            new Vue({
+                ...componentOptions,
+                created() {
+                    this.$watch(API_BASE_URL_ACCESSOR, () => {
+                        assert({ apiBaseURL: this[API_SERVICE_ACCESSOR].apiBaseURL });
+                    });
+                    this[API_BASE_URL_ACCESSOR] = API_BASE_URL_VALUE_CHANGED;
+                }
+            });
+        });
+
+        assert(({ apiBaseURL }) => {
+            expect(apiBaseURL).toEqual(API_BASE_URL_VALUE_CHANGED);
         });
     });
 
     // 6
-    test('Component `destroy` LC hook SHOULD dispose `ApiService` instance', () => {
-        // Arrange
-        let isServiceWasDisposed = false;
-        const apiServiceFactory = mockApiServiceFactory({
-            onDispose: () => {
-                isServiceWasDisposed = true;
-            }
-        });
-        const componentOptions = createComponentOptions({
-            apiServiceFactory
-        });
-        vm = new Vue(componentOptions);
+    test('Component `destroy` LC hook SHOULD dispose `ApiService` instance', (done, {
+        arrange,
+        act,
+        assert
+    }) => {
+        arrange(() => {
+            //const sayMyName = jest.fn();
+            //apiServiceFactory = jest.fn();
+            const componentOptions = createComponentOptions({
+                apiServiceFactory
+            });
 
-        // When
-        // Act
-        vm.$destroy();
+            return { componentOptions };
+        });
 
-        // Then
-        // Assert
-        expect(isServiceWasDisposed).toBeTruthy();
+        act(({ componentOptions }) => {
+            const vm = new Vue(componentOptions);
+            vm.$destroy();
+            return {};
+        });
+
+        assert(() => {
+            expect(disposeSpy).toHaveBeenCalled();
+        });
     });
 });

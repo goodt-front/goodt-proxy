@@ -24,6 +24,11 @@ class ApiHttpClient {
      * @constructs ApiHttpClient
      */
     constructor(transport) {
+        if (transport == null) {
+            throw new ApiHttpClientError('Required `transport` instance is not provided', {
+                code: ApiHttpClientError.Code.INTERNAL
+            });
+        }
         this._transport = transport;
     }
 
@@ -79,6 +84,10 @@ class ApiHttpClient {
      */
     // eslint-disable-next-line class-methods-use-this
     _buildTransportRequest(request) {
+        if (request == null || typeof request !== 'object') {
+            throw new ApiHttpClientError('Invalid `request` method input argument type');
+        }
+
         const { url, params, method, options } = request;
 
         if (!url) {
@@ -111,14 +120,17 @@ class ApiHttpClient {
      * Особенность: знает формат ошибки сервера, какие статус коды являются ошибочными
      *
      * @param {Error} error
-     * @return {Error}
+     * @return {ApiHttpClientError}
      */
     _processTransportError(error) {
         const { message } = error;
         // If non-transport error
         if (this._transport.constructor.isTransportError(error) === false) {
-            // return new ApiHttpClientError(message, { reason: error });
-            return error;
+            return new ApiHttpClientError(message, {
+                code: ApiHttpClientError.Code.INTERNAL,
+                reason: error
+            });
+            // return error;
         }
 
         // mute cancel error
@@ -150,14 +162,14 @@ class ApiHttpClient {
         // `error.request` is an instance of XMLHttpRequest in the browser
         if (request) {
             return new ApiHttpClientError(message, {
-                code: 0,
+                code: ApiHttpClientError.Code.INTERNAL,
                 reason
             });
         }
 
         // Something happened in setting up the request that triggered an Error
         return new ApiHttpClientError(message, {
-            code: 0,
+            code: ApiHttpClientError.Code.INTERNAL,
             reason: error
         });
     }

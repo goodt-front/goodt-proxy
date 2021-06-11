@@ -1,11 +1,10 @@
 import { IDescriptorProps } from '[[{core}]]';
-import Elem, { IElemComponentOptions, IElemInstance } from '[[{core}]]/Elem';
+import { IElemComponentOptions, IElemInstance, IElemComponentOptionsInternal } from '[[{core}]]/Elem';
 [[#hasTransport]]
 import { IApiServiceMixinInstance } from '@goodt/common/mixins';
 import { [[{name}]]Service } from './api/[[{name}]]Service';
 [[/hasTransport]]
 import { descriptor } from './descriptor';
-
 
 interface Data {}
 interface Methods {}
@@ -17,5 +16,5 @@ export interface IInstance extends IElemInstance,
     IApiServiceMixinInstance<InstanceType<typeof [[{name}]]Service>>,[[/hasTransport]]
     Data, Methods, Computed, Props {}
 export interface IComponentOptions extends IElemComponentOptions<IInstance, Data, Methods, Computed, Props> {
-    extends: typeof Elem;
+    extends: typeof IElemComponentOptionsInternal;
 }

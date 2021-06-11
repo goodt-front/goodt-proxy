@@ -1,7 +1,7 @@
 import Vue, { VueConstructor } from 'vue';
 import { ElemDescriptor } from '@goodt/core/types';
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
-import VuePanel, { PanelEvent } from './Panel.vue';
+import VuePanel from './Panel.vue';
 
 interface PanelMetaData {
     /**
@@ -39,6 +39,11 @@ interface Data {
 }
 
 export interface IPanelInstance extends Vue, Data, Methods, Computed, Props {}
+
+export interface IPanelComponentOptionsInternal
+    extends ThisTypedComponentOptionsWithRecordProps<Vue, Data, IElemInstance, Computed, Props> {
+    computed?: IPanelInstance;
+}
 
 export interface IPanelComponentOptions<IInstance, D, M, C, P>
     extends ThisTypedComponentOptionsWithRecordProps<

@@ -19,7 +19,11 @@ export { PanelEvent };
  * @property {string} name      panel name
  * @property {string} icon      mdi icon class
  */
-export default {
+
+/**
+ * @type {import('./Panel').IPanelComponentOptionsInternal}
+ */
+export default ({
     components: { ...PanelUi },
     props: {
         /** elem component instance reference */
@@ -33,7 +37,7 @@ export default {
             type: Object,
             required: true
         },
-        /** @type {import('vue').PropOptions<ElemDescriptor>} */
+        /** @type {import('vue').PropOptions<import('@goodt/core/types').ElemDescriptor>} */
         descriptor: {
             type: Object,
             required: true
@@ -49,7 +53,7 @@ export default {
     },
     computed: {
         /**
-         * @return {object}
+         * @return {import('@goodt/core/types').ElemDescriptor}
          */
         propsDefault() {
             return getDescriptorDefaultProps(this.descriptor);
@@ -87,5 +91,5 @@ export default {
             );
         }
     }
-};
+});
 </script>

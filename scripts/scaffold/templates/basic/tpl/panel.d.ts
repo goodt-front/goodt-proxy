@@ -1,5 +1,9 @@
 import { IDescriptorProps } from '[[{core}]]';
-import Panel, { IPanelComponentOptions, IPanelInstance } from '[[{core}]]/Panel';
+import {
+    IPanelComponentOptions,
+    IPanelComponentOptionsInternal,
+    IPanelInstance
+} from '[[{core}]]/Panel';
 import { descriptor } from '../descriptor';
 
 interface Data {}
@@ -8,7 +12,7 @@ interface Computed extends IDescriptorProps<ReturnType<typeof descriptor>> {}
 interface Props {}
 
 export interface IInstance extends IPanelInstance, Data, Methods, Computed, Props {}
-export interface IComponentOptions extends IPanelComponentOptions<IInstance, Data, Methods, Computed, Props> {
-    extends: typeof Panel;
+export interface IComponentOptions
+    extends IPanelComponentOptions<IInstance, Data, Methods, Computed, Props> {
+    extends: IPanelComponentOptionsInternal;
 }
-

@@ -1,5 +1,5 @@
 import { BaseDto } from '@goodt/common/infra';
-import { ApiServiceError } from '@goodt/common/services/ApiService/error/ApiServiceError';
+import { ApiServiceError } from '@goodt/common/services/ApiService/errors';
 
 export class PollInfoDto extends BaseDto {
     // eslint-disable-next-line class-methods-use-this

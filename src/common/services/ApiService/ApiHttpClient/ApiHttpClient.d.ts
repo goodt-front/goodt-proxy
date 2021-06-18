@@ -11,28 +11,16 @@ export class ApiHttpClient {
     /**
      * @type {string}
      */
-    baseURL: string;
+    public baseURL: string;
     /**
      * Transport client instance
      * @private
      * @member {ITransport}
      */
-    private _transport: ITransport;
-    /**
-     *
-     */
-    init(): void;
-    /**
-     * @public
-     * @async
-     * @method ApiHttpClient#request
-     * @param {ITransportRequest} request
-     *
-     * @throw {ApiHttpClientError|Error}
-     * @return {Promise<*>}
-     */
     public request(request: ITransportRequest): Promise<any>;
-    dispose(): void;
+    public dispose(): void;
+
+    private _transport: ITransport;
     /**
      * Создаёт конфиг реквеста для совершения запроса транспортом ITransportRequest
      * Особенность: знает формат запроса к серверу, дополнительные HTTP заголовки
@@ -49,7 +37,7 @@ export class ApiHttpClient {
      * @param {ITransportResponse} transportResponse
      * @return {*}
      */
-    _processTransportResponse(transportResponse: ITransportResponse): any;
+    private _processTransportResponse(transportResponse: ITransportResponse): any;
     /**
      * Обрабатывает ошибку от транспорта и трансформирует в инфраструктурную ошибку
      * Особенность: знает формат ошибки сервера, какие статус коды являются ошибочными
@@ -57,7 +45,7 @@ export class ApiHttpClient {
      * @param {Error} error
      * @return {Error}
      */
-    _processTransportError(error: Error): Error;
+    private _processTransportError(error: Error): Error;
 }
 
 export const ApiClientMethod: Readonly<{
@@ -67,10 +55,12 @@ export const ApiClientMethod: Readonly<{
     DELETE: string;
 }>;
 
+export interface IApiClientRequest extends ITransportRequest {}
+
 /**
  * Creates ApiHttpClient instance
  *
- * @param {ITransport} [transport] Transport client instance
+ * @param {ITransport} transport Transport client instance
  * @return {ApiHttpClient}
  */
-export function create(transport?: ITransport): ApiHttpClient;
+export function create(transport: ITransport): ApiHttpClient;

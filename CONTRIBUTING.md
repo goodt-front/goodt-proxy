@@ -103,3 +103,81 @@ class SomeClass {};
 export { SomeClass };
 export default SomeClass;
 ```
+
+# @goodt/common
+## API Services
+### Методы
+#### Названия публичных методов
+Должно начинаться с одного из четырёх возможных префиксов
+  - `get*` – чтение, получение данных
+  - `create*` – создание нового ресурса
+  - `update*` – обновление существующего ресурса
+  - `delete*` – удаление существующего ресурса
+
+Если метод осуществляет идентификацию ресурса по какому-то одному параметру – `id`,
+то название должно постфиксироваться `*byParam`
+
+Например, `getEmplyeeById`, `getEmplyeesByTeamId`
+
+#### Сигнатуры входных параметров
+**`get*`-методы**:
+```js
+/**
+ * @param {number|string} paramValue – идентификатор ресурса
+ * @param {Record<string, any>} extraServiceQuery – дополнительная служенбная информация для запроса
+ *
+ * @return {ItemDto|null}
+ */
+geItemById(itemId, extraServiceQuery);
+```
+
+```js
+
+/**
+ * @param {number|string} paramValue – идентификатор ресурса
+ * @param {Record<string, any>} extraServiceQuery – дополнительная служенбная информация для запроса
+ * @return {ItemDto[]|null}
+ */
+geItemsByTeamId(itemId, extraServiceQuery);
+```
+
+```js
+/**
+ * @param {number|string} paramValue – идентификатор ресурса
+ * @param {Record<string, any>} extraServiceQuery – дополнительная служенбная информация для запроса
+ * @return {ItemDto[]|null}
+ */
+geItems({ teamId: 10 }, { limit: 10, offset: 20, order: 1 });
+```
+
+**`create*`-методы**:
+```js
+/**
+ * @param {number|string} itemDto – dto ресурса
+ * @param {Record<string, any>} extraServiceQuery – дополнительная служенбная информация для запроса
+ * @return {ItemDto|null}
+ */
+createItem(itemDto, extraServiceQuery);
+```
+
+**`update*`-методы**:
+```js
+/**
+ * @param {number|string} itemId – идентификатор ресурса
+ * @param {number|string} itemDto – dto ресурса
+ * @param {Record<string, any>} extraServiceQuery – дополнительная служенбная информация для запроса
+ * @return {ItemDto|null}
+ */
+updateItemById(itemId, itemDto, extraServiceQuery);
+```
+
+**`update*`-методы**:
+```js
+/**
+ * @param {number|string} itemId – идентификатор ресурса
+ * @param {number|string} itemDto – dto ресурса
+ * @param {Record<string, any>} extraServiceQuery – дополнительная служенбная информация для запроса
+ * @return {boolean}
+ */
+deleteItemById(itemId);
+```

@@ -36,6 +36,7 @@ export interface ITransportRequest {
 }
 
 export interface ITransport {
+    baseURL: string;
     /**
      * Make async request and returns response promise
      */

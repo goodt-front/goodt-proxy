@@ -1,18 +1,17 @@
+import { ITransportOptions } from '@goodt/core/net';
 import { ISafeResult } from '@goodt/common/utils';
-import { ApiServiceRequestTypeEnum } from './ApiServiceRequest';
 
 export interface IApiServiceResponse extends ISafeResult {}
 
 export interface IApiServiceRequest {
-    operation: string;
-    payload?: Record<string, any>;
-    type?: ApiServiceRequestTypeEnum;
-    options?: IApiServiceOptions;
+    url: string;
+    params?: Record<string, any>;
+    options?: ITransportOptions;
 }
 
-export interface IApiServiceOptions {
-    apiBaseURL?: string;
+export interface IApiServiceOptions extends Record<string, unknown> {
     ttl?: number;
+    apiBaseURL?: string;
 }
 
 export interface IApiServiceConstructor {

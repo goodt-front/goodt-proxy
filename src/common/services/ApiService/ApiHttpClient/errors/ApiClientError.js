@@ -1,15 +1,36 @@
 import { InfrastructureError } from '@goodt/common/errors';
 
 /**
+ * @typedef { import('./ApiClientError').TApiHttpClientErrorCode } TApiHttpClientErrorCode
+ */
+
+/**
+ * Enum ошибок апи-сервиса
+ *
+ * @readonly
+ * @enum string
+ */
+export const ApiHttpClientErrorCode = Object.freeze({
+    INTERNAL: 0,
+    FORBIDDEN: 403,
+    NOT_FOUND: 404,
+    UNAUTHORIZED: 401,
+    INTERNAL_SERVER_ERROR: 500,
+    BAD_REQUEST: 400
+});
+
+/**
  * Класс-исключение транспортного уровня для запросов к api
  * @class ApiHttpClientError
  */
 class ApiHttpClientError extends InfrastructureError {
+    static Code = ApiHttpClientErrorCode;
+
     /**
      * @private
-     * @member {number}
+     * @type {TApiHttpClientErrorCode} [code]
      */
-    _code;
+    _code = ApiHttpClientErrorCode.INTERNAL;
 
     /**
      * @private
@@ -27,12 +48,12 @@ class ApiHttpClientError extends InfrastructureError {
     /**
      *
      * @param {string} [message]
-     * @param {number} [code]
+     * @param {TApiHttpClientErrorCode} [code]
      * @param {*} [data]
      * @param {Object} [reason]
      * @constructs Service
      */
-    constructor(message, { code = 0, data, reason } = {}) {
+    constructor(message, { code = ApiHttpClientErrorCode.INTERNAL, data, reason } = {}) {
         super(message);
         this.name = this.constructor.name;
         this._code = code;
@@ -54,7 +75,8 @@ class ApiHttpClientError extends InfrastructureError {
      * HTTP status code
      * @public
      * @readonly
-     * @member {number} Service_code
+     * @type {TApiHttpClientErrorCode}
+     * @return {TApiHttpClientErrorCode}
      */
     get code() {
         return this._code;
@@ -70,19 +92,5 @@ class ApiHttpClientError extends InfrastructureError {
         return this._reason;
     }
 }
-
-/**
- * Enum ошибок апи-сервиса
- *
- * @readonly
- * @enum string
- */
-export const ApiHttpClientErrorCode = Object.freeze({
-    FORBIDDEN: 403,
-    NOT_FOUND: 404,
-    UNAUTHORIZED: 401,
-    INTERNAL_SERVER_ERROR: 500,
-    BAD_REQUEST: 400
-});
 
 export { ApiHttpClientError, ApiHttpClientError as default };

@@ -1,3 +1,2 @@
 export * from './BaseApiService';
-export * from './ApiServiceRequest';
-export * from './utils';
+export * from './errors';

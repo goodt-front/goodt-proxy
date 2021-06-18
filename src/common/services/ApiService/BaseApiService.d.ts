@@ -7,7 +7,7 @@ import {
     IApiServiceOptions,
     IApiServiceRequest
 } from './types';
-import { ApiHttpClient } from './ApiHttpClient';
+import { ApiHttpClient, IApiClientRequest } from './ApiHttpClient';
 import { ApiServiceError } from './error';
 import { SafeResult } from '../../utils';
 import { ITransportRequest } from '@goodt/core/net';
@@ -40,7 +40,7 @@ export class BaseApiService implements IApiService {
     setOptions(options: IApiServiceOptions): void;
     /**
      *
-     * @param {import('./ApiServiceRequest')} request
+     * @param {IApiServiceRequest} request
      * @return {Promise<SafeResult>}
      */
     request(request: IApiServiceRequest): Promise<SafeResult>;
@@ -52,19 +52,19 @@ export class BaseApiService implements IApiService {
      * Билдит конфиг реквеста для клиента
      *
      * @param {IApiServiceRequest} request
-     * @return {import('@goodt/core/net').ITransportRequest} ITransportRequest
+     * @return {IApiClientRequest} IApiClientRequest
      */
-    _buildApiClientRequest(request: IApiServiceRequest): ITransportRequest;
+    private _buildApiClientRequest(request: IApiServiceRequest): IApiClientRequest;
     /**
      *
      * @param {Error} error
      * @return {ApiServiceError|Error|null}
      */
-    _processError(error: Error): ApiServiceError | Error | null;
+    private _processError(error: Error): ApiServiceError | Error | null;
     /**
      *
      * @param {Error} error
      * @return {ApiServiceError}
      */
-    _buildApiServiceError(error: Error): ApiServiceError;
+    private _buildApiServiceError(error: Error): ApiServiceError;
 }

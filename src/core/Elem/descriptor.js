@@ -176,10 +176,6 @@ export const descriptor = () => ({
             default() {
                 return {};
             }
-        },
-        slotData: {
-            type: Object,
-            default: () => ({})
         }
     },
     vars: {}

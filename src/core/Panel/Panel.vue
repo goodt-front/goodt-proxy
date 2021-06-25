@@ -53,20 +53,27 @@ export default ({
     },
     computed: {
         /**
-         * @return {import('@goodt/core/types').ElemDescriptor}
+         * @return {object}
          */
         propsDefault() {
             return getDescriptorDefaultProps(this.descriptor);
+        },
+        /**
+         * @return {object}
+         */
+        propsMerged() {
+            const { propsDefault, initProps } = this;
+            return { ...propsDefault, ...initProps };
         }
     },
     watch: {
-        initProps: {
+        propsMerged: {
             handler(val) {
-                this.props = cloneDeep({ ...this.propsDefault, ...val });
+                this.props = cloneDeep(val);
             },
             deep: true,
             immediate: true
-        }
+        },
     },
     methods: {
         /**

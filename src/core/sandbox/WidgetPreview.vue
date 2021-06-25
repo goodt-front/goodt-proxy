@@ -4,7 +4,7 @@
             <div class="col">
                 <widget-render v-bind="renderOpts" v-if="renderOpts"></widget-render>
             </div>
-            <div class="col col-auto">
+            <div class="col col-auto" v-if="showPanels">
                 <div class="tile scroll-y h-100" :style="panelSidebarStyle">
                     <div class="tile-body">
                         <div class="p cf">
@@ -86,6 +86,10 @@ export default {
             default() {
                 return { width: '22rem', 'max-height': '80vh' };
             }
+        },
+        showPanels: {
+            type: Boolean,
+            default: true
         },
         isEditorMode: {
             type: Boolean,

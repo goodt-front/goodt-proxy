@@ -20,6 +20,7 @@ import { Panel } from '@goodt/core';
  * @type {IComponentOptions}
  */
 export default ({
+    extends: Panel,
     data() {
         return {
             $meta: { name: 'Настройки виджета', icon: 'widgets' }

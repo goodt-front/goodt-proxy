@@ -59,7 +59,9 @@ const ComponentOptions = {
             /** default slot name (used in editor env by dnd) */
             slotDefault: 'default',
             /** @type {ElemDescriptor} */
-            descriptor: descriptor()
+            descriptor: descriptor(),
+            /** @NOTE we have to make it reactive for the computed $eventBus to work */
+            eventBusWrapper: null
         };
     },
     computed: {

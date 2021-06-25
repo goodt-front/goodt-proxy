@@ -3,6 +3,20 @@ import AuthManager from '../managers/AuthManager';
 
 class HttpAuth extends Http {
     /**
+     * @type {AuthManager}
+     * @private
+     */
+    _authManager = AuthManager.instance;
+
+    /**
+     *
+     * @param {AuthManager} authManager
+     */
+    setAuthManager(authManager) {
+        this._authManager = authManager;
+    }
+
+    /**
      * Constructor
      *
      * @param {import('./types').ITransportOptions} [options={}]  transport config
@@ -10,7 +24,7 @@ class HttpAuth extends Http {
     constructor(options = {}) {
         super(options);
         this.axios.interceptors.request.use((config) => {
-            const { adapter } = AuthManager.instance;
+            const { adapter } = this._authManager;
             if (adapter == null) {
                 return config;
             }

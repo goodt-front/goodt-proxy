@@ -217,7 +217,7 @@ class BaseApiService extends IApiService {
 ```js
 // services/ExampleApiService.js
 import { createTransport, HttpAuthTransportSymbol } from '@goodt/core/net';
-import { buildDtoSafeResult } from '@/common/infra/utils';
+import { buildDtoSafeResult } from '@goodt/common/infra/utils';
 import { useApiService } from '@goodt/common/mixins';
 import { BaseApiService } from '@goodt/common/services/ApiService';
 import { ItemDto } from './dto';

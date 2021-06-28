@@ -52,6 +52,10 @@ const mixin = {
              */
             queryHelper: null,
             /**
+             * @property {boolean}
+             */
+            watchStoreState: true,
+            /**
              * loadData() method hooks
              *
              * @see loadData()
@@ -126,19 +130,6 @@ const mixin = {
             }
         }
     },
-    watch: {
-        $storeState(state) {
-            if (!Object.keys(state).length) {
-                return;
-            }
-            this.$nextTick(() => {
-                if (this.applyDremioFilters(state)) {
-                    this.offset = 0;
-                }
-                this.loadData();
-            });
-        }
-    },
     created() {
         /**
          * @property {SDK}
@@ -151,6 +142,20 @@ const mixin = {
 
         this.dremioHandler();
 
+        // watch store state if enabled
+        if (this.watchStoreState) {
+            this.$watch('$storeState', (state) => {
+                if (!Object.keys(state).length) {
+                    return;
+                }
+                this.$nextTick(() => {
+                    if (this.applyDremioFilters(state)) {
+                        this.offset = 0;
+                    }
+                    this.loadData();
+                });
+            });
+        }
         if (this.isEditorMode) {
             this.$watch('dremioStr', this.dremioHandler);
         }

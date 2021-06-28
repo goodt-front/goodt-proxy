@@ -3,6 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import { getDescriptorDefaultProps } from '../Elem';
 import { PanelUi } from '../components';
+import { ConstManager } from '../managers';
 
 /**
  * Panel events
@@ -64,6 +65,13 @@ export default ({
         propsMerged() {
             const { propsDefault, initProps } = this;
             return { ...propsDefault, ...initProps };
+        },
+        /**
+         * @NOTE compatibility fix tobe removed
+         * @return [string[]]
+         */
+        envConstantsNames() {
+            return Object.keys(ConstManager.instance.getConstantsHash());
         }
     },
     watch: {
@@ -73,7 +81,7 @@ export default ({
             },
             deep: true,
             immediate: true
-        },
+        }
     },
     methods: {
         /**

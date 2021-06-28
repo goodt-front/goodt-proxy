@@ -5,6 +5,7 @@ const ApiClientMethod = Object.freeze({
     GET: 'get',
     POST: 'post',
     PATCH: 'patch',
+    PUT: 'put',
     DELETE: 'delete'
 });
 

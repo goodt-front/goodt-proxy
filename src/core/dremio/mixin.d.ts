@@ -22,6 +22,10 @@ interface Data {
      */
     queryHelper: Query;
     /**
+     * @property {boolean}
+     */
+    watchStoreState: boolean,
+    /**
      * loadData() method hooks
      *
      * @see loadData()

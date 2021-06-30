@@ -1,0 +1,5 @@
+{
+  "name": "@goodt/browserslist-config",
+  "version": "1.0.0",
+  "description": "SUP: browserslist config. Shared browserslist config for reuse in SUP projects."
+}

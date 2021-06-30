@@ -1,26 +1,35 @@
 <template>
     <ui-panel-container>
         <ui-has-panel v-for="variable in varsInfo" :key="variable.name" class="pad-v-1">
-            <ui-checkbox
-                v-model.lazy="variable.alias.meta.global"
-                :disabled="!variable.alias.listen && !variable.alias.trigger"
-                :title="variable.alias.meta.global ? 'global' : 'local'"
-                @change="exportAliases"
-            >
-                <span :title="variable.description">{{ variable.name }}</span>
-                <template #helper>
-                    <div
-                        class="mdi mdi-arrow-down pull-left"
-                        :class="{ 'text-muted': !variable.alias.listen }"
-                        :title="`listen: ${variable.alias.listen}`"
-                    />
-                    <div
-                        class="mdi mdi-arrow-up pull-left"
-                        :class="{ 'text-muted': !variable.alias.trigger }"
-                        :title="`trigger: ${variable.alias.trigger}`"
-                    />
+            <div class="d-flex flex-v-center">
+                <template v-if="!variable.alias.listen && !variable.alias.trigger">
+                    <i class="mdi mdi-close text-muted"></i>
                 </template>
-            </ui-checkbox>
+                <template v-else>
+                    <i
+                        class="mdi cursor-pointer "
+                        :class="{
+                            'mdi-earth-off color-grey': !variable.alias.meta.global,
+                            'mdi-earth color-primary': variable.alias.meta.global
+                        }"
+                        :title="variable.alias.meta.global ? 'global' : 'local'"
+                        @click="toggleAliasMetaGlobal(variable.alias)"
+                    ></i>
+                </template>
+                <div
+                    class="mdi mdi-arrow-down pad-left-2"
+                    :class="{ 'text-muted': !variable.alias.listen }"
+                    :title="`listen: ${variable.alias.listen}`"
+                />
+                <div
+                    class="mdi mdi-arrow-up"
+                    :class="{ 'text-muted': !variable.alias.trigger }"
+                    :title="`trigger: ${variable.alias.trigger}`"
+                />
+                <div class="text-small pad-left-2" :title="variable.description">
+                    {{ variable.name }}
+                </div>
+            </div>
             <template #panel>
                 <ui-panel :groups="[{ name: variable.name, slot: 'default' }]">
                     <div v-if="variable.name != variable.description" class="text-small p">
@@ -103,6 +112,13 @@ export default {
             });
             this.props.varAliases = aliases;
             this.propChanged('varAliases');
+        },
+        /**
+         * @param {ElemVarAliasDef} alias
+         */
+        toggleAliasMetaGlobal(alias) {
+            alias.meta.global = !alias.meta.global;
+            this.exportAliases();
         }
     }
 };

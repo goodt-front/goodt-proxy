@@ -44,7 +44,7 @@ const createRenderFactory = (h, elemInfo, vnodeData = {}, isEditorMode = false, 
                     ...data.props,
                     slotData: {
                         ...data.props.slotData,
-                        props
+                        ...props
                     }
                 }
             });

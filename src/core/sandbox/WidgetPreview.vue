@@ -152,11 +152,14 @@ export default {
                     ...elemAttrs,
                     props: elemProps
                 },
-                dataAddons: {
-                    on: {
-                        [ElemEvent.MOUNTED]: onElemMounted
-                    }
-                },
+                dataAddons: (info) =>
+                    info.id === elemAttrs.id
+                        ? {
+                              on: {
+                                  [ElemEvent.MOUNTED]: onElemMounted
+                              }
+                          }
+                        : {},
                 isEditorMode
             };
         },

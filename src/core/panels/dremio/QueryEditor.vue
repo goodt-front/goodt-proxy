@@ -14,6 +14,16 @@
                     <div class="text-h3">
                         {{ datasetName }}
                     </div>
+                    <a
+                        class="btn btn-ghost btn-icon mar-left-3"
+                        :href="datasetLink"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        <span class="icon">
+                            <i class="mdi mdi-database mdi-18px" />
+                        </span>
+                    </a>
                 </div>
             </template>
             <div v-else class="text-h3">
@@ -101,6 +111,7 @@ import SortEditor from './editors/SortEditor.vue';
 import PaginationEditor from './editors/PaginationEditor.vue';
 // utils
 import { Query, SDKFactory } from '../../dremio';
+import Const from '../../Const';
 
 const { KEY } = Query;
 const FIELD_TYPES_META = {
@@ -326,7 +337,10 @@ export default {
             });
         },
         datasetName() {
-            return this.query ? this.query[KEY.FROM].join(' / ') : '';
+            return this.from.join(' / ');
+        },
+        datasetLink() {
+            return `${Const.DREMIO_UI_URL}/space/${this.datasetName}`.replace(/\s/g, '');
         },
         fields: {
             get() {

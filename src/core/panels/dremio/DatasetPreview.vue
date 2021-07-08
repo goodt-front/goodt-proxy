@@ -155,9 +155,25 @@
                 </div>
                 <div class="popup-dialog-body">
                     <code>sql</code>
-                    <pre class="text-xsmall p" style="white-space: pre-line">{{ sql }}</pre>
+                    <div class="pos-rel">
+                        <pre class="text-xsmall p" style="white-space: pre-line">{{ sql }}</pre>
+                        <div
+                            class="btn btn-ghost btn-icon btn-small pos-abs pos-bot-right"
+                            @click="writeToClipboard(sql)"
+                        >
+                            <i class="mdi mdi-content-copy"></i>
+                        </div>
+                    </div>
                     <code>dremio</code>
-                    <pre class="text-xsmall" style="max-height: 35vh">{{ dremio }}</pre>
+                    <div class="pos-rel">
+                        <pre class="text-xsmall" style="max-height: 35vh">{{ dremio }}</pre>
+                        <div
+                            class="btn btn-ghost btn-icon btn-small pos-abs pos-bot-right"
+                            @click="writeToClipboard(dremio)"
+                        >
+                            <i class="mdi mdi-content-copy"></i>
+                        </div>
+                    </div>
                 </div>
                 <div class="popup-dialog-footer text-right">
                     <span class="btn btn-ghost" @click="showDebug = false">Закрыть</span>
@@ -341,10 +357,10 @@ export default {
             this.error = null;
             this.dremioSdk
                 .getData(this.buildQuery(), this.offset, this.limit, true)
-                .then(result => {
+                .then((result) => {
                     this.result = result;
                 })
-                .catch(e => {
+                .catch((e) => {
                     if (!e.isCancel) {
                         this.error = e;
                         this.errorCollapsed = true;
@@ -361,6 +377,14 @@ export default {
                 Query.queryInsertUpdateDimension(query, d);
             }
             return query;
+        },
+        async writeToClipboard(any) {
+            try {
+                const str = typeof any !== 'string' ? JSON.stringify(any) : any;
+                await navigator.clipboard.writeText(str);
+            } catch (e) {
+                this.error = e;
+            }
         },
         onColumnSummarySelect() {
             const selected = this.headerAllSelected ? [] : this.header.map(({ column }) => column);

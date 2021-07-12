@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "description": "SUP: Config. Shared configs and package dependencies config for reuse in SUP projects.",
   "dependencies": {
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.2"
   }
 }

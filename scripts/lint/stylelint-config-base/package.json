@@ -1,0 +1,15 @@
+{
+  "name": "@goodt/stylelint-config-base",
+  "version": "1.0.0",
+  "description": "SUP: Linting. Shared styles linting configs and package dependencies config for reuse in SUP projects.",
+  "main": "./index.json",
+  "dependencies": {
+    "@mapbox/stylelint-processor-arbitrary-tags": "^0.4.0",
+    "stylelint": "^13.13.1",
+    "stylelint-config-recommended": "^5.0.0",
+    "stylelint-webpack-plugin": "^2.2.2",
+    "stylelint-config-skyscanner": "^4.0.0",
+    "stylelint-declaration-strict-value": "^1.7.12",
+    "stylelint-no-unused-selectors": "^1.0.39"
+  }
+}

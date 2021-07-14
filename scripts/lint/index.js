@@ -51,7 +51,7 @@ module.exports = {
                 allowBinding: true
             }
         ],
-        'vue/no-side-effects-in-computed-properties': ['error', 'always'],
+        'vue/no-side-effects-in-computed-properties': 'error',
 
         'vue-scoped-css/enforce-style-type': ['error', { allows: ['scoped', 'module'] }],
         'vue-scoped-css/no-unused-selector': 0,

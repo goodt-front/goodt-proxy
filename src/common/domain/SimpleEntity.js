@@ -1,5 +1,5 @@
-import { BaseEntity } from '@goodt/common/domain/BaseEntity';
-import { decorateObjectWithProxy } from '@goodt/common/utils';
+import { BaseEntity } from '@goodt-common/domain/BaseEntity';
+import { decorateObjectWithProxy } from '@goodt-common/utils';
 
 export class SimpleEntity extends BaseEntity {
     constructor(...args) {

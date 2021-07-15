@@ -104,7 +104,7 @@ export { SomeClass };
 export default SomeClass;
 ```
 
-# @goodt/common
+# @goodt-common/api
 ## API Services
 ### Методы
 #### Названия публичных методов

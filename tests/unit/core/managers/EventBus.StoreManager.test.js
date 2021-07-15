@@ -1,12 +1,12 @@
-import RouteManager from '@goodt/core/managers/RouteManager';
-import { EventBus, EventBusWrapper, EventBusEvent } from '@goodt/core/managers/EventBus';
+import RouteManager from '@goodt-wcore/managers/RouteManager';
+import { EventBus, EventBusWrapper, EventBusEvent } from '@goodt-wcore/managers/EventBus';
 
 import {
     buildExternalStateFromInternal,
     buildInternalStateFromExternal
-} from '@goodt/core/mixins/useStore';
+} from '@goodt-wcore/mixins';
 
-import { buildStoreValue, createStore, unwrapStoreValue } from '@goodt/core/managers/StoreManager';
+import { buildStoreValue, createStore, unwrapStoreValue } from '@goodt-wcore/managers/StoreManager';
 
 /**
  * @dictionary

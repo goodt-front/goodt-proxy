@@ -2,11 +2,11 @@ import {
     ApiClientRequestCancel,
     create as createApiHttpClient,
     ApiHttpClientError
-} from '@goodt/common/services/ApiService/ApiHttpClient';
+} from '@goodt-common/api/ApiHttpClient';
 
 import mockAxios from 'jest-mock-axios';
 
-import { createTransport, HttpTransportSymbol } from '@goodt/core/net';
+import { createTransport, HttpTransportSymbol } from '@goodt-common/net';
 import { wrapTestWithAaa } from '../../utils';
 
 const test = wrapTestWithAaa(it);

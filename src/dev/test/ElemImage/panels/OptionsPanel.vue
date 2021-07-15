@@ -9,7 +9,7 @@
     </ui-panel-container>
 </template>
 <script>
-import { Panel } from '@goodt/core';
+import { Panel } from '@goodt-wcore/core';
 
 /**
  * @typedef {import('./OptionsPanel').IComponentOptions} IComponentOptions

@@ -1,7 +1,7 @@
 import { IDescriptorProps } from '[[{core}]]';
 import { IElemComponentOptions, IElemInstance, IElemComponentOptionsInternal } from '[[{core}]]/Elem';
 [[#hasTransport]]
-import { IApiServiceMixinInstance } from '@goodt/common/mixins';
+import { IApiServiceMixinInstance } from '@goodt-common/mixins';
 import { [[{name}]]Service } from './api/[[{name}]]Service';
 [[/hasTransport]]
 import { descriptor } from './descriptor';

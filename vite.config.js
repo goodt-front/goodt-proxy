@@ -5,7 +5,7 @@ module.exports = {
     plugins: [createVuePlugin()],
     resolve: {
         alias: {
-            '@goodt/core': path.resolve(__dirname, '/src/core')
+            '@goodt-wcore/core': path.resolve(__dirname, '/src/core')
         }
     }
 };

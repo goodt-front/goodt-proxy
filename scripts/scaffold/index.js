@@ -16,13 +16,13 @@ const CONFIG = {
             lib: `${cwd}/src/lib`
         },
         core: {
-            root: `@goodt/core`,
-            panels: `@goodt/panels`,
-            mixins: `@goodt/core/mixins`
+            root: `@goodt-wcore/core`,
+            panels: `@goodt-wcore/panels`,
+            mixins: `@goodt-wcore/mixins`
         },
         common: {
-            utils: `@goodt/common/utils`,
-            mixins: `@goodt/common/mixins`
+            utils: `@goodt-common/utils`,
+            mixins: `@goodt-common/mixins`
         }
     },
     panel: {

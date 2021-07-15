@@ -1,3 +1,4 @@
+export * from './utils';
 export { BaseError } from './BaseError';
 export { InfrastructureError } from './InfrastructureError';
 export { UncaughtTrackableError } from './UncaughtTrackableError';

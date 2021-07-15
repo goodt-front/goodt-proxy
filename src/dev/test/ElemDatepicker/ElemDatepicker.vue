@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import { Elem } from '@goodt/core';
+import { Elem } from '@goodt-wcore/core';
 
 const descriptor = () => ({
     props: {},

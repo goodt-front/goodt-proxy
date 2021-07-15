@@ -1,5 +1,5 @@
 {
-    "name": "@goodt/common",
+    "name": "@goodt-wcore/common",
     "version": "1.0.0",
     "private": true,
     "description": "SUP: Common. Folder-based package with shared `core common` functionality to reuse in SUP projects.",

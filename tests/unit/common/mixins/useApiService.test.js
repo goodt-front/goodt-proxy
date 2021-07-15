@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import { Elem } from '@goodt/core';
-import { useApiService } from '@goodt/common/mixins';
-import { BaseApiService } from '@goodt/common/services/ApiService';
+import { Elem } from '@goodt-wcore/core';
+import { useApiService } from '@goodt-common/mixins';
+import { BaseApiService } from '@goodt-common/api';
 import { wrapTestWithAaa } from '../../utils';
 
 const test = wrapTestWithAaa(it);

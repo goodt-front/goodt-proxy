@@ -1,5 +1,5 @@
-import { BaseApiService, createApiServiceRequest as createRequest } from '@goodt/common/services';
-import { fail, success } from '@goodt/common/utils';
+import { BaseApiService } from '@goodt-common/api';
+import { fail, success } from '@goodt-common/utils';
 
 const API_ENDPOINTS_PATH = {
     FETCH_ITEM_BY_ID: '/some/item/:id'

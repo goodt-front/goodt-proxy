@@ -138,12 +138,29 @@ panel** IPanel                                                                  
 
 ### Дополнительные folder-based npm-пакеты и алиасы
 
-#### Runtime-алиасы
+#### Runtime-алиасы ядра
 
 | название                      | описание                                                                                                                    |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `@goodt/core`                 | без зависимостей, алиас для доступа к папке `core` этого пакета
-| `@goodt/panels`               | без зависимостей, алиас для доступа к папке пакета `Panels` этого пакета |
+| `@goodt-wcore/core`           | |
+| `@goodt-wcore/managers`       | |
+| `@goodt-wcore/mixins`         | |
+| `@goodt-common/net`           | |
+| `@goodt-wcore/panels`         | |
+| `@goodt-wcore/render`         | |
+| `@goodt-wcore/types`          | |
+| `@goodt-wcore/common`         | |
+
+#### Runtime-алиасы общей функциональности
+
+| название                      | описание                                                                                                                    |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `@goodt-common/utils`         | |
+| `@goodt-common/api`           | |
+| `@goodt-common/services`      | |
+| `@goodt-common/domain`        | |
+| `@goodt-common/infra`         | |
+| `@goodt-common/errors`        | |
 
 #### Dev-mode пакеты
 npm-пакеты, которые используются как самим ядром при разработке, так и переиспользуются в режиме разработки проектов СУП: Плеер, Библиотека виджетов, Редактор
@@ -152,9 +169,10 @@ npm-пакеты, которые используются как самим яд
 | `@goodt/config`               | Содержит переиспользуемые конфиги в проектах СУП
 | `@goodt/browserslist-config`  | Содержит конфиг для browserslist |
 | `@goodt/eslint-config-base`   | Содержит конфиг для eslint и связанные с ним зависимости |
+| `@goodt/stylelint-config-base`| Содержит конфиг для eslint и связанные с ним зависимости |
 | `@goodt/tests`                | Содержит конфиг для jest и связанные зависимости для его работы |
-| `@goodt/scaffold`             | Содержит скрипты для ыс кода шаблона виджетов |
-| `@goodt/styleguide`           | Содержит зависимости для работы styleguide |
+| `@goodt-wcore/scaffold`       | Содержит скрипты для ыс кода шаблона виджетов |
+| `@goodt-wcore/styleguide`     | Содержит зависимости для работы styleguide |
 
 #### Особенности установки dev-mode folder-based npm-пакетов для внешнего использования
 Поскольку dev-mode npm-пакеты не являются самостоятельными npm-пакетами,
@@ -164,10 +182,10 @@ npm-пакеты, которые используются как самим яд
 Их можно установить в проект вручную ТОЛЬКО ПОСЛЕ УСТАНОВКИ `goodt-wcore`.
 
 ```bash
-npm i --no-save @goodt/config @goodt/browserslist-config @goodt/eslint-config-base @goodt/scaffold @goodt/styleguide
+npm i --no-save @goodt/config @goodt/browserslist-config @goodt/eslint-config-base @goodt/stylelint-config-base @goodt/scaffold @goodt/styleguide
 ```
 
-# @goodt/common
+# @goodt-common/api
 ## BaseApiService
 API-сервис – функциональность, ответственностями которой являются:
 * подготовка запросов для серверного API в требуемом формате;
@@ -208,7 +226,7 @@ class BaseApiService extends IApiService {
      * Билдит конфиг реквеста для клиента
      *
      * @param {IApiServiceRequest} request
-     * @return {import('@goodt/core/net').ITransportRequest} ITransportRequest
+     * @return {import('@goodt-wcore/core/net').ITransportRequest} ITransportRequest
      */
 }
 ```
@@ -216,10 +234,10 @@ class BaseApiService extends IApiService {
 Пример
 ```js
 // services/ExampleApiService.js
-import { createTransport, HttpAuthTransportSymbol } from '@goodt/core/net';
-import { buildDtoSafeResult } from '@goodt/common/infra/utils';
-import { useApiService } from '@goodt/common/mixins';
-import { BaseApiService } from '@goodt/common/services/ApiService';
+import { createTransport, HttpAuthTransportSymbol } from '@goodt-common/net';
+import { buildDtoSafeResult } from '@goodt-common/infra/utils';
+import { useApiService } from '@goodt-common/mixins';
+import { BaseApiService } from '@goodt-common/api';
 import { ItemDto } from './dto';
 
 const ApiEndpointsPath = {
@@ -326,10 +344,10 @@ export { create, useApiServiceMixin };
 
 ```js
 // ElemWidget.vue
-import { Elem } from '@goodt/core';
-import { useApiService } from '@goodt/common/mixins';
-import { fail, success } from '@goodt/common/utils';
-import { PresentableError } from '@goodt/common/errors';
+import { Elem } from '@goodt-wcore/core';
+import { useApiService } from '@goodt-common/mixins';
+import { fail, success } from '@goodt-common/utils';
+import { PresentableError } from '@goodt-common/errors';
 import { descriptor } from './descriptor';
 import { useApiServiceMixin } from './service/ExampleApiService';
 

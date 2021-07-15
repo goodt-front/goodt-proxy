@@ -1,4 +1,4 @@
-import { ITransport, ITransportRequest, ITransportResponse } from '@goodt/core/net';
+import { ITransport, ITransportRequest, ITransportResponse } from '@goodt-wcore/core/net';
 /**
  * @class ApiHttpClient
  */

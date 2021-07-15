@@ -2,7 +2,7 @@ import Panel, {
     IPanelComponentOptions,
     IPanelComponentOptionsInternal,
     IPanelInstance
-} from '@goodt/core/Panel';
+} from '@goodt-wcore/Panel';
 
 interface Methods {}
 interface Computed {}

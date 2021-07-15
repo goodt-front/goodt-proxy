@@ -1,9 +1,5 @@
 import { BaseApiService, ApiServiceError } from '@goodt-common/api';
-import {
-    ApiClientRequestCancel,
-    ApiHttpClient,
-    ApiHttpClientError
-} from '@goodt-common/api/ApiHttpClient';
+import { ApiClientRequestCancel, ApiHttpClient, ApiHttpClientError } from '@goodt-common/api';
 import { createTransport, HttpTransportSymbol } from '@goodt-common/net';
 
 const API_BASE_URL = 'https://localhost:8080';
@@ -34,6 +30,8 @@ describe(`'BaseApiService' check`, () => {
 
     beforeEach(() => {
         transport = createTransport(HttpTransportSymbol, { baseURL: API_BASE_URL });
+        // Hack due to mock axios defaults problem
+        transport.baseURL = API_BASE_URL;
     });
 
     test('ApiService construct with empty options SHOULD pass and `apiBaseURL` is NULL', () => {
@@ -91,6 +89,8 @@ describe(`'BaseApiService' check`, () => {
         const apiService = new TestApiService({ transport, options: API_SERVICE_CUSTOM_OPTIONS });
 
         const newTransport = createTransport(HttpTransportSymbol, { baseURL: API_BASE_URL });
+        // Hack due to axios mock defaults problems
+        newTransport.baseURL = API_BASE_URL;
         const apiClient = new MockApiHttpClient(newTransport);
 
         // Act

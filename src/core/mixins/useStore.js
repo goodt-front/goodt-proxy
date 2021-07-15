@@ -24,7 +24,7 @@ const INSTANCE_ACCESSOR_NAME = '$store';
  *
  * @param {Record<string, ValueObject>} externalState
  * @param {Record<string, AliasMapMeta>} [varAliases=null]
- * @param {function(valueObject: ValueObject): any} unwrapExternalStateValue
+ * @param {function(valueObject: ValueObject): any} [unwrapExternalStateValue]
  * @return {Record<string, any>}
  */
 export const buildInternalStateFromExternal = (
@@ -64,7 +64,7 @@ export const buildInternalStateFromExternal = (
 /**
  * @param {Record<string, any>} internalState
  * @param {Record<string, AliasMapMeta>} varAliases
- * @param {function(value: any, meta: ValueObjectMeta): ValueObject} buildExternalStateValue
+ * @param {function(value: any, meta: ValueObjectMeta): ValueObject} [buildExternalStateValue]
  * @return {Record<string, ValueObject>}
  */
 export const buildExternalStateFromInternal = (

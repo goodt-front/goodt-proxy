@@ -45,6 +45,7 @@
     </div>
 </template>
 <style lang="less" scoped>
+/* stylelint-disable */
 @z: 900;
 @w: 20rem;
 .panel {
@@ -62,6 +63,7 @@
         z-index: @z+1;
     }
 }
+/* stylelint-enable */
 </style>
 <script>
 import { Portal } from 'portal-vue';

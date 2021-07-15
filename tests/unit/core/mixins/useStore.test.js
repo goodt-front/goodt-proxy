@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { Elem } from '@goodt-wcore/core';
 import { createStore } from '@goodt-wcore/managers/StoreManager';
-import { useStore, buildExternalStateFromInternal } from '@goodt-core/mixins';
+import { useStore, buildExternalStateFromInternal } from '@goodt-wcore/mixins';
 
 // awkward, but valid names
 const STORE_STATE_VARIABLE_NAME = 0;

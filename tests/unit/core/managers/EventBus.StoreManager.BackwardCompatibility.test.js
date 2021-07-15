@@ -1,4 +1,4 @@
-import RouteManager from '@goodt-wcore/managers';
+import { RouteManager } from '@goodt-wcore/managers';
 import { EventBus, EventBusWrapper, EventBusEvent } from '@goodt-wcore/managers/EventBus';
 import { buildStoreValue, createStore, unwrapStoreValue } from '@goodt-wcore/managers/StoreManager';
 

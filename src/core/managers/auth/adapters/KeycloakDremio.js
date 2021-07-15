@@ -1,4 +1,4 @@
-import { SDKFactory } from '@goodt/core/dremio';
+import { SDKFactory } from '@goodt-wcore/core/dremio';
 import Keycloak from './Keycloak';
 
 class KeycloakDremio extends Keycloak {

@@ -1,4 +1,4 @@
-import { ValueObject } from '../managers/StoreManager';
+import { ValueObject, Store } from '../managers/StoreManager';
 
 interface StoreState {
     [k as string]: ValueObject;
@@ -25,11 +25,13 @@ interface AliasMapMeta {
 export function buildInternalStateFromExternal(
     externalState: Record<string, ValueObject>,
     varAliases: Record<string, AliasMapMeta>,
-    unwrapExternalStateValue: (valueObject: ValueObject) => any
+    unwrapExternalStateValue?: (valueObject: ValueObject) => any
 ): Record<string, ValueObject>;
 
 export function buildExternalStateFromInternal(
     internalState: Record<string, any>,
     varAliases: Record<string, AliasMapMeta>,
-    buildExternalStateValue: (value: any, meta: ValueObjectMeta) => ValueObject
+    buildExternalStateValue?: (value: any, meta: ValueObjectMeta) => ValueObject
 ): Record<string, any>;
+
+export function useStore(options: { name?: string; store: () => Store }): { mixin: MixinOptions };

@@ -1,5 +1,5 @@
 import './types';
-import { InfrastructureError } from '@goodt/common/errors';
+import { InfrastructureError } from '@goodt-common/errors';
 import { Http } from './Http';
 import { HttpAuth } from './HttpAuth';
 

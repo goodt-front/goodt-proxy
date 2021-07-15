@@ -26,7 +26,7 @@
  */
 const esModules = [
     'goodt-dremio-sdk', //
-    '@goodt/core', //
+    '@goodt-wcore/core', //
     'goodteditor-ui', //
     'goodteditor-wcore' //
 ].join('|');

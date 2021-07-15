@@ -1,4 +1,4 @@
-// import { IDescriptorProps } from '@goodt/core';
+// import { IDescriptorProps } from '@goodt-wcore/core';
 // import { descriptor } from './descriptor';
 
 export interface DescriptorProps {

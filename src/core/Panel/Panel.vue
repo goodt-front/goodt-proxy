@@ -38,7 +38,7 @@ export default ({
             type: Object,
             required: true
         },
-        /** @type {import('vue').PropOptions<import('@goodt/core/types').ElemDescriptor>} */
+        /** @type {import('vue').PropOptions<import('@goodt-wcore/core/types').ElemDescriptor>} */
         descriptor: {
             type: Object,
             required: true

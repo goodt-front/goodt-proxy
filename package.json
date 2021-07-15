@@ -45,6 +45,7 @@
         "@goodt-wcore/styleguide": "file:scripts/styleguide",
         "@goodt-wcore/types": "file:src/core/types",
         "@goodt/browserslist-config": "file:.config/browserslist-config",
+        "@goodt/core": "file:src/core",
         "@goodt/common": "file:src/common",
         "@goodt/config": "file:.config",
         "@goodt/eslint-config-base": "file:scripts/lint",

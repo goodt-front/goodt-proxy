@@ -1,4 +1,4 @@
-import { DescriptorTypes } from '@goodt/core';
+import { DescriptorTypes } from '@goodt-wcore/core';
 
 const { InputString, CheckboxBoolean } = DescriptorTypes;
 

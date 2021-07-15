@@ -48,11 +48,6 @@ module.exports = class extends Template {
         const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
         const readmeMd = this.compileTpl(`${tplPath}/README.MD`, tplBinds);
 
-        //
-        const service = this.compileTpl(`${tplPath}/api/service.js`, tplBinds);
-        this.createWidgetDir('api');
-        this.createWidgetFile(`api/${this.widgetName}Service.js`, service);
-
         return this.createWidget({
             elem,
             panel,
@@ -60,7 +55,6 @@ module.exports = class extends Template {
             panelDT,
             panelsIndex,
             descriptor,
-            service,
             readmeMd
         });
     }

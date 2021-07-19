@@ -75,7 +75,7 @@
         "webpack": "^4.46.0"
     },
     "peerDependencies": {
-        "goodteditor-ui": "^0.0.32",
+        "goodteditor-ui": "^0.0.34",
         "vue": "^2.6.12"
     },
     "lint-staged": {

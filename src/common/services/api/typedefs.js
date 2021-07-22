@@ -1,5 +1,5 @@
 /**
- * @typedef { import('@goodt-common/net').ITransport } ITransport
- * @typedef { import('@goodt-common/net').ITransportRequest } ITransportRequest
- * @typedef { import('@goodt-common/net').ITransportOptions } ITransportOptions
+ * @typedef { import('@goodt-wcore/net').ITransport } ITransport
+ * @typedef { import('@goodt-wcore/net').ITransportRequest } ITransportRequest
+ * @typedef { import('@goodt-wcore/net').ITransportOptions } ITransportOptions
  */

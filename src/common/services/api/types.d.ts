@@ -1,4 +1,4 @@
-import { ITransportOptions } from '@goodt-common/net';
+import { ITransportOptions } from '@goodt-wcore/net';
 import { ISafeResult } from '@goodt-common/utils';
 
 export interface IApiServiceResponse extends ISafeResult {}

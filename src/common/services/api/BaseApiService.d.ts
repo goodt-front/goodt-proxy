@@ -1,7 +1,7 @@
 /**
  * @type {import('./BaseApiService').IApiService}
  */
-import { ITransportRequest } from '@goodt-common/net';
+import { ITransportRequest } from '@goodt-wcore/net';
 import {
     IApiService,
     IApiServiceConstructorOptions,

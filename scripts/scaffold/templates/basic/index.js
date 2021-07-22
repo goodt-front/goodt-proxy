@@ -28,6 +28,7 @@ module.exports = class extends Template {
             core: this.corePath,
             corePanels: this.corePanelsPath,
             coreMixins: this.coreMixinsPath,
+            coreNetPath: this.coreNetPath,
             commonMixins: this.commonMixinsPath,
             commonUtils: this.commonUtilsPath,
             lib: this.libPath,
@@ -47,8 +48,9 @@ module.exports = class extends Template {
         const panelsIndex = this.compileTpl(`${tplPath}/panels.index.js`, tplBinds);
         const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
         const readmeMd = this.compileTpl(`${tplPath}/README.MD`, tplBinds);
-
-        return this.createWidget({
+        const serviceCl = this.compileTpl(`${tplPath}/service/service.js`, tplBinds);
+        const serviceUtils = this.compileTpl(`${tplPath}/service/utils.js`, tplBinds);
+        const widgetCreated = this.createWidget({
             elem,
             panel,
             elemDT,
@@ -57,5 +59,11 @@ module.exports = class extends Template {
             descriptor,
             readmeMd
         });
+        const servicePath = 'service';
+        this.createWidgetDir(servicePath);
+        this.createWidgetFile(`${servicePath}/service.js`, serviceCl);
+        this.createWidgetFile(`${servicePath}/utils.js`, serviceUtils);
+
+        return widgetCreated;
     }
 };

@@ -4,6 +4,16 @@
         <code>{{ type }}</code>
         <div v-if="isEditorMode">running in editor</div>
         <div>{{ props }}</div>
+        [[#hasTransport]]
+        <pre v-if="demoResult">{{ demoResult.value }}</pre>
+        <div
+            class="btn btn-primary btn-small"
+            :class="{ 'btn-loading events-none': loading }"
+            @click="getDemoData"
+        >
+            send demo request
+        </div>
+        [[/hasTransport]]
         <!-- {/demo} -->
     </div>
 </template>
@@ -14,30 +24,16 @@
  */
 import { Elem } from '[[{core}]]';
 [[#hasTransport]]
-import { useApiService } from '[[{coreMixins}]]';
+[[#http]]
+import { createTransport, HttpTransportSymbol } from '[[{coreNetPath}]]';
+[[/http]]
+[[^http]]
+import { createTransport, HttpAuthTransportSymbol } from '[[{coreNetPath}]]';
+[[/http]]
+import { ServiceFactory, Service } from './service/service';
 [[/hasTransport]]
 import { descriptor, /* Vars */ } from './descriptor';
 import { [[{panelName}]]Async } from '[[{panelPath}]]';
-
-[[#hasTransport]]
-
-/**
- * Creates transport mixin, that adds $transport (http, httpAuth) instance
- * @member {import('[[{coreMixins}]]/useTransport').ITransportMixin} ServiceMixin
- */
-const { mixin: ApiServiceMixin } = useApiService({
-    options: {
-        baseURL: 'http://localhost:3000'
-    },
-    /*
-    // @todo: DELETE UNUSED
-    // or using component's instance context
-    options: (vm) => ({
-        apiBaseURL: vm.someUrlProp
-    })
-    */
-});
-[[/hasTransport]]
 
 /**
  * @type {IComponentOptions}
@@ -45,7 +41,18 @@ const { mixin: ApiServiceMixin } = useApiService({
 export default ({
     extends: Elem,
     data: () => ({
-        descriptor: descriptor()
+        descriptor: descriptor(),
+        [[#hasTransport]]
+        loading: false,
+        /**
+         * @type {import('[[{commonUtils}]]').SafeResult}
+         */
+        demoResult: null,
+        /**
+         * @type {Service}
+         */
+        service: null
+        [[/hasTransport]]
     }),
     computed: {
         // to be implemented
@@ -64,11 +71,33 @@ export default ({
     },
     */
     /**
-     * @todo: DELETE UNUSED
      * @this {IInstance}
      */
     created() {
+        [[#hasTransport]]
+        // service 'apiBaseURL' property name in descriptor
+        const serviceBaseURLPropName = 'apiBaseURL';
+        [[#http]]
+        const transport = createTransport(HttpTransportSymbol);
+        [[/http]]
+        [[^http]]
+        const transport = createTransport(HttpAuthTransportSymbol);
+        [[/http]]
+        this.service = ServiceFactory(transport, {
+            apiBaseURL: this.props[serviceBaseURLPropName]
+        });
+        // in 'editor mode' props may change
+        if (this.isEditorMode) {
+            this.$watch(`props.${serviceBaseURLPropName}`, (val) => {
+                this.service.apiBaseURL = val;
+            });
+        }
+        // clean-up
+        this.$on('hook:beforeDestroy', () => this.service.dispose());
+        [[/hasTransport]]
+        [[^hasTransport]]
         // to be implemented
+        [[/hasTransport]]
     },
     methods: {
         /**
@@ -86,6 +115,13 @@ export default ({
         getPanels() {
             return [ [[{panelName}]]Async ];
         },
+        [[#hasTransport]]
+        async getDemoData() {
+            this.loading = true;
+            this.demoResult = await this.service.getUserById(1);
+            this.loading = false;
+        }
+        [[/hasTransport]]
         // @todo: DELETE UNUSED STUFF
         /*
         sampleStoreCommitMethod() {

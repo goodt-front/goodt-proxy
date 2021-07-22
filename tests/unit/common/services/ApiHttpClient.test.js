@@ -6,7 +6,7 @@ import {
 
 import mockAxios from 'jest-mock-axios';
 
-import { createTransport, HttpTransportSymbol } from '@goodt-common/net';
+import { createTransport, HttpTransportSymbol } from '@goodt-wcore/net';
 import { wrapTestWithAaa } from '../../utils';
 
 const test = wrapTestWithAaa(it);

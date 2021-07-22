@@ -148,7 +148,7 @@
 | `@goodt-wcore/core`     |          |
 | `@goodt-wcore/managers` |          |
 | `@goodt-wcore/mixins`   |          |
-| `@goodt-common/net`     |          |
+| `@goodt-wcore/net`      |          |
 | `@goodt-wcore/panels`   |          |
 | `@goodt-wcore/render`   |          |
 | `@goodt-wcore/types`    |          |
@@ -244,7 +244,7 @@ class BaseApiService extends IApiService {
 
 ```js
 // services/ExampleApiService.js
-import { createTransport, HttpAuthTransportSymbol } from '@goodt-common/net';
+import { createTransport, HttpAuthTransportSymbol } from '@goodt-wcore/net';
 import { buildDtoSafeResult } from '@goodt-common/infra/utils';
 import { useApiService } from '@goodt-common/mixins';
 import { BaseApiService } from '@goodt-common/api';

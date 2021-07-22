@@ -1,6 +1,6 @@
 import { BaseApiService, ApiServiceError } from '@goodt-common/api';
 import { ApiClientRequestCancel, ApiHttpClient, ApiHttpClientError } from '@goodt-common/api';
-import { createTransport, HttpTransportSymbol } from '@goodt-common/net';
+import { createTransport, HttpTransportSymbol } from '@goodt-wcore/net';
 
 const API_BASE_URL = 'https://localhost:8080';
 const API_BASE_URL_CUSTOM = 'https://host.com';

@@ -1,7 +1,7 @@
 import { buildDtoSafeResult } from '@goodt-common/infra/utils';
 import { BaseApiService } from '@goodt-common/api';
 import { useApiService } from '@goodt-common/mixins';
-import { createTransport, HttpAuthTransportSymbol } from '@goodt-common/net';
+import { createTransport, HttpAuthTransportSymbol } from '@goodt-wcore/net';
 import { PollInfoDto } from './dtos';
 
 const API_ENDPOINTS_PATH = {

@@ -18,7 +18,8 @@ const CONFIG = {
         core: {
             root: `@goodt-wcore/core`,
             panels: `@goodt-wcore/panels`,
-            mixins: `@goodt-wcore/mixins`
+            mixins: `@goodt-wcore/mixins`,
+            net: `@goodt-wcore/net`
         },
         common: {
             utils: `@goodt-common/utils`,

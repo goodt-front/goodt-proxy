@@ -1,6 +1,6 @@
-import Elem, { IElemComponentOptions, IElemInstance } from '@goodt/core/Elem';
-import { ITransportMixinInstance } from '@goodt/core/mixins/useTransport';
-import { IDescriptorProps } from '@goodt/core';
+import Elem, { IElemComponentOptions, IElemInstance } from '@goodt-wcore/core/Elem';
+import { ITransportMixinInstance } from '@goodt-wcore/mixins';
+import { IDescriptorProps } from '@goodt-wcore/core';
 import { descriptor } from './descriptor';
 
 interface Methods {}

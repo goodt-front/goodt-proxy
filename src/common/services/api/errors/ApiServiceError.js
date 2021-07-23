@@ -1,4 +1,4 @@
-import { BaseError } from '@goodt/common/errors';
+import { BaseError } from '@goodt-common/errors';
 
 /**
  * Enum ошибок апи-сервиса

@@ -2,7 +2,7 @@ import getByPath from 'lodash/get';
 
 const PUBLIC_ACCESSOR_NAME = '$apiService';
 /**
- * @typedef {import('@goodt/core/mixins').ITransportMixinInstance} ITransportMixinInstance
+ * @typedef {import('@goodt-wcore/mixins').ITransportMixinInstance} ITransportMixinInstance
  */
 
 /**

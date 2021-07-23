@@ -35,7 +35,6 @@ export class Http implements ITransport {
     /** @type {RequestRecord[]} */
     private _requests: RequestRecord[];
     /** @type {AxiosRequestConfig} */
-    options: ITransportOptions;
     axios: AxiosInstance;
 
     /**

@@ -1,4 +1,4 @@
-import { IApiService } from '@goodt/common/services';
+import { IApiService } from '@goodt-common/api';
 import { VueConstructor } from 'vue';
 
 interface IApiServiceFactory {

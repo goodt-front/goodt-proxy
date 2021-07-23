@@ -1,6 +1,7 @@
 /**
  * @type {import('./BaseApiService').IApiService}
  */
+import { ITransportRequest } from '@goodt-wcore/net';
 import {
     IApiService,
     IApiServiceConstructorOptions,
@@ -10,7 +11,6 @@ import {
 import { ApiHttpClient, IApiClientRequest } from './ApiHttpClient';
 import { ApiServiceError } from './error';
 import { SafeResult } from '../../utils';
-import { ITransportRequest } from '@goodt/core/net';
 
 export class BaseApiService implements IApiService {
     /**

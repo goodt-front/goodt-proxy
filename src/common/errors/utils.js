@@ -1,4 +1,4 @@
-import { UncaughtTrackableError } from '@goodt/common/errors/UncaughtTrackableError';
+import { UncaughtTrackableError } from '@goodt-common/errors';
 
 /**
  * Throws error that can not be caught

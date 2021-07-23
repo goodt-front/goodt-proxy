@@ -1,6 +1,6 @@
-import RouteManager from '@goodt/core/managers/RouteManager';
-import { EventBus, EventBusWrapper, EventBusEvent } from '@goodt/core/managers/EventBus';
-import { createStore } from '@goodt/core/managers/StoreManager';
+import { RouteManager } from '@goodt-wcore/managers';
+import { EventBus, EventBusWrapper, EventBusEvent } from '@goodt-wcore/managers/EventBus';
+import { createStore } from '@goodt-wcore/managers/StoreManager';
 
 const url = '/some-url';
 const params = { somePram: 1 };

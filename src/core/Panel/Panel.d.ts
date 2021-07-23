@@ -1,5 +1,5 @@
 import Vue, { VueConstructor } from 'vue';
-import { ElemDescriptor } from '@goodt/core/types';
+import { ElemDescriptor } from '@goodt-wcore/core/types';
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 import VuePanel from './Panel.vue';
 

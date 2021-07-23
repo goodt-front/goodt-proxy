@@ -1,0 +1,44 @@
+{
+  "ignoreFiles": ["**/*.js"],
+  "defaultSeverity": "warning",
+  "processors": [
+    [
+      "@mapbox/stylelint-processor-arbitrary-tags",
+      {
+        "fileFilterRegex": ["\\.vue$"]
+      }
+    ]
+  ],
+  "extends": [
+    "stylelint-config-recommended",
+    "stylelint-config-skyscanner",
+    "stylelint-declaration-strict-value"
+  ],
+  "plugins": [
+    "stylelint-no-unused-selectors"
+  ],
+  "rules": {
+    "plugin/no-unused-selectors": {
+      "resolve": {
+        "documents": [
+          "{cssDir}/{cssName}.vue"
+        ]
+      },
+      "plugins": [
+        {
+          "test": "\\.vue?$",
+          "plugin": "stylelint-no-unused-selectors-plugin-html"
+        }
+      ]
+    },
+    "no-empty-source": "never",
+    "order/properties-order": "never",
+    "at-rule-no-unknown": "never",
+    "scale-unlimited/declaration-strict-value": [
+      [
+        "/color$/",
+        "font-size"
+      ]
+    ]
+  }
+}

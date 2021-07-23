@@ -1,4 +1,4 @@
-import { InfrastructureError } from '@goodt/common/errors';
+import { InfrastructureError } from '@goodt-common/errors';
 
 /**
  * @typedef { import('./ApiClientError').TApiHttpClientErrorCode } TApiHttpClientErrorCode

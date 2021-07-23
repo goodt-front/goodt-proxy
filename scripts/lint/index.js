@@ -5,26 +5,64 @@ module.exports = {
     env: {
         node: true
     },
-    extends: ['plugin:vue/essential', 'airbnb-base', 'prettier'],
-    plugins: ['unicorn', 'radar'],
+    parser: 'vue-eslint-parser',
     parserOptions: {
         parser: '@babel/eslint-parser',
         sourceType: 'module',
         allowImportExportEverywhere: true
     },
+
+    extends: [
+        'airbnb-base',
+        'plugin:vue/recommended',
+        'plugin:vue-scoped-css/recommended',
+        'prettier'
+    ],
+    plugins: ['unicorn', 'radar', 'vue-scoped-css', 'vue'],
+
     rules: {
+        // Common
         'no-unused-vars': isProd ? 'warning' : 0,
         // allow console.log during development only
         'no-console': isProd ? 'error' : 0,
         // allow debugger during development only
         'no-debugger': isProd ? 'error' : 0,
 
-        // Editor-specific rule override
+        // Vue.js specific
+        'vue/v-on-function-call': ['error', 'never'],
+
+        'vue/max-attributes-per-line': [
+            'error',
+            {
+                singleline: {
+                    max: 3,
+                    allowFirstLine: true
+                },
+                multiline: {
+                    max: 1,
+                    allowFirstLine: false
+                }
+            }
+        ],
+        'vue/match-component-file-name': 'error',
+        'vue/no-static-inline-styles': [
+            'error',
+            {
+                allowBinding: true
+            }
+        ],
+        'vue/no-side-effects-in-computed-properties': 'error',
+
+        'vue-scoped-css/enforce-style-type': ['error', { allows: ['scoped', 'module'] }],
+        'vue-scoped-css/no-unused-selector': 0,
+        'vue-scoped-css/require-selector-used-inside': 0,
+
+        // Editor specific
         // offs
-        'no-underscore-dangle': 0,
         'no-plusplus': 0,
         'import/no-extraneous-dependencies': 0,
         // warns
+        'no-underscore-dangle': 'warn',
         'no-alert': 'warn',
         'import/prefer-default-export': 0,
         // jsdoc
@@ -39,9 +77,11 @@ module.exports = {
                 exceptions: [
                     '_',
                     'x',
+                    'y',
                     'e',
                     'h',
                     'i',
+                    'j',
                     '$c',
                     'id',
                     'vm',
@@ -50,7 +90,8 @@ module.exports = {
                     'in',
                     'tr',
                     'td',
-                    'to'
+                    'to',
+                    'el'
                 ]
             }
         ],
@@ -90,7 +131,9 @@ module.exports = {
                     Vars: true,
                     val: true,
                     Val: true,
-                    fn: true
+                    fn: true,
+                    num: true,
+                    el: true
                 }
             }
         ]

@@ -172,7 +172,7 @@ export default {
         },
         /**
          *
-         * @param {import('@goodt/core/Elem').ElemInstance} ci
+         * @param {import('@goodt-wcore/core/Elem').ElemInstance} ci
          */
         onElemMounted(ci) {
             this.elemInstance = ci;

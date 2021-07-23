@@ -54,8 +54,6 @@ class Http {
     constructor(options = {}) {
         /** @type {RequestRecord[]} */
         this._requests = [];
-        /** @type {AxiosRequestConfig} */
-        this.options = options;
         this.axios = axios.create(this.options);
     }
 

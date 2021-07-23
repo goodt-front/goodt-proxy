@@ -1,5 +1,5 @@
-import { success, fail } from '@goodt/common/utils/either';
-import { BaseError } from '@goodt/common/errors';
+import { success, fail } from '@goodt-common/utils';
+import { BaseError } from '@goodt-common/errors';
 import {
     ApiClientRequestCancel,
     ApiHttpClientError,

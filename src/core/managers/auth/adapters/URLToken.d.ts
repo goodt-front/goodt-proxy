@@ -1,4 +1,4 @@
-import { Http } from '@goodt/core/net';
+import { Http } from '@goodt-wcore/net';
 import Adapter from './Adapter';
 
 declare class URLToken extends Adapter {

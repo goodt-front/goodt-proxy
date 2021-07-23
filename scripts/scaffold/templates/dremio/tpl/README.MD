@@ -103,8 +103,8 @@ npm run lint:committed
 </template>
 
 <script>
-    import { Elem } from 'goodt-wcore';
-    import { useDremio } from '@goodt/core/mixins';
+    import { Elem } from '@goodt-wcore/core';
+    import { useDremio } from '@goodt-wcore/mixins';
     import { descriptor } from './descriptor';
     import { DremioPanelAsync } from './panels';
 

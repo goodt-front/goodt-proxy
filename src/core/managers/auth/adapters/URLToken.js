@@ -1,5 +1,5 @@
 import merge from 'lodash/merge';
-import Http from '@goodt/core/net/Http';
+import Http from '@goodt-wcore/net/Http';
 import Adapter from './Adapter';
 
 const configDefault = {

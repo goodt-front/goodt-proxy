@@ -1,6 +1,6 @@
-import RouteManager from '@goodt/core/managers/RouteManager';
-import { EventBus, EventBusWrapper, EventBusEvent } from '@goodt/core/managers/EventBus';
-import { buildStoreValue, createStore, unwrapStoreValue } from '@goodt/core/managers/StoreManager';
+import { RouteManager } from '@goodt-wcore/managers';
+import { EventBus, EventBusWrapper, EventBusEvent } from '@goodt-wcore/managers/EventBus';
+import { buildStoreValue, createStore, unwrapStoreValue } from '@goodt-wcore/managers/StoreManager';
 
 /**
  * @dictionary

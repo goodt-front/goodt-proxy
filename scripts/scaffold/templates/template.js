@@ -16,7 +16,12 @@ module.exports = class {
         const {
             path: {
                 project: { lib },
-                core: { root: coreRootPath, panels: corePanelsPath, mixins: coreMixinsPath },
+                core: {
+                    root: coreRootPath,
+                    panels: corePanelsPath,
+                    mixins: coreMixinsPath,
+                    net: coreNetPath
+                },
                 common: { mixins: commonMixinsPath, utils: commonUtilsPath }
             }
         } = this.config;
@@ -24,6 +29,7 @@ module.exports = class {
         this.corePath = coreRootPath;
         this.corePanelsPath = corePanelsPath;
         this.coreMixinsPath = coreMixinsPath;
+        this.coreNetPath = coreNetPath;
         this.commonUtilsPath = commonUtilsPath;
         this.commonMixinsPath = commonMixinsPath;
 

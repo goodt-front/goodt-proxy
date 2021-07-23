@@ -7,10 +7,10 @@
     </section>
 </template>
 <script>
-import { Elem } from '@goodt/core';
-import { useApiService } from '@goodt/common/mixins';
-import { fail, success } from '@goodt/common/utils';
-import { PresentableError } from '@goodt/common/errors';
+import { Elem } from '@goodt-wcore/core';
+import { useApiService } from '@goodt-common/mixins';
+import { fail, success } from '@goodt-common/utils';
+import { PresentableError } from '@goodt-common/errors';
 import { descriptor } from './descriptor';
 import { useApiServiceMixin } from './service/ExampleApiService';
 // import { ExampleDomainService } from './service/ExampleDomainService';

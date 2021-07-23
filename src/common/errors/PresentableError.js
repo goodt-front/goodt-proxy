@@ -1,4 +1,4 @@
-import { BaseError } from '@goodt/common/errors/BaseError';
+import { BaseError } from '@goodt-common/errors';
 
 export class PresentableError extends BaseError {
     constructor(message, { title, level } = {}) {

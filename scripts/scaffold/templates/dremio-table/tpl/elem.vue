@@ -12,9 +12,6 @@ import renders from './renders';
 import { PaginationPanelAsync, [[{panelName}]]Async } from '[[{panelPath}]]';
 import { descriptor, /* Vars */ } from './descriptor';
 
-/**
- * @type {IInstance}
- */
 export default {
     extends: Table,
     props: {

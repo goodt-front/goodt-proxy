@@ -173,10 +173,9 @@ export const descriptor = () => ({
 import { descriptor, Vars } from './descriptor';
 
 export default {
-    ...
+    // ...
     watch: {
-        $storeState(state, prevState)
-        {
+        $storeState(state, prevState) {
             const { [Vars.MY_VAR]: myVar } = state;
             if (myVar !== this.myVar) {
                 // do something
@@ -184,9 +183,8 @@ export default {
         }
     },
     methods: {
-        someMethodWithChangedState()
-        {
-        ...
+        someMethodWithChangedState() {
+            // ...
             const partialStateChanged = {
                 [Vars.MY_VAR]: 'changedValue'
             };
@@ -212,7 +210,8 @@ export default {
 
 ```js
 export default {
-    watch  : {
+    // ...
+    watch: {
         $routeCurrent(route, prevRoute) {
             const { path, query, meta } = route;
             // route data processing
@@ -220,7 +219,7 @@ export default {
     },
     methods: {
         someMethodWithRouteNavigation() {
-        ...
+            // ...
             const path = '/route/path';
             const query = {
                 param1: 'value'

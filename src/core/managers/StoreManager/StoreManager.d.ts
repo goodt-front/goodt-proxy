@@ -12,7 +12,7 @@ export function createStore(): Store;
 /**
  * Store
  */
-declare class Store {
+export declare class Store {
     private _commitHandlers: any[];
     /**
      * Returns the current state

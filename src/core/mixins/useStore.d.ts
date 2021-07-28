@@ -1,3 +1,4 @@
+import { VueConstructor } from 'vue';
 import { ValueObject, Store } from '../managers/StoreManager';
 
 interface StoreState {
@@ -34,4 +35,4 @@ export function buildExternalStateFromInternal(
     buildExternalStateValue?: (value: any, meta: ValueObjectMeta) => ValueObject
 ): Record<string, any>;
 
-export function useStore(options: { name?: string; store: () => Store }): { mixin: MixinOptions };
+export function useStore(options: { name?: string; store: () => Store }): { mixin: VueConstructor & Computed & Methods };

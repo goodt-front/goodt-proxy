@@ -1,6 +1,10 @@
 /**
+ * @typedef {import('../managers/StoreManager').ValueObject} ValueObject
+ */
+/**
  * @typedef {object} UseStoreOptions
  * @property {string} [name='$state'] instance property name
+ * @property {() => Store} [store] store factory
  */
 /**
  * @typedef {object} AliasMapMeta
@@ -8,7 +12,7 @@
  * @property {string} trigger
  * @property {import('../managers/StoreManager').ValueObjectMeta} meta
  */
-import { store, buildStoreValue, unwrapStoreValue } from '../managers/StoreManager';
+import { store, buildStoreValue, unwrapStoreValue, Store } from '../managers/StoreManager';
 
 const INSTANCE_ACCESSOR_NAME = '$store';
 
@@ -24,7 +28,7 @@ const INSTANCE_ACCESSOR_NAME = '$store';
  *
  * @param {Record<string, ValueObject>} externalState
  * @param {Record<string, AliasMapMeta>} [varAliases=null]
- * @param {function(valueObject: ValueObject): any} [unwrapExternalStateValue]
+ * @param {function(ValueObject):any} [unwrapExternalStateValue]
  * @return {Record<string, any>}
  */
 export const buildInternalStateFromExternal = (

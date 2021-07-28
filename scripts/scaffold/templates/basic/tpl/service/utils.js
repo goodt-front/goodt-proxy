@@ -1,14 +1,15 @@
 /**
  * @typedef {object} RequestOptions
- * @property {{ url:string, options: import('@goodt-wcore/net').ITransportOptions }} action
- * @property {object} urlBinds
- * @property {object} params
- * @property {import('@goodt-wcore/net').ITransportOptions} options
+ * @property {{ url:string, options: import('@goodt-wcore/net').ITransportOptions }} action     action
+ * @property {object} urlBinds  properties to replace url placeholders with
+ * @property {object} params    post/get params
+ * @property {import('@goodt-wcore/net').ITransportOptions} options     options
  */
 /**
- * Builds service a request
- * @param {RequestOptions} requestOptions
- * @return {import('@goodt-common/api/types').IApiServiceRequest}
+ * Builds a service request
+ *
+ * @param {RequestOptions} requestOptions   options
+ * @return {import('@goodt-common/api/types').IApiServiceRequest}   request
  */
 export const buildRequest = ({ action, urlBinds = {}, params = {}, options = {} }) => {
     let { url } = action;

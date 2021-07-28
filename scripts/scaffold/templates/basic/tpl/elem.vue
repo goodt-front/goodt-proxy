@@ -19,7 +19,6 @@
 </template>
 <script>
 /**
- * @typedef {import('./[[{name}]]').IComponentOptions} IComponentOptions
  * @typedef {import('./[[{name}]]').IInstance} IInstance
  */
 import { Elem } from '[[{core}]]';
@@ -36,16 +35,16 @@ import { descriptor, /* Vars */ } from './descriptor';
 import { [[{panelName}]]Async } from '[[{panelPath}]]';
 
 /**
- * @type {IComponentOptions}
+ * @type {IInstance}
  */
-export default ({
+export default {
     extends: Elem,
     data: () => ({
         descriptor: descriptor(),
         [[#hasTransport]]
         loading: false,
         /**
-         * @type {import('[[{commonUtils}]]').SafeResult}
+         * @type {import('[[{commonUtils}]]').ISafeResult}
          */
         demoResult: null,
         /**
@@ -54,25 +53,6 @@ export default ({
         service: null
         [[/hasTransport]]
     }),
-    computed: {
-        // to be implemented
-    },
-    // @todo: DELETE UNUSED
-    /*
-    watch: {
-        // watching global state changes
-        $storeState(state, prevState) {
-            // to be implement watch
-        },
-        // watching route changes
-        $routeCurrent(route, prevRoute) {
-            // to be implement watch
-        },
-    },
-    */
-    /**
-     * @this {IInstance}
-     */
     created() {
         [[#hasTransport]]
         // service 'apiBaseURL' property name in descriptor
@@ -107,9 +87,10 @@ export default ({
             return ['default'];
         },
         /**
+         * @param {string} type  widget type
          * @return {boolean}
          */
-        isChildAllowed(/* type */) {
+        isChildAllowed(type) {
             return true;
         },
         getPanels() {
@@ -122,17 +103,6 @@ export default ({
             this.loading = false;
         }
         [[/hasTransport]]
-        // @todo: DELETE UNUSED STUFF
-        /*
-        sampleStoreCommitMethod() {
-           // ...
-           this.$storeCommit(updatedState);
-        },
-        sampleRouteNavigateMethod() {
-           // ...
-           this.$routeNavigate({ path, query });
-        }
-        */
     }
-});
+};
 </script>

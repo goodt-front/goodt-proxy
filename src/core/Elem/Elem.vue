@@ -19,10 +19,11 @@ const { EventBusWrapper } = EB;
 /**
  * @type {import("./Elem").IElemComponentOptionsInternal}
  */
-const ComponentOptions = {
+export default {
     props: {
         /** uniq instance id */
         id: {
+            type: String,
             default: ''
         },
         /** elem fulltype @example 'Ns/SubNs/ElemExample' */
@@ -77,7 +78,6 @@ const ComponentOptions = {
         },
         /**
          * Returns the current store state
-         *
          * @return {Record<string, any>} state
          */
         $storeState() {
@@ -339,9 +339,4 @@ const ComponentOptions = {
         }
     }
 };
-
-/**
- * @type {import("./Elem.vue")}
- */
-export default ComponentOptions;
 </script>

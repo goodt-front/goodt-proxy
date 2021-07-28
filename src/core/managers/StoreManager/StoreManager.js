@@ -96,7 +96,7 @@ const storeInternal = new Store();
  */
 const createStore = () => new Store();
 
-export { createStore };
+export { createStore, Store };
 
 /**
  * @deprecated

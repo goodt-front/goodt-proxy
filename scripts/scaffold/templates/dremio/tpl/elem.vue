@@ -19,7 +19,6 @@
 </template>
 <script>
 /**
- * @typedef {import('./[[{name}]]').IComponentOptions} IComponentOptions
  * @typedef {import('./[[{name}]]').IInstance} IInstance
  */
 import { Elem } from '[[{core}]]';
@@ -28,10 +27,11 @@ import { DremioPanelAsync, [[{panelName}]]Async } from '[[{panelPath}]]';
 import { descriptor, Vars } from './descriptor';
 
 const { mixin: DremioMixin } = useDremio();
+
 /**
- * @type {IComponentOptions}
+ * @type {IInstance}
  */
-export default ({
+export default {
     extends: Elem,
     mixins: [DremioMixin],
     data() {
@@ -55,36 +55,10 @@ export default ({
             error: null
         };
     },
-    // @todo: DELETE UNUSED STUFF
-    /*
-    watch: {
-        $storeState(state, prevState) {
-            // to be implement watch
-        },
-        $routeCurrent(route, prevRoute) {
-            // to be implement watch
-        },
-    },
-    */
-    /**
-     * @todo: DELETE UNUSED STUFF
-     * @this {IInstance}
-     */
     created() {
         // to be implemented
     },
     methods: {
-        // @todo: DELETE UNUSED STUFF
-        /*
-        sampleStoreCommitMethod() {
-           // ...
-           this.$storeCommit(updatedState);
-        },
-        sampleRouteNavigateMethod() {
-           // ...
-           this.$routeNavigate({ path, query });
-        },
-        */
         getSlotNames() {
             return ['default'];
         },
@@ -102,5 +76,5 @@ export default ({
             this.loadData();
         }
     }
-});
+};
 </script>

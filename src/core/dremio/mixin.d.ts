@@ -1,3 +1,4 @@
+import { VueConstructor } from 'vue';
 import { DremioResult, Query, SDK } from './sdk';
 
 /**
@@ -88,4 +89,4 @@ interface Injected {
     dremioVars: string[];
 }
 
-export interface IDremioMixinInstance extends Data, Methods, Computed, Injected {}
+export interface IDremioMixinInstance extends VueConstructor, Data, Methods, Computed, Injected {}

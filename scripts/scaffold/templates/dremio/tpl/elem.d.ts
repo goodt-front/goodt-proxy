@@ -1,3 +1,4 @@
+import { ExtendedVue } from 'vue/types/vue';
 import { IDescriptorProps } from '[[{core}]]';
 import Elem, { IElemComponentOptions, IElemInstance } from '[[{core}]]/Elem';
 import { IDremioMixinInstance } from '[[{coreMixins}]]';
@@ -8,7 +9,7 @@ interface Methods {}
 interface Props {}
 interface Computed extends IDescriptorProps<ReturnType<typeof descriptor>> {}
 
-export interface IInstance extends IElemInstance, IDremioMixinInstance, Data, Methods, Computed, Props {}
+export interface IInstance extends ExtendedVue, IElemInstance, IDremioMixinInstance, Data, Methods, Computed, Props {}
 export interface IComponentOptions
     extends IElemComponentOptions<IInstance, Data, Methods, Computed, Props> {
     extends: typeof Elem;

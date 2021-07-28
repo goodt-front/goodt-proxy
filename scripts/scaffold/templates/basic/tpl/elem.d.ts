@@ -1,4 +1,5 @@
-import { IDescriptorProps } from '[[{core}]]';
+import { ExtendedVue } from 'vue/types/vue';
+import { IDescriptorProps, IDremioMixinInstance } from '[[{core}]]';
 import { IElemComponentOptions, IElemInstance, IElemComponentOptionsInternal } from '[[{core}]]/Elem';
 [[#hasTransport]]
 import { IApiServiceMixinInstance } from '@goodt-common/mixins';
@@ -11,11 +12,7 @@ interface Methods {}
 interface Props {}
 interface Computed extends IDescriptorProps<ReturnType<typeof descriptor>> {}
 
-export type IInstance = IElemInstance &
-    [[#hasTransport]]
-    IApiServiceMixinInstance<InstanceType<typeof [[{name}]]Service>> &
-    [[/hasTransport]]
-    Data & Methods & Computed & Props
+export interface IInstance extends ExtendedVue, IElemInstance, IDremioMixinInstance, Data, Methods, Computed, Props {}
 
 export interface IComponentOptions extends IElemComponentOptions<IInstance, Data, Methods, Computed, Props> {
     extends: typeof IElemComponentOptionsInternal;

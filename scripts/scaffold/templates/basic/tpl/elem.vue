@@ -5,14 +5,20 @@
         <div v-if="isEditorMode">running in editor</div>
         <div>{{ props }}</div>
         [[#hasTransport]]
-        <pre v-if="demoResult">{{ demoResult.value }}</pre>
-        <div
+        <template v-if="demoResult">
+            <pre v-if="demoResult.isSuccess">{{ demoResult.result }}</pre>
+            <pre v-if="demoResult.isError" class="color-red">{{ demoResult.error.message }}</pre>
+        </template>
+        <template v-else>
+            <div>No result yet</div>
+        </template>
+        <button
             class="btn btn-primary btn-small"
-            :class="{ 'btn-loading events-none': loading }"
+            :class="{ 'btn-loading events-none': isLoading }"
             @click="getDemoData"
         >
             send demo request
-        </div>
+        </button>
         [[/hasTransport]]
         <!-- {/demo} -->
     </div>
@@ -29,57 +35,63 @@ import { createTransport, HttpTransportSymbol } from '[[{coreNetPath}]]';
 [[^http]]
 import { createTransport, HttpAuthTransportSymbol } from '[[{coreNetPath}]]';
 [[/http]]
-import { ServiceFactory, Service } from './service/service';
+import { createApiService, ApiService } from './api/service';
 [[/hasTransport]]
 import { descriptor, /* Vars */ } from './descriptor';
 import { [[{panelName}]]Async } from '[[{panelPath}]]';
 
-/**
- * @type {IInstance}
- */
+[[#hasTransport]]
+// service 'apiBaseURL' property name in descriptor
+const API_SERVICE_BASE_URL_PROP_NAME = 'apiBaseURL';
+[[/hasTransport]]
+
 export default {
     extends: Elem,
     data: () => ({
         descriptor: descriptor(),
         [[#hasTransport]]
-        loading: false,
+        isLoading: false,
         /**
          * @type {import('[[{commonUtils}]]').ISafeResult}
          */
         demoResult: null,
         /**
-         * @type {Service}
+         * @type {ApiService}
          */
-        service: null
+        apiService: null
         [[/hasTransport]]
     }),
     created() {
         [[#hasTransport]]
-        // service 'apiBaseURL' property name in descriptor
-        const serviceBaseURLPropName = 'apiBaseURL';
-        [[#http]]
-        const transport = createTransport(HttpTransportSymbol);
-        [[/http]]
-        [[^http]]
-        const transport = createTransport(HttpAuthTransportSymbol);
-        [[/http]]
-        this.service = ServiceFactory(transport, {
-            apiBaseURL: this.props[serviceBaseURLPropName]
-        });
-        // in 'editor mode' props may change
-        if (this.isEditorMode) {
-            this.$watch(`props.${serviceBaseURLPropName}`, (val) => {
-                this.service.apiBaseURL = val;
-            });
-        }
-        // clean-up
-        this.$on('hook:beforeDestroy', () => this.service.dispose());
-        [[/hasTransport]]
-        [[^hasTransport]]
-        // to be implemented
+        this.createWidgetApiService();
         [[/hasTransport]]
     },
     methods: {
+        [[#hasTransport]]
+        /**
+         * @this {IInstance}
+         */
+        createWidgetApiService() {
+            [[#http]]
+            const transport = createTransport(HttpTransportSymbol);
+            [[/http]]
+            [[^http]]
+            const transport = createTransport(HttpAuthTransportSymbol);
+            [[/http]]
+            const apiService = createApiService(transport, {
+                apiBaseURL: this.props[API_SERVICE_BASE_URL_PROP_NAME]
+            });
+            // in 'editor mode' props may change
+            if (this.isEditorMode) {
+                this.$watch(`props.${API_SERVICE_BASE_URL_PROP_NAME}`, (val) => {
+                    apiService.apiBaseURL = val;
+                });
+            }
+            // clean-up
+            this.$on('hook:beforeDestroy', () => apiService.dispose());
+            this.apiService = apiService;
+        },
+        [[/hasTransport]]
         /**
          * @return {string[]}
          */
@@ -98,9 +110,9 @@ export default {
         },
         [[#hasTransport]]
         async getDemoData() {
-            this.loading = true;
-            this.demoResult = await this.service.getUserById(1);
-            this.loading = false;
+            this.isLoading = true;
+            this.demoResult = await this.apiService.getUserById(1);
+            this.isLoading = false;
         }
         [[/hasTransport]]
     }

@@ -41,6 +41,8 @@ module.exports = class extends Template {
             panelName: this.config.panel.name,
             panelPath: this.config.panel.path
         };
+        const servicePath = 'api';
+
         const elem = this.compileTpl(`${tplPath}/elem.vue`, tplBinds);
         const elemDT = this.compileTpl(`${tplPath}/elem.d.ts`, tplBinds);
         const panel = this.compileTpl(`${tplPath}/panel.vue`, tplBinds);
@@ -48,8 +50,8 @@ module.exports = class extends Template {
         const panelsIndex = this.compileTpl(`${tplPath}/panels.index.js`, tplBinds);
         const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
         const readmeMd = this.compileTpl(`${tplPath}/README.MD`, tplBinds);
-        const serviceCl = this.compileTpl(`${tplPath}/service/service.js`, tplBinds);
-        const serviceUtils = this.compileTpl(`${tplPath}/service/utils.js`, tplBinds);
+        const serviceCl = this.compileTpl(`${tplPath}/${servicePath}/service.js`, tplBinds);
+        const serviceUtils = this.compileTpl(`${tplPath}/${servicePath}/utils.js`, tplBinds);
         const widgetCreated = this.createWidget({
             elem,
             panel,
@@ -59,7 +61,6 @@ module.exports = class extends Template {
             descriptor,
             readmeMd
         });
-        const servicePath = 'service';
         this.createWidgetDir(servicePath);
         this.createWidgetFile(`${servicePath}/service.js`, serviceCl);
         this.createWidgetFile(`${servicePath}/utils.js`, serviceUtils);

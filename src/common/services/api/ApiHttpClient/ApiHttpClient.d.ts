@@ -1,4 +1,9 @@
-import { ITransport, ITransportRequest, ITransportResponse } from '@goodt-wcore/net';
+import {
+    ITransport,
+    ITransportRequest,
+    ITransportResponse,
+    ITransportOptions
+} from '@goodt-wcore/net';
 /**
  * @class ApiHttpClient
  */
@@ -29,7 +34,14 @@ export class ApiHttpClient {
      * @return {ITransportRequest} ITransportRequest
      * @private
      */
-    private _buildTransportRequest: ITransportRequest;
+    protected _buildTransportRequest(request: ITransportRequest): ITransportRequest;
+    /**
+     * Создаёт/дополняет объект опций для транспорта ITransportOptions
+     *
+     * @param {ITransportOptions} transportOptions
+     * @return {ITransportOptions}
+     */
+    protected _buildTransportOptions(transportOptions: ITransportOptions): ITransportOptions;
     /**
      * Обрабатывает ответа транспорта и возвращает целевые данные для HttpApiClient
      * Особенность: знает формат ответа сервера
@@ -37,7 +49,7 @@ export class ApiHttpClient {
      * @param {ITransportResponse} transportResponse
      * @return {*}
      */
-    private _processTransportResponse(transportResponse: ITransportResponse): any;
+    protected _processTransportResponse(transportResponse: ITransportResponse): any;
     /**
      * Обрабатывает ошибку от транспорта и трансформирует в инфраструктурную ошибку
      * Особенность: знает формат ошибки сервера, какие статус коды являются ошибочными
@@ -45,7 +57,7 @@ export class ApiHttpClient {
      * @param {Error} error
      * @return {Error}
      */
-    private _processTransportError(error: Error): Error;
+    protected _processTransportError(error: Error): Error;
 }
 
 export const ApiClientMethod: Readonly<{

@@ -1,3 +1,4 @@
+import { stringify as stringifyParams } from 'qs';
 import { ApiClientRequestCancel, ApiHttpClientError } from './errors';
 import '../typedefs';
 
@@ -89,17 +90,40 @@ class ApiHttpClient {
             throw new ApiHttpClientError('Invalid `request` method input argument type');
         }
 
-        const { url, params, method, options } = request;
-
+        const { url, params, options = {} } = request;
         if (!url) {
             throw new ApiHttpClientError('Empty url or pathname');
         }
+
+        const { method, ...resultTransportOptions } = this._buildTransportOptions(options);
 
         return {
             url,
             method,
             ...(params && { params }),
-            ...options
+            options: resultTransportOptions
+        };
+    }
+
+    /**
+     * Создаёт/дополняет объект опций для транспорта ITransportOptions
+     *
+     * @param {ITransportOptions} transportOptions
+     * @return {ITransportOptions}
+     */
+    // eslint-disable-next-line class-methods-use-this
+    _buildTransportOptions(transportOptions) {
+        const extraOptions = {};
+
+        const { method } = transportOptions;
+        if (method == null || method === ApiClientMethod.GET) {
+            extraOptions.paramsSerializer = (params) =>
+                stringifyParams(params, { arrayFormat: 'repeat' });
+        }
+
+        return {
+            ...transportOptions,
+            ...extraOptions
         };
     }
 

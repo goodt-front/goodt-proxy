@@ -1,7 +1,10 @@
 <template>
     <ui-panel-container>
-        <!-- your panel goes here -->
-        <ui-input class="p" v-model="props.apiBaseURL" @change="propChanged('apiBaseURL')">
+        <!-- {demo} your panel goes here -->
+        <ui-input
+            v-model="props.apiBaseURL"
+            class="p"
+            @change="propChanged('apiBaseURL')">
             Service apiBaseURL
         </ui-input>
     </ui-panel-container>

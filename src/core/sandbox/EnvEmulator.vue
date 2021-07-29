@@ -44,7 +44,7 @@ import {
     StoreManager
 } from '../managers';
 
-const { store } = StoreManager;
+const { store, ValueObject } = StoreManager;
 const { EventBus, EventBusEvent } = EB;
 
 const MODULES = {};
@@ -75,6 +75,12 @@ export default {
             }
         },
         appConstants: {
+            type: Object,
+            default() {
+                return {};
+            }
+        },
+        storeInitState: {
             type: Object,
             default() {
                 return {};
@@ -245,6 +251,12 @@ export default {
          * Init state manager
          */
         initStoreManager() {
+            const { storeInitState } = this;
+            const state = Object.entries(storeInitState).reduce((acc, [key, val]) => {
+                acc[key] = new ValueObject(val);
+                return acc;
+            }, {});
+            store.commit(state);
             this.registerModule(MODULE_KEYS.STORE_MANAGER, StoreManager);
         },
         /**

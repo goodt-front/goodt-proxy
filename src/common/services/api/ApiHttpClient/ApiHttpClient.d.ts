@@ -64,6 +64,7 @@ export const ApiClientMethod: Readonly<{
     GET: string;
     POST: string;
     PATCH: string;
+    PUT: string;
     DELETE: string;
 }>;
 

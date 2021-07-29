@@ -38,8 +38,8 @@ src/lib/
 <a name="conventions"></a>
 ## Соглашения
 ### Наименование
-*[ ] Название **widget component** ДОЛЖНО начинаться с префикса Elem* и использовать PascalCase (`[[name]]`)
-*[ ] Название **widget panel** ДОЛЖНО иметь суффикс *Panel и использовать PascalCase (`[[panelName]]`)
+*[ ] Название **widget component** ДОЛЖНО начинаться с префикса `Elem*` и использовать PascalCase (`[[name]]`)
+*[ ] Название **widget panel** ДОЛЖНО иметь суффикс `*Panel` и использовать PascalCase (`[[panelName]]`)
 *[ ] Название **widget component** и родительской папки должны совпадать: `src/lib/[[name]]/[[name]].vue`
 *[ ] Название **widget component** и родительской папки должны совпадать: `src/lib/[[name]]/[[name]].vue`
 
@@ -57,10 +57,10 @@ src/lib/
 *[ ] Логика вспомогательных сервисов ДОЛЖНА храниться в папке `src/lib/[[name]]/services`.
 
 ### Разделение логики
-- Вспомогательные (дочерние) компоненты **widget component** и **widget panel** ДОЛЖНЫ стремиться быть "ГЛУПЫМИ"НЕ ДОЛЖНЫ
+- Вспомогательные (дочерние) компоненты **widget component** и **widget panel** ДОЛЖНЫ стремиться быть "ГЛУПЫМИ".
 - Отношения между **widget component/panel** и вспомогательными компонентами должно стремиться следовать шаблону проектирования:
     Container/Presentational Components (оно же Provider/Consumer; Разделение Поведения и Представления)
-- Если методу в секции `methods` в ходе выполнения не требуется использования контекста (обращения к this экземпляра компонента),
+- Если методу в секции `methods` в ходе выполнения не требуется использования контекста (обращениe к `this` экземпляра компонента),
   то его функциональность следует выносить на уровень компонента, а вероятнее всего сразу в `src/lib/[[name]]/utils.js`.
 
 #### Вспомогательные компоненты:
@@ -93,7 +93,7 @@ npm run lint:committed
 `[[{name}]].vue`
 
 ```js
-// descriptor,js
+// descriptor.js
 export const Vars = Object.freeze({
    MY_VAR: 'myVariable'
 });
@@ -114,7 +114,7 @@ export const descriptor = () => ({
 import { descriptor, Vars } from './descriptor';
 
 export default {
-    ...
+   // ...
    watch: {
       $storeState(state, prevState) {
          const { [Vars.MY_VAR]: myVar } = state;
@@ -125,7 +125,7 @@ export default {
     },
     methods: {
         someMethodWithChangedState() {
-            ...
+            // ...
             const partialStateChanged = {
                 [Vars.MY_VAR]: 'changedValue'
             };
@@ -158,7 +158,7 @@ export default {
    },
    methods: {
       someMethodWithRouteNavigation() {
-         ...
+         // ...
          const path = '/route/path';
          const query = {
              param1: 'value'

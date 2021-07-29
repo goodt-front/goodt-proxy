@@ -7,6 +7,7 @@ interface IApiServiceFactory {
 
 interface ServiceMixinComputed<T> {
     $apiService: IApiService & T;
+    apiService: IApiService & T;
 }
 
 export interface IApiServiceMixinOptions {
@@ -14,8 +15,8 @@ export interface IApiServiceMixinOptions {
     apiBaseURL?: string | (() => string);
 }
 
-export interface IApiServiceMixinInstance<T> extends ServiceMixinComputed<T> {}
-export interface IApiServiceMixin extends VueConstructor<Vue & IApiServiceMixinInstance> {}
+export interface IApiServiceMixinInstance<T> extends ServiceMixinComputed<T> { }
+export interface IApiServiceMixin extends VueConstructor<Vue & IApiServiceMixinInstance> { }
 
 /**
  * Creates Vue Mixin with specified Transport and extra component transport-related behaviour

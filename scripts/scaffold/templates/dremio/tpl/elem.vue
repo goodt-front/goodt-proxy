@@ -24,13 +24,10 @@
 import { Elem } from '[[{core}]]';
 import { useDremio } from '[[{coreMixins}]]';
 import { DremioPanelAsync, [[{panelName}]]Async } from '[[{panelPath}]]';
-import { descriptor, Vars } from './descriptor';
+import { descriptor /*, Vars*/ } from './descriptor';
 
 const { mixin: DremioMixin } = useDremio();
 
-/**
- * @type {IInstance}
- */
 export default {
     extends: Elem,
     mixins: [DremioMixin],

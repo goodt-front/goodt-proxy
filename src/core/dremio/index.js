@@ -144,17 +144,7 @@ const mixin = {
 
         // watch store state if enabled
         if (this.watchStoreState) {
-            this.$watch('$storeState', (state) => {
-                if (!Object.keys(state).length) {
-                    return;
-                }
-                this.$nextTick(() => {
-                    if (this.applyDremioFilters(state)) {
-                        this.offset = 0;
-                    }
-                    this.loadData();
-                });
-            });
+            this.$watch('$storeState', this.storeStateWatcher, { immediate: true });
         }
         if (this.isEditorMode) {
             this.$watch('dremioStr', this.dremioHandler);
@@ -220,6 +210,7 @@ const mixin = {
          * Applies dremio filters
          *
          * @param {Record<string, any>} params   params to be injected
+         * @return {boolean}
          */
         applyDremioFilters(params) {
             const { query } = this.queryHelper;
@@ -266,6 +257,22 @@ const mixin = {
             const dimensions = Object.keys(dimensionList);
             const fields = Query.queryFieldNames(query);
             return [...metrics, ...dimensions, ...fields];
+        },
+        /**
+         * Store state watcher handler
+         *
+         * @param {object} state
+         */
+        storeStateWatcher(state) {
+            if (!Object.keys(state).length) {
+                return;
+            }
+            this.$nextTick(() => {
+                if (this.applyDremioFilters(state)) {
+                    this.offset = 0;
+                    this.loadData();
+                }
+            });
         }
     }
 };

@@ -8,13 +8,13 @@
 
 const utils = require('eslint-plugin-vue/lib/utils');
 const casing = require('eslint-plugin-vue/lib/utils/casing');
+const { toRegExp } = require('eslint-plugin-vue/lib/utils/regexp');
 
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------
 
-const allowedCaseOptions = ['PascalCase', 'kebab-case'];
-const defaultCase = 'PascalCase';
+const defaultPattern = /^ui-(.+)/;
 
 // ------------------------------------------------------------------------------
 // Rule Definition
@@ -33,11 +33,11 @@ module.exports = {
         fixable: 'code',
         schema: [
             {
-                enum: allowedCaseOptions
-            },
-            {
                 type: 'object',
                 properties: {
+                    pattern: {
+                        type: 'string'
+                    },
                     ignores: {
                         type: 'array',
                         items: { type: 'string' },
@@ -54,9 +54,11 @@ module.exports = {
     },
     /** @param {RuleContext} context */
     create(context) {
-        const [caseOption] = context.options;
-        const options = context.options[1] || {};
-        const caseType = allowedCaseOptions.includes(caseOption) ? caseOption : defaultCase;
+        const options = context.options[0] || {};
+
+        /** @type {RegExp[]} */
+        const rePattern = options.pattern ? toRegExp(options.pattern) : defaultPattern;
+        const ignores = (options.ignores || []).map(toRegExp);
         const registeredComponentsOnly = options.registeredComponentsOnly !== false;
         const tokens =
             context.parserServices.getTemplateBodyTokenStore &&
@@ -67,48 +69,79 @@ module.exports = {
 
         /**
          * Checks whether the given node is the verification target node.
-         *
          * @param {VElement} node element node
-         * @return {boolean} `true` if the given node is the verification target node.
+         * @returns {boolean} `true` if the given node is the verification target node.
          */
+        function isTargetNode(node) {
+            const { rawName } = node;
+            if (casing.isPascalCase(rawName)) {
+                return false;
+            }
+
+            // ignore
+            if (ignores.some((re) => re.test(rawName))) {
+                return false;
+            }
+
+            if (registeredComponentsOnly === false) {
+                // If the user specifies registeredComponentsOnly as false, it checks all component tags.
+                const isTargetNode =
+                    (!utils.isHtmlElementNode(node) && !utils.isSvgElementNode(node)) ||
+                    utils.isHtmlWellKnownElementName(rawName) ||
+                    utils.isSvgWellKnownElementName(rawName);
+
+                return isTargetNode;
+            }
+
+            // We only verify the components registered in the component.
+            const isTargetNode = registeredComponents.includes(casing.pascalCase(rawName));
+            return isTargetNode;
+        }
+
         let hasInvalidEOF = false;
 
         return utils.defineTemplateBodyVisitor(
             context,
             {
                 VElement(node) {
-                    // if (hasInvalidEOF) {
-                    //    return;
-                    // }
-                    //
-                    // if (!isVerifyTarget(node)) {
-                    //    return;
-                    // }
+                    const { rawName: name } = node;
 
-                    const name = node.rawName;
-                    // if (!casing.getChecker(caseType)(name)) {
+                    if (hasInvalidEOF) {
+                        return;
+                    }
+
+                    if (!isTargetNode(node)) {
+                        return;
+                    }
+
+                    if (rePattern.test(name)) {
+                        return;
+                    }
+
                     const { startTag } = node;
                     const open = tokens.getFirstToken(startTag);
-                    const casingName = casing.getExactConverter(caseType)(name);
+                    const fixedComponentName = `ui-${name}`;
+
                     context.report({
                         node: open,
                         loc: open.loc,
-                        message: 'Component name "{{name}}" is not start with "ui-" prefix.',
+                        message: 'Component name "{{name}}" should "{{pattern}}".',
                         data: {
                             name,
-                            caseType
+                            //pattern: rePattern.toString()
+                            pattern: fixedComponentName
                         },
+
                         *fix(fixer) {
-                            yield fixer.replaceText(open, `<${casingName}`);
+                            yield fixer.replaceText(open, `<${fixedComponentName}`);
                             const { endTag } = node;
 
                             if (endTag) {
                                 const endTagOpen = tokens.getFirstToken(endTag);
-                                yield fixer.replaceText(endTagOpen, `</${casingName}`);
+                                yield fixer.replaceText(endTagOpen, `</${fixedComponentName}`);
                             }
                         }
                     });
-                    // }
                 }
             },
             {

@@ -58,7 +58,7 @@ module.exports = {
         'vue-scoped-css/no-unused-selector': 0,
         'vue-scoped-css/require-selector-used-inside': 0,
 
-        'goodt-rules/component-name-regex': 0,
+        'goodt-rules/component-name-regex': 2,
 
         // Editor specific
         // offs

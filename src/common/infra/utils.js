@@ -1,11 +1,11 @@
-import { success, fail, SafeResult } from '@goodt-common/utils';
+import { success, fail } from '@goodt-common/utils';
 import { throwUncaughtError } from '@goodt-common/errors';
 
 /**
  *
  * @param {import('./BaseDto').BaseDto.constructor} DtoConstructor
  * @param {DtoJson|DtoJson[]} dtoJson
- * @return {SafeResult<BaseDto|BaseDto[], Error>}
+ * @return {import('@goodt-common/utils').SafeResult<BaseDto|BaseDto[], Error>}
  */
 export const buildDtoSafeResult = (DtoConstructor, dtoJson) => {
     try {

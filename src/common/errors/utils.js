@@ -3,6 +3,7 @@ import { UncaughtTrackableError } from '@goodt-common/errors';
 /**
  * Throws error that can not be caught
  * For top-level error tracking
+ *
  * @param {Error} error
  * @param {any} context
  * @throws UncaughtTrackableError
@@ -20,6 +21,6 @@ export const throwUncaughtError = (error, context) => {
             trackError.captureStackTrace(throwAsyncError);
             throw trackError;
         };
-        setTimeout(timeout);
+        setTimeout(throwAsyncError);
     }
 };

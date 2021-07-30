@@ -1,5 +1,5 @@
 module.exports = {
-    extends: ['@goodt/base', 'plugin:jsdoc/recommended'],
+    extends: ['@goodt/eslint-config-base', 'plugin:jsdoc/recommended'],
     settings: {
         jsdoc: {
             mode: 'typescript',

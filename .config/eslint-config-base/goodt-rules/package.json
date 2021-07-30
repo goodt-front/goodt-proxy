@@ -1,0 +1,8 @@
+{
+  "name": "eslint-plugin-goodt-rules",
+  "version": "1.0.0",
+  "description": "SUP: Linting. Shared code linting configs and package dependencies config for reuse in SUP projects.",
+  "dependencies": {
+    "eslint-plugin-vue": "^7.13.0"
+  }
+}

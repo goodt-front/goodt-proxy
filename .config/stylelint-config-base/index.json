@@ -1,6 +1,6 @@
 {
-  "ignoreFiles": ["**/*.js"],
-  "defaultSeverity": "warning",
+  "ignoreFiles": ["**/*.js", "**/*.ts"],
+  "defaultSeverity": "error",
   "processors": [
     [
       "@mapbox/stylelint-processor-arbitrary-tags",
@@ -31,9 +31,13 @@
         }
       ]
     },
-    "no-empty-source": "never",
-    "order/properties-order": "never",
-    "at-rule-no-unknown": "never",
+    "no-empty-source": "error",
+    "order/properties-order": 0,
+    "scss/at-rule-no-unknown": "warning",
+    "at-rule-no-unknown": "warning",
+    "at-rule-empty-line-before": "warning",
+    "selector-pseudo-element-colon-notation": "warning",
+    "selector-max-compound-selectors": "warning",
     "scale-unlimited/declaration-strict-value": [
       [
         "/color$/",

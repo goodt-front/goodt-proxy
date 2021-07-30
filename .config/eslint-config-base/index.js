@@ -1,4 +1,4 @@
-const isProd = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
     root: true,
@@ -16,19 +16,21 @@ module.exports = {
         'airbnb-base',
         'plugin:vue/recommended',
         'plugin:vue-scoped-css/recommended',
+        // 'plugin:putout/ide',
         'prettier'
     ],
-    plugins: ['unicorn', 'radar', 'vue-scoped-css', 'vue'],
+    plugins: ['unicorn', 'radar', 'vue-scoped-css', 'vue', 'goodt-rules', 'putout'],
 
     rules: {
         // Common
-        'no-unused-vars': isProd ? 'warning' : 0,
+        'no-unused-vars': isProduction ? 'warning' : 0,
         // allow console.log during development only
-        'no-console': isProd ? 'error' : 0,
+        'no-console': isProduction ? 'error' : 0,
         // allow debugger during development only
-        'no-debugger': isProd ? 'error' : 0,
+        'no-debugger': isProduction ? 'error' : 0,
 
         // Vue.js specific
+        'vue/comment-directive': 0,
         'vue/v-on-function-call': ['error', 'never'],
 
         'vue/max-attributes-per-line': [
@@ -56,6 +58,8 @@ module.exports = {
         'vue-scoped-css/enforce-style-type': ['error', { allows: ['scoped', 'module'] }],
         'vue-scoped-css/no-unused-selector': 0,
         'vue-scoped-css/require-selector-used-inside': 0,
+
+        'goodt-rules/component-name-regex': 0,
 
         // Editor specific
         // offs

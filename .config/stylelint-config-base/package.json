@@ -5,6 +5,7 @@
   "main": "./index.json",
   "dependencies": {
     "@mapbox/stylelint-processor-arbitrary-tags": "^0.4.0",
+    "eslint-config-stylelint": "^13.1.1",
     "stylelint": "^13.13.1",
     "stylelint-config-recommended": "^5.0.0",
     "stylelint-webpack-plugin": "^2.2.2",

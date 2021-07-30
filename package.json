@@ -1,6 +1,6 @@
 {
     "name": "goodt-wcore",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "private": true,
     "main": "src/core/index.js",
     "types": "src/core/index.d.ts",
@@ -10,7 +10,8 @@
         "build": "npm run lint && npm run format && npm run build:lib",
         "build:lib": "vue-cli-service build --target lib --dest ./dist/ --name goodt-wcore ./src/core/index.js",
         "lint": "eslint src/",
-        "stylelint": "stylelint 'src/**/*.{css,scss,less,pcss,vue}'",
+        "lint:fix:essential": "putout src/ --fix",
+        "lint:style": "stylelint 'src/**/*.{css,scss,less,pcss,vue}'",
         "lint:all": "scripts/lint/eslint-all.sh",
         "lint:all:fix": "npm run lint -- --fix",
         "lint:staged": "scripts/lint/eslint-staged.sh",

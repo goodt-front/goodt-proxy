@@ -1,0 +1,41 @@
+diff --git a/node_modules/@putout/processor-html/lib/html.js b/node_modules/@putout/processor-html/lib/html.js
+index 108862e..0cec52f 100644
+--- a/node_modules/@putout/processor-html/lib/html.js
++++ b/node_modules/@putout/processor-html/lib/html.js
+@@ -1,6 +1,7 @@
+ 'use strict';
+ 
+ const processorCSS = require('@putout/processor-css');
++const processorJS = require('@putout/processor-javascript');
+ 
+ const createSpaceLine = (a) => Array(a).join(' ');
+ const addSpaces = (spacesCount) => (a) => createSpaceLine(spacesCount) + a;
+@@ -8,12 +9,28 @@ const cutSpaces = (spacesCount) => (a) => a.slice(spacesCount);
+ 
+ module.exports.files = [
+     '*.html',
++    '*.vue'
+ ];
+ 
+ module.exports.fix = async (rawSource) => {
+     const svelte = require('svelte/compiler');
+     
+     const {code} = await svelte.preprocess(rawSource, {
++        //async script(node) {
++        //    const {content} = node;
++        //    //const source = removePrefixSpaces(content);
++        //    //const currentSource = await processorJS.fix(source);
++        //    //
++        //    //const code = addPrefixSpaces({
++        //    //    currentSource: currentSource.slice(0, -1),
++        //    //    content,
++        //    //});
++        //
++        //    return {
++        //        code: content,
++        //    };
++        //},
++
+         async style(node) {
+             const {content} = node;
+             const source = removePrefixSpaces(content);

@@ -41,7 +41,8 @@
     "scale-unlimited/declaration-strict-value": [
       [
         "/color$/",
-        "font-size"
+        "font-size",
+        "font-family"
       ]
     ]
   }

@@ -16,7 +16,6 @@ module.exports = {
         'airbnb-base',
         'plugin:vue/recommended',
         'plugin:vue-scoped-css/recommended',
-        // 'plugin:putout/ide',
         'prettier'
     ],
     plugins: ['unicorn', 'radar', 'vue-scoped-css', 'vue', 'goodt-rules', 'putout'],

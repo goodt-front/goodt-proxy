@@ -1,0 +1,11 @@
+{
+  "processors": [
+    "javascript",
+    "html"
+  ],
+  "rules": {
+    "remove-debugger": "on",
+    "remove-console": "on",
+    "remove-unused-variables": "on"
+  }
+}

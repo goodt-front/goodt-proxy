@@ -6,6 +6,7 @@
     "@babel/eslint-parser": "^7.14.7",
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
+    "@putout/plugin-apply-nullish-coalescing": "^1.0.0",
     "@putout/processor-html": "^2.0.1",
     "@vue/eslint-config-typescript": "^7.0.0",
     "eslint": "^7.30.0",
@@ -30,6 +31,7 @@
   },
   "scripts": {
     "postinstall": "npm run deps:patch",
+    "prepare": "npm run deps:patch",
     "deps:patch": "npx patch-package --patch-dir .patches"
   }
 }

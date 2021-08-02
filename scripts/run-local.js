@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+/**
+ * Script executes speecified npm run-script if it runs locally / in dev-mode,
+ * or exit if it runs during npm install in dependency role
+ */
+
 const fs = require('fs');
 const path = require('path');
 const isLocalInstall = fs.existsSync(path.resolve(__dirname, '../package-lock.json'));

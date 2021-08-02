@@ -1,13 +1,19 @@
 # Памятка по разработке
-
 Содержит краткую информацию
 из [README.MD](https://goodt-git.goodt.me/projects/GOOD/repos/goodteditor-web-components/browse/README.md)
 и [CONTRIBUTING.MD](https://goodt-git.goodt.me/projects/GOOD/repos/goodteditor-web-components/browse/CONTRIBUTING.MD).
 
-## ВАЖНО
+## ВАЖНО!
 
 Перед началом и после окончания разработки, перед созданием `PR` советуем свериться с чеклистом соответствия
 [Соглашениям](#conventions).
+
+## Полезные ссылки
+- [README.MD](https://goodt-git.goodt.me/projects/GOOD/repos/goodteditor-web-components/browse/README.md)
+- [CONTRIBUTING.MD](https://goodt-git.goodt.me/projects/GOOD/repos/goodteditor-web-components/browse/CONTRIBUTING.MD)
+- [Goodt Wiki](https://redmine.goodt.me/projects/general_goodt/wiki/Frontend)
+- [Goodt UI](https://goodt-ui.netlify.app/)
+- [Goodt CSS](https://goodt-css.netlify.app/)
 
 ## Термины
 
@@ -28,11 +34,12 @@ src/lib/
    │    ├── [[{panelName}]].d.ts  # d.ts описание TypeScript-типов компонента панели (для ассиста IDE)
    │    ├── [[{panelName}]].vue   # компонент панели
    │    └── index.js              
-   ├── utils                      # утилиты
    ├── services                   # сервисы
+   ├── utils                      # утилиты
    ├── descriptor.js              # файл дескриптора
    ├── [[{name}]].d.ts            # d.ts описание TypeScript-типов компонента виджета (для ассиста IDE)
-   └── [[{name}]].vue             # компонент виджета
+   ├── [[{name}]].vue             # компонент виджета
+   └── style.less                 # файл стилей
 ```
 
 <a name="conventions"></a>
@@ -42,6 +49,8 @@ src/lib/
 *[ ] Название **widget panel** ДОЛЖНО иметь суффикс `*Panel` и использовать PascalCase (`[[panelName]]`)
 *[ ] Название **widget component** и родительской папки должны совпадать: `src/lib/[[name]]/[[name]].vue`
 *[ ] Название **widget component** и родительской папки должны совпадать: `src/lib/[[name]]/[[name]].vue`
+*[ ] Название переиспользуемых компонентов (модальных окон, попапов, контролов, панелей) в шаблоне <template></template>
+  виджета должны быть написано в нотации kebab-case и начинаться с префикса `ui-*`
 
 ### Структура и состав
 *[ ] **widget component** ДОЛЖЕН находится в корне папки `src/lib/[[name]]/[[name]].vue`.
@@ -51,6 +60,7 @@ src/lib/
 *[ ] В папке виджета ДОЛЖЕН существовать только ОДИН **widget component** `[[name]]` наследующий `Elem`.
 *[ ] Вспомогательные компоненты **widget panel** не могут наследовать компонент `Panel`.
 *[ ] Дескриптор компонента рекомендуется выносить в отдельный файл с названием `descriptor.js` в корне папки виджета.
+*[ ] Стили компонента рекомендуется выносить в отдельный файл с названием `style.less` в корне папки виджета.
 *[ ] Вспомогательные `Vue.js`-миксины ДОЛЖНЫ храниться в папке `src/lib/[[name]]/mixins`.
 *[ ] Утилиты, специфичные для конкретного **widget** ДОЛЖНЫ храниться в папке `src/lib/[[name]]/utils` или файле `src/lib/[[name]]/utils.js`.
 *[ ] Логика API-сервисов (работы с серверным API) ДОЛЖНА храниться в папке `src/lib/[[name]]/api`.
@@ -115,10 +125,13 @@ import { descriptor, Vars } from './descriptor';
 
 export default {
    // ...
+   data: () => ({
+       myVar: null
+   }),
    watch: {
       $storeState(state, prevState) {
-         const { [Vars.MY_VAR]: myVar } = state;
-         if (myVar !== this.myVar) {
+         const { [Vars.MY_VAR]: storeVarValue } = state;
+         if (storeVarValue !== this.myVar) {
              // do something
          }
       }

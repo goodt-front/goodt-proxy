@@ -125,7 +125,7 @@ module.exports = {
                     context.report({
                         node: open,
                         loc: open.loc,
-                        message: 'Component name "{{name}}" should "{{pattern}}".',
+                        message: 'Component tag name "{{name}}" should be "{{pattern}}".',
                         data: {
                             name,
                             //pattern: rePattern.toString()

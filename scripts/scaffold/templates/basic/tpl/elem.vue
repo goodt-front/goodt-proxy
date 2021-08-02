@@ -23,6 +23,7 @@
         <!-- {/demo} -->
     </div>
 </template>
+<style lang="less" scoped src="./style.less"></style>
 <script>
 /**
  * @typedef {import('./[[{name}]]').IInstance} IInstance

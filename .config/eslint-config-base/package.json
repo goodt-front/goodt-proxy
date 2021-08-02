@@ -29,7 +29,7 @@
     "putout": "^18.8.0"
   },
   "scripts": {
-    "install": "npm run deps:patch",
+    "postinstall": "npm run deps:patch",
     "deps:patch": "npx patch-package --patch-dir .patches"
   }
 }

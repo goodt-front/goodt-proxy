@@ -14,7 +14,10 @@
                         </div>
                         <!-- {panels} -->
                         <ui-collapse class="p" v-for="(p, k) in panels" :key="`${elemType}-${k}`">
-                            <template #header>{{ p.meta.name }}</template>
+                            <template #header>
+                                <i class="mdi" :class="`mdi-${p.meta.icon}`" v-if="p.meta.icon"></i>
+                                {{ p.meta.name }}
+                            </template>
                             <component
                                 :is="p.def"
                                 :init-props="elemProps"
@@ -84,7 +87,7 @@ export default {
         panelSidebarStyle: {
             type: Object,
             default() {
-                return { width: '22rem', 'max-height': '80vh' };
+                return { width: '23.75rem', 'max-height': '80vh' };
             }
         },
         showPanels: {

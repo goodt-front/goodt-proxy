@@ -103,7 +103,7 @@ export default {
          * @param {string} type  widget type
          * @return {boolean}
          */
-        isChildAllowed(type) {
+        isChildAllowed(/* type */) {
             return true;
         },
         getPanels() {
@@ -114,6 +114,15 @@ export default {
             this.isLoading = true;
             this.demoResult = await this.apiService.getUserById(1);
             this.isLoading = false;
+            /*
+            const { isSuccess, isError, result, error } = this.demoResult;
+            if (isSuccess) {
+                console.log({ result });
+            }
+            if (isError) {
+                console.error({ error });
+            }
+            */
         }
         [[/hasTransport]]
     }

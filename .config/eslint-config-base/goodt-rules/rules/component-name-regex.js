@@ -14,7 +14,7 @@ const { toRegExp } = require('eslint-plugin-vue/lib/utils/regexp');
 // Helpers
 // -----------------------------------------------------------------------------
 
-const defaultPattern = /^ui-(.+)/;
+const defaultPattern = /^(ui|w)-.+/;
 
 // ------------------------------------------------------------------------------
 // Rule Definition
@@ -120,7 +120,8 @@ module.exports = {
 
                     const { startTag } = node;
                     const open = tokens.getFirstToken(startTag);
-                    const fixedComponentName = `ui-${name}`;
+                    const clearedRe = rePattern.toString().replace(/[/^.+]/g, '');
+                    const fixedComponentName = `${clearedRe}-${name}`;
 
                     context.report({
                         node: open,
@@ -128,7 +129,6 @@ module.exports = {
                         message: 'Component tag name "{{name}}" should be "{{pattern}}".',
                         data: {
                             name,
-                            //pattern: rePattern.toString()
                             pattern: fixedComponentName
                         },
 

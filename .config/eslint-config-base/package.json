@@ -7,7 +7,7 @@
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
     "@putout/plugin-apply-nullish-coalescing": "^1.0.0",
-    "@putout/processor-html": "^2.0.1",
+    "@putout/processor-html": "git+ssh://git@github.com:mayoujin/putout-processor-html.git",
     "@vue/eslint-config-typescript": "^7.0.0",
     "eslint": "^7.30.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -30,8 +30,6 @@
     "putout": "^18.8.0"
   },
   "scripts": {
-    "postinstall": "npm run deps:patch",
-    "prepare": "npm run deps:patch",
     "deps:patch": "npx patch-package --patch-dir .patches"
   }
 }

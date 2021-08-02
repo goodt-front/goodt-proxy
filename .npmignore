@@ -1,6 +1,5 @@
 .husky
 .jest
-.patches
 .utils
 public
 src/dev

@@ -121,7 +121,7 @@ module.exports = {
                     const { startTag } = node;
                     const open = tokens.getFirstToken(startTag);
                     const clearedRe = rePattern.toString().replace(/[/^.+]/g, '');
-                    const fixedComponentName = `${clearedRe}-${name}`;
+                    const fixedComponentName = `${clearedRe}${name}`;
 
                     context.report({
                         node: open,

@@ -49,8 +49,9 @@ module.exports = class extends Template {
         const panelDT = this.compileTpl(`${tplPath}/panel.d.ts`, tplBinds);
         const panelsIndex = this.compileTpl(`${tplPath}/panels.index.js`, tplBinds);
         const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
+        const style = this.compileTpl(`${tplPath}/style.less`, tplBinds);
         const readmeMd = this.compileTpl(`${tplPath}/README.MD`, tplBinds);
-        const serviceCl = this.compileTpl(`${tplPath}/${servicePath}/service.js`, tplBinds);
+        const serviceMain = this.compileTpl(`${tplPath}/${servicePath}/service.js`, tplBinds);
         const serviceUtils = this.compileTpl(`${tplPath}/${servicePath}/utils.js`, tplBinds);
         const widgetCreated = this.createWidget({
             elem,
@@ -62,7 +63,8 @@ module.exports = class extends Template {
             readmeMd
         });
         this.createWidgetDir(servicePath);
-        this.createWidgetFile(`${servicePath}/service.js`, serviceCl);
+        this.createWidgetFile(`style.less`, style);
+        this.createWidgetFile(`${servicePath}/service.js`, serviceMain);
         this.createWidgetFile(`${servicePath}/utils.js`, serviceUtils);
 
         return widgetCreated;

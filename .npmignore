@@ -3,7 +3,6 @@
 .utils
 public
 src/dev
-tests
 vite.*
 vue.*
 jest.*

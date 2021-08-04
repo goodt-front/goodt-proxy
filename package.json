@@ -46,7 +46,6 @@
         "@goodt/browserslist-config": "file:.config/browserslist-config",
         "@goodt/config": "file:.config",
         "@goodt/eslint-config-base": "file:.config/eslint-config-base",
-        "@goodt/scaffold": "file:scripts/scaffold",
         "@goodt/stylelint-config-base": "file:.config/stylelint-config-base",
         "@goodt/tests": "file:tests",
         "axios": "^0.21.1",

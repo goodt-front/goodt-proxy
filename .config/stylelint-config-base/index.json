@@ -11,29 +11,13 @@
   ],
   "extends": [
     "stylelint-config-recommended",
-    "stylelint-config-skyscanner",
     "stylelint-declaration-strict-value"
   ],
   "plugins": [
-    "stylelint-no-unused-selectors"
   ],
   "rules": {
-    "plugin/no-unused-selectors": {
-      "resolve": {
-        "documents": [
-          "{cssDir}/{cssName}.vue"
-        ]
-      },
-      "plugins": [
-        {
-          "test": "\\.vue?$",
-          "plugin": "stylelint-no-unused-selectors-plugin-html"
-        }
-      ]
-    },
     "no-empty-source": "error",
     "order/properties-order": 0,
-    "scss/at-rule-no-unknown": "warning",
     "at-rule-no-unknown": "warning",
     "at-rule-empty-line-before": "warning",
     "selector-pseudo-element-colon-notation": "warning",

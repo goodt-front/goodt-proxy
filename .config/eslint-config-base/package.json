@@ -26,10 +26,6 @@
     "eslint-plugin-vue": "^7.13.0",
     "eslint-plugin-vue-scoped-css": "^1.2.1",
     "lint-staged": "^11.0.0",
-    "prettier": "^2.3.2",
     "putout": "^18.8.0"
-  },
-  "scripts": {
-    "deps:patch": "npx patch-package --patch-dir .patches"
   }
 }

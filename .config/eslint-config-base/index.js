@@ -21,57 +21,28 @@ module.exports = {
     plugins: ['unicorn', 'radar', 'vue-scoped-css', 'vue', 'goodt-rules', 'putout'],
 
     rules: {
-        // Common
+        /* eslint-recommended */
         'no-unused-vars': isProduction ? 'warning' : 0,
         // allow console.log during development only
         'no-console': isProduction ? 'error' : 0,
         // allow debugger during development only
         'no-debugger': isProduction ? 'error' : 0,
 
-        // Vue.js specific
-        'vue/comment-directive': 0,
-        'vue/v-on-function-call': ['error', 'never'],
-
-        'vue/max-attributes-per-line': [
+        'no-underscore-dangle': [
             'error',
             {
-                singleline: {
-                    max: 3,
-                    allowFirstLine: true
-                },
-                multiline: {
-                    max: 1,
-                    allowFirstLine: false
-                }
+                allowAfterSuper: true,
+                allowAfterThis: true,
+                enforceInMethodNames: false,
+                allowAfterThisConstructor: true
             }
         ],
-        'vue/match-component-file-name': 'error',
-        'vue/no-static-inline-styles': [
-            'error',
-            {
-                allowBinding: true
-            }
-        ],
-        'vue/no-side-effects-in-computed-properties': 'error',
+        'class-methods-use-this': 'off',
 
-        'vue-scoped-css/enforce-style-type': ['error', { allows: ['scoped', 'module'] }],
-        'vue-scoped-css/no-unused-selector': 0,
-        'vue-scoped-css/require-selector-used-inside': 0,
-
-        'goodt-rules/component-name-regex': 2,
-
-        // Editor specific
         // offs
         'no-plusplus': 0,
-        'import/no-extraneous-dependencies': 0,
         // warns
-        'no-underscore-dangle': 'warn',
         'no-alert': 'warn',
-        'import/prefer-default-export': 0,
-        // jsdoc
-        'jsdoc/newline-after-description': 0,
-        'jsdoc/require-returns-description': 0, // Recommended
-        //
         'id-length': [
             'error',
             {
@@ -98,7 +69,11 @@ module.exports = {
                 ]
             }
         ],
-        //
+
+        'import/no-extraneous-dependencies': 0,
+        'import/prefer-default-export': 0,
+
+        // unicorn
         'unicorn/prevent-abbreviations': [
             'error',
             {
@@ -129,17 +104,60 @@ module.exports = {
                     Props: true,
                     prop: true,
                     var: true,
+                    opt: true,
                     vars: true,
                     src: true,
                     Vars: true,
                     val: true,
                     Val: true,
+                    vm: true,
                     fn: true,
                     num: true,
-                    el: true
+                    el: true,
+                    $el: true
                 }
             }
-        ]
+        ],
+
+        /* eslint-plugin-vue */
+        'vue/comment-directive': 0,
+        'vue/v-on-function-call': ['error', 'never'],
+
+        'vue/max-attributes-per-line': [
+            'error',
+            {
+                singleline: {
+                    max: 20,
+                    allowFirstLine: true
+                },
+                multiline: {
+                    max: 1,
+                    allowFirstLine: false
+                }
+            }
+        ],
+        'vue/match-component-file-name': 'error',
+        'vue/no-static-inline-styles': [
+            'error',
+            {
+                allowBinding: true
+            }
+        ],
+        'vue/no-side-effects-in-computed-properties': 'error',
+
+        //
+        'vue-scoped-css/enforce-style-type': ['error', { allows: ['scoped', 'module'] }],
+        'vue-scoped-css/no-unused-selector': 0,
+        'vue-scoped-css/require-selector-used-inside': 0,
+
+        /* goodt-rules */
+        'goodt-rules/component-name-regex': 2,
+
+        // Editor specific
+
+        // jsdoc
+        'jsdoc/newline-after-description': 0,
+        'jsdoc/require-returns-description': 0 // Recommended
     },
     settings: {
         'import/resolver': {

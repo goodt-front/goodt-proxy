@@ -11,7 +11,7 @@
             </div>
         </div>
         <slot v-bind="{ authenticated, initialized }"></slot>
-        <popup :visible.sync="showConsole" :dialog="consolePopupDialog">
+        <ui-popup :visible.sync="showConsole" :dialog="consolePopupDialog">
             <template #body>
                 <div class="p">
                     <code>store.state</code>
@@ -26,8 +26,8 @@
                     <pre class="text-xsmall">{{ authAdapterUserProfile }}</pre>
                 </div>
             </template>
-        </popup>
-        <portal-target :name="portalName" multiple></portal-target>
+        </ui-popup>
+        <ui-portal-target :name="portalName" multiple></ui-portal-target>
     </div>
 </template>
 <script>
@@ -60,7 +60,7 @@ const MODULE_KEYS = {
 
 export default {
     name: 'EnvEmulator',
-    components: { PortalTarget, Popup },
+    components: { UiPortalTarget: PortalTarget, UiPopup: Popup },
     props: {
         authAdapter: {
             type: Object,

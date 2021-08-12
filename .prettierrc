@@ -10,5 +10,7 @@
     "arrowParens": "always",
     "requirePragma": false,
     "insertPragma": false,
-    "proseWrap": "preserve"
+    "proseWrap": "preserve",
+    "htmlWhitespaceSensitivity": "ignore",
+    "alignObjectProperties": false
 }

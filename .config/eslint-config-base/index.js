@@ -18,7 +18,7 @@ module.exports = {
         'plugin:vue-scoped-css/recommended',
         'prettier'
     ],
-    plugins: ['unicorn', 'radar', 'vue-scoped-css', 'vue', 'goodt-rules', 'putout', 'deprecate'],
+    plugins: ['unicorn', 'radar', 'vue-scoped-css', 'vue', 'goodt-rules', 'putout'],
 
     rules: {
         /* goodt-rules */

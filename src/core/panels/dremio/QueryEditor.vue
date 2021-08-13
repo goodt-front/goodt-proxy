@@ -340,7 +340,8 @@ export default {
             return this.from.join(' / ');
         },
         datasetLink() {
-            return `${Const.DREMIO_UI_URL}/space/${this.datasetName}`.replace(/\s/g, '');
+            const dataset = this.from.join('.').replace('.', '/');
+            return `${Const.DREMIO_UI_URL}/space/${dataset}`;
         },
         fields: {
             get() {

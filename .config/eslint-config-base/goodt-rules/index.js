@@ -1,6 +1,7 @@
 module.exports = {
     rules: {
-        'component-name-regex': require('./rules/component-name-regex')
+        'component-name-regex': require('./rules/component-name-regex'),
+        'deprecate-member-expression': require('./rules/deprecate-member-expression')
     },
     configs: {
         base: require('./configs/base')

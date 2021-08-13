@@ -18,9 +18,18 @@ module.exports = {
         'plugin:vue-scoped-css/recommended',
         'prettier'
     ],
-    plugins: ['unicorn', 'radar', 'vue-scoped-css', 'vue', 'goodt-rules', 'putout'],
+    plugins: ['unicorn', 'radar', 'vue-scoped-css', 'vue', 'goodt-rules', 'putout', 'deprecate'],
 
     rules: {
+        /* goodt-rules */
+        'goodt-rules/component-name-regex': 2,
+        'goodt-rules/deprecate-member-expression': [
+            'error',
+            { name: 'triggerStateChange', use: 'this.$storeCommit()' },
+            { name: 'listenStateChange', use: 'watch: { $storeState(state) { ... } }' },
+            { name: 'triggerNavigate', use: 'this.$routeNavigate()' }
+        ],
+
         /* eslint-recommended */
         'no-unused-vars': isProduction ? 'warning' : 0,
         // allow console.log during development only
@@ -149,9 +158,6 @@ module.exports = {
         'vue-scoped-css/enforce-style-type': ['error', { allows: ['scoped', 'module'] }],
         'vue-scoped-css/no-unused-selector': 0,
         'vue-scoped-css/require-selector-used-inside': 0,
-
-        /* goodt-rules */
-        'goodt-rules/component-name-regex': 2,
 
         // Editor specific
 

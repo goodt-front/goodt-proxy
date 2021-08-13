@@ -6,6 +6,7 @@
   "dependencies": {
     "@mapbox/stylelint-processor-arbitrary-tags": "^0.4.0",
     "stylelint": "^13.13.1",
+    "stylelint-config-skyscanner": "^4.0.0",
     "stylelint-config-recommended": "^5.0.0",
     "stylelint-webpack-plugin": "^2.2.2",
     "stylelint-declaration-strict-value": "^1.7.12"

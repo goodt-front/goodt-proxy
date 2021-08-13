@@ -1,4 +1,3 @@
-
 /*
  * IMPORTANT!
  * This file has been automatically generated,
@@ -16,6 +15,7 @@ module.exports = {
     },
     plugins: ['goodt-rules'],
     rules: {
-        'goodt-rules/component-name-regex': 'error'
+        'goodt-rules/component-name-regex': 'error',
+        'goodt-rules/deprecate-member-expression': 'error'
     }
 };

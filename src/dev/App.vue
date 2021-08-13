@@ -1,5 +1,5 @@
 <template>
-    <env-emulator class="w-100 h-100" v-bind="envEmulatorCfg">
+    <w-env-emulator class="w-100 h-100" v-bind="envEmulatorCfg">
         <template #default="{ initialized }">
             <div class="pad-l3">
                 <div class="p">
@@ -9,13 +9,13 @@
                     </select>
                 </div>
 
-                <widget-preview
+                <w-widget-preview
                     v-bind="{ elem: widgetSelected }"
                     v-if="widgetSelected"
-                ></widget-preview>
+                ></w-widget-preview>
             </div>
         </template>
-    </env-emulator>
+    </w-env-emulator>
 </template>
 <script>
 import { Sandbox } from '../core';
@@ -24,7 +24,7 @@ const { EnvEmulator, WidgetPreview } = Sandbox;
 
 export default {
     name: 'App',
-    components: { EnvEmulator, WidgetPreview },
+    components: { WEnvEmulator: EnvEmulator, WWidgetPreview: WidgetPreview },
     data() {
         return {
             envEmulatorCfg: {

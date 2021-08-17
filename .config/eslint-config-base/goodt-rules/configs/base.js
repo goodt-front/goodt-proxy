@@ -16,6 +16,7 @@ module.exports = {
     plugins: ['goodt-rules'],
     rules: {
         'goodt-rules/component-name-regex': 'error',
-        'goodt-rules/deprecate-member-expression': 'error'
+        'goodt-rules/deprecate-member-expression': 'error',
+        'goodt-rules/data-boolean-key-naming': 'error'
     }
 };

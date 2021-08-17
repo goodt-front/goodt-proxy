@@ -23,11 +23,14 @@ module.exports = {
     rules: {
         /* goodt-rules */
         'goodt-rules/component-name-regex': 2,
+        'goodt-rules/data-boolean-key-naming': 2,
         'goodt-rules/deprecate-member-expression': [
             'error',
             { name: 'triggerStateChange', use: 'this.$storeCommit()' },
             { name: 'listenStateChange', use: 'watch: { $storeState(state) { ... } }' },
-            { name: 'triggerNavigate', use: 'this.$routeNavigate()' }
+            { name: 'triggerNavigate', use: 'this.$routeNavigate()' },
+            { name: 'Http', use: '"createTransport(HttpTransportSymbol, options)" factory' },
+            { name: 'HttpAuth', use: '"createTransport(HttpAuthTransportSymbol, options)" factory' }
         ],
 
         /* eslint-recommended */

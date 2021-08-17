@@ -8,6 +8,8 @@ function makeRuleMeta(memberName) {
     throw new Error('Unsupported type of argument ' + JSON.stringify(memberName));
 }
 
+const astUtils = require('eslint/lib/rules/utils/ast-utils');
+
 module.exports = {
     meta: {
         docs: {
@@ -24,9 +26,10 @@ module.exports = {
                 let ruleMeta;
                 let target;
 
-                const isObjectIndetifier = node.object && node.object.type === 'Identifier';
-                if (isObjectIndetifier) {
-                    const isPropertyIdentifier = node.property && node.property.type === 'Identifier';
+                const isObjectIdentifier = node.object && node.object.type === 'Identifier';
+                if (isObjectIdentifier) {
+                    const isPropertyIdentifier =
+                        node.property && node.property.type === 'Identifier';
                     if (!isPropertyIdentifier) return;
                     ruleMeta = ruleMetaList[node.object.name + '.' + node.property.name];
                     target = node.property;
@@ -50,6 +53,24 @@ module.exports = {
                 ].join('');
 
                 context.report({ node: target, message: errorMsg });
+            },
+            NewExpression(node) {
+                const variable = astUtils.getVariableByName(context.getScope(), node.callee.name);
+                if (variable && ruleMetaList[variable.name] == null) {
+                    return;
+                }
+
+                const ruleMeta = ruleMetaList[variable.name];
+
+                const message = [
+                    'Class "' + ruleMeta.name + '" construction is deprecated.',
+                    ...[ruleMeta.use ? ' Use ' + ruleMeta.use + ' instead' : '']
+                ].join('');
+
+                context.report({
+                    node,
+                    message
+                });
             }
         };
     }

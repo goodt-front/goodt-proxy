@@ -93,7 +93,7 @@ class BaseApiService {
     /**
      *
      * @param {import('./types').IApiServiceRequest} request
-     * @return {Promise<SafeResult>}
+     * @return {Promise<import('@goodt-common/utils').ISafeResult<*, Error>>}
      */
     async request(request) {
         try {

@@ -1,7 +1,6 @@
 /**
  * @type {import('./BaseApiService').IApiService}
  */
-import { ITransportRequest } from '@goodt-wcore/net';
 import {
     IApiService,
     IApiServiceConstructorOptions,
@@ -41,7 +40,7 @@ export class BaseApiService implements IApiService {
     /**
      *
      * @param {IApiServiceRequest} request
-     * @return {Promise<SafeResult>}
+     * @return {Promise<import('@goodt-common/utils').ISafeResult<*, Error>>}
      */
     request(request: IApiServiceRequest): Promise<SafeResult>;
     /**

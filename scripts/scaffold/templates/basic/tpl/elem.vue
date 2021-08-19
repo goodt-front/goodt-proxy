@@ -23,20 +23,13 @@
         <!-- {/demo} -->
     </div>
 </template>
-<style lang="less" scoped src="./style.less"></style>
 <script>
 /**
  * @typedef {import('./[[{name}]]').IInstance} IInstance
  */
 import { Elem } from '[[{core}]]';
 [[#hasTransport]]
-[[#http]]
-import { createTransport, HttpTransportSymbol } from '[[{coreNetPath}]]';
-[[/http]]
-[[^http]]
-import { createTransport, HttpAuthTransportSymbol } from '[[{coreNetPath}]]';
-[[/http]]
-import { createApiService, ApiService } from './api/service';
+import { createApiService, ServiceTypeData } from './api/service';
 [[/hasTransport]]
 import { descriptor, /* Vars */ } from './descriptor';
 import { [[{panelName}]]Async } from '[[{panelPath}]]';
@@ -57,9 +50,8 @@ export default {
          */
         demoResult: null,
         /**
-         * @type {ApiService}
+         * @property {import('./api/service').ApiService} apiService
          */
-        apiService: null
         [[/hasTransport]]
     }),
     created() {
@@ -71,21 +63,16 @@ export default {
         [[#hasTransport]]
         /**
          * @this {IInstance}
+         * @todo replace for useService
          */
         createWidgetApiService() {
-            [[#http]]
-            const transport = createTransport(HttpTransportSymbol);
-            [[/http]]
-            [[^http]]
-            const transport = createTransport(HttpAuthTransportSymbol);
-            [[/http]]
-            const apiService = createApiService(transport, {
+            const apiService = createApiService({
                 apiBaseURL: this.props[API_SERVICE_BASE_URL_PROP_NAME]
             });
             // in 'editor mode' props may change
             if (this.isEditorMode) {
-                this.$watch(`props.${API_SERVICE_BASE_URL_PROP_NAME}`, (val) => {
-                    apiService.apiBaseURL = val;
+                this.$watch(`props.${API_SERVICE_BASE_URL_PROP_NAME}`, (url) => {
+                    apiService.apiBaseURL = url;
                 });
             }
             // clean-up
@@ -123,8 +110,11 @@ export default {
                 console.error({ error });
             }
             */
-        }
+        },
+        /* Vetur HACK – extra structure and type information */
+        ...ServiceTypeData
         [[/hasTransport]]
     }
 };
 </script>
+<style lang="less" scoped src="./style.less"></style>

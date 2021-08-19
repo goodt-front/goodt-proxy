@@ -5,9 +5,8 @@ interface IApiServiceFactory {
     (options: any): IApiService;
 }
 
-interface ServiceMixinComputed<T> {
-    $apiService: IApiService & T;
-    apiService: IApiService & T;
+type ServiceMixinComputed<T extends IApiService> = {
+    apiService: T;
 }
 
 export interface IApiServiceMixinOptions {
@@ -15,7 +14,7 @@ export interface IApiServiceMixinOptions {
     apiBaseURL?: string | (() => string);
 }
 
-export interface IApiServiceMixinInstance<T> extends ServiceMixinComputed<T> {}
+export type IApiServiceMixinInstance<T extends IApiService> = ServiceMixinComputed<T>
 export interface IApiServiceMixin extends VueConstructor<Vue & IApiServiceMixinInstance> {}
 
 /**

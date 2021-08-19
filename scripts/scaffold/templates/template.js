@@ -62,7 +62,17 @@ module.exports = class {
      * @param {object} tpl  compiled vue template files
      * @return {boolean|Error}  true if success; else error
      */
-    createWidget({ elem, panel, panelDT, elemDT, descriptor, panelsIndex, readmeMd }) {
+    createWidget({
+        elem,
+        panel,
+        panelDT,
+        panelTypesDT,
+        elemDT,
+        elemTypesDT,
+        descriptor,
+        panelsIndex,
+        readmeMd
+    }) {
         this.createWidgetDir();
         const { path: panelPath, name: panelName } = this.config.panel;
         ['components', panelPath, `${panelPath}/components`].forEach((dir) =>
@@ -71,13 +81,15 @@ module.exports = class {
         this.createWidgetFile(`${this.widgetName}.vue`, elem);
         this.createWidgetFile(`${panelPath}/${panelName}.vue`, panel);
 
-        if (panelDT) {
+        if (panelDT && panelTypesDT) {
+            this.createWidgetFile(`${panelPath}/${panelName}Types.d.ts`, panelTypesDT);
             this.createWidgetFile(`${panelPath}/${panelName}.d.ts`, panelDT);
         }
         if (panelsIndex) {
             this.createWidgetFile(`${panelPath}/index.js`, panelsIndex);
         }
-        if (elemDT) {
+        if (elemDT && elemTypesDT) {
+            this.createWidgetFile(`types.d.ts`, elemTypesDT);
             this.createWidgetFile(`${this.widgetName}.d.ts`, elemDT);
         }
         if (descriptor) {

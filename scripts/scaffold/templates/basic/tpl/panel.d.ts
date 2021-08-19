@@ -1,18 +1,1 @@
-import { IDescriptorProps } from '[[{core}]]';
-import {
-    IPanelComponentOptions,
-    IPanelComponentOptionsInternal,
-    IPanelInstance
-} from '[[{core}]]/Panel';
-import { descriptor } from '../descriptor';
-
-interface Data {}
-interface Methods {}
-interface Computed extends IDescriptorProps<ReturnType<typeof descriptor>> {}
-interface Props {}
-
-export interface IInstance extends IPanelInstance, Data, Methods, Computed, Props {}
-export interface IComponentOptions
-    extends IPanelComponentOptions<IInstance, Data, Methods, Computed, Props> {
-    extends: IPanelComponentOptionsInternal;
-}
+export * from './[[{panelName}]]Types';

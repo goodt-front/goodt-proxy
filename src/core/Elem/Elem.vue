@@ -16,9 +16,6 @@ import { ElemEvent } from './infra/config';
 const { store, buildStoreValue, unwrapStoreValue } = StoreManager;
 const { EventBusWrapper } = EB;
 
-/**
- * @type {import("./Elem").IElemComponentOptionsInternal}
- */
 export default {
     props: {
         /** uniq instance id */

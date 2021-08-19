@@ -1,4 +1,5 @@
 import { BaseApiService } from '@goodt-common/services/api';
+import { useApiService } from '@goodt-common/mixins';
 [[#http]]
 import { createTransport, HttpTransportSymbol } from '[[{coreNetPath}]]';
 [[/http]]
@@ -53,10 +54,23 @@ export const createApiService = (options, transport) => {
 };
 
 /**
+ *
+ * @param {import('@goodt-common/services/api/types').IApiServiceOptions} serviceOptions
+ * @param {import('@goodt-common/mixins').IApiServiceMixinOptions} [mixinOptions]
+ * @return {import('@goodt-common/mixins').IApiServiceMixin}
+ */
+export const useApiServiceMixin = (serviceOptions, mixinOptions) => {
+    const { mixin: ServiceMixin } = useApiService(createApiService, serviceOptions, mixinOptions);
+
+    return ServiceMixin;
+};
+
+/**
  * Это "пустой" вспомогательный объект с JSDOc аннотацией
- * для примешивания информации о структуре компонента и типах
+ * для примешивания информации о сервисе
+ * в структуру инстанса компонента и типах
  * исключительно для Vetur
  *
- * @type {{ apiService: ApiService }}
+ * @type {{ apiBaseURL: string }}
  */
-export const ServiceTypeData = undefined;
+export const ServiceTypeDescriptor = undefined;

@@ -44,8 +44,10 @@ module.exports = class extends Template {
         const servicePath = 'api';
 
         const elem = this.compileTpl(`${tplPath}/elem.vue`, tplBinds);
+        const elemTypesDT = this.compileTpl(`${tplPath}/elem.types.d.ts`, tplBinds);
         const elemDT = this.compileTpl(`${tplPath}/elem.d.ts`, tplBinds);
         const panel = this.compileTpl(`${tplPath}/panel.vue`, tplBinds);
+        const panelTypesDT = this.compileTpl(`${tplPath}/panel.types.d.ts`, tplBinds);
         const panelDT = this.compileTpl(`${tplPath}/panel.d.ts`, tplBinds);
         const panelsIndex = this.compileTpl(`${tplPath}/panels.index.js`, tplBinds);
         const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
@@ -57,7 +59,9 @@ module.exports = class extends Template {
             elem,
             panel,
             elemDT,
+            elemTypesDT,
             panelDT,
+            panelTypesDT,
             panelsIndex,
             descriptor,
             readmeMd

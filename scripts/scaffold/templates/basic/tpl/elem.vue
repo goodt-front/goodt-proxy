@@ -15,8 +15,7 @@
         <button
             class="btn btn-primary btn-small"
             :class="{ 'btn-loading events-none': isLoading }"
-            @click="getDemoData"
-        >
+            @click="getDemoData">
             send demo request
         </button>
         [[/hasTransport]]
@@ -24,23 +23,42 @@
     </div>
 </template>
 <script>
-/**
- * @typedef {import('./[[{name}]]').IInstance} IInstance
- */
 import { Elem } from '[[{core}]]';
 [[#hasTransport]]
-import { createApiService, ServiceTypeData } from './api/service';
 [[/hasTransport]]
-import { descriptor, /* Vars */ } from './descriptor';
 import { [[{panelName}]]Async } from '[[{panelPath}]]';
+import { useApiServiceMixin, ServiceTypeDescriptor } from './api/service';
+import { descriptor /* , Vars */ } from './descriptor';
+
+/**
+ * @typedef {import('./types').TInstance} TInstance
+ * @type {TInstance}
+ */
+const ComponentInstanceTypeDescriptor = undefined;
 
 [[#hasTransport]]
-// service 'apiBaseURL' property name in descriptor
-const API_SERVICE_BASE_URL_PROP_NAME = 'apiBaseURL';
+/**
+ * Миксин для использования ApiService вместе с компонентом
+ * @type {import('@goodt-common/mixins').IApiServiceMixin}
+ */
+const ApiServiceMixin = useApiServiceMixin({
+    /**
+     * api service would watch for 'props.apiBaseURL' property changes
+     * @type {string}
+     */
+    apiBaseURL: 'props.apiBaseURL'
+}, {
+    /**
+     * api service accessor name to access in component: `this.apiService`
+     * @type {string}
+     */
+    name: 'apiService'
+});
 [[/hasTransport]]
 
 export default {
     extends: Elem,
+    mixins: [ ApiServiceMixin ],
     data: () => ({
         descriptor: descriptor(),
         [[#hasTransport]]
@@ -49,36 +67,14 @@ export default {
          * @type {import('[[{commonUtils}]]').ISafeResult}
          */
         demoResult: null,
-        /**
-         * @property {import('./api/service').ApiService} apiService
-         */
         [[/hasTransport]]
     }),
     created() {
         [[#hasTransport]]
-        this.createWidgetApiService();
         [[/hasTransport]]
     },
     methods: {
         [[#hasTransport]]
-        /**
-         * @this {IInstance}
-         * @todo replace for useService
-         */
-        createWidgetApiService() {
-            const apiService = createApiService({
-                apiBaseURL: this.props[API_SERVICE_BASE_URL_PROP_NAME]
-            });
-            // in 'editor mode' props may change
-            if (this.isEditorMode) {
-                this.$watch(`props.${API_SERVICE_BASE_URL_PROP_NAME}`, (url) => {
-                    apiService.apiBaseURL = url;
-                });
-            }
-            // clean-up
-            this.$on('hook:beforeDestroy', () => apiService.dispose());
-            this.apiService = apiService;
-        },
         [[/hasTransport]]
         /**
          * @return {string[]}
@@ -111,8 +107,9 @@ export default {
             }
             */
         },
-        /* Vetur HACK – extra structure and type information */
-        ...ServiceTypeData
+        /* Vetur HACK – extra structure and type hinting */
+        ...ComponentInstanceTypeDescriptor,
+        ...ServiceTypeDescriptor
         [[/hasTransport]]
     }
 };

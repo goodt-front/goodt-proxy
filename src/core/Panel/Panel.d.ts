@@ -41,7 +41,7 @@ interface Data {
 export interface IPanelInstance extends Vue, Data, Methods, Computed, Props {}
 
 export interface IPanelComponentOptionsInternal
-    extends ThisTypedComponentOptionsWithRecordProps<Vue, Data, IElemInstance, Computed, Props> {
+    extends ThisTypedComponentOptionsWithRecordProps<Vue, Data, IPanelInstance, Computed, Props> {
     computed?: IPanelInstance;
 }
 
@@ -56,7 +56,7 @@ export interface IPanelComponentOptions<IInstance, D, M, C, P>
     computed?: IPanelInstance & IInstance & D & M & C & P;
 }
 
-export type TPanelConstructor = VueConstructor<Data>;
+export type TPanelConstructor = VueConstructor<IPanelInstance>;
 
 declare const _default: VuePanel;
 export default _default;

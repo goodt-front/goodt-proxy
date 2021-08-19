@@ -29,7 +29,7 @@ export const useApiService = (serviceFactory, serviceOptions, mixinOptions = {})
             apiBaseURL: getApiBaseURLFunction(vm).call(vm)
         };
 
-        return serviceFactory({ options });
+        return serviceFactory(options);
     };
 
     /**

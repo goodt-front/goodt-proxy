@@ -72,7 +72,7 @@
         "yorkie": "^2.0.0"
     },
     "peerDependencies": {
-        "goodteditor-ui": "^0.0.34",
+        "goodteditor-ui": "^0.0.35",
         "vue": "^2.6.12"
     },
     "engines": {

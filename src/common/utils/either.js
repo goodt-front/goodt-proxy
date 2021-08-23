@@ -32,12 +32,8 @@ export class SafeResult {
         this._value = value;
     }
 
-    get isFail() {
-        return this._type === ResultType.FAIL;
-    }
-
     get isError() {
-        return this.isFail;
+        return this._type === ResultType.FAIL;
     }
 
     get isSuccess() {
@@ -53,7 +49,7 @@ export class SafeResult {
     }
 
     get error() {
-        return this.isFail ? this._value : null;
+        return this.isError ? this._value : null;
     }
 }
 

@@ -4,7 +4,8 @@
  * Как безопасная альтернатива try...catch.
  */
 export class SafeResult<TSuccessValue extends any, TFailValue extends Error | null>
-    implements ISafeResult {
+    implements ISafeResult
+{
     static success(value: TSuccessValue): SafeResult;
 
     static fail(value: TFailValue): SafeResult;
@@ -20,10 +21,9 @@ export class SafeResult<TSuccessValue extends any, TFailValue extends Error | nu
      */
     private _value: TSuccessValue | TFailValue;
 
-    isFail: boolean;
+    // isFail: boolean;
     isError: boolean;
     isSuccess: boolean;
-    value: TSuccessValue | TFailValue;
     result: TSuccessValue;
     error: TFailValue;
 }
@@ -35,10 +35,9 @@ export function success(value: any): SafeResult;
 export function isSafeResult(value: any): boolean;
 
 export interface ISafeResult<TSuccessValue extends any, TFailValue extends Error> {
-    isFail: boolean;
+    // isFail: boolean;
     isError: boolean;
     isSuccess: boolean;
-    value: TSuccessValue | TFailValue | null;
     result: TSuccessValue;
     error: Error | null;
 }

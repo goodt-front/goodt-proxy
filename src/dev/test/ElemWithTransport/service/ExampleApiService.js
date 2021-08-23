@@ -22,8 +22,8 @@ class ExampleApiService extends BaseApiService {
             url: API_ENDPOINTS_PATH.POLL_STRUCT.replace(':id', String(pollId))
         });
 
-        const { isFail, result: pollInfoDtoJson, error } = responseResult;
-        if (isFail) {
+        const { isError, result: pollInfoDtoJson, error } = responseResult;
+        if (isError) {
             // some extra logic for error service specific transform
             console.error(error);
             return responseResult;

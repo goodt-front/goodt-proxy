@@ -120,11 +120,11 @@ describe(`'BaseApiService' check`, () => {
         const requestOptions = { url: API_BASE_URL };
 
         // Act
-        const { isSuccess, isFail, result } = await apiService.request(requestOptions);
+        const { isSuccess, isError, result } = await apiService.request(requestOptions);
 
         // Assert
         expect(isSuccess).toBeTruthy();
-        expect(isFail).toBeFalsy();
+        expect(isError).toBeFalsy();
         expect(result).toEqual(FIXTURE_API_HTTP_CLIENT_REQUEST_RESULT);
     });
 
@@ -137,9 +137,9 @@ describe(`'BaseApiService' check`, () => {
             return apiService;
         };
 
-        const expectRequest = ({ isSuccess, isFail, error }, code, reason) => {
+        const expectRequest = ({ isSuccess, isError, error }, code, reason) => {
             expect(isSuccess).toBeFalsy();
-            expect(isFail).toBeTruthy();
+            expect(isError).toBeTruthy();
             expect(error).toBeInstanceOf(ApiServiceError);
             expect(error.code).toEqual(code);
             if (reason) {
@@ -204,11 +204,11 @@ describe(`'BaseApiService' check`, () => {
             const apiService = createApiServiceWithFailedRequest({ error: requestError });
 
             // Act
-            const { isSuccess, isFail, error } = await apiService.request(null);
+            const { isSuccess, isError, error } = await apiService.request(null);
 
             // Assert
             expect(isSuccess).toBeFalsy();
-            expect(isFail).toBeTruthy();
+            expect(isError).toBeTruthy();
             expect(error).toBeNull();
         });
     });

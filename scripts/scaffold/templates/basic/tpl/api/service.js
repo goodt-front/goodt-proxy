@@ -23,7 +23,7 @@ export class ApiService extends BaseApiService {
     /**
      * Get user info by id
      *
-     * @param {string|number} id    user id
+     * @param {string|number} id user id
      * @return {Promise<import('@goodt-common/utils').ISafeResult<*, Error>>} result
      */
     getUserById(id) {

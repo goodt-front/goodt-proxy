@@ -15,5 +15,3 @@ export interface IInstance extends IElemInstance, Data, Methods, Computed, Props
 export type TInstance = IInstance & IApiServiceMixinInstance<ApiService> & Computed;
 
 export interface IComponentOptions extends IElemComponentOptions<IInstance, Data, Methods, Computed, Props> {}
-
-export const ComponentInstanceTypeDescriptor: TInstance = undefined;

@@ -12,5 +12,3 @@ export interface IComponentOptions
     extends IPanelComponentOptions<IInstance, Data, Methods, Computed, Props> {}
 
 export type TInstance = IInstance & Computed;
-
-export const ComponentInstanceTypeDescriptor: TInstance = undefined;

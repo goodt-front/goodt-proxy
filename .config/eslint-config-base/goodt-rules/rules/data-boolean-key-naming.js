@@ -52,6 +52,26 @@ module.exports = {
         const groups = new Set(GROUP_NAMES.concat(options.groups ?? []));
         const prefixes = options.prefixes ?? PREFIXES;
 
+        const isPrefixRequired = ({ property, name }) => {
+            const {
+                value: { type, value }
+            } = property;
+
+            const isBoolean = type === 'Literal' && typeof value === 'boolean';
+            if (isBoolean === false) {
+                return false;
+            }
+
+            const isNameStartsWithRequiredPrefix = prefixes.some((prefix) =>
+                name.startsWith(prefix)
+            );
+
+            if (isNameStartsWithRequiredPrefix) {
+                return false;
+            }
+
+            return true;
+        };
         // ----------------------------------------------------------------------
         // Public
         // ----------------------------------------------------------------------
@@ -60,18 +80,8 @@ module.exports = {
             utils.executeOnVue(context, (obj) => {
                 const properties = utils.iterateProperties(obj, groups);
                 for (const { node, name, property } of properties) {
-                    const {
-                        value: { type, value }
-                    } = property;
-                    const isBooleanPropValue = type === 'Literal' && typeof value === 'boolean';
-                    if (isBooleanPropValue === false) {
-                        return;
-                    }
-                    const isNameStartsWithRequiredPrefix = prefixes.some((prefix) =>
-                        name.startsWith(prefix)
-                    );
-                    if (isNameStartsWithRequiredPrefix) {
-                        return;
+                    if (isPrefixRequired({ property, name }) === false) {
+                        continue;
                     }
                     context.report({
                         node,

@@ -407,8 +407,8 @@ export default {
             this.apiResponseResult = success(null);
 
             const safeResult = await this.$apiService.getPollInfo(1);
-            const { isFail, error, result: pollInfo } = safeResult;
-            if (isFail) {
+            const { isError, error, result: pollInfo } = safeResult;
+            if (isError) {
                 const presentableError = processApiServiceError(error);
                 this.apiResponseResult = fail(presentableError);
                 return;

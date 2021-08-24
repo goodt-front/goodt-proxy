@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Elem } from '@goodt-wcore/core';
 import { useApiService } from '@goodt-common/mixins';
 import { BaseApiService } from '@goodt-common/api';
-import { wrapTestWithAaa } from '../../utils';
+import { wrapTestWithAaa } from '@goodt/tests/.jest/utils';
 
 const test = wrapTestWithAaa(it);
 
@@ -13,16 +13,15 @@ const API_BASE_URL_VALUE = 'http://localhost:8080';
 /**
  * Creates Mock Api Service Factory
  *
- * @param onDispose
  * @return {function(): BaseApiService }
  */
 const mockApiServiceFactory = () => {
     const disposeSpy = jest.spyOn(BaseApiService.prototype, 'dispose').mockImplementation(() => {});
 
-    jest.spyOn(BaseApiService.prototype, 'apiBaseURL', 'get').mockImplementation(function() {
+    jest.spyOn(BaseApiService.prototype, 'apiBaseURL', 'get').mockImplementation(function () {
         return this._apiBaseURL;
     });
-    jest.spyOn(BaseApiService.prototype, 'apiBaseURL', 'set').mockImplementation(function(value) {
+    jest.spyOn(BaseApiService.prototype, 'apiBaseURL', 'set').mockImplementation(function (value) {
         this._apiBaseURL = value;
     });
 

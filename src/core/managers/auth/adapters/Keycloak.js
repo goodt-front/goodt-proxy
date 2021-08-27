@@ -2,14 +2,16 @@ import KeycloakJS from 'keycloak-js';
 import Adapter from './Adapter';
 
 const href = window.location.href.replace(window.location.hash, '');
+
 /** @type {import('keycloak-js').KeycloakConfig} */
-const configDefault = {
+const CONFIG_DEFAULT = {
     url: '',
     realm: '',
     clientId: ''
 };
+
 /** @type {import('keycloak-js').KeycloakInitOptions} */
-const initConfig = {
+const INIT_CONFIG_DEFAULT = {
     onLoad: 'check-sso',
     silentCheckSsoRedirectUri: `${href}keycloak-check-sso.html`,
     pkceMethod: 'S256',
@@ -21,18 +23,40 @@ class Keycloak extends Adapter {
     keycloakInstance;
 
     /**
+     * @type {import('keycloak-js').KeycloakInitOptions}
+     * @private
+     */
+    _initConfig = INIT_CONFIG_DEFAULT;
+
+    /**
      * Constructor
      *
-     * @param {Record<string, any>} [config={}]
+     * @param {import('keycloak-js').KeycloakConfig & { init: import('keycloak-js').KeycloakInitOptions }|null|undefined} config
      */
-    constructor(config = {}) {
+    constructor(config) {
         /**
-         * @type {import('keycloak-js').KeycloakConfig | string}
+         * @var {import('keycloak-js').KeycloakConfig} instanceConfig
+         * @var {import('keycloak-js').KeycloakInitOptions} initConfig
          */
-        const configFinal = { ...configDefault, ...config };
-        super(configFinal);
-        this.keycloakInstance = KeycloakJS(configFinal);
+        const { init: initConfig, ...instanceConfig } = { ...CONFIG_DEFAULT, ...config };
+        super(instanceConfig);
+
+        this._extendInitConfig(initConfig);
+
+        this.keycloakInstance = KeycloakJS(instanceConfig);
         this.initPromise = null;
+    }
+
+    /**
+     *
+     * @private
+     * @param {import('keycloak-js').KeycloakInitOptions|undefined} initConfig
+     */
+    _extendInitConfig(initConfig) {
+        this._initConfig = {
+            ...this._initConfig,
+            ...initConfig
+        };
     }
 
     /**
@@ -41,8 +65,8 @@ class Keycloak extends Adapter {
      * @return {Promise}
      */
     init() {
-        if (!this.initPromise) {
-            this.initPromise = this.keycloakInstance.init(initConfig);
+        if (this.initPromise == null) {
+            this.initPromise = this.keycloakInstance.init(this._initConfig);
         }
         return this.initPromise;
     }
@@ -51,7 +75,7 @@ class Keycloak extends Adapter {
      * Login method
      *
      * @param {Record<string, any>} [credentials={}]  user credentials
-     * @return {Promise}
+     * @return {Promise<void>}
      */
     login(credentials = {}) {
         this.keycloakInstance.login();
@@ -61,7 +85,7 @@ class Keycloak extends Adapter {
     /**
      * Logout method
      *
-     * @return {Promise}
+     * @return {Promise<void>}
      */
     logout() {
         this.keycloakInstance.logout();
@@ -131,7 +155,7 @@ class Keycloak extends Adapter {
      */
     // eslint-disable-next-line class-methods-use-this
     get configDefault() {
-        return { ...configDefault };
+        return { ...CONFIG_DEFAULT };
     }
 }
 

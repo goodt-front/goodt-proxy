@@ -3,9 +3,9 @@ const { TransportType } = require('../template.js');
 const { Select } = require('enquirer');
 
 const TRANSPORT_OPTION_TITLES = {
-    [TransportType.NONE]: 'none (no transport)',
-    [TransportType.HTTP]: 'http (no authorization)',
-    [TransportType.HTTP_AUTH]: 'http-auth (with authorization support)'
+    [TransportType.NONE]: 'none (no Api Service)',
+    [TransportType.HTTP]: 'Api Service (no authorization)',
+    [TransportType.HTTP_AUTH]: 'auth Api Service (with authorization support)'
 };
 
 module.exports = class extends Template {
@@ -53,8 +53,6 @@ module.exports = class extends Template {
         const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
         const style = this.compileTpl(`${tplPath}/style.less`, tplBinds);
         const readmeMd = this.compileTpl(`${tplPath}/README.MD`, tplBinds);
-        const serviceMain = this.compileTpl(`${tplPath}/${servicePath}/service.js`, tplBinds);
-        const serviceUtils = this.compileTpl(`${tplPath}/${servicePath}/utils.js`, tplBinds);
         const widgetCreated = this.createWidget({
             elem,
             panel,
@@ -66,10 +64,16 @@ module.exports = class extends Template {
             descriptor,
             readmeMd
         });
-        this.createWidgetDir(servicePath);
         this.createWidgetFile(`style.less`, style);
-        this.createWidgetFile(`${servicePath}/service.js`, serviceMain);
-        this.createWidgetFile(`${servicePath}/utils.js`, serviceUtils);
+
+        if (hasTransport) {
+            const serviceMain = this.compileTpl(`${tplPath}/${servicePath}/service.js`, tplBinds);
+            const serviceUtils = this.compileTpl(`${tplPath}/${servicePath}/utils.js`, tplBinds);
+
+            this.createWidgetDir(servicePath);
+            this.createWidgetFile(`${servicePath}/service.js`, serviceMain);
+            this.createWidgetFile(`${servicePath}/utils.js`, serviceUtils);
+        }
 
         return widgetCreated;
     }

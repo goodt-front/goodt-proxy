@@ -9,10 +9,12 @@ export const Vars = Object.freeze({});
  */
 export const descriptor = () => ({
     props: {
+    [[#hasTransport]]
         apiBaseURL: {
             type: String,
             default: 'https://reqres.in/api/'
         }
+    [[/hasTransport]]
     },
     vars: Object.values(Vars).reduce(
         (acc, varName) => ({ ...acc, [varName]: { description: varName } }),

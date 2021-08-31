@@ -1,12 +1,14 @@
 <template>
     <ui-panel-container>
         <!-- {demo} your panel goes here -->
+        [[#hasTransport]]
         <ui-input
             v-model="props.apiBaseURL"
             class="p"
             @change="propChanged('apiBaseURL')">
             Service apiBaseURL
         </ui-input>
+        [[/hasTransport]]
     </ui-panel-container>
 </template>
 <script>

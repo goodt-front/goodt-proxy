@@ -25,9 +25,9 @@
 <script>
 import { Elem } from '[[{core}]]';
 [[#hasTransport]]
+import { useApiServiceMixin, ServiceTypeDescriptor } from './api/service';
 [[/hasTransport]]
 import { [[{panelName}]]Async } from '[[{panelPath}]]';
-import { useApiServiceMixin, ServiceTypeDescriptor } from './api/service';
 import { descriptor /* , Vars */ } from './descriptor';
 
 /**
@@ -58,7 +58,9 @@ const ApiServiceMixin = useApiServiceMixin({
 
 export default {
     extends: Elem,
+    [[#hasTransport]]
     mixins: [ ApiServiceMixin ],
+    [[/hasTransport]]
     data: () => ({
         descriptor: descriptor(),
         [[#hasTransport]]
@@ -69,13 +71,7 @@ export default {
         demoResult: null,
         [[/hasTransport]]
     }),
-    created() {
-        [[#hasTransport]]
-        [[/hasTransport]]
-    },
     methods: {
-        [[#hasTransport]]
-        [[/hasTransport]]
         /**
          * @return {string[]}
          */
@@ -108,9 +104,9 @@ export default {
             */
         },
         /* Vetur HACK – extra structure and type hinting */
-        ...ComponentInstanceTypeDescriptor,
         ...ServiceTypeDescriptor
         [[/hasTransport]]
+        ...ComponentInstanceTypeDescriptor,
     }
 };
 </script>

@@ -12,6 +12,6 @@ interface Props {}
 interface Computed extends IDescriptorProps<ReturnType<typeof descriptor>> {}
 
 export interface IInstance extends IElemInstance, Data, Methods, Computed, Props {}
-export type TInstance = IInstance & IApiServiceMixinInstance<ApiService> & Computed;
+export type TInstance = IInstance [[#hasTransport]]& IApiServiceMixinInstance<ApiService>[[/hasTransport]] & Computed;
 
 export interface IComponentOptions extends IElemComponentOptions<IInstance, Data, Methods, Computed, Props> {}

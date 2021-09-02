@@ -40,10 +40,6 @@ export class SafeResult {
         return this._type === ResultType.SUCCESS;
     }
 
-    get value() {
-        return this._value;
-    }
-
     get result() {
         return this.isSuccess ? this._value : null;
     }

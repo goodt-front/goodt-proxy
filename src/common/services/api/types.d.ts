@@ -36,3 +36,10 @@ export interface IApiService {
      */
     dispose(): void;
 }
+
+export interface IApiServiceRequestOptions {
+    action: { url: string; options?: ITransportOptions };
+    pathParams?: Record<string, string | number | boolean | null | undefined>;
+    params?: Record<string, any>;
+    options?: ITransportOptions;
+}

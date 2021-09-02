@@ -68,11 +68,11 @@ module.exports = class extends Template {
 
         if (hasTransport) {
             const serviceMain = this.compileTpl(`${tplPath}/${servicePath}/service.js`, tplBinds);
-            const serviceUtils = this.compileTpl(`${tplPath}/${servicePath}/utils.js`, tplBinds);
+            /* const serviceUtils = this.compileTpl(`${tplPath}/${servicePath}/utils.js`, tplBinds); */
 
             this.createWidgetDir(servicePath);
             this.createWidgetFile(`${servicePath}/service.js`, serviceMain);
-            this.createWidgetFile(`${servicePath}/utils.js`, serviceUtils);
+            /* this.createWidgetFile(`${servicePath}/utils.js`, serviceUtils); */
         }
 
         return widgetCreated;

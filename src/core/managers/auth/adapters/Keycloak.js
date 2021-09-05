@@ -22,6 +22,8 @@ class Keycloak extends Adapter {
     /** @type {import('keycloak-js').KeycloakInstance} */
     keycloakInstance;
 
+    initPromise;
+
     /**
      * @type {import('keycloak-js').KeycloakInitOptions}
      * @private

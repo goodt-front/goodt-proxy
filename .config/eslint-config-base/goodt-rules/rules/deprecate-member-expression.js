@@ -17,10 +17,14 @@ module.exports = {
         }
     },
     create: function create(context) {
-        const ruleMetaList = {};
-        context.options.map(makeRuleMeta).forEach(function (importObj) {
-            ruleMetaList[importObj.name] = importObj;
-        });
+        const ruleMetaList = context.options.map(makeRuleMeta).reduce(
+            (acc, importObj) => ({
+                ...acc,
+                [importObj.name]: importObj
+            }),
+            {}
+        );
+
         return {
             MemberExpression: function MemberExpression(node) {
                 let ruleMeta;
@@ -43,7 +47,7 @@ module.exports = {
                     target = node.property;
                 }
 
-                if (!ruleMeta) {
+                if (!ruleMeta || typeof ruleMeta === 'function') {
                     return;
                 }
 
@@ -51,12 +55,13 @@ module.exports = {
                     'Member expression ' + ruleMeta.name + ' is deprecated.',
                     ...[ruleMeta.use ? ' Use ' + ruleMeta.use + ' instead' : '']
                 ].join('');
+                console.dir(ruleMeta);
 
                 context.report({ node: target, message: errorMsg });
             },
             NewExpression(node) {
                 const variable = astUtils.getVariableByName(context.getScope(), node.callee.name);
-                if (variable && ruleMetaList[variable.name] == null) {
+                if (variable == null || (variable && ruleMetaList[variable.name] == null)) {
                     return;
                 }
 

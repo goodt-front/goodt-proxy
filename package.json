@@ -1,6 +1,6 @@
 {
     "name": "goodt-wcore",
-    "version": "0.1.26",
+    "version": "0.1.28",
     "private": true,
     "main": "src/core/index.js",
     "types": "src/core/index.d.ts",
@@ -44,7 +44,6 @@
         "@goodt-wcore/styleguide": "file:scripts/styleguide",
         "@goodt-wcore/types": "file:src/core/types",
         "@goodt/browserslist-config": "file:.config/browserslist-config",
-        "@goodt/config": "file:.config",
         "@goodt/eslint-config-base": "file:.config/eslint-config-base",
         "@goodt/stylelint-config-base": "file:.config/stylelint-config-base",
         "@goodt/tests": "file:tests",

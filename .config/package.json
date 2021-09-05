@@ -1,5 +1,0 @@
-{
-  "name": "@goodt/config",
-  "version": "1.0.0",
-  "description": "SUP: Config. Shared configs and package dependencies config for reuse in SUP projects."
-}

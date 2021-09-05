@@ -18,12 +18,22 @@ module.exports = {
         'plugin:vue-scoped-css/recommended',
         'prettier'
     ],
-    plugins: ['unicorn', 'radar', 'vue-scoped-css', 'vue', 'goodt-rules', 'putout'],
+    plugins: [
+        'unicorn',
+        'radar',
+        'more',
+        'unused-imports',
+        'better-mutation',
+        'vue',
+        'vue-scoped-css',
+        'goodt-rules',
+        'putout'
+    ],
 
     rules: {
         /* goodt-rules */
-        'goodt-rules/component-name-regex': 2,
-        'goodt-rules/data-boolean-key-naming': 2,
+        'goodt-rules/component-name-regex': 'error',
+        'goodt-rules/data-boolean-key-naming': 'error',
         'goodt-rules/deprecate-member-expression': [
             'error',
             { name: 'triggerStateChange', use: 'this.$storeCommit()' },
@@ -32,6 +42,7 @@ module.exports = {
             { name: 'Http', use: '"createTransport(HttpTransportSymbol, options)" factory' },
             { name: 'HttpAuth', use: '"createTransport(HttpAuthTransportSymbol, options)" factory' }
         ],
+        'goodt-rules/no-long-prop-chains': ['error', { depth: 3 }],
 
         /* eslint-recommended */
         'no-unused-vars': isProduction ? 'warning' : 0,
@@ -96,12 +107,15 @@ module.exports = {
                     acc: true,
                     Acc: true,
                     prev: true,
+                    Prev: true,
                     env: true,
                     Env: true,
                     lib: true,
                     elem: true,
                     Elem: true,
+                    Elem: true,
                     arg: true,
+                    Arg: true,
                     args: true,
                     Args: true,
                     attrs: true,
@@ -115,7 +129,9 @@ module.exports = {
                     props: true,
                     Props: true,
                     prop: true,
+                    Prop: true,
                     var: true,
+                    Var: true,
                     opt: true,
                     vars: true,
                     src: true,
@@ -123,7 +139,9 @@ module.exports = {
                     val: true,
                     Val: true,
                     vm: true,
+                    Vm: true,
                     fn: true,
+                    Fn: true,
                     num: true,
                     el: true,
                     $el: true
@@ -162,6 +180,17 @@ module.exports = {
         'vue-scoped-css/no-unused-selector': 0,
         'vue-scoped-css/require-selector-used-inside': 0,
 
+        'more/no-numeric-endings-for-variables': 'error',
+        'more/force-native-methods': 'error',
+        'more/prefer-includes': 'error',
+
+        'unused-imports/no-unused-imports': 'error',
+
+        'better-mutation/no-mutating-functions': 'error',
+        /*
+        'better-mutation/no-mutating-methods': 'error',
+        'better-mutation/no-mutation': 'error',
+         */
         // Editor specific
 
         // jsdoc

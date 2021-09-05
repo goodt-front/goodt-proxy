@@ -17,6 +17,7 @@ module.exports = {
     rules: {
         'goodt-rules/component-name-regex': 'error',
         'goodt-rules/deprecate-member-expression': 'error',
-        'goodt-rules/data-boolean-key-naming': 'error'
+        'goodt-rules/data-boolean-key-naming': 'error',
+        'goodt-rules/no-long-prop-chains': ['error', { depth: 3 }]
     }
 };

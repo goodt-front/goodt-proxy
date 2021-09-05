@@ -1,5 +1,4 @@
 /* globals Record */
-/* globals unknown */
 /**
  * @typedef {import('vue').PropOptions} PropOptions
  */

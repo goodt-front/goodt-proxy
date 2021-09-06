@@ -25,7 +25,11 @@
 <script>
 import { Elem } from '[[{core}]]';
 [[#hasTransport]]
-import { useApiServiceMixin, ServiceTypeDescriptor } from './api/service';
+import { joinPathParts } from '@goodt-widgets/common/utils';
+import {
+    useApiServiceMixin, ApiServiceTypeDescriptor,
+    useOrgStructureApiServiceMixin, OrgStructureApiServiceTypeDescriptor
+} from './api';
 [[/hasTransport]]
 import { [[{panelName}]]Async } from '[[{panelPath}]]';
 import { descriptor /* , Vars */ } from './descriptor';
@@ -54,12 +58,20 @@ const ApiServiceMixin = useApiServiceMixin({
      */
     name: 'apiService'
 });
+/**
+ * Миксин для использования OrgStructureApiService вместе с компонентом
+ * @type {import('@goodt-common/mixins').IApiServiceMixin}
+ */
+const OrgStructureApiServiceMixin = useOrgStructureApiServiceMixin(
+    { apiBaseURL: 'orgStructureApiUrl' },
+    { name: 'orgStructureApiService' }
+);
 [[/hasTransport]]
 
 export default {
     extends: Elem,
     [[#hasTransport]]
-    mixins: [ ApiServiceMixin ],
+    mixins: [ ApiServiceMixin, OrgStructureApiServiceMixin ],
     [[/hasTransport]]
     data: () => ({
         descriptor: descriptor(),
@@ -71,6 +83,16 @@ export default {
         demoResult: null,
         [[/hasTransport]]
     }),
+    [[#hasTransport]]
+    computed: {
+        orgStructureApiUrl() {
+            return joinPathParts(
+                this.$c(this.props.orgStructureApiUrl),
+                this.descriptor.props.orgStructureApiUrl.options.apiPath
+            );
+        }
+    },
+    [[/hasTransport]]
     methods: {
         /**
          * @return {string[]}
@@ -91,22 +113,23 @@ export default {
         [[#hasTransport]]
         async getDemoData() {
             this.isLoading = true;
-            this.demoResult = await this.apiService.getUserById(1);
+            /* this.demoResult = await this.apiService.getUserById(1); */
+            this.demoResult = await this.orgStructureApiService.getEmployeeDivisionTeamAssignments({ employeeId: 25 });
             this.isLoading = false;
-            /*
-            const { isSuccess, isError, result, error } = this.demoResult;
-            if (isSuccess) {
-                console.log({ result });
-            }
+            const { isSuccess, isError, result: employeeAssignments, error } = this.demoResult;
             if (isError) {
-                console.error({ error });
+                console.error(error.message);
+                return;
             }
-            */
+            if (isSuccess) {
+                console.log({ employeeAssignments });
+            }
         },
         /* Vetur HACK – extra structure and type hinting */
-        ...ServiceTypeDescriptor
+        ...ApiServiceTypeDescriptor,
+        ...OrgStructureApiServiceTypeDescriptor,
         [[/hasTransport]]
-        ...ComponentInstanceTypeDescriptor,
+        ...ComponentInstanceTypeDescriptor
     }
 };
 </script>

@@ -67,12 +67,23 @@ module.exports = class extends Template {
         this.createWidgetFile(`style.less`, style);
 
         if (hasTransport) {
-            const serviceMain = this.compileTpl(`${tplPath}/${servicePath}/service.js`, tplBinds);
-            /* const serviceUtils = this.compileTpl(`${tplPath}/${servicePath}/utils.js`, tplBinds); */
+            const DemoApiService = this.compileTpl(
+                `${tplPath}/${servicePath}/ApiService.js`,
+                tplBinds
+            );
+            const OrgStructureApiService = this.compileTpl(
+                `${tplPath}/${servicePath}/OrgStructureApiService.js`,
+                tplBinds
+            );
+            const indexFile = this.compileTpl(`${tplPath}/${servicePath}/index.js`, tplBinds);
 
             this.createWidgetDir(servicePath);
-            this.createWidgetFile(`${servicePath}/service.js`, serviceMain);
-            /* this.createWidgetFile(`${servicePath}/utils.js`, serviceUtils); */
+            this.createWidgetFile(`${servicePath}/ApiService.js`, DemoApiService);
+            this.createWidgetFile(
+                `${servicePath}/OrgStructureApiService.js`,
+                OrgStructureApiService
+            );
+            this.createWidgetFile(`${servicePath}/index.js`, indexFile);
         }
 
         return widgetCreated;

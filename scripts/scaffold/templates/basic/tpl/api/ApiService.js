@@ -93,4 +93,4 @@ export const useApiServiceMixin = (serviceOptions, mixinOptions) => {
  *
  * @type {{ apiBaseURL: string }}
  */
-export const ServiceTypeDescriptor = undefined;
+export const ApiServiceTypeDescriptor = undefined;

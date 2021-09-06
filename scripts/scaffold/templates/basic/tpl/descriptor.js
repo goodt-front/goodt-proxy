@@ -13,6 +13,12 @@ export const descriptor = () => ({
         apiBaseURL: {
             type: String,
             default: 'https://reqres.in/api/'
+        },
+        orgStructureApiUrl: {
+            default: 'https://goodt-dev.goodt.me:8480',
+            options: {
+                apiPath: '/api/'
+            }
         }
     [[/hasTransport]]
     },

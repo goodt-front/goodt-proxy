@@ -1,6 +1,6 @@
 {
     "name": "goodt-wcore",
-    "version": "0.1.29",
+    "version": "0.1.30",
     "private": true,
     "main": "src/core/index.js",
     "types": "src/core/index.d.ts",
@@ -46,6 +46,7 @@
         "@goodt/browserslist-config": "file:.config/browserslist-config",
         "@goodt/eslint-config-base": "file:.config/eslint-config-base",
         "@goodt/stylelint-config-base": "file:.config/stylelint-config-base",
+        "@goodt/postcss-config": "file:.config/postcss-config",
         "@goodt/tests": "file:tests",
         "axios": "^0.21.1",
         "goodt-dremio-sdk": "^1.0.21",

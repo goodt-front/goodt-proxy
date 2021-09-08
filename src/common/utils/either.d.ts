@@ -15,11 +15,11 @@ export class SafeResult<TSuccessValue extends any, TFailValue extends Error | nu
     /**
      * @type {symbol}
      */
-    private _type: symbol;
+    protected _type: symbol;
     /**
      * @type {*}
      */
-    private _value: TSuccessValue | TFailValue;
+    protected _value: TSuccessValue | TFailValue;
 
     // isFail: boolean;
     isError: boolean;
@@ -41,3 +41,5 @@ export interface ISafeResult<TSuccessValue extends any, TFailValue extends Error
     result: TSuccessValue;
     error: Error | null;
 }
+
+export { ResultType } from './either';

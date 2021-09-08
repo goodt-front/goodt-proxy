@@ -1,4 +1,4 @@
-const ResultType = {
+export const ResultType = {
     FAIL: Symbol('Fail'),
     SUCCESS: Symbol('Success')
 };

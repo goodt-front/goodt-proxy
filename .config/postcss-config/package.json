@@ -2,10 +2,9 @@
     "name": "@goodt/postcss-config",
     "version": "1.0.0",
     "description": "SUP: Postcss. Shared postcss configs and package dependencies config for reuse in SUP projects.",
-    "main": "./postcss.config.js",
     "scripts": {
         "gen:tw-ignore-classes": "list-selectors ../../node_modules/goodt-framework-css/dist/all.min.css -p -i classes >> ./tw-ignored-classes.js",
-        "gen:tw-ignore-classes-js": "echo 'module.exports = ' > ./tw-ignored-classes.js && npm run gen:tw-ignore-classes",
+        "gen:tw-ignore-classes-js": "echo module.exports = > ./tw-ignored-classes.js && npm run gen:tw-ignore-classes",
         "prepare": "npm run gen:tw-ignore-classes-js"
     },
     "dependencies": {

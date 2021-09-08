@@ -2,7 +2,7 @@
   "name": "@goodt/stylelint-config-base",
   "version": "1.0.0",
   "description": "SUP: Linting. Shared styles linting configs and package dependencies config for reuse in SUP projects.",
-  "main": "./index.json",
+  "main": "./index.js",
   "dependencies": {
     "@mapbox/stylelint-processor-arbitrary-tags": "^0.4.0",
     "stylelint": "^13.13.1",

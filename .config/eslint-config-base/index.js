@@ -27,6 +27,7 @@ module.exports = {
         'vue',
         'vue-scoped-css',
         'goodt-rules',
+        'ban',
         'putout'
     ],
 
@@ -39,11 +40,50 @@ module.exports = {
             { name: 'triggerStateChange', use: 'this.$storeCommit()' },
             { name: 'listenStateChange', use: 'watch: { $storeState(state) { ... } }' },
             { name: 'triggerNavigate', use: 'this.$routeNavigate()' },
-            { name: 'Http', use: '"createTransport(HttpTransportSymbol, options)" factory' },
-            { name: 'HttpAuth', use: '"createTransport(HttpAuthTransportSymbol, options)" factory' }
+            {
+                name: 'Http',
+                use: '"createTransport(HttpTransportSymbol, options)" factory or Service instead'
+            },
+            {
+                name: 'HttpAuth',
+                use: '"createTransport(HttpAuthTransportSymbol, options)" factory or Service instead'
+            },
+            {
+                name: 'createWidgetApiService',
+                use: '"useApiServiceMixin" form scaffold for creating service instance'
+            },
+            { name: 'serviceOrgstructure', use: '"orgStructureApi" property name instead' },
+            { name: 'serviceOrgStructure', use: '"orgStructureApi" property name instead' },
+            { name: 'serviceTasksettings', use: '"taskSettingsApi" property name instead' },
+            { name: 'serviceTaskSettings', use: '"taskSettingsApi" property name instead' }
         ],
         'goodt-rules/no-long-prop-chains': ['error', { depth: 3 }],
-
+        'ban/ban': [
+            2,
+            {
+                name: 'createApiService',
+                message:
+                    'Using "createApiService" is deprecated. Reuse "useApiServiceMixin" form scaffold to inject service instance'
+            },
+            {
+                name: 'createOrgStructureApiService',
+                message:
+                    'Using "createOrgStructureApiService" is deprecated. Reuse "useApiServiceMixin" from scaffold to inject service instance'
+            },
+            {
+                name: 'createOrgstructureApiService',
+                use: 'Using "createOrgstructureApiService" is deprecated. Reuse "useApiServiceMixin" from scaffold to inject service instance'
+            },
+            {
+                name: 'createTaskSettingsApiService',
+                message:
+                    'Using "createTaskSettingsApiService" is deprecated. Reuse "useApiServiceMixin" from scaffold to inject service instance'
+            },
+            {
+                name: 'createTasksettingsApiService',
+                use: 'Using "createTasksettingsApiService" is deprecated. Reuse "useApiServiceMixin" from scaffold to inject service instance'
+            }
+        ],
         /* eslint-recommended */
         'no-unused-vars': isProduction ? 'warning' : 0,
         // allow console.log during development only

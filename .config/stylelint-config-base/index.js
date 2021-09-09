@@ -20,7 +20,7 @@ module.exports = {
     rules: {
         'selector-disallowed-list': disallowedClasses.classes,
         'scss/at-rule-no-unknown': 0,
-        'at-rule-allowed-list': ['apply', 'tailwind', 'b', 'e', 'm'],
+        'at-rule-allowed-list': ['apply', 'tailwind', 'b', 'e', 'm', 'import', 'screen'],
         'no-empty-source': 0,
         'order/properties-order': 0,
         'at-rule-no-unknown': 'warning',

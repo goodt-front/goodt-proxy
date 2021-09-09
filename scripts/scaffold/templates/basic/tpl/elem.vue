@@ -25,7 +25,6 @@
 <script>
 import { Elem } from '[[{core}]]';
 [[#hasTransport]]
-import { joinPathParts } from '@goodt-widgets/common/utils';
 import {
     useApiServiceMixin, ApiServiceTypeDescriptor,
     useOrgStructureApiServiceMixin, OrgStructureApiServiceTypeDescriptor
@@ -43,29 +42,16 @@ const ComponentInstanceTypeDescriptor = undefined;
 [[#hasTransport]]
 /**
  * Миксин для использования ApiService вместе с компонентом
+ * Дефолтные `apiBaseURL` и `name` настройки определены в аргументах миксина
  * @type {import('@goodt-common/mixins').IApiServiceMixin}
  */
-const ApiServiceMixin = useApiServiceMixin({
-    /**
-     * api service would watch for 'props.apiBaseURL' property changes
-     * @type {string}
-     */
-    apiBaseURL: 'props.apiBaseURL'
-}, {
-    /**
-     * api service accessor name to access in component: `this.apiService`
-     * @type {string}
-     */
-    name: 'apiService'
-});
+const ApiServiceMixin = useApiServiceMixin();
 /**
  * Миксин для использования OrgStructureApiService вместе с компонентом
+ * Дефолтные настройки определены в аргументах миксина
  * @type {import('@goodt-common/mixins').IApiServiceMixin}
  */
-const OrgStructureApiServiceMixin = useOrgStructureApiServiceMixin(
-    { apiBaseURL: 'orgStructureApiUrl' },
-    { name: 'orgStructureApiService' }
-);
+const OrgStructureApiServiceMixin = useOrgStructureApiServiceMixin();
 [[/hasTransport]]
 
 export default {
@@ -85,12 +71,18 @@ export default {
     }),
     [[#hasTransport]]
     computed: {
+        apiBaseUrl() {
+            const { options } = this.descriptor.props.apiBaseUrl;
+            const { apiBaseURL: baseUrl } = this.props;
+
+            return options.build(this.$c(baseUrl));
+        },
         orgStructureApiUrl() {
-            return joinPathParts(
-                this.$c(this.props.orgStructureApiUrl),
-                this.descriptor.props.orgStructureApiUrl.options.apiPath
-            );
-        }
+            const { options } = this.descriptor.props.orgStructureApiUrl;
+            const { orgStructureApiUrl: baseUrl } = this.props;
+
+            return options.build(this.$c(baseUrl));
+        },
     },
     [[/hasTransport]]
     methods: {
@@ -114,7 +106,7 @@ export default {
         async getDemoData() {
             this.isLoading = true;
             /* this.demoResult = await this.apiService.getUserById(1); */
-            this.demoResult = await this.orgStructureApiService.getEmployeeDivisionTeamAssignments({ employeeId: 25 });
+            this.demoResult = await this.orgStructureApi.getEmployeeDivisionTeamAssignments({ employeeId: 25 });
             this.isLoading = false;
             const { isSuccess, isError, result: employeeAssignments, error } = this.demoResult;
             if (isError) {

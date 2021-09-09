@@ -1,6 +1,6 @@
 {
     "name": "goodt-wcore",
-    "version": "0.1.35",
+    "version": "0.1.36",
     "private": true,
     "main": "src/core/index.js",
     "types": "src/core/index.d.ts",

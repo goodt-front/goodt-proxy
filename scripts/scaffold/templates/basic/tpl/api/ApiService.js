@@ -79,8 +79,11 @@ export const createApiService = (options, transport) => {
  * @param {import('@goodt-common/mixins').IApiServiceMixinOptions} [mixinOptions]
  * @return {import('@goodt-common/mixins').IApiServiceMixin}
  */
-export const useApiServiceMixin = (serviceOptions, mixinOptions) => {
-    const { mixin: ServiceMixin } = useApiService(createApiService, serviceOptions, mixinOptions);
+export const useApiServiceMixin = (
+    { apiBaseURL = 'apiBaseUrl' } = {},
+    { name = 'apiService' } = {}
+) => {
+    const { mixin: ServiceMixin } = useApiService(createApiService, { apiBaseURL }, { name });
 
     return ServiceMixin;
 };

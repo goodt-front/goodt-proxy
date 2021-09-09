@@ -1,3 +1,5 @@
+import { joinPathParts } from '@goodt-widgets/common/utils';
+
 /**
  * @enum {string}
  * @type {Readonly<Record<string, string>>}
@@ -10,14 +12,29 @@ export const Vars = Object.freeze({});
 export const descriptor = () => ({
     props: {
     [[#hasTransport]]
-        apiBaseURL: {
+        apiBaseUrl: {
             type: String,
-            default: 'https://reqres.in/api/'
+            default: 'https://reqres.in',
+            options: {
+                apiPath: '/api/',
+                build(host) {
+                    return joinPathParts(
+                        host,
+                        this.apiPath
+                    );
+                }
+            }
         },
         orgStructureApiUrl: {
             default: 'https://goodt-dev.goodt.me:8480',
             options: {
-                apiPath: '/api/'
+                apiPath: '/api/',
+                build(host) {
+                    return joinPathParts(
+                        host,
+                        this.apiPath
+                    );
+                }
             }
         }
     [[/hasTransport]]

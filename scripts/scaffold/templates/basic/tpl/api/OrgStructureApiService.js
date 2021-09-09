@@ -39,8 +39,11 @@ export const createOrgStructureApiService = (options, transport) => {
  * @param {import('@goodt-common/mixins').IApiServiceMixinOptions} [mixinOptions]
  * @return {import('@goodt-common/mixins').IApiServiceMixin}
  */
-export const useOrgStructureApiServiceMixin = (serviceOptions, mixinOptions) => {
-    const { mixin: ServiceMixin } = useApiService(createOrgStructureApiService, serviceOptions, mixinOptions);
+export const useOrgStructureApiServiceMixin = (
+    { apiBaseURL = 'orgStructureApiUrl' } = {},
+    { name = 'orgStructureApi' } = {}
+) => {
+    const { mixin: ServiceMixin } = useApiService(createOrgStructureApiService, { apiBaseURL }, { name });
 
     return ServiceMixin;
 };

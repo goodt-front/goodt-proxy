@@ -1,3 +1,4 @@
+const path = require('path');
 const variables = require('postcss-advanced-variables');
 const nested = require('postcss-nested');
 const postcssBem = require('postcss-bem-fix');
@@ -20,7 +21,7 @@ const removeDeclaration = (env = process.env.NODE_ENV) => {
     return [removeDeclarationPlugin({ remove: removeDeclarationsData })];
 };
 
-const postcssOnlyPlugins = [
+const postcssOnlyPlugins = (env) => [
     /* importPlugin, */
     variables,
     postcssBem({
@@ -34,10 +35,15 @@ const postcssOnlyPlugins = [
             modifier: 'm'
         }
     }),
-    nested
+    nested,
+    tailwindcss
 ];
 
-const commonPlugins = [tailwindcss, ...removeDeclaration(), autoprefixer];
+const commonPlugins = (env = 'production') => [
+    // purgecss,
+    ...removeDeclaration(env),
+    autoprefixer
+];
 
 module.exports = (api) => {
     // `api.file` - path to the file
@@ -45,19 +51,25 @@ module.exports = (api) => {
     // `api.webpackLoaderContext` - loader context for complex use cases
     // `api.env` - alias `api.mode` for compatibility with `postcss-cli`
     // `api.options` - the `postcssOptions` options    plugins
-    if (/goodt-framework-css$/.test(api.file)) {
+    const {
+        env,
+        options: { excludePatterns = [] }
+    } = api;
+    const { basename, dirname } = api.file;
+    const pathName = path.join(dirname, basename);
+
+    if (excludePatterns.some((re) => re.test(pathName))) {
         return {
             plugins: [autoprefixer]
         };
     }
-
-    if (/\.less$/.test(api.file)) {
+    if (/\.(less|css)$/.test(basename)) {
         return {
-            plugins: commonPlugins
+            plugins: commonPlugins(env)
         };
     }
 
     return {
-        plugins: [...postcssOnlyPlugins, ...commonPlugins]
+        plugins: [...postcssOnlyPlugins(env), ...commonPlugins(env)]
     };
 };

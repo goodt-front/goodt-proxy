@@ -8,6 +8,7 @@ const autoprefixer = require('autoprefixer');
 const importPlugin = require('postcss-import');
 */
 
+/*
 const removeDeclaration = (env = process.env.NODE_ENV) => {
     if (env !== 'production') {
         return [];
@@ -20,6 +21,7 @@ const removeDeclaration = (env = process.env.NODE_ENV) => {
 
     return [removeDeclarationPlugin({ remove: removeDeclarationsData })];
 };
+*/
 
 const postcssOnlyPlugins = (env) => [
     /* importPlugin, */
@@ -41,35 +43,48 @@ const postcssOnlyPlugins = (env) => [
 
 const commonPlugins = (env = 'production') => [
     // purgecss,
-    ...removeDeclaration(env),
-    autoprefixer
+    // ...removeDeclaration(env),
+    // autoprefixer
 ];
 
+const basePlugins = () => [autoprefixer];
+
 module.exports = (api) => {
-    // `api.file` - path to the file
     // `api.mode` - `mode` value of webpack, please read https://webpack.js.org/configuration/mode/
     // `api.webpackLoaderContext` - loader context for complex use cases
     // `api.env` - alias `api.mode` for compatibility with `postcss-cli`
     // `api.options` - the `postcssOptions` options    plugins
-    const {
-        env,
-        options: { excludePatterns = [] }
-    } = api;
-    const { basename, dirname } = api.file;
+    const { file, env = 'development' } = api;
+
+    const isVite = file == null;
+    if (isVite) {
+        return {
+            plugins: [...basePlugins(env), ...commonPlugins(env), ...postcssOnlyPlugins(env)]
+        };
+    }
+
+    const { options: { excludePatterns = [] } = {} } = api;
+    const { basename, dirname } = file;
     const pathName = path.join(dirname, basename);
+
+    let plugins = basePlugins(env);
 
     if (excludePatterns.some((re) => re.test(pathName))) {
         return {
-            plugins: [autoprefixer]
-        };
-    }
-    if (/\.(less|css)$/.test(basename)) {
-        return {
-            plugins: commonPlugins(env)
+            plugins
         };
     }
 
+    plugins = [...commonPlugins(env), ...plugins];
+    if (/\.(less|css)$/.test(basename)) {
+        return {
+            plugins
+        };
+    }
+
+    plugins = [...postcssOnlyPlugins(env), ...plugins];
+
     return {
-        plugins: [...postcssOnlyPlugins(env), ...commonPlugins(env)]
+        plugins
     };
 };

@@ -3,11 +3,19 @@ import Adapter from './Adapter';
 
 const href = window.location.href.replace(window.location.hash, '');
 
-/** @type {import('keycloak-js').KeycloakConfig} */
+/** @param {import('keycloak-js').KeycloakConfig & { postMessageInit: boolean } & { init: import('keycloak-js').KeycloakInitOptions }|null|undefined} */
+const POST_MESSAGE_RESPONSE_TIMEOUT = 10000;
+const POST_MESSAGE_REQUEST_EVENT_NAME = 'goodt/request-keycloak-init-config';
+const POST_MESSAGE_POST_EVENT_NAME = 'goodt/post-keycloak-init-config';
+
 const CONFIG_DEFAULT = {
     url: '',
     realm: '',
-    clientId: ''
+    clientId: '',
+    init: {
+        checkLoginIframe: true
+    },
+    postMessageInit: false
 };
 
 /** @type {import('keycloak-js').KeycloakInitOptions} */
@@ -17,6 +25,54 @@ const INIT_CONFIG_DEFAULT = {
     pkceMethod: 'S256',
     responseMode: 'fragment'
 };
+
+/**
+ *
+ * @param callback
+ * @return {Promise<unknown>}
+ */
+const promisifyPostMessageInit = (callback) =>
+    new Promise((resolve) => {
+        /**
+         *
+         * @param config
+         */
+        function resolveWithConfig(config) {
+            if (callback == null) {
+                return;
+            }
+
+            const initialPromise = callback(config);
+            resolve(initialPromise);
+
+            // eslint-disable-next-line no-use-before-define
+            window.removeEventListener(POST_MESSAGE_POST_EVENT_NAME, postMessageListener);
+            // eslint-disable-next-line no-param-reassign
+            callback = null;
+        }
+
+        /**
+         *
+         * @param name
+         * @param details
+         */
+        function postMessageListener({ name, details }) {
+            if (name !== POST_MESSAGE_POST_EVENT_NAME) {
+                return;
+            }
+
+            const { token, updateToken } = details;
+            resolveWithConfig({ token, updateToken });
+        }
+
+        window.addEventListener('message', postMessageListener);
+
+        window.postMessage(new CustomEvent(POST_MESSAGE_REQUEST_EVENT_NAME), '*');
+
+        window.setTimeout(() => {
+            resolveWithConfig();
+        }, POST_MESSAGE_RESPONSE_TIMEOUT);
+    });
 
 class Keycloak extends Adapter {
     /** @type {import('keycloak-js').KeycloakInstance} */
@@ -30,6 +86,8 @@ class Keycloak extends Adapter {
      */
     _initConfig = INIT_CONFIG_DEFAULT;
 
+    _isPostMessageInit = false;
+
     /**
      * Constructor
      *
@@ -40,10 +98,15 @@ class Keycloak extends Adapter {
          * @var {import('keycloak-js').KeycloakConfig} instanceConfig
          * @var {import('keycloak-js').KeycloakInitOptions} initConfig
          */
-        const { init: initConfig, ...instanceConfig } = { ...CONFIG_DEFAULT, ...config };
+        const {
+            init: initConfig,
+            postMessageInit = false,
+            ...instanceConfig
+        } = { ...CONFIG_DEFAULT, ...config };
         super(instanceConfig);
 
         this._extendInitConfig(initConfig);
+        this._isPostMessageInit = postMessageInit;
 
         this.keycloakInstance = KeycloakJS(instanceConfig);
         this.initPromise = null;
@@ -67,9 +130,17 @@ class Keycloak extends Adapter {
      * @return {Promise}
      */
     init() {
-        if (this.initPromise == null) {
-            this.initPromise = this.keycloakInstance.init(this._initConfig);
+        if (this.initPromise != null) {
+            return this.initPromise;
         }
+
+        const keycloakInstanceInit = (config) =>
+            this.keycloakInstance.init({ ...this._initConfig, ...config });
+
+        this.initPromise = this._isPostMessageInit
+            ? promisifyPostMessageInit(keycloakInstanceInit)
+            : keycloakInstanceInit();
+
         return this.initPromise;
     }
 

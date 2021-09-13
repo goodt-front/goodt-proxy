@@ -2,14 +2,18 @@ import { KeycloakInstance, KeycloakInitOptions, KeycloakConfig } from 'keycloak-
 import Adapter from './Adapter';
 
 class Keycloak extends Adapter {
-    private _initConfig: KeycloakInitOptions;
-
     public keycloakInstance: KeycloakInstance;
+
+    private _isPostMessageInit: boolean;
+
+    private _initConfig: KeycloakInitOptions;
 
     /**
      * @param config
      */
-    constructor(config: KeycloakConfig & { init: KeycloakInitOptions });
+    constructor(
+        config: KeycloakConfig & { postMessageInit: boolean } & { init: KeycloakInitOptions }
+    );
     /**
      * Return auth status
      *

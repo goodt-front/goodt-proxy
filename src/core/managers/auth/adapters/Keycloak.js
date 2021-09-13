@@ -1,13 +1,10 @@
 import KeycloakJS from 'keycloak-js';
 import Adapter from './Adapter';
+import { isPostMessageInitRequired, promisifyAuthCredentialsRequest } from './iframe';
 
 const href = window.location.href.replace(window.location.hash, '');
 
 /** @param {import('keycloak-js').KeycloakConfig & { postMessageInit: boolean } & { init: import('keycloak-js').KeycloakInitOptions }|null|undefined} */
-const POST_MESSAGE_RESPONSE_TIMEOUT = 10000;
-const POST_MESSAGE_REQUEST_EVENT_NAME = 'goodt/request-keycloak-init-config';
-const POST_MESSAGE_POST_EVENT_NAME = 'goodt/post-keycloak-init-config';
-
 const CONFIG_DEFAULT = {
     url: '',
     realm: '',
@@ -28,52 +25,7 @@ const INIT_CONFIG_DEFAULT = {
 
 /**
  *
- * @param callback
- * @return {Promise<unknown>}
  */
-const promisifyPostMessageInit = (callback) =>
-    new Promise((resolve) => {
-        /**
-         *
-         * @param config
-         */
-        function resolveWithConfig(config) {
-            if (callback == null) {
-                return;
-            }
-
-            const initialPromise = callback(config);
-            resolve(initialPromise);
-
-            // eslint-disable-next-line no-use-before-define
-            window.removeEventListener(POST_MESSAGE_POST_EVENT_NAME, postMessageListener);
-            // eslint-disable-next-line no-param-reassign
-            callback = null;
-        }
-
-        /**
-         *
-         * @param name
-         * @param details
-         */
-        function postMessageListener({ name, details }) {
-            if (name !== POST_MESSAGE_POST_EVENT_NAME) {
-                return;
-            }
-
-            const { token, updateToken } = details;
-            resolveWithConfig({ token, updateToken });
-        }
-
-        window.addEventListener('message', postMessageListener);
-
-        window.postMessage(new CustomEvent(POST_MESSAGE_REQUEST_EVENT_NAME), '*');
-
-        window.setTimeout(() => {
-            resolveWithConfig();
-        }, POST_MESSAGE_RESPONSE_TIMEOUT);
-    });
-
 class Keycloak extends Adapter {
     /** @type {import('keycloak-js').KeycloakInstance} */
     keycloakInstance;
@@ -86,6 +38,10 @@ class Keycloak extends Adapter {
      */
     _initConfig = INIT_CONFIG_DEFAULT;
 
+    /**
+     * @type {boolean}
+     * @private
+     */
     _isPostMessageInit = false;
 
     /**
@@ -106,7 +62,7 @@ class Keycloak extends Adapter {
         super(instanceConfig);
 
         this._extendInitConfig(initConfig);
-        this._isPostMessageInit = postMessageInit;
+        this._isPostMessageInit = isPostMessageInitRequired(postMessageInit);
 
         this.keycloakInstance = KeycloakJS(instanceConfig);
         this.initPromise = null;
@@ -138,7 +94,7 @@ class Keycloak extends Adapter {
             this.keycloakInstance.init({ ...this._initConfig, ...config });
 
         this.initPromise = this._isPostMessageInit
-            ? promisifyPostMessageInit(keycloakInstanceInit)
+            ? promisifyAuthCredentialsRequest(keycloakInstanceInit)
             : keycloakInstanceInit();
 
         return this.initPromise;

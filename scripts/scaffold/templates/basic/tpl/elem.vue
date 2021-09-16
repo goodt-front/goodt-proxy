@@ -71,18 +71,12 @@ export default {
     }),
     [[#hasTransport]]
     computed: {
-        apiBaseUrl() {
-            const { options } = this.descriptor.props.apiBaseUrl;
-            const { apiBaseURL: baseUrl } = this.props;
-
-            return options.build(this.$c(baseUrl));
-        },
         orgStructureApiUrl() {
             const { options } = this.descriptor.props.orgStructureApiUrl;
             const { orgStructureApiUrl: baseUrl } = this.props;
 
             return options.build(this.$c(baseUrl));
-        },
+        }
     },
     [[/hasTransport]]
     methods: {

@@ -1,4 +1,6 @@
+[[#hasTransport]]
 import { joinPathParts } from '@goodt-widgets/common/utils';
+[[/hasTransport]]
 
 /**
  * @enum {string}
@@ -14,16 +16,7 @@ export const descriptor = () => ({
     [[#hasTransport]]
         apiBaseUrl: {
             type: String,
-            default: 'https://reqres.in',
-            options: {
-                apiPath: '/api/',
-                build(host) {
-                    return joinPathParts(
-                        host,
-                        this.apiPath
-                    );
-                }
-            }
+            default: 'https://reqres.in/api'
         },
         orgStructureApiUrl: {
             default: 'https://goodt-dev.goodt.me:8480',

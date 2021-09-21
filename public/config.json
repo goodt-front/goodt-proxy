@@ -1,0 +1,58 @@
+{
+    "emulator": {
+        "authAdapter": {
+            "name": "KeycloakDremio",
+            "config": {
+                "url": "https://test.lukoil-hrportal.ru/keycloak/auth/",
+                "realm": "lukoil",
+                "clientId": "vkp-dev"
+            }
+        },
+        "envConstants": {
+            "DREMIO_API_URL": "https://goodt-dev.goodt.me:4400/",
+            "WFM_DATAPROVIDER_API_URL": "https://localhost/"
+        },
+        "appConstants": {
+            "%VUE_LOGO%": "https://vuejs.org/images/logo.png",
+            "%MY_COLOR%": "#face00"
+        },
+        "storeInitState": {},
+        "demoFiles": [
+            {
+                "hash": "1",
+                "name": "logo.png",
+                "type": "image/png",
+                "size": 100,
+                "url": "https://vuejs.org/images/logo.png"
+            }
+        ],
+        "demoRoute": {
+            "path": "/",
+            "query": {},
+            "meta": {}
+        }
+    },
+    "services": [
+        {
+            "name": "OrgStructureGraphqlService",
+            "options": {
+                "uri": "https://goodt-dev.goodt.me:8480/graphql",
+                "cache": {
+                    "timeToLive": 6000000
+                },
+                "auth": true
+            }
+        }
+    ],
+    "widgets": [
+        {
+            "type": "ElemWithGraphql",
+            "props": {
+                "cssStyle": { "border": "1px solid" },
+                "cssClass": ["pad-l3"],
+                "slot": ""
+            },
+            "children": []
+        }
+    ]
+}

@@ -215,18 +215,35 @@ export default {
          * Generates css-style def
          */
         genCssStyle() {
-            const o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
+            const cssStyle = this.props.cssStyle ? { ...this.props.cssStyle } : {};
             if (
                 this.props.widthUnit !== 'size' &&
                 !Number.isNaN(this.props.width) &&
                 this.props.width !== ''
             ) {
-                o.width = `${this.props.width}${this.props.widthUnit}`;
+                cssStyle.width = `${this.props.width}${this.props.widthUnit}`;
             }
             if (!Number.isNaN(this.props.height) && this.props.height !== '') {
-                o.height = `${this.props.height}${this.props.heightUnit}`;
+                cssStyle.height = `${this.props.height}${this.props.heightUnit}`;
             }
-            this.$set(this, 'cssStyle', o);
+
+            this.$set(this, 'cssStyle', {
+                ...cssStyle,
+                //...this.buildCssStyleVars()
+            });
+        },
+        /**
+         * Generates css-style def
+         */
+        buildCssStyleVars() {
+            return Object.entries(this.props.cssVars).reduce((acc, [variable, options]) => {
+                const { default: value, name, units = '' } = options;
+                debugger
+                return {
+                    ...acc,
+                    [name]: `${value}${units}`
+                }
+            }, {});
         },
         /**
          * Returns component slot names

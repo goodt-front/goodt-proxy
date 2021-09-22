@@ -4,8 +4,7 @@ const { Select } = require('enquirer');
 
 const TRANSPORT_OPTION_TITLES = {
     [TransportType.NONE]: 'none (no Api Service)',
-    [TransportType.HTTP]: 'Api Service (no authorization)',
-    [TransportType.HTTP_AUTH]: 'auth Api Service (with authorization support)'
+    [TransportType.HTTP_AUTH]: 'Auth Api Service'
 };
 
 module.exports = class extends Template {
@@ -67,10 +66,7 @@ module.exports = class extends Template {
         this.createWidgetFile(`style.less`, style);
 
         if (hasTransport) {
-            const DemoApiService = this.compileTpl(
-                `${tplPath}/${servicePath}/ApiService.js`,
-                tplBinds
-            );
+            const DemoApiService = this.compileTpl(`${tplPath}/${servicePath}/ApiService.js`, tplBinds);
             const OrgStructureApiService = this.compileTpl(
                 `${tplPath}/${servicePath}/OrgStructureApiService.js`,
                 tplBinds
@@ -79,10 +75,7 @@ module.exports = class extends Template {
 
             this.createWidgetDir(servicePath);
             this.createWidgetFile(`${servicePath}/ApiService.js`, DemoApiService);
-            this.createWidgetFile(
-                `${servicePath}/OrgStructureApiService.js`,
-                OrgStructureApiService
-            );
+            this.createWidgetFile(`${servicePath}/OrgStructureApiService.js`, OrgStructureApiService);
             this.createWidgetFile(`${servicePath}/index.js`, indexFile);
         }
 

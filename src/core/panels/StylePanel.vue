@@ -2,20 +2,12 @@
     <ui-panel-container>
         <ui-has-two-columns class="p">
             <template #left>
-                <ui-select
-                    v-model="props.position"
-                    :options="descriptor.props.position.options"
-                    @change="propChanged"
-                >
+                <ui-select v-model="props.position" :options="descriptor.props.position.options" @change="propChanged">
                     Position
                 </ui-select>
             </template>
             <template #right>
-                <ui-select
-                    v-model="props.display"
-                    :options="descriptor.props.display.options"
-                    @change="propChanged"
-                >
+                <ui-select v-model="props.display" :options="descriptor.props.display.options" @change="propChanged">
                     Display
                 </ui-select>
             </template>
@@ -82,12 +74,7 @@
             </div>
         </ui-collapse>
 
-        <ui-input-tags
-            v-model="props.cssClass"
-            class="p"
-            v-bind="{ delimiter: ' ' }"
-            @change="propChanged"
-        >
+        <ui-input-tags v-model="props.cssClass" class="p" v-bind="{ delimiter: ' ' }" @change="propChanged">
             Css class
             <template #tag="{ tag, remove }">
                 <ui-badge
@@ -100,13 +87,7 @@
             </template>
         </ui-input-tags>
 
-        <ui-input-tags
-            ref="cssstyle"
-            v-model="cssStyles"
-            class="p"
-            v-bind="{ delimiter: ';' }"
-            @change="propChanged"
-        >
+        <ui-input-tags ref="cssstyle" v-model="cssStyles" class="p" v-bind="{ delimiter: ';' }" @change="propChanged">
             Css style
             <template #tag="{ tag, remove, setNewTag }">
                 <ui-badge
@@ -127,12 +108,25 @@
         </ui-input-tags>
 
         <ui-select
+            class="p"
             v-model="props.slot"
             v-bind="{ options: slotNames, valueField: null, labelField: null }"
             @change="propChanged"
         >
             Render slot
         </ui-select>
+
+        <ui-collapse>
+            <template #header>Css variables</template>
+            <ui-input
+                :class="{ p: i < cssVars.length - 1 }"
+                v-for="({ name, value, valueDefault, description }, i) in cssVars"
+                v-bind="{ placeholder: valueDefault, value, key: name, colSize: '8-12' }"
+                @change="(val) => setCssVar(name, val, valueDefault)"
+            >
+                <div :title="description">{{ name }}</div>
+            </ui-input>
+        </ui-collapse>
     </ui-panel-container>
 </template>
 <style lang="less" scoped>
@@ -201,9 +195,7 @@ export default {
             return this.descriptor.props.paddingT.options;
         },
         widthUnits() {
-            return this.descriptor.props.widthUnit.options
-                .map(({ value }) => value)
-                .filter((v) => !!v);
+            return this.descriptor.props.widthUnit.options.map(({ value }) => value).filter((v) => !!v);
         },
         heightUnits() {
             return this.descriptor.props.heightUnit.options.map(({ value }) => value);
@@ -253,12 +245,31 @@ export default {
                     }, {});
                 this.props.cssStyle = obj;
             }
+        },
+        cssVars() {
+            const { cssVars } = this.descriptor;
+            const { cssVars: cssVarsValues } = this.props;
+            return Object.entries(cssVars).map(([name, { default: f, description }]) => ({
+                name,
+                value: cssVarsValues[name] || '',
+                valueDefault: typeof f === 'function' ? f() : f,
+                description
+            }));
         }
     },
     methods: {
         getStyleDefObj(def) {
             const [key, value] = def.split(':');
             return value != null ? { key: key.trim(), value: value.trim() } : null;
+        },
+        setCssVar(name, value, valueDefault) {
+            const propName = 'cssVars';
+            if (value === '' || value == valueDefault) {
+                this.$delete(this.props[propName], name);
+            } else {
+                this.$set(this.props[propName], name, value);
+            }
+            this.propChanged(propName);
         }
     }
 };

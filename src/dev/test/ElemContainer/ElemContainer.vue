@@ -1,5 +1,5 @@
 <template>
-    <div :class="cssClass" :style="cssStyle">
+    <div class="widget" :class="cssClass" :style="cssStyle">
         <code class="text-xsmall">{{ type }} | #{{ id }} | slotData</code>
         <pre class="text-xsmall">{{ slotData }}</pre>
         <div class="row">
@@ -12,19 +12,32 @@
         </div>
     </div>
 </template>
+<style lang="less" scoped>
+.widget {
+    color: var(--text-color);
+    background: var(--bg-color);
+    padding: var(--padding);
+    transition: padding 0.25s ease;
+}
+</style>
 <script>
 import { Elem } from '@goodt-wcore/core';
 
 const descriptor = () => ({
     props: {},
-    vars: {}
+    vars: {},
+    cssVars: {
+        'text-color': { default: 'grey' },
+        'bg-color': { default: 'white', description: 'Background color' }
+    }
 });
 
 export default {
     extends: Elem,
     data() {
         return {
-            descriptor: descriptor()
+            descriptor: descriptor(),
+            sec: 0
         };
     },
     methods: {

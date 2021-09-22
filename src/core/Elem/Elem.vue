@@ -7,7 +7,9 @@ import { ConstManager, RouteManager, StoreManager, EB } from '../managers';
 import {
     dispatchEventByName,
     getDescriptorDefaultProps,
-    patchComponentRootDomElement
+    getDescriptorDefaultCssVars,
+    patchComponentRootDomElement,
+    prefixCssVarsObject
 } from './infra/utils';
 
 import { descriptor } from './descriptor';
@@ -74,17 +76,37 @@ export default {
             return { ...defaultProps, ...initProps };
         },
         /**
+         * Css variables
+         * @return {object}
+         */
+        $cssVars() {
+            return {};
+        },
+        /**
+         * Css variables (static)
+         * @return {object}
+         */
+        $cssVarsStatic() {
+            const { cssVars } = this.props;
+            const cssVarsDefault = getDescriptorDefaultCssVars(this.descriptor);
+            return { ...cssVarsDefault, ...cssVars };
+        },
+        /**
+         * Css variables combined (runtime + static)
+         * @return {object}
+         */
+        $cssVarsCombined() {
+            const { $cssVarsStatic, $cssVars } = this;
+            return { ...$cssVarsStatic, ...$cssVars };
+        },
+        /**
          * Returns the current store state
          * @return {Record<string, any>} state
          */
         $storeState() {
             const varAliases = this.props.varAliases || {};
             const { state: externalState } = store;
-            const internalState = buildInternalStateFromExternal(
-                externalState,
-                varAliases,
-                unwrapStoreValue
-            );
+            const internalState = buildInternalStateFromExternal(externalState, varAliases, unwrapStoreValue);
 
             return internalState;
         },
@@ -113,6 +135,12 @@ export default {
             immediate: true
         },
         'props.cssStyle': {
+            handler() {
+                this.genCssStyle();
+            },
+            immediate: true
+        },
+        $cssVarsCombined: {
             handler() {
                 this.genCssStyle();
             },
@@ -216,17 +244,14 @@ export default {
          */
         genCssStyle() {
             const o = this.props.cssStyle ? { ...this.props.cssStyle } : {};
-            if (
-                this.props.widthUnit !== 'size' &&
-                !Number.isNaN(this.props.width) &&
-                this.props.width !== ''
-            ) {
+            if (this.props.widthUnit !== 'size' && !Number.isNaN(this.props.width) && this.props.width !== '') {
                 o.width = `${this.props.width}${this.props.widthUnit}`;
             }
             if (!Number.isNaN(this.props.height) && this.props.height !== '') {
                 o.height = `${this.props.height}${this.props.heightUnit}`;
             }
-            this.$set(this, 'cssStyle', o);
+            const { $cssVarsCombined } = this;
+            this.$set(this, 'cssStyle', { ...prefixCssVarsObject($cssVarsCombined), ...o });
         },
         /**
          * Returns component slot names

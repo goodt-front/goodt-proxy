@@ -167,9 +167,18 @@ export const descriptor = () => ({
             }
         },
         /**
+         * @type {PropOptions<Record<string, Record>>}
+         */
+        cssVars: {
+            type: Object,
+            default() {
+                return {};
+            }
+        },
+        /**
          * Returns aliases hash for 'vars'
          *
-         * @type PropOptions<Record<string, ElemVarAliasDef>>
+         * @type {PropOptions<Record<string, ElemVarAliasDef>>}
          */
         varAliases: {
             type: Object,
@@ -178,7 +187,8 @@ export const descriptor = () => ({
             }
         }
     },
-    vars: {}
+    vars: {},
+    cssVars: {}
 });
 
 export default descriptor;

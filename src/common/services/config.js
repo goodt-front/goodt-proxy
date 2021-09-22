@@ -1,3 +1,6 @@
-import { createOrgStructureGraphqlService, OrgStructureGraphqlServiceSymbol } from './api/OrgStructureGraphqlService';
+import {
+    createOrgStructureGraphqlService,
+    OrgStructureGraphqlServiceSymbol
+} from './graphql/OrgStructureGraphqlService';
 
 export const ServiceFactoryMappingList = [[OrgStructureGraphqlServiceSymbol, createOrgStructureGraphqlService]];

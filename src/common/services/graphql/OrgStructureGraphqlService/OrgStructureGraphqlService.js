@@ -8,7 +8,7 @@ export class OrgStructureGraphqlService extends GraphqlBaseService {}
 
 /**
  *
- * @param {import('@goodt-widgets/common/graphql').IGraphqlServiceOptions} options
+ * @param {import('@goodt-common/graphql').IGraphqlServiceOptions} options
  * @return {OrgStructureGraphqlService}
  */
 export const create = (options = {}) => {

@@ -1,5 +1,5 @@
 import { GraphqlServiceConsumer, gql } from '@goodt-common/graphql';
-import { [[prefixCapital]]GraphqlServiceSymbol } from '@goodt-common/api';
+import { [[prefixCapital]]GraphqlServiceSymbol } from '@goodt-common/services/graphql';
 
 /**
  *

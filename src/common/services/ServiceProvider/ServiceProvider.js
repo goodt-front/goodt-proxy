@@ -16,7 +16,7 @@ const ServiceContainer = new Map();
  *
  * @param serviceFactoryList
  */
-export const init = (serviceFactoryList) => {
+export const setServiceFactories = (serviceFactoryList) => {
     ServiceFactoryMap = new Map(serviceFactoryList);
 };
 

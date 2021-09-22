@@ -1,8 +1,8 @@
 <template>
     <section>
         <h2>OrgStructure GraphQL Service: {{ uid }}</h2>
-        <ui-operation-result :result="assignmentsResult">
-            <template v-if="assignments">
+        <ui-operation-result v-model="assignmentsResult" always>
+            <template v-if="assignments.length > 0">
                 <h3 class="mar-top-6">assignments</h3>
                 <ul class="unstyled">
                     <li v-for="{ id, ...assignment } in assignments" :key="id">
@@ -12,19 +12,14 @@
             </template>
         </ui-operation-result>
 
-        <button class="btn btn-primary mar-top-8 mar-left-4" @click="onCreateEmployee">
-            Create Employee
-        </button>
-        <button class="btn btn-primary mar-top-8 mar-left-4" @click="onDeleteEmployee">
-            Delete Employee 1
-        </button>
-
+        <button class="btn btn-primary mar-top-8 mar-left-4" @click="onCreateEmployee">Create Employee</button>
+        <button class="btn btn-primary mar-top-8 mar-left-4" @click="onDeleteEmployee">Delete Employee 1</button>
     </section>
 </template>
 
 <script>
+import { OperationResult } from '@goodt-common/graphql';
 import { Elem } from '@goodt-wcore/core';
-import OperationResult from './OperationResult.vue';
 import { OrgStructureConsumerMixinTypes } from '../api';
 
 /**

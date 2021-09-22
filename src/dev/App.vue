@@ -1,10 +1,6 @@
 <script>
 import { Sandbox } from '@goodt-wcore/core/sandbox';
-import {
-    setServiceOptions as provideService,
-    init as initServiceProvider,
-    ServiceFactoryMappingList
-} from '@goodt-common/services';
+import { initServices } from '@goodt-common/services';
 
 export default {
     name: 'App',
@@ -17,11 +13,8 @@ export default {
             return ({ type, name }) => import(`./test/${type}/${name}.vue`);
         },
         initServiceProvider() {
-            initServiceProvider(ServiceFactoryMappingList);
-            const { services } = this.config;
-            services.forEach(({ name, options }) => {
-                provideService(name, { ...options });
-            });
+            const { services: settings } = this.config;
+            initServices({ settings });
         }
     }
 };

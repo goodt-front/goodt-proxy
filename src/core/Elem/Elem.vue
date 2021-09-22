@@ -227,23 +227,7 @@ export default {
                 cssStyle.height = `${this.props.height}${this.props.heightUnit}`;
             }
 
-            this.$set(this, 'cssStyle', {
-                ...cssStyle,
-                //...this.buildCssStyleVars()
-            });
-        },
-        /**
-         * Generates css-style def
-         */
-        buildCssStyleVars() {
-            return Object.entries(this.props.cssVars).reduce((acc, [variable, options]) => {
-                const { default: value, name, units = '' } = options;
-                debugger
-                return {
-                    ...acc,
-                    [name]: `${value}${units}`
-                }
-            }, {});
+            this.$set(this, 'cssStyle', cssStyle);
         },
         /**
          * Returns component slot names

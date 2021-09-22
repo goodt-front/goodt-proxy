@@ -1,9 +1,7 @@
 /**
  * @typedef {import('graphql').DocumentNode} TOperationDocument
- * @typedef {import('@goodt-widgets/common/graphql').IGraphqlServiceOperationOptions} IOperationOptions
- * @typedef {import('@goodt-widgets/common/graphql').IGraphqlService} IGraphqlService
- * @typedef {import('@goodt-widgets/common/graphql').TApolloOperation} TOperation
- * @typedef {import('@goodt-widgets/common/graphql').IGraphqlServiceOperationMeta} IOperationMeta
+ * @typedef {import('@goodt-common/graphql').IGraphqlServiceOperationOptions} IOperationOptions
+ * @typedef {import('@goodt-common/graphql').IGraphqlService} IGraphqlService
  */
 
 /**
@@ -13,8 +11,8 @@
  * @param [mixinOptions={}]
  * @return {{mixin: {destroyed(): void, created(): void}}}
  */
-export const useGqlServiceConsumer = (serviceFactory, mixinOptions = {}) => {
-    const { name: $gqlService = 'gqlService' } = mixinOptions;
+export const useGqlServiceConsumerMixin = (serviceFactory, mixinOptions = {}) => {
+    const { name: $gqlService = 'gqlApi' } = mixinOptions;
 
     /**
      */

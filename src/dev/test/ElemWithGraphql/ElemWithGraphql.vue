@@ -1,6 +1,5 @@
 <template>
     <section>
-<!--        <w-single :key="forceKeyOne" />-->
         <button class="btn btn-primary" @click="onResetFirst">Reset</button>
         <w-list :key="forceKeyTwo" :offset="0" />
         <w-list :key="forceKeyTwo + 1" :offset="1" />
@@ -12,7 +11,6 @@
 
 <script>
 import { Elem } from '@goodt-wcore/core';
-// import EmployeeSingle from './EmployeeSingle.vue';
 import EmployeeList from './components/EmployeeList.vue';
 import { descriptor } from './descriptor';
 
@@ -24,7 +22,6 @@ import { useOrgStructureConsumerMixin, OrgStructureConsumerMixinTypes } from './
 export default {
     extends: Elem,
     components: {
-        // WSingle: EmployeeSingle,
         WList: EmployeeList
     },
     mixins: [ useOrgStructureConsumerMixin() ],

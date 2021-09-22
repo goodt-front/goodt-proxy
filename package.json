@@ -1,5 +1,5 @@
 {
-    "version": "0.1.40",
+    "version": "0.1.43",
     "name": "goodt-wcore",
     "private": true,
     "main": "src/core/index.js",

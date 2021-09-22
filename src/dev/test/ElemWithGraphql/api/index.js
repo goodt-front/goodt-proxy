@@ -1,4 +1,4 @@
-import { useGqlServiceConsumer } from '@goodt-common/graphql';
+import { useGqlServiceConsumerMixin } from '@goodt-common/graphql';
 import { create as createOrgStructureGqlConsumer } from './OrgStructureConsumer';
 
 /**
@@ -7,7 +7,7 @@ import { create as createOrgStructureGqlConsumer } from './OrgStructureConsumer'
  * @return {{destroyed(): void, created(): void}}
  */
 export const useOrgStructureConsumerMixin = ({ name = 'orgStructureGql' } = {}) => {
-    const { mixin } = useGqlServiceConsumer(createOrgStructureGqlConsumer, { name });
+    const { mixin } = useGqlServiceConsumerMixin(createOrgStructureGqlConsumer, { name });
 
     return mixin;
 };

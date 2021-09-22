@@ -41,5 +41,7 @@ export interface IApiServiceRequestOptions {
     action: { url: string; options?: ITransportOptions };
     pathParams?: Record<string, string | number | boolean | null | undefined>;
     params?: Record<string, any>;
+    // extra query params for POST-method requests
+    queryParams?: Record<string, any> | undefined;
     options?: ITransportOptions;
 }

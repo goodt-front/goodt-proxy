@@ -1,5 +1,5 @@
 <script>
-import { Sandbox } from '@goodt-wcore/core/sandbox';
+import Sandbox from '@goodt-wcore/core/sandbox/Sandbox.vue';
 import { initServices } from '@goodt-common/services';
 
 export default {

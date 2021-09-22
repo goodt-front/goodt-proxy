@@ -544,17 +544,25 @@ type Mutation {
     # /api/employee/verifyteamdivisionsuccessors Удаление преемников
     verifyTeamDivisionSuccessors: VerifyTeamDivisionSuccessorsResult
     # /api/employee/teamdivisionassignmentrotationcommit Подтверждение готовности к ротации
-    commitDivisionTeamAssignmentRotation(id: ID!): UpdateDivisionTeamAssignmentRotationResult
+    commitDivisionTeamAssignmentRotation(id: ID!): DivisionTeamAssignmentRotationDto
     # /api/employee/teamdivisionassignmentrotationwithdraw
-    withdrawDivisionTeamAssignmentRotation(id: ID!): UpdateDivisionTeamAssignmentRotationResult
+    # Update
+    withdrawDivisionTeamAssignmentRotation(id: ID!): DivisionTeamAssignmentRotationDto
     # /api/employee/divisionteamsuccessorupdatehr
-    updateHrDivisionTeamSuccessor(params: UpdateHrDivisionTeamSuccessorInput!): UpdateHrDivisionTeamSuccessorResult
+    # Update
+    updateHrDivisionTeamSuccessor(params: UpdateHrDivisionTeamSuccessorInput!): DivisionTeamSuccessorDto
     # /api/employee/addteamdivisionassignmentrotation
     addDivisionTeamAssignmentRotation(params: AddDivisionTeamAssignmentRotationInput!): AddDivisionTeamAssignmentRotationResult
     # /api/role/setemployeerole
-    setEmployeeRole(params: UpdateEmployeeRoleInput!): UpdateEmployeeRoleResult
+    # используется?
+    setEmployeeRole(params: UpdateEmployeeRoleInput!): LegalEntityTeamAssignmentDto
     # /api/role/clearemployeerole
-    clearEmployeeRole(params: UpdateEmployeeRoleInput!): UpdateEmployeeRoleResult
+    # используется?
+    clearEmployeeRole(params: UpdateEmployeeRoleInput!): LegalEntityTeamAssignmentDto
+    # /api/divisionteamrole
+    createDivisionTeamRole(params: DivisionTeamRoleInput!): CreateDivisionTeamRoleResult
+    # test fake mutations
+    updateDivisionTeamRole(id: ID!, params: DivisionTeamRoleInput!): DivisionTeamRoleDto
     # test fake mutations
     createEmployee(employee: EmployeeCreateInput!): EmployeeCreateResult
     deleteEmployee(id: ID!): EmployeeDeleteResult
@@ -564,6 +572,14 @@ input UpdateEmployeeRoleInput {
     employeeId: ID,
     roleId: ID,
     legalEntityId: ID
+}
+
+input DivisionTeamRoleInput {
+    id: ID!
+    importance: ID!
+    divisionTeamId: ID!
+    roleId: ID!
+    externalId:	String
 }
 
 input AddDivisionTeamSuccessorInput {
@@ -583,6 +599,16 @@ input UpdateHrDivisionTeamSuccessorInput {
 
 input EmployeeCreateInput {
     name: String
+}
+
+type CreateDivisionTeamRoleResult {
+    id: ID! # divisionTeamRole.id
+    divisionTeamRole: DivisionTeamRoleDto
+}
+
+type DeleteDivisionTeamRoleResult {
+    id: ID! # divisionTeamRole.id
+    divisionTeamRole: DivisionTeamRoleDto
 }
 
 type AddDivisionTeamSuccessorResult {

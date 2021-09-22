@@ -58,15 +58,21 @@
     </w-env-emulator>
 </template>
 <script>
-import { Components, Managers, Sandbox } from '@goodt-wcore/core';
+import { Components, Managers } from '@goodt-wcore/core';
+import WWidgetPreview from './WidgetPreview.vue';
+import WEnvEmulator from './EnvEmulator.vue';
 import { Config } from './Config';
 
-const { WidgetPreview: WWidgetPreview, EnvEmulator: WEnvEmulator } = Sandbox;
-const { PanelUi } = Components;
-const { Popup: UiPopup } = Components.Ui;
-const { store, ValueObject } = Managers.StoreManager;
-const { AuthManager } = Managers;
-const { EventBusEvent } = Managers.EB;
+const {
+    PanelUi,
+    Ui: { Popup: UiPopup }
+} = Components;
+
+const {
+    AuthManager,
+    EB: { EventBusEvent },
+    StoreManager: { store, ValueObject }
+} = Managers;
 
 /**
  * Creates elemInfo factory
@@ -85,8 +91,7 @@ const createElemInfoFactory = ({ componentFactory }) => {
     };
 
     return createElemInfo;
-}
-
+};
 
 /**
  * Transforms object prop values to VOs

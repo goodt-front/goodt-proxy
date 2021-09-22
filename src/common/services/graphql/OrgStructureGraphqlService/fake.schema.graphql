@@ -1,0 +1,655 @@
+directive @fake(type: FakeTypesEnum, locale: FakeLocaleEnum) on FIELD_DEFINITION | ARGUMENT_DEFINITION
+directive @listLength(min: Int, max: Int) on FIELD_DEFINITION | ARGUMENT_DEFINITION
+
+enum FakeLocaleEnum {
+    ru
+}
+
+enum FakeTypesEnum {
+    firstName
+    lastName
+    colorName
+    avatarUrl
+    streetAddress
+    number
+    words
+    word
+    email
+    phoneNumber
+    zipCode
+    date
+    pastDate
+    lorem
+    hackerAbbreviation
+    hackerPhrase
+    jobTitle
+}
+
+schema {
+    query: Query
+}
+
+input EmployeeFilterInput {
+    "Массив идентификаторов сотрудников (таблица employee)"
+    ids: [ID!]
+    "Идентификатор подразделения (таблица division)"
+    divisionId: ID,
+    "Идентификатор выполняемой функции (таблица work_function)"
+    functionId: ID,
+    "Строка поиска по фамилии, имени, отчеству или номеру сотрудника (таблица employee)"
+    search: String
+}
+
+input DivisionTeamAssignmentFilterInput {
+    "Массив идентификаторов назначений в команду подразделения (таблица division_team_assignment)"
+    ids: [ID]
+    #    "Идентификатор сотрудника (таблица division_team_assignment)"
+    #    employeeId: ID
+    #    "Внешний идентификатор сотрудника (таблица employee)"
+    #    externalEmployeeId: String
+    #    "Идентификатор команды подразделения (таблица division_team_role)"
+    #    teamId: ID
+    #    "Идентификатор подразделения (таблица division_team_role)"
+    #    legalEntityId: ID
+}
+
+input DivisionTeamFilterInput {
+    "Массив идентификаторов назначений в команду подразделения (таблица division_team_assignment)"
+    ids: [ID]
+    "Идентификатор родительского divisionTeam"
+    parentId: ID
+    "Массив идентификаторов назначений в команду подразделения (таблица division_team_assignment)"
+    divisionId: ID
+    "Массив идентификаторов назначений в команду подразделения (таблица division_team_assignment)"
+    legalEntityId: ID
+}
+
+input DivisionFilterInput {
+    "Массив идентификаторов division"
+    ids: [ID]
+    "Идентификатор родительского division"
+    parentId: ID
+    "Идентификатор организации (таблица legal_entity)"
+    legalEntityId: ID
+}
+
+type AssignmentReadinessDto {
+    id: ID! @fake(type: number)
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date
+    name: String
+}
+
+type DivisionTeamHeadDto {
+    divisionTeam: DivisionTeamDto
+    headDivisionTeam: DivisionTeamDto
+    employee: EmployeeDto
+    headEmployee: EmployeeDto
+}
+
+type EmployeeDto {
+    id: ID! @fake(type: number, options: { minNumber: 1, maxNumber: 4 })
+    externalId: String @fake(type: number)
+    email: String @fake(type: email)
+    fax: String @fake(type: phoneNumber)
+    isFreelancer: Boolean
+    isHasMobile: Boolean
+    number: String @fake(type: zipCode)
+    phone: String @fake(type: phoneNumber)
+
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date @fake(type: date)
+
+    person: PersonDto
+    divisionTeamHead(divisionTeamId: ID): DivisionTeamHeadDto
+    divisionTeamAssignments: DivisionTeamAssignmentList @listLength(min: 1, max: 1)
+    positionAssignments: PositionAssignmentList @listLength(min: 1, max: 1)
+    condition: EmployeeConditionInfoDto
+}
+
+type EmployeeConditionInfoDto {
+    id: ID! @fake(type: number)
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date @fake(type: date)
+    # legacy: condition()
+    employeeStatus: EmployeeStatusDto
+}
+
+type EmployeeStatusDto {
+    id: ID!
+    fullName: String @fake(type: words)
+    shortName: String @fake(type: words)
+    systemName: String @fake(type: words)
+}
+
+type DivisionDto {
+    id: ID! @fake(type: number)
+    legalEntityId: ID @fake(type: number)
+    parentId: ID @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date
+    externalId: String @fake(type: number)
+    fullName: String @fake(type: words)
+    groupId: Long @fake(type: number)
+    precursorId: Long @fake(type: number)
+    shortName: String @fake(type: words)
+    statusId: Long @fake(type: number)
+    structureId: Long @fake(type: number)
+
+    path: DivisionList
+    "Организация"
+    legalEntity: LegalEntityDto
+    "Родительское подразделение"
+    parent: DivisionDto
+    "Начальник подразделения"
+    divisionHead: EmployeeDto
+    "Команды"
+    divisionTeams: DivisionTeamList
+}
+
+type AssignmentStatusDto {
+    id: ID! @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    fullName: String @fake(type: words)
+    shortName: String @fake(type: words)
+}
+
+type AssignmentTypeDto {
+    id: ID! @fake(type: number)
+    abbreviation: String  @fake(type: hackerAbbreviation)
+    fullName: String @fake(type: words)
+    shortName: String @fake(type: words)
+}
+
+type AssignmentRotationDto {
+    id: ID! @fake(type: number)
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date
+    name: String @fake(type: words)
+}
+
+type DivisionTeamAssignmentRotationDto {
+    id: ID! @fake(type: number)
+    commentEmployee: String @fake(type: lorem)
+    commentHr: String @fake(type: lorem)
+    dateCommitHr: Date
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date
+
+    divisionTeamAssignment: DivisionTeamAssignmentDto
+    rotation: AssignmentRotationDto
+}
+
+type DivisionTeamAssignmentDto {
+    id: ID! @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    externalId: String @fake(type: number)
+    fullName: String @fake(type: words)
+    shortName: String @fake(type: words)
+
+    employee: EmployeeDto
+    rotations: DivisionTeamAssignmentRotationList
+    divisionTeamRole: DivisionTeamRoleDto
+    status: AssignmentStatusDto
+}
+
+type DivisionTeamDto {
+    id: ID! @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    dateFrom: Date @fake(type: date)
+    dateTo: Date @fake(type: date)
+    divisionId: ID @fake(type: number)
+    externalId: String @fake(type: number)
+    fullName: String @fake(type: jobTitle)
+    isHead: Boolean
+    parentId: ID @fake(type: number)
+    precursorId: Long @fake(type: number)
+    shortName: String @fake(type: jobTitle)
+    teamStatusId: Long @fake(type: number)
+    teamTypeId: Long @fake(type: number)
+
+    parent: DivisionTeamDto
+    division: DivisionDto
+    divisionTeamRoleHead: DivisionTeamRoleDto
+    divisionTeamRoles: DivisionTeamRoleList
+}
+
+type DivisionTeamSuccessorReadinessDto {
+    id: ID! @fake(type: number)
+    assignmentReadiness: AssignmentReadinessDto
+    dateFrom: Date @fake(type: date)
+    dateTo: Date @fake(type: date)
+    divisionTeamSuccessor: DivisionTeamSuccessorDto
+}
+
+type DivisionTeamSuccessorDto {
+    id: ID! @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    externalId: String @fake(type: number)
+    fullName: String @fake(type: words)
+    shortName: String @fake(type: hackerPhrase)
+
+    employee: EmployeeDto
+    readinessCurrent: DivisionTeamSuccessorReadinessDto
+    readinesses: DivisionTeamSuccessorReadinessList
+    divisionTeamRole: DivisionTeamRoleDto
+}
+
+type DivisionTeamRoleDto {
+    id: ID! @fake(type: number)
+    externalId: String @fake(type: number)
+
+    divisionTeam: DivisionTeamDto
+    assignmentCurrent: DivisionTeamAssignmentDto
+    assignments: DivisionTeamAssignmentList
+    successorsCurrent: DivisionTeamSuccessorList
+    successors: DivisionTeamSuccessorList
+    importance: TeamRoleImportanceDto
+    role: RoleDto
+}
+
+type JobTitleDto {
+    id: ID! @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    clusterId: Long @fake(type: number)
+    code: String @fake(type: hackerPhrase)
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date @fake(type: pastDate)
+    externalId: String @fake(type: number)
+    fullName: String  @fake(type: words)
+    hash: String @fake(type: hackerPhrase)
+    isRequiredCertificate: Boolean
+    precursorId: ID @fake(type: number)
+    shortName: String @fake(type: jobTitle)
+}
+
+type PersonDto {
+    id: ID! @fake(type: number)
+    address: String @fake(type: streetAddress)
+    birthDate: Date @fake(type: pastDate)
+    email: String @fake(type: email)
+    externalId: String @fake(type: number)
+    familyStatusId: Long @fake(type: number)
+    inn: String @fake(type: zipCode)
+    name: String @fake(type: firstName, locale: ru)
+    parentId: ID @fake(type: number)
+    patronymic: String @fake(type: colorName)
+    phone: String @fake(type: phoneNumber)
+    photo: String @fake(type: avatarUrl)
+    sex: String
+    snils: String @fake(type: zipCode)
+    spouseId: ID @fake(type: number)
+    surname: String @fake(type: lastName, locale: ru)
+}
+
+type PositionAssignmentDto {
+    id: ID! @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    categoryId: Long @fake(type: number)
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date
+    employeeId: ID @fake(type: number)
+    externalId: String
+    fullName: String @fake(type: jobTitle)
+    placementId: Long @fake(type: number)
+    positionId: ID @fake(type: number)
+    precursorId: Long @fake(type: number)
+    probationDateTo: Date
+    shortName: String @fake(type: jobTitle)
+    stake: Float
+    statusId: Int @fake(type: number)
+    substitutionTypeId: Int @fake(type: number)
+    typeId: Int @fake(type: number)
+
+    assignmentType: AssignmentTypeDto
+    position: PositionDto
+    employee: EmployeeDto
+}
+
+type PositionDto {
+    id: ID! @fake(type: number)
+    abbreviation: String
+    categoryId: Long @fake(type: number)
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date
+    divisionId: ID @fake(type: number)
+    externalId: String @fake(type: number)
+    fullName: String @fake(type: words)
+    isKey: Boolean
+    isVariable: Boolean
+    jobTitleId: ID @fake(type: number)
+    precursorId: Long @fake(type: number)
+    rankId: Long @fake(type: number)
+    shortName: String @fake(type: jobTitle)
+    stake: Float
+    statusId: Int @fake(type: number)
+    workFunctionId: ID @fake(type: number)
+    workplaceId: ID @fake(type: number)
+
+    jobTitle: JobTitleDto
+}
+
+type LegalEntityDto {
+    id: ID! @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date @fake(type: date)
+    externalId: String
+    fullName: String @fake(type: words)
+    isAffiliate: Boolean
+    parentId: ID  @fake(type: number)
+    precursorId: Long @fake(type: number)
+    shortName: String @fake(type: words)
+    statusId: ID @fake(type: number)
+    typeId: ID @fake(type: number)
+
+    parent: LegalEntityDto
+    divisions: DivisionList
+    # legalEntityTeams: [LegalEntityTeamDto]
+}
+
+type LegalEntityTeamDto {
+    id: ID! @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date @fake(type: pastDate)
+    externalId: String @fake(type: number)
+    fullName: String @fake(type: words)
+    legalEntityId: ID @fake(type: number)
+    parentId: ID @fake(type: number)
+    precursorId: ID @fake(type: number)
+    shortName: String @fake(type: words)
+    statusId: ID @fake(type: number)
+    typeId: ID @fake(type: number)
+
+    legalEntity: LegalEntityDto
+    assignments: LegalEntityTeamAssignmentList
+}
+
+type LegalEntityTeamAssignmentDto {
+    id: ID! @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    dateFrom: Date @fake(type: pastDate)
+    dateTo: Date
+    employeeId: ID @fake(type: number)
+    fullName: String @fake(type: words)
+    precursorId: ID @fake(type: number)
+    shortName: String @fake(type: words)
+    typeId: Int @fake(type: number)
+
+    role: RoleDto
+    employee: EmployeeDto
+    legalEntityTeam: LegalEntityTeamDto
+    status: AssignmentStatusDto
+}
+
+type RoleDto {
+    id: ID! @fake(type: number)
+    abbreviation: String @fake(type: hackerAbbreviation)
+    fullName: String @fake(type: words)
+    shortName: String @fake(type: words)
+    systemRole: SystemRoleDto
+}
+
+type RoleInfo {
+    role: RoleDto
+    systemRole: SystemRoleDto
+}
+
+type SystemRoleDto {
+    id: Int
+    isAssignable: Int
+    name: String
+}
+
+type TeamRoleImportanceDto {
+    id: Int
+    name: String
+    successorCount: Long
+}
+
+type UserInfo {
+    employeeId: String
+    name: String
+    userName: String
+}
+
+
+"Long type"
+scalar Long
+
+"Built-in scalar for dynamic values"
+scalar ObjectScalar
+
+"Built-in scalar representing an instant in time"
+scalar Date
+
+"Unrepresentable type"
+scalar UNREPRESENTABLE
+
+"Query root"
+type Query {
+    "Получение информации о сотруднике"
+    employee(
+        "Идентификатор сотрудника (таблица employee)"
+        id: ID,
+        externalId: String
+    ): EmployeeDto
+
+    "Получение информации о сотрудниках"
+    employees(
+        filter: EmployeeFilterInput!
+    ): EmployeeList
+
+    "Получение информации о команде"
+    divisionTeam(
+        "Идентификатор сотрудника (таблица employee)"
+        id: ID!,
+    ): DivisionTeamDto
+
+    "Получение информации о командах"
+    divisionTeams(
+        filter: DivisionTeamFilterInput!
+    ): DivisionTeamList
+
+    "Получение подразделения"
+    division(id: ID!): DivisionDto
+
+    "Получение списка подразделений"
+    divisions(filter: DivisionFilterInput!): DivisionList
+
+    "Получение информации о назначениях в команду подразделения"
+    teamAssignment(
+        id: ID!
+    ): DivisionTeamAssignmentDto
+
+    "Получение информации о назначениях в команду подразделения"
+    teamAssignments(
+        filter: DivisionTeamAssignmentFilterInput!
+    ): DivisionTeamAssignmentList
+
+    "Получение информации об организации"
+    legalEntity(id: ID!): LegalEntityDto
+
+    #"Получение информации о всех ролях"
+    roles: RoleList
+
+}
+
+type ListMetaType {
+    total: Int
+}
+
+type EmployeeList {
+    list: [EmployeeDto]
+    meta: ListMetaType
+}
+
+type DivisionTeamList {
+    list: [DivisionTeamDto]
+    meta: ListMetaType
+}
+
+type DivisionList {
+    list: [DivisionDto]
+    meta: ListMetaType
+}
+
+type DivisionTeamAssignmentList {
+    list: [DivisionTeamAssignmentDto]
+    meta: ListMetaType
+}
+
+type PositionAssignmentList {
+    list: [PositionAssignmentDto]
+    meta: ListMetaType
+}
+
+type DivisionTeamAssignmentRotationList {
+    list: [DivisionTeamAssignmentRotationDto]
+    meta: ListMetaType
+}
+
+type DivisionTeamSuccessorList {
+    list: [DivisionTeamSuccessorDto]
+    meta: ListMetaType
+}
+
+type DivisionTeamRoleList {
+    list: [DivisionTeamRoleDto]
+    meta: ListMetaType
+}
+
+type DivisionTeamSuccessorReadinessList {
+    list: [DivisionTeamSuccessorReadinessDto]
+    meta: ListMetaType
+}
+
+type LegalEntityTeamAssignmentList {
+    list: [LegalEntityTeamAssignmentDto]
+    meta: ListMetaType
+}
+
+type RoleList {
+    list: [DivisionTeamDto]
+    meta: ListMetaType
+}
+
+type Mutation {
+    # /api/employee/addteamdivisionsuccessor
+    addDivisionTeamSuccessor(params: AddDivisionTeamSuccessorInput!): AddDivisionTeamSuccessorResult
+    # /api/employee/deleteteamdivisionsuccessor Удаление преемника
+    deleteTeamDivisionSuccessor(id: ID!): DeleteTeamDivisionSuccessorResult
+    # /api/employee/verifyteamdivisionsuccessors Удаление преемников
+    verifyTeamDivisionSuccessors: VerifyTeamDivisionSuccessorsResult
+    # /api/employee/teamdivisionassignmentrotationcommit Подтверждение готовности к ротации
+    commitDivisionTeamAssignmentRotation(id: ID!): DivisionTeamAssignmentRotationDto
+    # /api/employee/teamdivisionassignmentrotationwithdraw
+    # Update
+    withdrawDivisionTeamAssignmentRotation(id: ID!): DivisionTeamAssignmentRotationDto
+    # /api/employee/divisionteamsuccessorupdatehr
+    # Update
+    updateHrDivisionTeamSuccessor(params: UpdateHrDivisionTeamSuccessorInput!): DivisionTeamSuccessorDto
+    # /api/employee/addteamdivisionassignmentrotation
+    addDivisionTeamAssignmentRotation(params: AddDivisionTeamAssignmentRotationInput!): AddDivisionTeamAssignmentRotationResult
+    # /api/role/setemployeerole
+    # используется?
+    setEmployeeRole(params: UpdateEmployeeRoleInput!): LegalEntityTeamAssignmentDto
+    # /api/role/clearemployeerole
+    # используется?
+    clearEmployeeRole(params: UpdateEmployeeRoleInput!): LegalEntityTeamAssignmentDto
+    # /api/divisionteamrole
+    createDivisionTeamRole(params: DivisionTeamRoleInput!): CreateDivisionTeamRoleResult
+    # test fake mutations
+    updateDivisionTeamRole(id: ID!, params: DivisionTeamRoleInput!): DivisionTeamRoleDto
+    # test fake mutations
+    createEmployee(employee: EmployeeCreateInput!): EmployeeCreateResult
+    deleteEmployee(id: ID!): EmployeeDeleteResult
+}
+
+input UpdateEmployeeRoleInput {
+    employeeId: ID,
+    roleId: ID,
+    legalEntityId: ID
+}
+
+input DivisionTeamRoleInput {
+    id: ID!
+    importance: ID!
+    divisionTeamId: ID!
+    roleId: ID!
+    externalId:	String
+}
+
+input AddDivisionTeamSuccessorInput {
+    employeeId: ID,
+    divisionTeamRoleId: ID!
+}
+
+input AddDivisionTeamAssignmentRotationInput {
+    divisionTeamAssignmentId: ID,
+    assignmentRotationId: ID!
+}
+
+input UpdateHrDivisionTeamSuccessorInput {
+    divisionTeamSuccessorId: ID!,
+    dateCommitHr: String
+}
+
+input EmployeeCreateInput {
+    name: String
+}
+
+type CreateDivisionTeamRoleResult {
+    id: ID! # divisionTeamRole.id
+    divisionTeamRole: DivisionTeamRoleDto
+}
+
+type DeleteDivisionTeamRoleResult {
+    id: ID! # divisionTeamRole.id
+    divisionTeamRole: DivisionTeamRoleDto
+}
+
+type AddDivisionTeamSuccessorResult {
+    id: ID! # divisionTeamSuccessor.id
+    divisionTeamSuccessor: DivisionTeamSuccessorDto
+}
+
+type UpdateEmployeeRoleResult {
+    divisionTeamRole: DivisionTeamRoleDto
+}
+
+type DeleteTeamDivisionSuccessorResult {
+    id: ID! # divisionTeamSuccessor.id
+    divisionTeamSuccessor: DivisionTeamSuccessorDto
+}
+
+type VerifyTeamDivisionSuccessorsResult {
+    divisionTeamSuccessors: DivisionTeamSuccessorList
+}
+
+type UpdateDivisionTeamAssignmentRotationResult {
+    id: ID! # divisionTeamAssignmentRotation.id
+    divisionTeamAssignmentRotation: DivisionTeamAssignmentRotationDto
+}
+
+type UpdateHrDivisionTeamSuccessorResult {
+    id: ID! # divisionTeamSuccessor.id
+    divisionTeamSuccessor: DivisionTeamSuccessorDto
+}
+
+type AddDivisionTeamAssignmentRotationResult {
+    id: ID! # divisionTeamSuccessor.id
+    divisionTeamAssignmentRotation: DivisionTeamAssignmentRotationDto
+}
+
+type EmployeeCreateResult {
+    id: ID! # employee.id
+    employee: EmployeeDto # "пустой" пользователь достаточно рандомного id
+}
+
+type EmployeeDeleteResult {
+    id: ID! # employee.id
+    employee: EmployeeDto
+}

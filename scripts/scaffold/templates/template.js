@@ -16,12 +16,7 @@ module.exports = class {
         const {
             path: {
                 project: { lib },
-                core: {
-                    root: coreRootPath,
-                    panels: corePanelsPath,
-                    mixins: coreMixinsPath,
-                    net: coreNetPath
-                },
+                core: { root: coreRootPath, panels: corePanelsPath, mixins: coreMixinsPath, net: coreNetPath },
                 common: { mixins: commonMixinsPath, utils: commonUtilsPath }
             }
         } = this.config;
@@ -34,10 +29,7 @@ module.exports = class {
         this.commonMixinsPath = commonMixinsPath;
 
         this.widgetPath = widgetNameFull;
-        this.widgetName = widgetNameFull.substring(
-            widgetNameFull.lastIndexOf('/') + 1,
-            widgetNameFull.length
-        );
+        this.widgetName = widgetNameFull.substring(widgetNameFull.lastIndexOf('/') + 1, widgetNameFull.length);
         this.widgetDirPath = `${this.libPath}/${this.widgetPath}`;
         this.widgetLibPath =
             './' +
@@ -62,22 +54,10 @@ module.exports = class {
      * @param {object} tpl  compiled vue template files
      * @return {boolean|Error}  true if success; else error
      */
-    createWidget({
-        elem,
-        panel,
-        panelDT,
-        panelTypesDT,
-        elemDT,
-        elemTypesDT,
-        descriptor,
-        panelsIndex,
-        readmeMd
-    }) {
+    createWidget({ elem, panel, panelDT, panelTypesDT, elemDT, elemTypesDT, descriptor, panelsIndex, readmeMd }) {
         this.createWidgetDir();
         const { path: panelPath, name: panelName } = this.config.panel;
-        ['components', panelPath, `${panelPath}/components`].forEach((dir) =>
-            this.createWidgetDir(dir)
-        );
+        ['components', panelPath, `${panelPath}/components`].forEach((dir) => this.createWidgetDir(dir));
         this.createWidgetFile(`${this.widgetName}.vue`, elem);
         this.createWidgetFile(`${panelPath}/${panelName}.vue`, panel);
 
@@ -145,5 +125,6 @@ module.exports.TransportType = Object.freeze({
     NONE: 'none',
     HTTP: 'http',
     HTTP_AUTH: 'httpAuth',
-    DREMIO: 'http'
+    DREMIO: 'http',
+    GQL: 'graphql'
 });

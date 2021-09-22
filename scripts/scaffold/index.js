@@ -1,8 +1,10 @@
+const fs = require('fs');
 const signale = require('signale');
 const { Input, Select } = require('enquirer');
-const fs = require('fs');
 const figlet = require('figlet');
+
 const BasicTemplate = require('./templates/basic/index.js');
+const GraphqlTemplate = require('./templates/graphql/index.js');
 const DremioTemplate = require('./templates/dremio/index.js');
 const DremioTableTemplate = require('./templates/dremio-table/index.js');
 
@@ -29,13 +31,20 @@ const CONFIG = {
     panel: {
         name: 'SettingsPanel',
         path: './panels'
-    }
+    },
+    services: [{ name: 'OrgStructure GraphQL API', value: 'OrgStructure' }]
 };
+
 const TEMPLATES = [
     {
-        name: 'widget basic',
-        descr: 'basic widget (optional rest-api datasource)',
+        name: 'Widget Basic',
+        descr: 'Basic widget (optional rest-api client-side service)',
         class: BasicTemplate
+    },
+    {
+        name: 'Widget GraphQL',
+        descr: 'Basic widget with graphql API client-side service',
+        class: GraphqlTemplate
     },
     {
         name: 'widget dremio',
@@ -51,7 +60,7 @@ const TEMPLATES = [
 
 const logo = () => {
     return new Promise((resolve) => {
-        figlet('Scaffold', function(err, data) {
+        figlet('Scaffold', function (err, data) {
             console.clear();
             console.log(data);
             resolve();

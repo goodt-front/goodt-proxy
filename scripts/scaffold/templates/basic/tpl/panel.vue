@@ -2,11 +2,9 @@
     <ui-panel-container>
         <!-- {demo} your panel goes here -->
         [[#hasTransport]]
-        <ui-input
-            v-model="props.apiBaseURL"
-            class="p"
-            @change="propChanged('apiBaseURL')">
-            Service apiBaseURL
+        <ui-input v-model="props.apiBaseUrl" class="p" @change="propChanged('apiBaseUrl')">Service apiBaseUrl</ui-input>
+        <ui-input v-model="props.orgStructureApiUrl" class="p" @change="propChanged('orgStructureApiUrl')">
+            Service orgStructureApiUrl
         </ui-input>
         [[/hasTransport]]
     </ui-panel-container>

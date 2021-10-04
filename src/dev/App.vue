@@ -9,10 +9,7 @@
                     </select>
                 </div>
 
-                <w-widget-preview
-                    v-bind="{ elem: widgetSelected }"
-                    v-if="widgetSelected"
-                ></w-widget-preview>
+                <w-widget-preview v-bind="{ elem: widgetSelected }" v-if="widgetSelected"></w-widget-preview>
             </div>
         </template>
     </w-env-emulator>
@@ -41,6 +38,12 @@ export default {
             },
             widgetSelected: null,
             widgets: [
+                {
+                    component: () => import('./test/ElemCssVarsTest/ElemCssVarsTest.vue'),
+                    type: 'ElemCssVarsTest',
+                    props: {},
+                    children: []
+                },
                 {
                     component: () => import('./test/ElemContainer/ElemContainer.vue'),
                     type: 'ElemContainer',

@@ -4,13 +4,7 @@
 <script>
 import { buildExternalStateFromInternal, buildInternalStateFromExternal } from '../mixins/useStore';
 import { ConstManager, RouteManager, StoreManager, EB } from '../managers';
-import {
-    dispatchEventByName,
-    getDescriptorDefaultProps,
-    getDescriptorDefaultCssVars,
-    patchComponentRootDomElement,
-    prefixCssVarsObject
-} from './infra/utils';
+import { dispatchEventByName, getDescriptorDefaultProps, patchComponentRootDomElement } from './infra/utils';
 
 import { descriptor } from './descriptor';
 import { ElemEvent } from './infra/config';
@@ -80,24 +74,14 @@ export default {
          * @return {object}
          */
         $cssVars() {
-            return {};
-        },
-        /**
-         * Css variables (static)
-         * @return {object}
-         */
-        $cssVarsStatic() {
-            const { cssVars } = this.props;
-            const cssVarsDefault = getDescriptorDefaultCssVars(this.descriptor);
-            return { ...cssVarsDefault, ...cssVars };
-        },
-        /**
-         * Css variables combined (runtime + static)
-         * @return {object}
-         */
-        $cssVarsCombined() {
-            const { $cssVarsStatic, $cssVars } = this;
-            return { ...$cssVarsStatic, ...$cssVars };
+            const { cssVars } = this.descriptor;
+            if (!cssVars) {
+                return {};
+            }
+            return Object.entries(cssVars).reduce((acc, [key, value]) => {
+                acc[`--${key}`] = value(this.props, this);
+                return acc;
+            }, {});
         },
         /**
          * Returns the current store state
@@ -140,7 +124,7 @@ export default {
             },
             immediate: true
         },
-        $cssVarsCombined: {
+        $cssVars: {
             handler() {
                 this.genCssStyle();
             },
@@ -250,8 +234,7 @@ export default {
             if (!Number.isNaN(this.props.height) && this.props.height !== '') {
                 o.height = `${this.props.height}${this.props.heightUnit}`;
             }
-            const { $cssVarsCombined } = this;
-            this.$set(this, 'cssStyle', { ...prefixCssVarsObject($cssVarsCombined), ...o });
+            this.$set(this, 'cssStyle', { ...this.$cssVars, ...o });
         },
         /**
          * Returns component slot names

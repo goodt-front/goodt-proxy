@@ -19,8 +19,7 @@
                     v-model="widthWithUnit"
                     :units="widthUnits"
                     :options="descriptor.props.width.options"
-                    @change="propChanged"
-                >
+                    @change="propChanged">
                     Width
                 </ui-input-units>
             </template>
@@ -29,17 +28,14 @@
                     v-model="heightWithUnit"
                     :units="heightUnits"
                     :options="descriptor.props.height.options"
-                    @change="propChanged"
-                >
+                    @change="propChanged">
                     Height
                 </ui-input-units>
             </template>
         </ui-has-two-columns>
 
         <ui-collapse class="p">
-            <template #header>
-                Margin
-            </template>
+            <template #header>Margin</template>
             <div class="grid-3-3 flex-center">
                 <ui-select
                     v-for="dir in directions"
@@ -56,9 +52,7 @@
         </ui-collapse>
 
         <ui-collapse class="p">
-            <template #header>
-                Padding
-            </template>
+            <template #header>Padding</template>
             <div class="grid-3-3 flex-center">
                 <ui-select
                     v-for="dir in directions"
@@ -80,8 +74,7 @@
                 <ui-badge
                     class="mar-right-1 mar-bot-1"
                     v-bind="{ size: 'xsmall', theme: 'primary', removable: true }"
-                    @remove="remove(tag)"
-                >
+                    @remove="remove(tag)">
                     {{ tag }}
                 </ui-badge>
             </template>
@@ -93,13 +86,11 @@
                 <ui-badge
                     class="mar-right-1 mar-bot-1"
                     v-bind="{ size: 'xsmall', theme: 'primary', removable: true }"
-                    @remove="remove(tag)"
-                >
+                    @remove="remove(tag)">
                     <span
                         class="cursor-pointer nobr pad-right-2"
                         style="align-self: flex-start"
-                        @click="setNewTag(tag)"
-                    >
+                        @click="setNewTag(tag)">
                         {{ getStyleDefObj(tag).key }}:
                     </span>
                     {{ getStyleDefObj(tag).value }}
@@ -108,25 +99,11 @@
         </ui-input-tags>
 
         <ui-select
-            class="p"
             v-model="props.slot"
             v-bind="{ options: slotNames, valueField: null, labelField: null }"
-            @change="propChanged"
-        >
+            @change="propChanged">
             Render slot
         </ui-select>
-
-        <ui-collapse>
-            <template #header>Css variables</template>
-            <ui-input
-                :class="{ p: i < cssVars.length - 1 }"
-                v-for="({ name, value, valueDefault, description }, i) in cssVars"
-                v-bind="{ placeholder: valueDefault, value, key: name, colSize: '8-12' }"
-                @change="(val) => setCssVar(name, val, valueDefault)"
-            >
-                <div :title="description">{{ name }}</div>
-            </ui-input>
-        </ui-collapse>
     </ui-panel-container>
 </template>
 <style lang="less" scoped>
@@ -245,31 +222,12 @@ export default {
                     }, {});
                 this.props.cssStyle = obj;
             }
-        },
-        cssVars() {
-            const { cssVars } = this.descriptor;
-            const { cssVars: cssVarsValues } = this.props;
-            return Object.entries(cssVars).map(([name, { default: f, description }]) => ({
-                name,
-                value: cssVarsValues[name] || '',
-                valueDefault: typeof f === 'function' ? f() : f,
-                description
-            }));
         }
     },
     methods: {
         getStyleDefObj(def) {
             const [key, value] = def.split(':');
             return value != null ? { key: key.trim(), value: value.trim() } : null;
-        },
-        setCssVar(name, value, valueDefault) {
-            const propName = 'cssVars';
-            if (value === '' || value == valueDefault) {
-                this.$delete(this.props[propName], name);
-            } else {
-                this.$set(this.props[propName], name, value);
-            }
-            this.propChanged(propName);
         }
     }
 };

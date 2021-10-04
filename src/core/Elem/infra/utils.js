@@ -76,32 +76,3 @@ export const getDescriptorDefaultProps = (descriptor) => {
         };
     }, {});
 };
-
-/**
- * Returns descriptor css vars hash with default values
- *
- * @param {ElemDescriptor} descriptor
- * @return {Record<string, any>}
- */
-export const getDescriptorDefaultCssVars = (descriptor) => {
-    const cssVars = descriptor?.cssVars || {};
-    return Object.entries(cssVars).reduce((defaults, [varName, varOptions]) => {
-        const { default: value } = varOptions;
-        return {
-            ...defaults,
-            [varName]: typeof value === 'function' ? value() : value
-        };
-    }, {});
-};
-
-/**
- * Adds '--' prefix to all keys if needed
- *
- * @param {Record<string, any>} cssVars
- * @return {Record<string, any>}
- */
-export const prefixCssVarsObject = (cssVars) =>
-    Object.entries(cssVars).reduce((acc, [k, v]) => {
-        const key = k.indexOf('--') === 0 ? k : `--${k}`;
-        return { ...acc, [key]: v };
-    }, {});

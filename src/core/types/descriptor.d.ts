@@ -19,7 +19,7 @@ export type ElemRecordVarsDefinition = {
 };
 
 export type ElemRecordCssVarsDefinition = {
-    readonly [K as string]?: ElemCssVarDef;
+    readonly [K as string]?: ElemCssVarFactory;
 };
 
 export interface ElemDescriptor<P extends Record<string, ElemPropDef>, V extends Record<string, ElemVarDef>, X extends Record<string, ElemCssVarDef>> {

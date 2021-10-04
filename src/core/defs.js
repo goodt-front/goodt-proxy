@@ -6,7 +6,7 @@
  * @typedef {Record<string, any>} ElemDescriptor
  * @property {Record<string, ElemPropDef>} props
  * @property {Record<string, ElemVarDef>} vars
- * @property {Record<string, ElemCssVarDef>} cssVars
+ * @property {Record<string, ElemCssVarFactory>} cssVars
  */
 /**
  * @typedef {Record<string, any>} ElemPropDef
@@ -29,7 +29,8 @@
  * @property {boolean} [global=true]    alias global scope
  */
 /**
- * @typedef {Record<string, any>} ElemCssVarDef
- * @property {string} description  css var description
- * @property {boolean | number | string | Function} default       default value for Object, Array must be a factory method
+ * @callback ElemCssVarFactory
+ * @param {Record<string, ElemPropDef>} props
+ * @param {import('vue').Component} vm
+ * @return {string|number}
  */

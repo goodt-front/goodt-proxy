@@ -50,7 +50,7 @@
             <div class="pad-l3" v-if="initialized">
                 <w-widget-preview
                     v-for="(elem, i) in widgets"
-                    v-bind="{ elem, isPanelsVisible }"
+                    v-bind="{ elem, showPanels: isPanelsVisible }"
                     :key="`${elem.type}${i}`"></w-widget-preview>
             </div>
             <div v-else class="preloader"></div>
@@ -58,7 +58,7 @@
     </w-env-emulator>
 </template>
 <script>
-import { Components, Managers } from '@goodt-wcore/core';
+import { Components, Managers } from '..';
 import WWidgetPreview from './WidgetPreview.vue';
 import WEnvEmulator from './EnvEmulator.vue';
 import { Config } from './Config';

@@ -159,7 +159,7 @@ export default {
             this.config = await new Config().load();
         },
         getComponentFactory() {
-            return ({ type, name }) => import(`./lib/${type}/${name}.vue`);
+            return ({ type, name }) => Promise.resolve();
         },
         /**
          * @return {import('@goodt-wcore/managers').EB.EventBus}

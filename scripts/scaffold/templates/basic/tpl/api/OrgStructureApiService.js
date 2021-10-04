@@ -1,4 +1,4 @@
-import { OrgStructureApiService as OrgStructureApiServiceBase } from '@goodt-widgets/common/services/api';
+import { OrgStructureApiService as OrgStructureApiServiceBase } from '@goodt-common/api';
 import { useApiService } from '@goodt-common/mixins';
 [[#http]]
 import { createTransport, HttpTransportSymbol } from '[[{coreNetPath}]]';
@@ -54,6 +54,6 @@ export const useOrgStructureApiServiceMixin = (
  * в структуру инстанса компонента и типах
  * исключительно для Vetur
  *
- * @type {{ orgStructureApiUrl: string, orgStructureApiService: OrgStructureApiService }}
+ * @type {{ orgStructureApiUrl: string, orgStructureApi: OrgStructureApiService }}
  */
 export const OrgStructureApiServiceTypeDescriptor = undefined;

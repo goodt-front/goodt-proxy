@@ -1,6 +1,6 @@
 <script>
-import Sandbox from '@goodt-wcore/core/sandbox/Sandbox.vue';
-import { initServices } from '@goodt-common/services';
+import Sandbox from '../core/sandbox/Sandbox.vue';
+import { initServices } from '../common/services';
 
 export default {
     name: 'App',

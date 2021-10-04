@@ -6,6 +6,7 @@ export const Vars = Object.freeze({});
 
 /**
  * @description Don't change `descriptor` exported name
+ * @return {ElemDescriptor}
  */
 export const descriptor = () => ({
     props: {
@@ -14,10 +15,7 @@ export const descriptor = () => ({
             default: null
         }
     },
-    vars: Object.values(Vars).reduce(
-        (acc, varName) => ({ ...acc, [varName]: { description: varName } }),
-        {}
-    )
+    vars: Object.values(Vars).reduce((acc, varName) => ({ ...acc, [varName]: { description: varName } }), {})
 });
 
 export default descriptor;

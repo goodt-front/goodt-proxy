@@ -80,7 +80,7 @@ export const createApiService = (options, transport) => {
  * @return {import('@goodt-common/mixins').IApiServiceMixin}
  */
 export const useApiServiceMixin = (
-    { apiBaseURL = 'props.apiBaseUrl' } = {},
+    { apiBaseURL = 'apiBaseUrl' } = {},
     { name = 'apiService' } = {}
 ) => {
     const { mixin: ServiceMixin } = useApiService(createApiService, { apiBaseURL }, { name });
@@ -94,6 +94,6 @@ export const useApiServiceMixin = (
  * в структуру инстанса компонента и типах
  * исключительно для Vetur
  *
- * @type {{ apiBaseURL: string }}
+ * @type {{ apiBaseUrl: string, apiService: ApiService }}
  */
 export const ApiServiceTypeDescriptor = undefined;

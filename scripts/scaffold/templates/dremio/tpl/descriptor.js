@@ -6,6 +6,7 @@ export const Vars = Object.freeze({});
 
 /**
  * @description Don't change `descriptor` exported name
+ * @return {ElemDescriptor}
  */
 export const descriptor = () => ({
     props: {

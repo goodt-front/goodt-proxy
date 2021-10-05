@@ -1,9 +1,7 @@
 <template>
     <div :class="cssClass" :style="cssStyle">
         <!-- {demo} @todo: DELETE COMMENTS -->
-        <code>{{ type }}</code>
-        <div v-if="isEditorMode">running in editor</div>
-        <div>{{ props }}</div>
+        <code v-if="isEditorMode">{{ type }}</code>
         [[#hasTransport]]
         <template v-if="demoResult">
             <pre v-if="demoResult.isSuccess">{{ demoResult.result }}</pre>
@@ -54,6 +52,16 @@ const ApiServiceMixin = useApiServiceMixin();
 const OrgStructureApiServiceMixin = useOrgStructureApiServiceMixin();
 [[/hasTransport]]
 
+/**
+ * @param {{ name: string, descriptor: object, props: object }} options
+ * @return {{ options: object, value: any }}
+ */
+// eslint-disable-next-line
+const extractDescriptorPropMeta = ({ name, descriptor, props }) => ({
+    options: descriptor.props[name].options,
+    value: props[name]
+});
+
 export default {
     extends: Elem,
     [[#hasTransport]]
@@ -71,11 +79,23 @@ export default {
     }),
     [[#hasTransport]]
     computed: {
+        /** @return {string} */
+        apiBaseUrl() {
+            const { value, options } = extractDescriptorPropMeta({
+                name: 'apiBaseUrl',
+                descriptor: this.descriptor,
+                props: this.props
+            });
+            return options.build(this.$c(value));
+        },
+        /** @return {string} */
         orgStructureApiUrl() {
-            const { options } = this.descriptor.props.orgStructureApiUrl;
-            const { orgStructureApiUrl: baseUrl } = this.props;
-
-            return options.build(this.$c(baseUrl));
+            const { value, options } = extractDescriptorPropMeta({
+                name: 'orgStructureApiUrl',
+                descriptor: this.descriptor,
+                props: this.props
+            });
+            return options.build(this.$c(value));
         }
     },
     [[/hasTransport]]
@@ -93,14 +113,17 @@ export default {
         isChildAllowed(/* type */) {
             return true;
         },
+        /**
+         * @return {import('vue').AsyncComponent[]}
+         */
         getPanels() {
             return [ [[{panelName}]]Async ];
         },
         [[#hasTransport]]
         async getDemoData() {
             this.isLoading = true;
-            /* this.demoResult = await this.apiService.getUserById(1); */
-            this.demoResult = await this.orgStructureApi.getEmployeeDivisionTeamAssignments({ employeeId: 25 });
+            /* this.demoResult = await this.orgStructureApi.getEmployeeDivisionTeamAssignments({ employeeId: 25 }); */
+            this.demoResult = await this.apiService.getUserById(1);
             this.isLoading = false;
             const { isSuccess, isError, result: employeeAssignments, error } = this.demoResult;
             if (isError) {

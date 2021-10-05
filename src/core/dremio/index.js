@@ -1,5 +1,6 @@
 import { SDK, Query, Dremio, Errors } from 'goodt-dremio-sdk';
 import cloneDeep from 'lodash/cloneDeep';
+import isEqual from 'lodash/isEqual';
 // eslint-disable-next-line import/no-cycle
 import AuthManager from '../managers/AuthManager';
 import Const from '../Const';
@@ -213,22 +214,23 @@ const mixin = {
          * @return {boolean}
          */
         applyDremioFilters(params) {
-            const { query } = this.queryHelper;
+            let { query } = this.queryHelper;
+            const originalQuery = cloneDeep(query);
             const dremioParams = this.getDremioQueryParamNames();
             let anyFilterApplied = false;
-
+    
             Object.entries(params).forEach(([name, paramVal]) => {
                 if (dremioParams.includes(name)) {
-                    anyFilterApplied = true;
                     if (paramVal !== null) {
                         const filter = this.createDremioFilter(name, paramVal);
-                        this.queryHelper.query = Query.queryInsertUpdateFilter(query, filter);
+                        query = Query.queryInsertUpdateFilter(query, filter);
                     } else {
-                        this.queryHelper.query = Query.queryRemoveFilter(query, name);
+                        query = Query.queryRemoveFilter(query, name);
                     }
+                    anyFilterApplied = !isEqual(query, originalQuery);
                 }
             });
-
+    
             return anyFilterApplied;
         },
         /**

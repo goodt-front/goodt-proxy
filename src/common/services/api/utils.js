@@ -4,7 +4,7 @@
  * @param {import('@goodt-common/api').IApiServiceRequestOptions} requestOptions options
  * @return {import('@goodt-common/api').IApiServiceRequest} request
  */
-export const buildRequest = ({ action, pathParams = {}, params = {}, options = {} }) => {
+export const buildRequest = ({ action, pathParams = {}, params = {}, queryParams, options}) => {
     const { url: initialUrl = '', options: defaultOptions } = action;
     const url = Object.entries(pathParams).reduce(
         (finalUrl, [key, value]) => finalUrl.replace(new RegExp(`:${key}`, 'g'), value),
@@ -14,6 +14,12 @@ export const buildRequest = ({ action, pathParams = {}, params = {}, options = {
     return {
         url,
         params,
-        options: { ...defaultOptions, ...options }
+        options: {
+            ...defaultOptions,
+            ...options,
+            options: {
+                ...(queryParams && { params: queryParams })
+            }
+        }
     };
 };

@@ -115,11 +115,8 @@ class ApiHttpClient {
     _buildTransportOptions(transportOptions) {
         const extraOptions = {};
 
-        const { method } = transportOptions;
-        if (method == null || method === ApiClientMethod.GET) {
-            extraOptions.paramsSerializer = (params) =>
-                stringifyParams(params, { arrayFormat: 'repeat' });
-        }
+        // repeat pattern for query string params
+        extraOptions.paramsSerializer = (params) => stringifyParams(params, { arrayFormat: 'repeat' });
 
         return {
             ...transportOptions,

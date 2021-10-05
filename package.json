@@ -1,5 +1,5 @@
 {
-    "version": "0.1.48",
+    "version": "0.1.49",
     "name": "goodt-wcore",
     "private": true,
     "main": "src/core/index.js",
@@ -70,7 +70,7 @@
         "less": "^4.1.1",
         "less-loader": "^6.0.0",
         "npm-commands": "^1.1.0",
-        "prettier": "git+ssh://git@github.com:mayoujin/prettierx.git",
+        "prettier": "^2.4.1",
         "vite": "^2.4.1",
         "vite-plugin-vue2": "^1.7.3",
         "webpack": "^4.46.0",

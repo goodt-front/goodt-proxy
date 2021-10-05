@@ -5,6 +5,7 @@
     "main": "src/core/index.js",
     "types": "src/core/index.d.ts",
     "scripts": {
+        "start": "vite",
         "dev": "vite",
         "serve": "vue-cli-service serve",
         "build": "npm run lint && npm run format && npm run build:lib",

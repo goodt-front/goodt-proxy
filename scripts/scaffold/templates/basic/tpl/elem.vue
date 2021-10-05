@@ -23,6 +23,7 @@
 <script>
 import { Elem } from '[[{core}]]';
 [[#hasTransport]]
+import { extractDescriptorPropMeta } from '@goodt-common/utils';
 import {
     useApiServiceMixin, ApiServiceTypeDescriptor,
     useOrgStructureApiServiceMixin, OrgStructureApiServiceTypeDescriptor
@@ -52,50 +53,31 @@ const ApiServiceMixin = useApiServiceMixin();
 const OrgStructureApiServiceMixin = useOrgStructureApiServiceMixin();
 [[/hasTransport]]
 
-/**
- * @param {{ name: string, descriptor: object, props: object }} options
- * @return {{ options: object, value: any }}
- */
-// eslint-disable-next-line
-const extractDescriptorPropMeta = ({ name, descriptor, props }) => ({
-    options: descriptor.props[name].options,
-    value: props[name]
-});
-
 export default {
     extends: Elem,
     [[#hasTransport]]
     mixins: [ ApiServiceMixin, OrgStructureApiServiceMixin ],
     [[/hasTransport]]
     data: () => ({
-        descriptor: descriptor(),
-        [[#hasTransport]]
+        descriptor: descriptor()[[#hasTransport]],
         isLoading: false,
         /**
          * @type {import('[[{commonUtils}]]').ISafeResult}
          */
-        demoResult: null,
+        demoResult: null
         [[/hasTransport]]
     }),
     [[#hasTransport]]
     computed: {
         /** @return {string} */
         apiBaseUrl() {
-            const { value, options } = extractDescriptorPropMeta({
-                name: 'apiBaseUrl',
-                descriptor: this.descriptor,
-                props: this.props
-            });
-            return options.build(this.$c(value));
+            const { options } = extractDescriptorPropMeta(this.descriptor, 'apiBaseUrl');
+            return options.build(this.$c(this.props.apiBaseUrl));
         },
         /** @return {string} */
         orgStructureApiUrl() {
-            const { value, options } = extractDescriptorPropMeta({
-                name: 'orgStructureApiUrl',
-                descriptor: this.descriptor,
-                props: this.props
-            });
-            return options.build(this.$c(value));
+            const { options } = extractDescriptorPropMeta(this.descriptor, 'orgStructureApiUrl');
+            return options.build(this.$c(this.props.orgStructureApiUrl));
         }
     },
     [[/hasTransport]]

@@ -77,6 +77,9 @@ module.exports = class extends Template {
             this.createWidgetFile(`${servicePath}/ApiService.js`, DemoApiService);
             this.createWidgetFile(`${servicePath}/OrgStructureApiService.js`, OrgStructureApiService);
             this.createWidgetFile(`${servicePath}/index.js`, indexFile);
+
+            const mixinsFile = this.compileTpl(`${tplPath}/mixins.js`, tplBinds);
+            this.createWidgetFile(`mixins.js`, mixinsFile);
         }
 
         return widgetCreated;

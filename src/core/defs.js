@@ -3,9 +3,9 @@
  */
 /**
  * @typedef {object} ElemDescriptor
- * @property {Object<string, ElemPropDef>} props            props definition
- * @property {Object<string, ElemVarDef>} vars              vars definition
- * @property {Object<string, ElemCssVarFactory>} cssVars    css variables definition
+ * @property {Object<string, ElemPropDef>} props                    props definition
+ * @property {Object<string, ElemVarDef>} vars                      vars definition
+ * @property {Object<string, ElemCssVarFactory|string>} cssVars     css variables definition
  */
 /**
  * @typedef {object} ElemPropDef
@@ -28,8 +28,12 @@
  * @property {boolean} [global=true]    alias global scope
  */
 /**
+ * @typedef {object} ElemCssVarContext
+ * @property {boolean} isEditorMode
+ */
+/**
  * @callback ElemCssVarFactory
  * @param {Object<string, object>} props
- * @param {import('vue').Component} vm
+ * @param {ElemCssVarContext} ctx
  * @return {string|number|boolean}
  */

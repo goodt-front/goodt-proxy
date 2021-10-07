@@ -14,16 +14,25 @@ export interface ElemRecordPropsDefinition<T> {
     readonly [K in keyof T]: ElemPropDef<T[K]>;
 };
 
+export interface ElemCssVarContext {
+    isEditorMode: boolean
+}
+
+export type ElemCssVarFactory = (props:object, ctx: ElemCssVarContext) => string|number|boolean
+
 export type ElemRecordVarsDefinition = {
     readonly [K as string]?: ElemVarDef;
 };
 
 export type ElemRecordCssVarsDefinition = {
-    readonly [K as string]?: ElemCssVarFactory;
+    readonly [K as string]?: ElemCssVarFactory | string;
 };
 
-export interface ElemDescriptor<P extends Record<string, ElemPropDef>, V extends Record<string, ElemVarDef>, X extends Record<string, ElemCssVarDef>> {
-    readonly props?: ElemRecordPropsDefinition<P>;
-    readonly vars?: ElemRecordVarsDefinition<V>;
-    readonly cssVars?: ElemRecordCssVarsDefinition<X>;
+declare global {
+
+    export interface ElemDescriptor<P extends Record<string, ElemPropDef>, V extends Record<string, ElemVarDef>, X extends Record<string, ElemCssVarDef>> {
+        readonly props?: ElemRecordPropsDefinition<P>;
+        readonly vars?: ElemRecordVarsDefinition<V>;
+        readonly cssVars?: ElemRecordCssVarsDefinition<X>;
+    }
 }

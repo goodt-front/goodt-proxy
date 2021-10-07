@@ -24,6 +24,11 @@ export default {
         descriptor: descriptor(),
         isClicked: false
     }),
+    computed: {
+        $cssVars() {
+            return { 'font-size': this.isClicked ? '1rem' : '2rem' };
+        }
+    },
     methods: {
         /**
          * @return {string[]}

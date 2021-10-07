@@ -70,16 +70,25 @@ export default {
             return { ...defaultProps, ...initProps };
         },
         /**
-         * Css variables
+         * Css variables (run-time, context-aware, should be overriden)
+         * @note don't prefix css-var names with '--'
          * @return {object}
          */
         $cssVars() {
+            return {};
+        },
+        /**
+         * Css variables (static, auto-generated from descriptor)
+         * @return {object}
+         */
+        $cssVarsStatic() {
+            const { isEditorMode, props } = this;
             const { cssVars } = this.descriptor;
             if (!cssVars) {
                 return {};
             }
             return Object.entries(cssVars).reduce((acc, [key, value]) => {
-                acc[`--${key}`] = value(this.props, this);
+                acc[key] = typeof value === 'function' ? value(props, { isEditorMode }) : props[value];
                 return acc;
             }, {});
         },
@@ -144,6 +153,12 @@ export default {
                 }
             });
         }
+        // whenever css-vars change -> invoke getCssStyle()
+        this.$watch(
+            () => ({ ...this.$cssVarsStatic, ...this.$cssVars }),
+            () => this.genCssStyle(),
+            { immediate: true }
+        );
         /** @type {EventBusWrapper} */
         // @ts-ignore
         this.eventBusWrapper = null;
@@ -234,7 +249,11 @@ export default {
             if (!Number.isNaN(this.props.height) && this.props.height !== '') {
                 cssStyle.height = `${this.props.height}${this.props.heightUnit}`;
             }
-            this.$set(this, 'cssStyle', { ...this.$cssVars, ...cssStyle });
+            const cssVars = Object.entries({ ...this.$cssVarsStatic, ...this.$cssVars }).reduce((acc, [key, value]) => {
+                acc[`--w-${key}`] = value;
+                return acc;
+            }, {});
+            this.$set(this, 'cssStyle', { ...cssVars, ...cssStyle });
         },
         /**
          * Returns component slot names

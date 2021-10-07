@@ -21,8 +21,8 @@ export const descriptor = () => ({
     },
     vars: Object.values(Vars).reduce((acc, varName) => ({ ...acc, [varName]: { description: varName } }), {}),
     cssVars: {
-        'bg-color': ({ bgColor }) => bgColor,
-        'text-color': ({ textColor }, { isClicked }) => (isClicked ? textColor : 'black')
+        'bg-color': 'bgColor',
+        'text-color': 'textColor'
     }
 });
 

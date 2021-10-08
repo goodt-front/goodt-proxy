@@ -10,13 +10,22 @@ export const Vars = Object.freeze({});
  */
 export const descriptor = () => ({
     props: {
-        dremio: {
+        bgColor: {
+            type: String,
+            default: 'white'
+        },
+        font: {
             type: Object,
-            default: null
+            default() {
+                return { color: 'black' };
+            }
         }
     },
     vars: Object.values(Vars).reduce((acc, varName) => ({ ...acc, [varName]: { description: varName } }), {}),
-    cssVars: {}
+    cssVars: {
+        'bg-color': 'bgColor',
+        'text-color': 'font.color'
+    }
 });
 
 export default descriptor;

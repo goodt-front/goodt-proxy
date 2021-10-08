@@ -25,7 +25,8 @@ export const descriptor = () => ({
     vars: Object.values(Vars).reduce(
         (acc, varName) => ({ ...acc, [varName]: { description: varName } }),
         {}
-    )
+    ),
+    cssVars: {}
 });
 
 export default descriptor;

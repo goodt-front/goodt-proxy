@@ -3,10 +3,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 
 import { EventBusWrapper, EventBus } from '../managers/EventBus';
 import { Computed as StoreMixinComputed, Methods as StoreMixinMethods } from '../mixins/useStore';
-import {
-    Computed as RouterMixinComputed,
-    Methods as RouterMixinMethods
-} from '../mixins/useRouter';
+import { Computed as RouterMixinComputed, Methods as RouterMixinMethods } from '../mixins/useRouter';
 
 import VueElem from './Elem.vue';
 import { descriptor } from './descriptor';
@@ -41,6 +38,9 @@ interface Props {
 interface Computed extends StoreMixinComputed, RouterMixinComputed {
     readonly props?: DescriptorProps;
     readonly varAliases: Record<string, any>;
+    readonly $cssVars: Record<string, any>;
+    readonly $cssVarsStatic: Record<string, any>;
+    readonly $cssVarsCombined: Record<string, any>;
     readonly $eventBus: EventBusWrapper;
 }
 

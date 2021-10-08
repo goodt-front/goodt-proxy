@@ -1,7 +1,7 @@
 <template>
     <ui-panel-container>
         <ui-input-cp class="p" v-model="props.bgColor" @change="propChanged('bgColor')">bgColor</ui-input-cp>
-        <ui-input-cp v-model="props.textColor" @change="propChanged('textColor')">textColor</ui-input-cp>
+        <ui-input-cp v-model="props.font.color" @change="propChanged('font')">font.color</ui-input-cp>
     </ui-panel-container>
 </template>
 <script>

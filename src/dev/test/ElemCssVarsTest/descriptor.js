@@ -14,15 +14,17 @@ export const descriptor = () => ({
             type: String,
             default: 'white'
         },
-        textColor: {
-            type: String,
-            default: 'black'
+        font: {
+            type: Object,
+            default() {
+                return { color: 'black' };
+            }
         }
     },
     vars: Object.values(Vars).reduce((acc, varName) => ({ ...acc, [varName]: { description: varName } }), {}),
     cssVars: {
         'bg-color': 'bgColor',
-        'text-color': 'textColor'
+        'text-color': 'font.color'
     }
 });
 

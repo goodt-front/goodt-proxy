@@ -2,6 +2,7 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
+import { get as getByPath } from 'lodash';
 import { buildExternalStateFromInternal, buildInternalStateFromExternal } from '../mixins/useStore';
 import { ConstManager, RouteManager, StoreManager, EB } from '../managers';
 import { dispatchEventByName, getDescriptorDefaultProps, patchComponentRootDomElement } from './infra/utils';
@@ -88,7 +89,7 @@ export default {
                 return {};
             }
             return Object.entries(cssVars).reduce((acc, [key, value]) => {
-                acc[key] = typeof value === 'function' ? value(props, { isEditorMode }) : props[value];
+                acc[key] = typeof value === 'function' ? value(props, { isEditorMode }) : getByPath(props, value);
                 return acc;
             }, {});
         },

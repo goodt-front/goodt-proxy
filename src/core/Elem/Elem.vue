@@ -89,7 +89,8 @@ export default {
                 return {};
             }
             return Object.entries(cssVars).reduce((acc, [key, value]) => {
-                acc[key] = typeof value === 'function' ? value(props, { isEditorMode }) : getByPath(props, value);
+                const val = typeof value === 'function' ? value(props, { isEditorMode }) : getByPath(props, value);
+                acc[key] = this.$c(val);
                 return acc;
             }, {});
         },

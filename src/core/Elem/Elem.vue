@@ -13,7 +13,18 @@ import { ElemEvent } from './infra/config';
 const { store, buildStoreValue, unwrapStoreValue } = StoreManager;
 const { EventBusWrapper } = EB;
 
-export default {
+const PropsToClassMap = new Map([
+    ['marginT', 'mar-top'],
+    ['marginR', 'mar-right'],
+    ['marginB', 'mar-bot'],
+    ['marginL', 'mar-left'],
+    ['paddingT', 'pad-top'],
+    ['paddingR', 'pad-right'],
+    ['paddingB', 'pad-bot'],
+    ['paddingL', 'pad-left']
+]);
+
+const ComponentOptions = {
     props: {
         /** uniq instance id */
         id: {
@@ -83,16 +94,34 @@ export default {
          * @return {object}
          */
         $cssVarsStatic() {
-            const { isEditorMode, props } = this;
-            const { cssVars } = this.descriptor;
-            if (!cssVars) {
+            const {
+                props,
+                descriptor: { cssVars }
+            } = this;
+            if (cssVars == null) {
                 return {};
             }
-            return Object.entries(cssVars).reduce((acc, [key, value]) => {
-                const val = typeof value === 'function' ? value(props, { isEditorMode }) : getByPath(props, value);
-                acc[key] = this.$c(val);
-                return acc;
-            }, {});
+            const resolveMapping = (mapping) => {
+                if (typeof mapping === 'function') {
+                    return mapping(props);
+                }
+                if (typeof mapping === 'string') {
+                    return getByPath(props, mapping);
+                }
+                if (Array.isArray(mapping)) {
+                    const value = getByPath(props, mapping[0]);
+                    return value || mapping[1];
+                }
+                return mapping;
+            };
+
+            return Object.entries(cssVars).reduce(
+                (acc, [cssVar, mapping]) => ({
+                    ...acc,
+                    [cssVar]: this.$c(resolveMapping(mapping))
+                }),
+                {}
+            );
         },
         /**
          * Returns the current store state
@@ -200,45 +229,30 @@ export default {
          * Generates css-class def
          */
         genCssClass() {
-            const o = {};
-            const p = ['display', 'position', 'cssClass'];
-            p.forEach((pName) => {
-                const pVal = this.props[pName];
-                const pValArr = Array.isArray(pVal) ? pVal : [pVal];
-                pValArr.forEach((v) => {
-                    if (v) {
-                        o[v] = true;
-                    }
-                });
+            const { props } = this;
+            const classMap = {};
+
+            ['display', 'position', 'cssClass'].forEach((propName) => {
+                []
+                    .concat(props[propName])
+                    .filter(Boolean)
+                    .forEach((propValue) => {
+                        classMap[propValue] = true;
+                    });
             });
-            if (this.props.widthUnit === '' && this.props.width !== '') {
-                o[`w-${this.props.width}`] = true;
+            PropsToClassMap.forEach((classPrefix, propName) => {
+                const { [propName]: value } = props;
+                if (value) {
+                    classMap[`${classPrefix}-${value}`] = true;
+                }
+            });
+            if (props.widthUnit === '' && props.width !== '') {
+                classMap[`w-${props.width}`] = true;
             }
-            if (this.props.marginT) {
-                o[`mar-top-${this.props.marginT}`] = true;
-            }
-            if (this.props.marginR) {
-                o[`mar-right-${this.props.marginR}`] = true;
-            }
-            if (this.props.marginB) {
-                o[`mar-bot-${this.props.marginB}`] = true;
-            }
-            if (this.props.marginL) {
-                o[`mar-left-${this.props.marginL}`] = true;
-            }
-            if (this.props.paddingT) {
-                o[`pad-top-${this.props.paddingT}`] = true;
-            }
-            if (this.props.paddingR) {
-                o[`pad-right-${this.props.paddingR}`] = true;
-            }
-            if (this.props.paddingB) {
-                o[`pad-bot-${this.props.paddingB}`] = true;
-            }
-            if (this.props.paddingL) {
-                o[`pad-left-${this.props.paddingL}`] = true;
-            }
-            this.$set(this, 'cssClass', o);
+
+            this.$set(this, 'cssClass', classMap);
+
+            return classMap;
         },
         /**
          * Generates css-style def
@@ -365,4 +379,6 @@ export default {
         }
     }
 };
+
+export default ComponentOptions;
 </script>

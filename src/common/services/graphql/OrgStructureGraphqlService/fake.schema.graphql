@@ -563,6 +563,7 @@ type Mutation {
     createDivisionTeamRole(params: DivisionTeamRoleInput!): CreateDivisionTeamRoleResult
     # test fake mutations
     updateDivisionTeamRole(id: ID!, params: DivisionTeamRoleInput!): DivisionTeamRoleDto
+
     # test fake mutations
     createEmployee(employee: EmployeeCreateInput!): EmployeeCreateResult
     deleteEmployee(id: ID!): EmployeeDeleteResult
@@ -588,7 +589,7 @@ input AddDivisionTeamSuccessorInput {
 }
 
 input AddDivisionTeamAssignmentRotationInput {
-    divisionTeamAssignmentId: ID,
+    divisionTeamAssignmentId: ID!,
     assignmentRotationId: ID!
 }
 

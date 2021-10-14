@@ -64,3 +64,31 @@ export class OperationState extends SafeResult {
         return this._errorHook.on(errorCallback);
     }
 }
+
+/**
+ * @param {Record<string, OperationState>|OperationState[]} states
+ * @return {{ isSuccess: boolean, isError: boolean, isCompleted: boolean, isLoading: boolean, result: any[] }}
+ */
+export const resolveOperationStates = (states) => {
+    if (Array.isArray(states) === false) {
+        states = Object.values(states);
+    }
+
+    if (states.some((state) => state == null)) {
+        return {
+            isSuccess: false,
+            isError: false,
+            isCompleted: false,
+            isLoading: states.filter(Boolean).some(({ isLoading }) => isLoading),
+            result: states.map((state) => (state == null ? null : state.result))
+        };
+    }
+
+    return {
+        isCompleted: states.every(({ isCompleted }) => isCompleted),
+        isSuccess: states.every(({ isSuccess }) => isSuccess),
+        isLoading: states.some(({ isLoading }) => isLoading),
+        isError: states.some(({ isError }) => isError),
+        result: states.map(({ result }) => result)
+    };
+};

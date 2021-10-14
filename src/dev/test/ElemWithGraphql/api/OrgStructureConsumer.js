@@ -1,5 +1,5 @@
 import { GraphqlServiceConsumer, gql } from '@goodt-common/graphql';
-import { OrgStructureGraphqlServiceSymbol } from '@goodt-common/api';
+import { OrgStructureGraphqlServiceSymbol } from '@goodt-common/services/graphql';
 
 /**
  *

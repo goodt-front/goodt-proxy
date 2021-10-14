@@ -59,9 +59,35 @@ export class [[prefixCapital]]Consumer extends GraphqlServiceConsumer {
                     }
                 }
             `,
-            { filter: { employeeId, divisionTeamId } }
+            { filter: { employeeId, teamId: divisionTeamId } }
         );
     }
+
+    /**
+     * OrgStructureGraphql API example
+     * @deprecated this should me replaced or removed
+     *
+     * @param {number} id
+     * @return {import('@goodt-common/graphql').OperationState}
+     */
+    getEmployeeById(id) {
+        return this.query(
+            gql`
+                query Employee($id: ID!) {
+                    employee(id: $id) {
+                        id
+                        person {
+                            id
+                            name
+                            surname
+                        }
+                    }
+                }
+            `,
+            { id }
+        );
+    }
+
 
     /**
      * Fake API example

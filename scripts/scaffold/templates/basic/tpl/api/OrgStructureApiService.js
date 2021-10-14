@@ -1,5 +1,4 @@
-import { OrgStructureApiService as OrgStructureApiServiceBase } from '@goodt-widgets/common/services/api';
-import { useApiService } from '@goodt-common/mixins';
+import { OrgStructureApiService as OrgStructureApiServiceBase } from '@goodt-common/api';
 [[#http]]
 import { createTransport, HttpTransportSymbol } from '[[{coreNetPath}]]';
 [[/http]]
@@ -32,28 +31,3 @@ export const createOrgStructureApiService = (options, transport) => {
 
     return new OrgStructureApiService({ transport, options });
 };
-
-/**
- *
- * @param {import('@goodt-common/services/api/types').IApiServiceOptions} serviceOptions
- * @param {import('@goodt-common/mixins').IApiServiceMixinOptions} [mixinOptions]
- * @return {import('@goodt-common/mixins').IApiServiceMixin}
- */
-export const useOrgStructureApiServiceMixin = (
-    { apiBaseURL = 'orgStructureApiUrl' } = {},
-    { name = 'orgStructureApi' } = {}
-) => {
-    const { mixin: ServiceMixin } = useApiService(createOrgStructureApiService, { apiBaseURL }, { name });
-
-    return ServiceMixin;
-};
-
-/**
- * Это "пустой" вспомогательный объект с JSDOc аннотацией
- * для примешивания информации о сервисе
- * в структуру инстанса компонента и типах
- * исключительно для Vetur
- *
- * @type {{ orgStructureApiUrl: string, orgStructureApiService: OrgStructureApiService }}
- */
-export const OrgStructureApiServiceTypeDescriptor = undefined;

@@ -1,9 +1,7 @@
 <template>
     <div :class="cssClass" :style="cssStyle">
         <!-- {demo} @todo: DELETE COMMENTS -->
-        <code>{{ type }}</code>
-        <div v-if="isEditorMode">running in editor</div>
-        <div>{{ props }}</div>
+        <code v-if="isEditorMode">{{ type }}</code>
         [[#hasTransport]]
         <template v-if="demoResult">
             <pre v-if="demoResult.isSuccess">{{ demoResult.result }}</pre>
@@ -15,7 +13,7 @@
         <button
             class="btn btn-primary btn-small"
             :class="{ 'btn-loading events-none': isLoading }"
-            @click="getDemoData">
+            @click="fetchDemoData">
             send demo request
         </button>
         [[/hasTransport]]
@@ -26,9 +24,9 @@
 import { Elem } from '[[{core}]]';
 [[#hasTransport]]
 import {
-    useApiServiceMixin, ApiServiceTypeDescriptor,
-    useOrgStructureApiServiceMixin, OrgStructureApiServiceTypeDescriptor
-} from './api';
+    ApiMixins,
+    ApiMixinsTypeDescriptor
+} from './mixins';
 [[/hasTransport]]
 import { [[{panelName}]]Async } from '[[{panelPath}]]';
 import { descriptor /* , Vars */ } from './descriptor';
@@ -39,46 +37,20 @@ import { descriptor /* , Vars */ } from './descriptor';
  */
 const ComponentInstanceTypeDescriptor = undefined;
 
-[[#hasTransport]]
-/**
- * Миксин для использования ApiService вместе с компонентом
- * Дефолтные `apiBaseURL` и `name` настройки определены в аргументах миксина
- * @type {import('@goodt-common/mixins').IApiServiceMixin}
- */
-const ApiServiceMixin = useApiServiceMixin();
-/**
- * Миксин для использования OrgStructureApiService вместе с компонентом
- * Дефолтные настройки определены в аргументах миксина
- * @type {import('@goodt-common/mixins').IApiServiceMixin}
- */
-const OrgStructureApiServiceMixin = useOrgStructureApiServiceMixin();
-[[/hasTransport]]
-
 export default {
     extends: Elem,
     [[#hasTransport]]
-    mixins: [ ApiServiceMixin, OrgStructureApiServiceMixin ],
+    mixins: [ ...ApiMixins ],
     [[/hasTransport]]
     data: () => ({
-        descriptor: descriptor(),
-        [[#hasTransport]]
+        descriptor: descriptor()[[#hasTransport]],
         isLoading: false,
         /**
          * @type {import('[[{commonUtils}]]').ISafeResult}
          */
-        demoResult: null,
+        demoResult: null
         [[/hasTransport]]
     }),
-    [[#hasTransport]]
-    computed: {
-        orgStructureApiUrl() {
-            const { options } = this.descriptor.props.orgStructureApiUrl;
-            const { orgStructureApiUrl: baseUrl } = this.props;
-
-            return options.build(this.$c(baseUrl));
-        }
-    },
-    [[/hasTransport]]
     methods: {
         /**
          * @return {string[]}
@@ -93,14 +65,17 @@ export default {
         isChildAllowed(/* type */) {
             return true;
         },
+        /**
+         * @return {import('vue').AsyncComponent[]}
+         */
         getPanels() {
             return [ [[{panelName}]]Async ];
         },
         [[#hasTransport]]
-        async getDemoData() {
+        async fetchDemoData() {
             this.isLoading = true;
-            /* this.demoResult = await this.apiService.getUserById(1); */
-            this.demoResult = await this.orgStructureApi.getEmployeeDivisionTeamAssignments({ employeeId: 25 });
+            /* this.demoResult = await this.orgStructureApi.getEmployeeDivisionTeamAssignments({ employeeId: 25 }); */
+            this.demoResult = await this.apiService.getUserById(1);
             this.isLoading = false;
             const { isSuccess, isError, result: employeeAssignments, error } = this.demoResult;
             if (isError) {
@@ -112,8 +87,7 @@ export default {
             }
         },
         /* Vetur HACK – extra structure and type hinting */
-        ...ApiServiceTypeDescriptor,
-        ...OrgStructureApiServiceTypeDescriptor,
+        ...ApiMixinsTypeDescriptor,
         [[/hasTransport]]
         ...ComponentInstanceTypeDescriptor
     }

@@ -2,13 +2,10 @@
     <div :class="cssClass" :style="cssStyle" />
 </template>
 <script>
+import { get as getByPath } from 'lodash';
 import { buildExternalStateFromInternal, buildInternalStateFromExternal } from '../mixins/useStore';
 import { ConstManager, RouteManager, StoreManager, EB } from '../managers';
-import {
-    dispatchEventByName,
-    getDescriptorDefaultProps,
-    patchComponentRootDomElement
-} from './infra/utils';
+import { dispatchEventByName, getDescriptorDefaultProps, patchComponentRootDomElement } from './infra/utils';
 
 import { descriptor } from './descriptor';
 import { ElemEvent } from './infra/config';
@@ -74,17 +71,37 @@ export default {
             return { ...defaultProps, ...initProps };
         },
         /**
+         * Css variables (run-time, context-aware, should be overriden)
+         * @note don't prefix css-var names with '--'
+         * @return {object}
+         */
+        $cssVars() {
+            return {};
+        },
+        /**
+         * Css variables (static, auto-generated from descriptor)
+         * @return {object}
+         */
+        $cssVarsStatic() {
+            const { isEditorMode, props } = this;
+            const { cssVars } = this.descriptor;
+            if (!cssVars) {
+                return {};
+            }
+            return Object.entries(cssVars).reduce((acc, [key, value]) => {
+                const val = typeof value === 'function' ? value(props, { isEditorMode }) : getByPath(props, value);
+                acc[key] = this.$c(val);
+                return acc;
+            }, {});
+        },
+        /**
          * Returns the current store state
          * @return {Record<string, any>} state
          */
         $storeState() {
             const varAliases = this.props.varAliases || {};
             const { state: externalState } = store;
-            const internalState = buildInternalStateFromExternal(
-                externalState,
-                varAliases,
-                unwrapStoreValue
-            );
+            const internalState = buildInternalStateFromExternal(externalState, varAliases, unwrapStoreValue);
 
             return internalState;
         },
@@ -117,6 +134,12 @@ export default {
                 this.genCssStyle();
             },
             immediate: true
+        },
+        $cssVars: {
+            handler() {
+                this.genCssStyle();
+            },
+            immediate: true
         }
     },
     /**
@@ -132,6 +155,12 @@ export default {
                 }
             });
         }
+        // whenever css-vars change -> invoke getCssStyle()
+        this.$watch(
+            () => ({ ...this.$cssVarsStatic, ...this.$cssVars }),
+            () => this.genCssStyle(),
+            { immediate: true }
+        );
         /** @type {EventBusWrapper} */
         // @ts-ignore
         this.eventBusWrapper = null;
@@ -216,18 +245,17 @@ export default {
          */
         genCssStyle() {
             const cssStyle = this.props.cssStyle ? { ...this.props.cssStyle } : {};
-            if (
-                this.props.widthUnit !== 'size' &&
-                !Number.isNaN(this.props.width) &&
-                this.props.width !== ''
-            ) {
+            if (this.props.widthUnit !== 'size' && !Number.isNaN(this.props.width) && this.props.width !== '') {
                 cssStyle.width = `${this.props.width}${this.props.widthUnit}`;
             }
             if (!Number.isNaN(this.props.height) && this.props.height !== '') {
                 cssStyle.height = `${this.props.height}${this.props.heightUnit}`;
             }
-
-            this.$set(this, 'cssStyle', cssStyle);
+            const cssVars = Object.entries({ ...this.$cssVarsStatic, ...this.$cssVars }).reduce((acc, [key, value]) => {
+                acc[`--w-${key}`] = value;
+                return acc;
+            }, {});
+            this.$set(this, 'cssStyle', { ...cssVars, ...cssStyle });
         },
         /**
          * Returns component slot names

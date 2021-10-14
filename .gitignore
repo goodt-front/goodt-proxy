@@ -2,9 +2,11 @@ node_modules
 docs
 dist/demo.html
 dist/lib.umd-report.html
+public/config.local.json
 .vscode
 .idea
 .dev
 .history
 .todo
+.config/postcss-config/tw-ignored-classes.js
 workspace.code-workspace

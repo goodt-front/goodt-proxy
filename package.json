@@ -1,11 +1,12 @@
 {
-    "version": "0.1.47",
+    "version": "1.0.2",
     "name": "goodt-wcore",
     "private": true,
     "main": "src/core/index.js",
     "types": "src/core/index.d.ts",
     "scripts": {
         "start": "vite",
+        "dev": "vite",
         "serve": "vue-cli-service serve",
         "build": "npm run lint && npm run format && npm run build:lib",
         "build:lib": "vue-cli-service build --target lib --dest ./dist/ --name goodt-wcore ./src/core/index.js",
@@ -70,7 +71,7 @@
         "less": "^4.1.1",
         "less-loader": "^6.0.0",
         "npm-commands": "^1.1.0",
-        "prettier": "git+ssh://git@github.com:mayoujin/prettierx.git",
+        "prettier": "^2.4.1",
         "vite": "^2.4.1",
         "vite-plugin-vue2": "^1.7.3",
         "webpack": "^4.46.0",

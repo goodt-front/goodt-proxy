@@ -2,20 +2,12 @@
     <ui-panel-container>
         <ui-has-two-columns class="p">
             <template #left>
-                <ui-select
-                    v-model="props.position"
-                    :options="descriptor.props.position.options"
-                    @change="propChanged"
-                >
+                <ui-select v-model="props.position" :options="descriptor.props.position.options" @change="propChanged">
                     Position
                 </ui-select>
             </template>
             <template #right>
-                <ui-select
-                    v-model="props.display"
-                    :options="descriptor.props.display.options"
-                    @change="propChanged"
-                >
+                <ui-select v-model="props.display" :options="descriptor.props.display.options" @change="propChanged">
                     Display
                 </ui-select>
             </template>
@@ -27,8 +19,7 @@
                     v-model="widthWithUnit"
                     :units="widthUnits"
                     :options="descriptor.props.width.options"
-                    @change="propChanged"
-                >
+                    @change="propChanged">
                     Width
                 </ui-input-units>
             </template>
@@ -37,17 +28,14 @@
                     v-model="heightWithUnit"
                     :units="heightUnits"
                     :options="descriptor.props.height.options"
-                    @change="propChanged"
-                >
+                    @change="propChanged">
                     Height
                 </ui-input-units>
             </template>
         </ui-has-two-columns>
 
         <ui-collapse class="p">
-            <template #header>
-                Margin
-            </template>
+            <template #header>Margin</template>
             <div class="grid-3-3 flex-center">
                 <ui-select
                     v-for="dir in directions"
@@ -64,9 +52,7 @@
         </ui-collapse>
 
         <ui-collapse class="p">
-            <template #header>
-                Padding
-            </template>
+            <template #header>Padding</template>
             <div class="grid-3-3 flex-center">
                 <ui-select
                     v-for="dir in directions"
@@ -82,43 +68,29 @@
             </div>
         </ui-collapse>
 
-        <ui-input-tags
-            v-model="props.cssClass"
-            class="p"
-            v-bind="{ delimiter: ' ' }"
-            @change="propChanged"
-        >
+        <ui-input-tags v-model="props.cssClass" class="p" v-bind="{ delimiter: ' ' }" @change="propChanged">
             Css class
             <template #tag="{ tag, remove }">
                 <ui-badge
                     class="mar-right-1 mar-bot-1"
                     v-bind="{ size: 'xsmall', theme: 'primary', removable: true }"
-                    @remove="remove(tag)"
-                >
+                    @remove="remove(tag)">
                     {{ tag }}
                 </ui-badge>
             </template>
         </ui-input-tags>
 
-        <ui-input-tags
-            ref="cssstyle"
-            v-model="cssStyles"
-            class="p"
-            v-bind="{ delimiter: ';' }"
-            @change="propChanged"
-        >
+        <ui-input-tags ref="cssstyle" v-model="cssStyles" class="p" v-bind="{ delimiter: ';' }" @change="propChanged">
             Css style
             <template #tag="{ tag, remove, setNewTag }">
                 <ui-badge
                     class="mar-right-1 mar-bot-1"
                     v-bind="{ size: 'xsmall', theme: 'primary', removable: true }"
-                    @remove="remove(tag)"
-                >
+                    @remove="remove(tag)">
                     <span
                         class="cursor-pointer nobr pad-right-2"
                         style="align-self: flex-start"
-                        @click="setNewTag(tag)"
-                    >
+                        @click="setNewTag(tag)">
                         {{ getStyleDefObj(tag).key }}:
                     </span>
                     {{ getStyleDefObj(tag).value }}
@@ -129,8 +101,7 @@
         <ui-select
             v-model="props.slot"
             v-bind="{ options: slotNames, valueField: null, labelField: null }"
-            @change="propChanged"
-        >
+            @change="propChanged">
             Render slot
         </ui-select>
     </ui-panel-container>
@@ -201,9 +172,7 @@ export default {
             return this.descriptor.props.paddingT.options;
         },
         widthUnits() {
-            return this.descriptor.props.widthUnit.options
-                .map(({ value }) => value)
-                .filter((v) => !!v);
+            return this.descriptor.props.widthUnit.options.map(({ value }) => value).filter((v) => !!v);
         },
         heightUnits() {
             return this.descriptor.props.heightUnit.options.map(({ value }) => value);

@@ -5,6 +5,7 @@
     "figlet": "latest",
     "jscodeshift": "^0.13.0",
     "lodash.merge": "^4.6.2",
+    "lodash.camelcase": "^4.3.0",
     "enquirer": "^2.3.6",
     "mustache": "latest",
     "signale": "latest",

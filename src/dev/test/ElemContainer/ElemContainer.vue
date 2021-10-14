@@ -1,5 +1,5 @@
 <template>
-    <div :class="cssClass" :style="cssStyle">
+    <div class="widget" :class="cssClass" :style="cssStyle">
         <code class="text-xsmall">{{ type }} | #{{ id }} | slotData</code>
         <pre class="text-xsmall">{{ slotData }}</pre>
         <div class="row">
@@ -24,7 +24,8 @@ export default {
     extends: Elem,
     data() {
         return {
-            descriptor: descriptor()
+            descriptor: descriptor(),
+            sec: 0
         };
     },
     methods: {

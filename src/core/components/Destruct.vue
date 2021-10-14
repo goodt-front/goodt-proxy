@@ -10,9 +10,12 @@ export default {
     },
 
     render(_, context) {
-        const { props: { of: value }, scopedSlots: { is: defaultSlot } } = context;
-        if (value == null || value == null) {
-            return null;
+        const { props: { of: value }, scopedSlots: { is: defaultSlot }, children } = context;
+        if (value == null) {
+            return children;
+        }
+        if (defaultSlot == null) {
+            return children;
         }
         return defaultSlot(value);
     }

@@ -80,6 +80,7 @@ export const getDescriptorDefaultProps = (descriptor) => {
 };
 
 const Observer = new Vue().$data.__ob__.constructor;
+const dummyObserver = new Observer({});
 
 /**
  *
@@ -91,11 +92,11 @@ export const unobserve = (object) => {
     }
 
     if (object.__ob__ != null) {
-        object.__ob__ = new Observer({});
+        object.__ob__ = dummyObserver;
     }
 
     if (Array.isArray(object) === false) {
-        Object.values(object).forEach(unobserve);
+        Object.entries(object).forEach(unobserve);
         return;
     }
 

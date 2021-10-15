@@ -155,6 +155,10 @@ const ComponentOptions = {
      * @this {import("./Elem").IElemInstance}
      */
     created() {
+        unobserve(this.descriptor);
+        //// whenever css-vars change -> invoke getCssStyle()
+        this.$watch('$cssVars', this.genCssStyle, { immediate: true });
+
         if (this.isEditorMode) {
             /**
              * @todo remove varAliases
@@ -171,13 +175,14 @@ const ComponentOptions = {
             this.$watch('$cssVarsStatic', this.genCssStyle, { immediate: true });
         } else {
             this.genCssClass();
+            /*
+            // skipping due earlier
+            // this.$watch('$cssVars', this.genCssStyle, { immediate: true });
             this.genCssStyle();
+            */
             unobserve([this.$props, this.cssClass, this.cssStyle]);
         }
 
-        unobserve(this.descriptor);
-        //// whenever css-vars change -> invoke getCssStyle()
-        this.$watch('$cssVars', this.genCssStyle, { immediate: true });
         /** @type {EventBusWrapper} */
         // @ts-ignore
         this.eventBusWrapper = null;

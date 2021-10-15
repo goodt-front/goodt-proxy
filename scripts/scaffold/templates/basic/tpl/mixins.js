@@ -1,9 +1,7 @@
 [[#hasTransport]]
 import { extractDescriptorPropMeta } from '@goodt-common/utils';
-import {
-    useApiServiceMixin, ApiServiceTypeDescriptor,
-    useOrgStructureApiServiceMixin, OrgStructureApiServiceTypeDescriptor
-} from './api';
+import { useOrgStructureApiServiceMixin } from '@goodt-common/api';
+import { useApiServiceMixin } from './api';
 
 /**
  * Миксин для использования ApiService вместе с компонентом
@@ -15,6 +13,10 @@ const ApiServiceMixin = useApiServiceMixin({
         return options.build(this.$c(this.props.apiBaseUrl));
     }
 });
+/**
+ * @type {{  apiService: import('./api/ApiService').ApiService }}
+ */
+export const ApiServiceMixinTypeDescriptor = undefined;
 
 /**
  * Миксин для использования OrgStructureApiService вместе с компонентом
@@ -26,6 +28,16 @@ const OrgStructureApiServiceMixin = useOrgStructureApiServiceMixin({
         return options.build(this.$c(this.props.orgStructureApiUrl));
     }
 });
+/**
+ * Это "пустой" вспомогательный объект с JSDOc аннотацией
+ * для примешивания информации о сервисе
+ * в структуру инстанса компонента и типах
+ * исключительно для Vetur
+ *
+ * @type {{  orgStructureApiService: import('@goodt-common/api').OrgStructureApiService }}
+ */
+export const OrgStructureApiServiceMixinTypeDescriptor = undefined;
+
 
 export const ApiMixins = [
     ApiServiceMixin,
@@ -33,8 +45,8 @@ export const ApiMixins = [
 ];
 
 export const ApiMixinsTypeDescriptor = {
-    ...ApiServiceTypeDescriptor,
-    ...OrgStructureApiServiceTypeDescriptor
+    ...ApiServiceMixinTypeDescriptor,
+    ...OrgStructureApiServiceMixinTypeDescriptor
 };
 [[/hasTransport]]
 

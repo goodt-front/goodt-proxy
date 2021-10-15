@@ -67,15 +67,10 @@ module.exports = class extends Template {
 
         if (hasTransport) {
             const DemoApiService = this.compileTpl(`${tplPath}/${servicePath}/ApiService.js`, tplBinds);
-            const OrgStructureApiService = this.compileTpl(
-                `${tplPath}/${servicePath}/OrgStructureApiService.js`,
-                tplBinds
-            );
             const indexFile = this.compileTpl(`${tplPath}/${servicePath}/index.js`, tplBinds);
 
             this.createWidgetDir(servicePath);
             this.createWidgetFile(`${servicePath}/ApiService.js`, DemoApiService);
-            this.createWidgetFile(`${servicePath}/OrgStructureApiService.js`, OrgStructureApiService);
             this.createWidgetFile(`${servicePath}/index.js`, indexFile);
 
             const mixinsFile = this.compileTpl(`${tplPath}/mixins.js`, tplBinds);

@@ -74,7 +74,7 @@ export default {
         [[#hasTransport]]
         async fetchDemoData() {
             this.isLoading = true;
-            /* this.demoResult = await this.orgStructureApi.getEmployeeDivisionTeamAssignments({ employeeId: 25 }); */
+            /* this.demoResult = await this.orgStructureApiService.getEmployeeDivisionTeamAssignments({ employeeId: 25 }); */
             this.demoResult = await this.apiService.getUserById(1);
             this.isLoading = false;
             const { isSuccess, isError, result: employeeAssignments, error } = this.demoResult;

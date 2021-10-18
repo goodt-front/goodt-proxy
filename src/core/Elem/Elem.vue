@@ -5,7 +5,7 @@
 import { get as getByPath } from 'lodash';
 import { buildExternalStateFromInternal, buildInternalStateFromExternal } from '../mixins/useStore';
 import { ConstManager, RouteManager, StoreManager, EB } from '../managers';
-import { dispatchEventByName, getDescriptorDefaultProps, patchComponentRootDomElement } from './infra/utils';
+import { dispatchEventByName, getDescriptorDefaultProps, patchComponentRootDomElement, unobserve } from './infra/utils';
 
 import { descriptor } from './descriptor';
 import { ElemEvent } from './infra/config';
@@ -151,31 +151,18 @@ const ComponentOptions = {
             return this.eventBusWrapper;
         }
     },
-    watch: {
-        'props.cssClass': {
-            handler() {
-                this.genCssClass();
-            },
-            immediate: true
-        },
-        'props.cssStyle': {
-            handler() {
-                this.genCssStyle();
-            },
-            immediate: true
-        },
-        $cssVars: {
-            handler() {
-                this.genCssStyle();
-            },
-            immediate: true
-        }
-    },
     /**
      * @this {import("./Elem").IElemInstance}
      */
     created() {
+        unobserve(this.descriptor);
+        //// whenever css-vars change -> invoke getCssStyle()
+        this.$watch('$cssVars', this.genCssStyle, { immediate: true });
+
         if (this.isEditorMode) {
+            /**
+             * @todo remove varAliases
+             */
             this.$watch('props.varAliases', (val) => {
                 // @ts-ignore
                 const { eventBusWrapper } = this;
@@ -183,13 +170,19 @@ const ComponentOptions = {
                     eventBusWrapper.varAliases = val;
                 }
             });
+            this.$watch('props.cssClass', this.genCssClass, { immediate: true });
+            this.$watch('props.cssStyle', this.genCssStyle, { immediate: true });
+            this.$watch('$cssVarsStatic', this.genCssStyle, { immediate: true });
+        } else {
+            this.genCssClass();
+            /*
+            // skipping due earlier
+            // this.$watch('$cssVars', this.genCssStyle, { immediate: true });
+            this.genCssStyle();
+            */
+            unobserve([this.$props, this.cssClass, this.cssStyle]);
         }
-        // whenever css-vars change -> invoke getCssStyle()
-        this.$watch(
-            () => ({ ...this.$cssVarsStatic, ...this.$cssVars }),
-            () => this.genCssStyle(),
-            { immediate: true }
-        );
+
         /** @type {EventBusWrapper} */
         // @ts-ignore
         this.eventBusWrapper = null;

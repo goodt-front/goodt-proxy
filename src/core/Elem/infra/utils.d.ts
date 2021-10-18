@@ -19,3 +19,7 @@ export function getDescriptorDefaultProps(descriptor: ElemDescriptor);
  * Returns generated Constructor-specific dom id
  */
 export function getElemDomId(elemId: string): string;
+/**
+ * Remove watchers information from  object, replacing __ob__
+ */
+export function unobserve(object: Record<string, any> | Array<Record<string, any>>): void;

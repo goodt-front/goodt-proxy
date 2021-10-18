@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 /**
  * @typedef {import('vue/types/vue')} VueInstance
  */
@@ -75,4 +77,32 @@ export const getDescriptorDefaultProps = (descriptor) => {
             [propName]: typeof value === 'function' ? value() : value
         };
     }, {});
+};
+
+const Observer = new Vue().$data.__ob__.constructor;
+const dummyObserver = new Observer({});
+
+/**
+ *
+ * @param object
+ */
+export const unobserve = (object) => {
+    if (object == null || typeof object !== 'object') {
+        return;
+    }
+
+    if (object.__ob__ != null) {
+        object.__ob__ = dummyObserver;
+    }
+
+    if (Array.isArray(object) === false) {
+        Object.entries(object).forEach(unobserve);
+        return;
+    }
+
+    if (object.length === 0 || typeof object[0] !== 'object') {
+        return;
+    }
+
+    object.forEach(unobserve);
 };

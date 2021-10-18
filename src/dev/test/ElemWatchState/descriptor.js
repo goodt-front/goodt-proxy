@@ -22,13 +22,22 @@ export const descriptor = () => ({
         color: {
             type: Object,
             default: () => ({ even: '#f00', odd: '#0f0' })
+        },
+        varAliases: {
+            type: Object,
+            default: () => ({
+                [Vars.BAR]: {
+                    listen: Vars.BAR,
+                    trigger: Vars.BAR
+                },
+                [Vars.FOO]: {
+                    listen: Vars.FOO,
+                    trigger: Vars.FOO
+                }
+            })
         }
     },
-    vars: Object.values(Vars).reduce((acc, varName) => ({ ...acc, [varName]: { description: varName } }), {}),
-    cssVars: {
-        'box-border-color': ['boxBorder.color', 'var(--color-primary)'],
-        'box-border-width': 'boxBorder.width'
-    }
+    vars: Object.values(Vars).reduce((acc, varName) => ({ ...acc, [varName]: { description: varName } }), {})
 });
 
 export default descriptor;

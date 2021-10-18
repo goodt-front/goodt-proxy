@@ -3,17 +3,16 @@
  * @todo to `useStore`'s structure / store's $storeState $storeCommit responsibility holder/provider
  */
 import { ValueObject, createValueObject } from './ValueObject';
-
+import { useWatchStore } from './WatchStore';
 /**
  * Builds store value (ValueObject) to keep in state
  * Encapsulates store value type and structure.
  *
  * @param {any} value
- * @param {?ValueObjectMeta} [meta=null]
+ * @param {?import('.').ValueObjectMeta} [meta=null]
  * @return {ValueObject}
  */
-const buildStoreValue = (value, meta = null) =>
-    value instanceof ValueObject ? value : createValueObject(value, meta);
+const buildStoreValue = (value, meta = null) => (value instanceof ValueObject ? value : createValueObject(value, meta));
 
 /**
  * Unwraps value from Store Value (ValueObject)
@@ -23,4 +22,4 @@ const buildStoreValue = (value, meta = null) =>
  */
 const unwrapStoreValue = (valueObject) => ValueObject.getValue(valueObject);
 
-export { buildStoreValue, unwrapStoreValue };
+export { buildStoreValue, unwrapStoreValue, useWatchStore };

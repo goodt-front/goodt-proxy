@@ -87,22 +87,22 @@ export default ({
         /**
          * Notifies env that the 'props' object has changed (used by the editor env)
          *
-         * @param {?string} [propName=null] property to update from the 'props' object or null to replace the whole 'props' object
+         * @param {?string|?string[]} [propName=null] property to update from the 'props' object or null to replace the whole 'props' object
          */
         propChanged(propName = null) {
             const { props, propsDefault } = this;
-            const propsDif = Object.keys(propsDefault).reduce((obj, key) => {
-                if (!isEqual(propsDefault[key], props[key])) {
-                    // eslint-disable-next-line no-param-reassign
-                    obj[key] = props[key];
-                }
-                return obj;
-            }, {});
+            const propsDif = Object
+                .entries(propsDefault)
+                .filter(([key, defaultVal]) => !isEqual(defaultVal, props[key]))
+                .reduce((obj, [key]) => ({
+                    ...obj,
+                    [key]: props[key]
+                }), {});
 
             this.$emit(
                 PanelEvent.PROPS_CHANGE,
                 propsDif,
-                typeof propName === 'string' ? propName : null
+                propName
             );
         }
     }

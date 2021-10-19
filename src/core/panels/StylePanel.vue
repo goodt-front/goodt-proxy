@@ -2,12 +2,18 @@
     <ui-panel-container>
         <ui-has-two-columns class="p">
             <template #left>
-                <ui-select v-model="props.position" :options="descriptor.props.position.options" @change="propChanged">
+                <ui-select
+                    v-model="props.position"
+                    :options="descriptor.props.position.options"
+                    @change="propChanged('position')">
                     Position
                 </ui-select>
             </template>
             <template #right>
-                <ui-select v-model="props.display" :options="descriptor.props.display.options" @change="propChanged">
+                <ui-select
+                    v-model="props.display"
+                    :options="descriptor.props.display.options"
+                    @change="propChanged('display')">
                     Display
                 </ui-select>
             </template>
@@ -19,7 +25,7 @@
                     v-model="widthWithUnit"
                     :units="widthUnits"
                     :options="descriptor.props.width.options"
-                    @change="propChanged">
+                    @change="propChanged(['width', 'widthUnit'])">
                     Width
                 </ui-input-units>
             </template>
@@ -28,7 +34,7 @@
                     v-model="heightWithUnit"
                     :units="heightUnits"
                     :options="descriptor.props.height.options"
-                    @change="propChanged">
+                    @change="propChanged(['height', 'heightUnit'])">
                     Height
                 </ui-input-units>
             </template>
@@ -43,7 +49,7 @@
                     v-model="props[`margin${dir.id.toUpperCase()}`]"
                     :options="marginOptions"
                     :style="{ 'grid-area': dir.id }"
-                    @change="propChanged"
+                    @change="propChanged(`margin${dir.id.toUpperCase()}`)"
                     @focusin.native="marginDirectionId = dir.id"
                     @focusout.native="marginDirectionId = null"
                 />
@@ -60,7 +66,7 @@
                     v-model="props[`padding${dir.id.toUpperCase()}`]"
                     :options="paddingOptions"
                     :style="{ 'grid-area': dir.id }"
-                    @change="propChanged"
+                    @change="propChanged(`padding${dir.id.toUpperCase()}`)"
                     @focusin.native="paddingDirectionId = dir.id"
                     @focusout.native="paddingDirectionId = null"
                 />
@@ -68,7 +74,7 @@
             </div>
         </ui-collapse>
 
-        <ui-input-tags v-model="props.cssClass" class="p" v-bind="{ delimiter: ' ' }" @change="propChanged">
+        <ui-input-tags v-model="props.cssClass" class="p" v-bind="{ delimiter: ' ' }" @change="propChanged('cssClass')">
             Css class
             <template #tag="{ tag, remove }">
                 <ui-badge
@@ -80,7 +86,7 @@
             </template>
         </ui-input-tags>
 
-        <ui-input-tags ref="cssstyle" v-model="cssStyles" class="p" v-bind="{ delimiter: ';' }" @change="propChanged">
+        <ui-input-tags ref="cssstyle" v-model="cssStyles" class="p" v-bind="{ delimiter: ';' }" @change="propChanged('cssStyles')">
             Css style
             <template #tag="{ tag, remove, setNewTag }">
                 <ui-badge
@@ -101,7 +107,7 @@
         <ui-select
             v-model="props.slot"
             v-bind="{ options: slotNames, valueField: null, labelField: null }"
-            @change="propChanged">
+            @change="propChanged('slot')">
             Render slot
         </ui-select>
     </ui-panel-container>

@@ -38,9 +38,13 @@ export const useApiService = (serviceFactory, serviceOptions, mixinOptions = {})
         created() {
             this[$apiService] = createServiceInstance(this);
             if (this.isEditorMode) {
-                this.$watch(getApiBaseURLFunction(this), (baseURL) => {
-                    this[$apiService].apiBaseURL = baseURL;
-                });
+                this.$watch(
+                    getApiBaseURLFunction(this),
+                    (baseURL) => {
+                        this[$apiService].apiBaseURL = baseURL;
+                    },
+                    { immediate: true }
+                );
             }
         },
         /**

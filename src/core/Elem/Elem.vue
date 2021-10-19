@@ -246,18 +246,24 @@ const ComponentOptions = {
          * Generates css-style def
          */
         genCssStyle() {
-            const cssStyle = this.props.cssStyle ? { ...this.props.cssStyle } : {};
+            const cssStyle = { ...this.props.cssStyle };
             if (this.props.widthUnit !== 'size' && !Number.isNaN(this.props.width) && this.props.width !== '') {
                 cssStyle.width = `${this.props.width}${this.props.widthUnit}`;
             }
             if (!Number.isNaN(this.props.height) && this.props.height !== '') {
                 cssStyle.height = `${this.props.height}${this.props.heightUnit}`;
             }
-            const cssVars = Object.entries({ ...this.$cssVarsStatic, ...this.$cssVars }).reduce((acc, [key, value]) => {
-                acc[`--w-${key}`] = value;
-                return acc;
-            }, {});
-            this.$set(this, 'cssStyle', { ...cssVars, ...cssStyle });
+            this.$set(this, 'cssStyle', { ...this.genCssVarsStyle(), ...cssStyle });
+        },
+        /**
+         * Generates css-vars-style def
+         */
+        genCssVarsStyle() {
+            // prettier-ignore
+            return Object.entries({ ...this.$cssVarsStatic, ...this.$cssVars }).reduce((acc, [key, value]) => ({
+                ...acc,
+                [`--w-${key}`]: value
+            }), {});
         },
         /**
          * Returns component slot names

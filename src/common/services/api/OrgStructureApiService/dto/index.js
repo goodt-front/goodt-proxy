@@ -20,3 +20,5 @@ export class DivisionTeamRoleDto extends BaseDto {
     division_team;
     external_id;
 }
+
+export class DivisionTeamAssignmentRotationDto extends BaseDto {}

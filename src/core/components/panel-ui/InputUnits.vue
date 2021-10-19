@@ -13,8 +13,7 @@
                     class="mdi mdi-variable cursor-pointer pull-right"
                     :class="[isCustomValueMode ? '' : 'color-grey']"
                     style="line-height: 1"
-                    @click="toggleCustomValueMode"
-                />
+                    @click="toggleCustomValueMode" />
             </template>
             <template #control>
                 <ui-select
@@ -23,15 +22,13 @@
                     :class="controlCl"
                     size="small"
                     v-bind="{ value, options }"
-                    @change="onOptionChange"
-                />
+                    @change="onOptionChange" />
                 <ui-input-units
                     class="w-12-12"
                     :class="controlCl"
                     v-bind="{ value, units, size: 'small' }"
                     v-else-if="!options.length || (options.length && !isCustomValueMode)"
-                    @change="onInputUnitChange"
-                ></ui-input-units>
+                    @change="onInputUnitChange"></ui-input-units>
             </template>
         </control-layout>
     </div>
@@ -114,8 +111,8 @@ export default {
          * @param {any} value
          */
         onOptionChange(value) {
-            this.emitChange(value);
             this.emitInput(value);
+            this.emitChange(value);
         },
         /**
          * @param {any} value
@@ -124,8 +121,8 @@ export default {
             if (!value) {
                 return;
             }
-            this.emitChange(value);
             this.emitInput(value);
+            this.emitChange(value);
         }
     }
 };

@@ -27,3 +27,7 @@ export interface IDescriptorProps<T> {
         [P in keyof T['props']]?: Primitive<T['props'][P]['type']>;
     };
 }
+
+declare global {
+    export interface DescriptorProps extends IDescriptorProps {}
+}

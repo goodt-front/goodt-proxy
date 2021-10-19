@@ -51,6 +51,26 @@ export default {
         demoResult: null
         [[/hasTransport]]
     }),
+    static: {},
+    watchStore: [
+    /*
+        {
+            vars: [Vars.FOO],
+            handler([ foo ], state) {
+                /!* todo: implement *!/
+            }
+        },
+        {
+            // any changed and both are not undefined
+            all: true,
+            vars: [Vars.FOO, Vars.BAR],
+            handler([ foo, bar ], state) {
+                /!* todo: implement *!/
+                console.log('[all] FOO-BAR.changed', { foo, bar }, { state );
+            }
+        }
+    */
+    ],
     methods: {
         /**
          * @return {string[]}

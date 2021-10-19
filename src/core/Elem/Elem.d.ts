@@ -9,9 +9,7 @@ import VueElem from './Elem.vue';
 import { descriptor } from './descriptor';
 import { DescriptorProps } from './infra/types';
 
-interface Injected {
-    eventBusWrapper: EventBusWrapper;
-}
+export type TDescriptorProps = ReturnType<typeof descriptor>;
 
 /**
  * Component Instance 'data' ComponentOptions descriptor section members
@@ -22,6 +20,7 @@ interface Data {
     cssStyle: Record<string, string>;
     slotDefault: string;
     descriptor: ReturnType<typeof descriptor>;
+    eventBusWrapper: EventBusWrapper;
 }
 
 interface Props {
@@ -70,6 +69,7 @@ export interface IElemInstance extends Vue, Data, Methods, Computed, Props, Inje
 export interface IElemComponentOptionsInternal
     extends ThisTypedComponentOptionsWithRecordProps<Vue, Data, IElemInstance, Computed, Props> {
     computed?: IElemInstance;
+    static: Record<string, any>;
 }
 
 export interface IElemComponentOptions<IInstance, D, M, C, P>
@@ -81,8 +81,21 @@ export interface IElemComponentOptions<IInstance, D, M, C, P>
         Props & P
     > {
     computed?: IElemInstance & IInstance & D & M & C & P;
+    static: Record<string, any>;
 }
-export type TElemConstructor = VueConstructor<IElemInstance>;
 
-declare const _default: VueElem;
+declare module 'vue/types/options' {
+    import Vue from 'vue';
+    interface ComponentOptions<V extends Vue> {
+        static?: Record<string, any>;
+    }
+}
+
+declare module 'vue/types/vue' {
+    interface Vue extends Data, Props, Computed, Methods {
+    }
+}
+
+export type TElemConstructor = VueConstructor<IElemInstance>;
+declare const _default: VueElem & IElemComponentOptions;
 export default _default;

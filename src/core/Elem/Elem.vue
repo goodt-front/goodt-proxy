@@ -10,7 +10,7 @@ import { dispatchEventByName, getDescriptorDefaultProps, patchComponentRootDomEl
 import { descriptor } from './descriptor';
 import { ElemEvent } from './infra/config';
 
-const { store, buildStoreValue, unwrapStoreValue } = StoreManager;
+const { store, buildStoreValue, unwrapStoreValue, useWatchStore } = StoreManager;
 const { EventBusWrapper } = EB;
 
 const PropsToClassMap = new Map([
@@ -114,14 +114,11 @@ const ComponentOptions = {
                 }
                 return mapping;
             };
-
-            return Object.entries(cssVars).reduce(
-                (acc, [cssVar, mapping]) => ({
-                    ...acc,
-                    [cssVar]: this.$c(resolveMapping(mapping))
-                }),
-                {}
-            );
+            // prettier-ignore
+            return Object.entries(cssVars).reduce((acc, [cssVar, mapping]) => ({
+                ...acc,
+                [cssVar]: this.$c(resolveMapping(mapping))
+            }), {});
         },
         /**
          * Returns the current store state
@@ -155,7 +152,7 @@ const ComponentOptions = {
      * @this {import("./Elem").IElemInstance}
      */
     created() {
-        unobserve(this.descriptor);
+        this.eventBusWrapper = null;
         //// whenever css-vars change -> invoke getCssStyle()
         this.$watch('$cssVars', this.genCssStyle, { immediate: true });
 
@@ -180,12 +177,11 @@ const ComponentOptions = {
             // this.$watch('$cssVars', this.genCssStyle, { immediate: true });
             this.genCssStyle();
             */
-            unobserve([this.$props, this.cssClass, this.cssStyle]);
+            unobserve([this.descriptor, this.$props, this.cssClass, this.cssStyle]);
         }
 
-        /** @type {EventBusWrapper} */
-        // @ts-ignore
-        this.eventBusWrapper = null;
+        // starts watching Global Store.state
+        useWatchStore(this);
         // emit 'created' event via vue/dom
         dispatchEventByName.call(this, ElemEvent.CREATED);
     },
@@ -224,14 +220,13 @@ const ComponentOptions = {
         genCssClass() {
             const { props } = this;
             const classMap = {};
-
+            // prettier-ignore
             ['display', 'position', 'cssClass'].forEach((propName) => {
-                []
-                    .concat(props[propName])
-                    .filter(Boolean)
-                    .forEach((propValue) => {
-                        classMap[propValue] = true;
-                    });
+                [].concat(props[propName])
+                  .filter(Boolean)
+                  .forEach((propValue) => {
+                      classMap[propValue] = true;
+                  });
             });
             PropsToClassMap.forEach((classPrefix, propName) => {
                 const { [propName]: value } = props;

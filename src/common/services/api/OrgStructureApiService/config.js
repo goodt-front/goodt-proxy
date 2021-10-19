@@ -25,8 +25,13 @@ const ApiEndpointPaths = {
     ROLE_CLEAR_EMPLOYEE: 'role/clearemployeerole',
 
     DIVISION_TEAM_ROLE: 'divisionteamrole',
-    GET_DIVISION_TEAM_ROLE_BY_ID: 'divisionteamrole/:id',
-    SET_DIVISION_TEAM_ROLE_BY_ID: 'divisionteamrole/:id'
+    DIVISION_TEAM_ROLE_GET_BY_ID: 'divisionteamrole/:id',
+    DIVISION_TEAM_ROLE_SET_BY_ID: 'divisionteamrole/:id',
+
+    DIVISION_TEAM_ASSIGNMENT_ROTATION_COMMIT: 'employee/teamdivisionassignmentrotationcommit',
+    DIVISION_TEAM_ASSIGNMENT_ROTATION_WITHDRAW: 'employee/teamdivisionassignmentrotationwithdraw',
+    DIVISION_TEAM_ASSIGNMENT_ROTATION_CREATE: 'employee/addteamdivisionassignmentrotation',
+    DIVISION_TEAM_ASSIGNMENT_ROTATION_UPDATE_COMMENT: 'employee/teamdivisionassignmentrotationcomment'
 };
 
 export { ApiEndpointPaths };

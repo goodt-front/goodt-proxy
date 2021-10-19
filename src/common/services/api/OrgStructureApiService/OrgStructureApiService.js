@@ -15,7 +15,8 @@ import {
     DivisionShortInfoDto,
     RoleInfoDto,
     DivisionTeamRoleRawDto,
-    DivisionTeamRoleDto
+    DivisionTeamRoleDto,
+    DivisionTeamAssignmentRotationDto
 } from './dto';
 
 import { withEmployeeContext, withEmployeeIdContext } from './EmployeeContext';
@@ -23,16 +24,24 @@ import { withDivisionContext, withDivisionIdContext } from './DivisionContext';
 import { withTeamContext, withTeamIdContext } from './TeamContext';
 
 /**
+ * @typeof {import('@goodt-common/infra/BaseDto').BaseDto} BaseDto
+ */
+/**
  *
- * @param {import('@goodt-common/infra/BaseDto').BaseDto.constructor} DtoConstructor
+ * @param {typeof BaseDto.constructor|true} DtoConstructor
  * @param {SafeResult} safeResult
- * @return {SafeResult<BaseDto|BaseDto[], Error>}
+ * @return {SafeResult<BaseDto|BaseDto[]|true, Error>}
  */
 const processRequestResult = (DtoConstructor, safeResult) => {
     const { isError, result: dtoJsonResult } = safeResult;
 
     if (isError) {
         return safeResult;
+    }
+
+    // eslint-disable-next-line no-prototype-builtins
+    if (BaseDto.isPrototypeOf(DtoConstructor) === false) {
+        return success(DtoConstructor);
     }
 
     return buildDtoSafeResult(DtoConstructor, dtoJsonResult);
@@ -475,7 +484,7 @@ class OrgStructureApiService extends BaseApiService {
             });
         }
         const safeResult = await this.request({
-            url: Paths.GET_DIVISION_TEAM_ROLE_BY_ID.replace(':id', id)
+            url: Paths.DIVISION_TEAM_ROLE_GET_BY_ID.replace(':id', id)
         });
 
         return processRequestResult(DivisionTeamRoleRawDto, safeResult);
@@ -494,7 +503,7 @@ class OrgStructureApiService extends BaseApiService {
         }
 
         const safeResult = await this.request({
-            url: Paths.SET_DIVISION_TEAM_ROLE_BY_ID.replace(':id', id),
+            url: Paths.DIVISION_TEAM_ROLE_SET_BY_ID.replace(':id', id),
             params: divisionTeamRoleDto,
             options: {
                 method: ApiClientMethod.PUT
@@ -519,6 +528,89 @@ class OrgStructureApiService extends BaseApiService {
         });
 
         return processRequestResult(DivisionTeamRoleDto, safeResult);
+    }
+
+    /**
+     * employee/teamdivisionassignmentrotationcommit
+     * @param {number|string} id DivisionTeamAssignmentRotation id
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division_team_role/create
+     * @return {Promise<SafeResult<true, Error>>}
+     */
+    async commitDivisionTeamAssignmentRotation(id) {
+        const safeResult = await this.request({
+            url: Paths.DIVISION_TEAM_ASSIGNMENT_ROTATION_COMMIT,
+            options: {
+                method: ApiClientMethod.POST,
+                params: { id }
+            }
+        });
+
+        return processRequestResult(true, safeResult);
+    }
+
+    /**
+     * employee//teamdivisionassignmentrotationwithdraw
+     * @param {number|string} id DivisionTeamAssignmentRotation id
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division_team_role/create
+     * @return {Promise<SafeResult<true, Error>>}
+     */
+    async withdrawDivisionTeamAssignmentRotation(id) {
+        const safeResult = await this.request({
+            url: Paths.DIVISION_TEAM_ASSIGNMENT_ROTATION_WITHDRAW,
+            options: {
+                method: ApiClientMethod.POST,
+                params: { id }
+            }
+        });
+
+        return processRequestResult(true, safeResult);
+    }
+
+    /**
+     * employee/teamdivisionassignmentrotationcomment
+     * @param {number|string} divisionTeamAssignmentId DivisionTeamAssignment id
+     * @param {number|string} assignmentRotationId AssignmentRotation id
+     * @return {Promise<SafeResult<DivisionTeamAssignmentRotationDto[], Error>>}
+     */
+    async createDivisionTeamAssignmentRotation(divisionTeamAssignmentId, assignmentRotationId) {
+        const safeResult = await this.request({
+            url: Paths.DIVISION_TEAM_ASSIGNMENT_ROTATION_CREATE,
+            options: {
+                method: ApiClientMethod.POST,
+                params: {
+                    division_team_assignment_id: divisionTeamAssignmentId,
+                    assignment_rotation_id: assignmentRotationId
+                }
+            }
+        });
+
+        return processRequestResult(DivisionTeamAssignmentRotationDto, safeResult);
+    }
+
+    /**
+     * employee/teamdivisionassignmentrotationcomment
+     * @param {number|string} divisionTeamAssignmentRotationId DivisionTeamAssignmentRotation id
+     * @param {string} employeeComment
+     * @param {string} hrComment
+     * @return {Promise<SafeResult<true, Error>>}
+     */
+    async updateDivisionTeamAssignmentRotationComment(
+        divisionTeamAssignmentRotationId,
+        { hrComment, employeeComment }
+    ) {
+        const safeResult = await this.request({
+            url: Paths.DIVISION_TEAM_ASSIGNMENT_ROTATION_UPDATE_COMMENT,
+            options: {
+                method: ApiClientMethod.PUT,
+                params: {
+                    id: divisionTeamAssignmentRotationId,
+                    ...(hrComment && { comment_hr: hrComment }),
+                    ...(employeeComment && { comment_employee: employeeComment })
+                }
+            }
+        });
+
+        return processRequestResult(true, safeResult);
     }
 
     /**

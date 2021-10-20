@@ -6,13 +6,13 @@ export type WatchStoreStrat = WatchStoreStratEnum.ANY | WatchStoreStratEnum.ALL;
 
 export interface IWatchStoreDefinition<TVarList = string[]> {
     vars?: TVarList;
-    any?: boolean;
+    all?: boolean;
     handler:
-        | string
         | ((
-              values: any[],
+              values?: any[],
               state?: { [key in ValuesOf<typeof TVarList>]: number | string | boolean | null | undefined }
-          ) => void);
+          ) => void)
+        | string;
 }
 
 declare global {

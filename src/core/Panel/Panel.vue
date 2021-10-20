@@ -98,11 +98,12 @@ export default ({
                     ...obj,
                     [key]: props[key]
                 }), {});
+            const propNames = [propName].flat().filter(name => propsDefault[name]);
 
             this.$emit(
                 PanelEvent.PROPS_CHANGE,
                 propsDif,
-                propName
+                propNames
             );
         }
     }

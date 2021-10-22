@@ -11,6 +11,13 @@ PR – [Pull Request](https://www.atlassian.com/ru/git/tutorials/making-a-pull-r
 
 
 ## Оформление изменений
+### Версионирование и git-теги **`ВАЖНО!`**
+Перед назначением git-тега на коммит, убедитесь, что аналогичное названию тега значение указано в `package.json` в поле `version`
+```json
+{
+  version: "1.0.0"
+}
+```
 
 ### Commit and PR
 Для описания комментариев к commit'ам и PR должно (MUST) использоваться [«Соглашение о коммитах»](https://www.conventionalcommits.org/ru/v1.0.0/),

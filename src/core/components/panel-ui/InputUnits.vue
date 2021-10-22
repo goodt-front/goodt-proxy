@@ -24,6 +24,7 @@
                     v-bind="{ value, options }"
                     @change="onOptionChange" />
                 <ui-input-units
+                    ref="input"
                     class="w-12-12"
                     :class="controlCl"
                     v-bind="{ value, units, size: 'small' }"
@@ -99,20 +100,25 @@ export default {
         },
         /**
          * @param {any} value
+         * @param {object} model
+         * @param {any} model.value
+         * @param {string} model.unit
          */
-        emitChange(value) {
+        emitChange(value, model) {
             /**
              * Change event
              * @property {any} value
+             * @property {object} model
              */
-            this.$emit('change', value);
+            this.$emit('change', value, model);
         },
         /**
          * @param {any} value
          */
         onOptionChange(value) {
+            const model = { value, unit: '' };
             this.emitInput(value);
-            this.emitChange(value);
+            this.emitChange(value, model);
         },
         /**
          * @param {any} value
@@ -121,8 +127,9 @@ export default {
             if (!value) {
                 return;
             }
+            const { model } = this.$refs.input;
             this.emitInput(value);
-            this.emitChange(value);
+            this.emitChange(value, model);
         }
     }
 };

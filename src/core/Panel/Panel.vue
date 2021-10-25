@@ -98,7 +98,7 @@ export default ({
                     ...obj,
                     [key]: props[key]
                 }), {});
-            const propNames = [propName].flat().filter(name => propsDefault[name]);
+            const propNames = [propName].flat().filter(name => propsDefault[name] === undefined);
 
             this.$emit(
                 PanelEvent.PROPS_CHANGE,

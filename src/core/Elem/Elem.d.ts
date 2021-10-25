@@ -53,6 +53,8 @@ interface Methods extends StoreMixinMethods, RouterMixinMethods {
 
     genCssClass(): void;
     genCssStyle(): void;
+    genCssVarsStyle(cssVars): Record<string, any>;
+    buildCssVars(cssVarsMapping, props): Record<string, any>;
     getSlotNames(): string[];
     getPanels(): AsyncComponent[];
     isChildAllowed(type: string): boolean;
@@ -88,11 +90,6 @@ declare module 'vue/types/options' {
     import Vue from 'vue';
     interface ComponentOptions<V extends Vue> {
         static?: Record<string, any>;
-    }
-}
-
-declare module 'vue/types/vue' {
-    interface Vue extends Data, Props, Computed, Methods {
     }
 }
 

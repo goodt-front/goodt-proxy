@@ -101,24 +101,7 @@ const ComponentOptions = {
             if (cssVars == null) {
                 return {};
             }
-            const resolveMapping = (mapping) => {
-                if (typeof mapping === 'function') {
-                    return mapping(props);
-                }
-                if (typeof mapping === 'string') {
-                    return getByPath(props, mapping);
-                }
-                if (Array.isArray(mapping)) {
-                    const value = getByPath(props, mapping[0]);
-                    return value || mapping[1];
-                }
-                return mapping;
-            };
-            // prettier-ignore
-            return Object.entries(cssVars).reduce((acc, [cssVar, mapping]) => ({
-                ...acc,
-                [cssVar]: this.$c(resolveMapping(mapping))
-            }), {});
+            return this.buildCssVars({ cssVars, props });
         },
         /**
          * Returns the current store state
@@ -253,14 +236,40 @@ const ComponentOptions = {
             if (!Number.isNaN(this.props.height) && this.props.height !== '') {
                 cssStyle.height = `${this.props.height}${this.props.heightUnit}`;
             }
-            this.$set(this, 'cssStyle', { ...this.genCssVarsStyle(), ...cssStyle });
+            this.$set(this, 'cssStyle', {
+                ...this.genCssVarsStyle({ ...this.$cssVarsStatic, ...this.$cssVars }),
+                ...cssStyle
+            });
+        },
+        /**
+         *
+         */
+        buildCssVars(cssVarsMapping, props = this.props) {
+            const resolveMapping = (mapping) => {
+                if (typeof mapping === 'function') {
+                    return mapping(props);
+                }
+                if (typeof mapping === 'string') {
+                    return getByPath(props, mapping);
+                }
+                if (Array.isArray(mapping)) {
+                    const value = getByPath(props, mapping[0]);
+                    return value || mapping[1];
+                }
+                return mapping;
+            };
+            // prettier-ignore
+            return Object.entries(cssVarsMapping).reduce((acc, [cssVar, mapping]) => ({
+                ...acc,
+                [cssVar]: this.$c(resolveMapping(mapping))
+            }), {});
         },
         /**
          * Generates css-vars-style def
          */
-        genCssVarsStyle() {
+        genCssVarsStyle(cssVars = { ...this.$cssVarsStatic, ...this.$cssVars }) {
             // prettier-ignore
-            return Object.entries({ ...this.$cssVarsStatic, ...this.$cssVars }).reduce((acc, [key, value]) => ({
+            return Object.entries(cssVars).reduce((acc, [key, value]) => ({
                 ...acc,
                 [`--w-${key}`]: value
             }), {});

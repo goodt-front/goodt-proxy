@@ -101,7 +101,7 @@ const ComponentOptions = {
             if (cssVars == null) {
                 return {};
             }
-            return this.buildCssVars({ cssVars, props });
+            return this.buildCssVars(cssVars, props);
         },
         /**
          * Returns the current store state

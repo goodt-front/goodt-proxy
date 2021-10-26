@@ -46,7 +46,6 @@
         "@goodt-wcore/render": "file:src/core/render",
         "@goodt-wcore/scaffold": "file:scripts/scaffold",
         "@goodt-wcore/styleguide": "file:scripts/styleguide",
-        "@goodt-wcore/types": "file:src/core/types",
         "@goodt/browserslist-config": "file:.config/browserslist-config",
         "@goodt/eslint-config-base": "file:.config/eslint-config-base",
         "@goodt/postcss-config": "file:.config/postcss-config",

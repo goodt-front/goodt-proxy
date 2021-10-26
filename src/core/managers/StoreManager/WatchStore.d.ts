@@ -1,7 +1,7 @@
-export type WatchStoreStratEnum = {
-    ANY: 'any';
-    ALL: 'all';
-};
+export enum WatchStoreStratEnum {
+    ANY = 'any',
+    ALL = 'all'
+}
 export type WatchStoreStrat = WatchStoreStratEnum.ANY | WatchStoreStratEnum.ALL;
 
 export interface IWatchStoreDefinition<TVarList = string[]> {
@@ -16,7 +16,7 @@ export interface IWatchStoreDefinition<TVarList = string[]> {
 }
 
 declare global {
-    export interface WatchStoreDefinition extends IWatchStoreDefinition {}
+    interface WatchStoreDefinition extends IWatchStoreDefinition {}
 }
 
 declare module 'vue/types/options' {

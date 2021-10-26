@@ -1,10 +1,13 @@
+export { IWatchStoreDefinition } from './managers';
+
 declare global {
     import { PropOptions } from 'vue';
 
     export interface ElemPropDef extends PropOptions {
-        type?: String | Boolean | Number | Object | Array | Function;
+        type: String | Boolean | Number | Object | Array | Function;
+        default?: String | Boolean | Number | Object | Array | Function;
         enum?: string[];
-        options?: { value: unknown; label: string }[];
+        options?: { value: unknown; label: string }[] | Record<string, any>;
     }
 
     export interface ElemVarDef {

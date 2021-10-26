@@ -2,5 +2,6 @@
     "name": "@goodt-wcore/core",
     "version": "1.0.0",
     "private": true,
+    "types": "./index.d.ts",
     "description": "SUP: Core (goodt-wcore). Folder-based package is the alias for `core` folder structure."
 }

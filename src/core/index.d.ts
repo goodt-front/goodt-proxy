@@ -9,6 +9,8 @@ import Const from './Const';
 
 export * from './utils';
 export * from './mixins';
+export * from './types';
+
 export { Components, Dremio, Managers, Net, Panels, Render, Sandbox, Const };
 export { Elem, ElemEvent, getDescriptorDefaultProps, getElemDomId } from './Elem';
 export { Panel, PanelEvent } from './Panel';

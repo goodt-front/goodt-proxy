@@ -6,3 +6,4 @@ import RouteManager from './RouteManager';
 import * as StoreManager from './StoreManager/index';
 
 export { AuthManager, ConstManager, EB, FileManager, RouteManager, StoreManager };
+export { IWatchStoreDefinition } from './StoreManager';

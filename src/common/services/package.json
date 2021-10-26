@@ -1,6 +1,7 @@
 {
   "name": "@goodt-common/services",
   "version": "1.0.0",
+  "types": "./index.d.ts",
   "dependencies": {
     "qs": "^6.10.1"
   }

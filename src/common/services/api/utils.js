@@ -7,7 +7,7 @@
 export const buildRequest = ({ action, pathParams = {}, params = {}, queryParams, options}) => {
     const { url: initialUrl = '', options: defaultOptions } = action;
     const url = Object.entries(pathParams).reduce(
-        (finalUrl, [key, value]) => finalUrl.replace(new RegExp(`:${key}`, 'g'), value),
+        (finalUrl, [key, value]) => finalUrl.replace(new RegExp(`:${key}`, 'g'), String(value)),
         initialUrl
     );
 
@@ -17,9 +17,7 @@ export const buildRequest = ({ action, pathParams = {}, params = {}, queryParams
         options: {
             ...defaultOptions,
             ...options,
-            options: {
-                ...(queryParams && { params: queryParams })
-            }
+            ...(queryParams && { params: queryParams })
         }
     };
 };

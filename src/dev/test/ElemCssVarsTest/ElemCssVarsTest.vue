@@ -1,10 +1,11 @@
 <template>
     <div class="widget" :class="cssClass" :style="cssStyle" @click="isClicked = !isClicked">
-        <!-- {demo} @todo: DELETE COMMENTS -->
         <code>{{ type }}</code>
         <div v-if="isEditorMode">running in editor</div>
         <div>{{ props }}</div>
-        <!-- {/demo} -->
+        <button v-for="index in props.buttonStyles.length" class="btn btn-outline" :style="buttonCssVars[index]">
+            <span class="btn__text">text</span>
+        </button>
     </div>
 </template>
 <script>
@@ -18,6 +19,10 @@ import { descriptor /* , Vars */ } from './descriptor';
  */
 const ComponentInstanceTypeDescriptor = undefined;
 
+const createButtonCssVarsMappingByIndex = (i) => ({
+    'button-caption_color': `buttonStyles[${i}].textColor`
+});
+
 export default {
     extends: Elem,
     data: () => ({
@@ -27,6 +32,15 @@ export default {
     computed: {
         $cssVars() {
             return { 'font-size': this.isClicked ? '1rem' : '2rem' };
+        },
+        buttonCssVars() {
+            const buildCssVarsStyle = (index) => this.genCssVarsStyle(
+                this.buildCssVars(
+                    createButtonCssVarsMappingByIndex(index)
+                )
+            );
+            return Object.keys(this.props.buttonStyles)
+                .map(buildCssVarsStyle)
         }
     },
     methods: {

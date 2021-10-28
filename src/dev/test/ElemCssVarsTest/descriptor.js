@@ -19,6 +19,16 @@ export const descriptor = () => ({
             default() {
                 return { color: 'black' };
             }
+        },
+        buttonStyles: {
+            type: Object,
+            // prettier-ignore
+            default: () => [
+                { textColor: 'red' },
+                { textColor: 'green' },
+                { textColor: 'blue' },
+                { textColor: 'yellow' }
+            ]
         }
     },
     vars: Object.values(Vars).reduce((acc, varName) => ({ ...acc, [varName]: { description: varName } }), {}),

@@ -104,15 +104,15 @@ function deleteNode(array, childrenProp, match) {
 /**
  * @param {AppEntityElem[]} array
  * @param {string} childrenProp
- * @param {Function} function_
+ * @param {Function} callback
  */
-function traverse(array, childrenProp, function_) {
+function traverse(array, childrenProp, callback) {
     const nodeQueue = new Queue(array);
     
     while (!nodeQueue.isEmpty) {
         const currentNode = nodeQueue.dequeue();
         const parentNode = findParentNode(array, childrenProp, ({ id }) => id === currentNode.id);
-        function_(currentNode, parentNode);
+        callback(currentNode, parentNode);
         nodeQueue.enqueue(currentNode[childrenProp]);
     }
 }

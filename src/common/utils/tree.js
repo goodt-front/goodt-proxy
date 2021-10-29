@@ -39,22 +39,7 @@ class Queue {
     }
 }
 /**
- * @param {Array} array
- * @param {string} childrenProp
- * @param {Function} function_
- * @param {any} parent
- */
-function traverse(array, childrenProp, function_, parent = null) {
-    const nodeQueue = new Queue(array);
-    
-    while (!nodeQueue.isEmpty) {
-        const currentNode = nodeQueue.dequeue();
-        function_(currentNode, parent);
-        nodeQueue.enqueue(currentNode[childrenProp]);
-    }
-}
-/**
- * @param {Array} array
+ * @param {AppEntityElem[]} array
  * @param {string} childrenProp
  * @param {Function} match
  * @return {Object|null}
@@ -73,7 +58,7 @@ function findNode(array, childrenProp, match) {
     return null;
 }
 /**
- * @param {Array} array
+ * @param {AppEntityElem[]} array
  * @param {string} childrenProp
  * @param {Function} match
  * @return {Object|null}
@@ -95,7 +80,7 @@ function findParentNode(array, childrenProp, match) {
     return null;
 }
 /**
- * @param {Array} array
+ * @param {AppEntityElem[]} array
  * @param {string} childrenProp
  * @param {Function} match
  * @return {boolean}
@@ -115,6 +100,21 @@ function deleteNode(array, childrenProp, match) {
     }
     
     return false;
+}
+/**
+ * @param {AppEntityElem[]} array
+ * @param {string} childrenProp
+ * @param {Function} function_
+ */
+function traverse(array, childrenProp, function_) {
+    const nodeQueue = new Queue(array);
+    
+    while (!nodeQueue.isEmpty) {
+        const currentNode = nodeQueue.dequeue();
+        const parentNode = findParentNode(array, childrenProp, ({ id }) => id === currentNode.id);
+        function_(currentNode, parentNode);
+        nodeQueue.enqueue(currentNode[childrenProp]);
+    }
 }
 
 export { traverse, findNode, findParentNode, deleteNode };

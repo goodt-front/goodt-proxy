@@ -122,13 +122,13 @@ const resolveStrategy = ({ all }) => {
 
 /**
  * Creates a new watcher, which watches 'vars' keys in '$storeState'
- * @param {ElemInstance} vm                             vue component reference
- * @param {WatchStoreDefinition} def                    watcher definition
- * @param {import('vue').WatchOptions} watchOptions     watcher options
+ * @param {ElemInstance} vm                                 vue component reference
+ * @param {WatchStoreDefinition} def                        watcher definition
+ * @param {import('vue').WatchOptions} watchOptions         watcher options
  *
  * @return {function(): void} watcher disposal function
  */
-const createStoreWatcher = (vm, { all = false, vars = [], handler }, watchOptions) => {
+const createStoreWatcher = (vm, { all = false, vars = [], handler }, watchOptions = { immediate: true }) => {
     const strat = resolveStrategy({ all });
     return vm.$watch(
         () => {
@@ -143,15 +143,30 @@ const createStoreWatcher = (vm, { all = false, vars = [], handler }, watchOption
 };
 
 /**
+ * Allows creating a stateWatcher dynamically
+ * @param {WatchStoreDefinition} def                                            watcher definition
+ * @return {function(): void} watcher disposal function
+ */
+function watchStore({ all = false, vars = [], handler }) {
+    return createStoreWatcher(this, { all, vars, handler });
+}
+
+/**
  * Automatically creates '$storeState' watchers defined in the '#WATCH_STORE_COMPONENT_OPTION_NAME' block of the target 'vm'
  * @param {ElemInstance} vm  target component
- * @return {function[]} array of watcher disposal functions
+ * @returns {Object} watchStore
+ * @returns {function[]} watchStore.disposals array of watcher disposal functions
+ * @returns {function} watchStore.$watchStore function to create a stateWatcher dynamically
  */
 const useWatchStore = (vm) => {
-    const watchOptions = { immediate: true };
     /** @type {WatchStoreDefinition[]} */
     const defs = vm.$options[WATCH_STORE_COMPONENT_OPTION_NAME] ?? [];
-    return defs.map((def) => createStoreWatcher(vm, def, watchOptions));
+    const disposals = defs.map((def) => createStoreWatcher(vm, def));
+    const $watchStore = watchStore.bind(vm);
+    return {
+        disposals,
+        $watchStore
+    };
 };
 
 export { useWatchStore };

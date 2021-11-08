@@ -164,7 +164,8 @@ const ComponentOptions = {
         }
 
         // starts watching Global Store.state
-        useWatchStore(this);
+        const { $watchStore } = useWatchStore(this);
+        this.$watchStore = $watchStore;
         // emit 'created' event via vue/dom
         dispatchEventByName.call(this, ElemEvent.CREATED);
     },

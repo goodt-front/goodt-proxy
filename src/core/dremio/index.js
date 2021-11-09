@@ -263,7 +263,6 @@ const mixin = {
         /**
          * Store state watcher handler
          * @param {object} state
-         * @returns {void|undefined}
          */
         storeStateWatcher(state) {
             if (!Object.keys(state).length) {

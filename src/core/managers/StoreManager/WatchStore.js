@@ -154,9 +154,7 @@ function watchStore({ all = false, vars = [], handler }) {
 /**
  * Automatically creates '$storeState' watchers defined in the '#WATCH_STORE_COMPONENT_OPTION_NAME' block of the target 'vm'
  * @param {ElemInstance} vm  target component
- * @returns {Object} watchStore
- * @returns {function[]} watchStore.disposals array of watcher disposal functions
- * @returns {function} watchStore.$watchStore function to create a stateWatcher dynamically
+ * @return {{ disposals: function[], $watchStore: function }}
  */
 const useWatchStore = (vm) => {
     /** @type {WatchStoreDefinition[]} */

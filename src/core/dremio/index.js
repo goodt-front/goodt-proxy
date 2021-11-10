@@ -145,7 +145,7 @@ const mixin = {
 
         // watch store state if enabled
         if (this.watchStoreState) {
-            this.$watch('$storeState', this.storeStateWatcher, { immediate: true });
+            this.$watchStore({ handler: (_, state) => this.storeStateWatcher(state) });
         }
         if (this.isEditorMode) {
             this.$watch('dremioStr', this.dremioHandler);
@@ -262,7 +262,6 @@ const mixin = {
         },
         /**
          * Store state watcher handler
-         *
          * @param {object} state
          */
         storeStateWatcher(state) {

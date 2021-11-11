@@ -1,6 +1,6 @@
 {
     "name": "@goodt/postcss-config",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "SUP: Postcss. Shared postcss configs and package dependencies config for reuse in SUP projects.",
     "scripts": {
         "gen:tw-ignore-classes": "list-selectors ../../node_modules/goodt-framework-css/dist/all.min.css -p -i classes >> ./tw-ignored-classes.js",
@@ -16,6 +16,7 @@
         "postcss-advanced-variables": "3.0.1",
         "postcss-bem-fix": "2.1.0",
         "postcss-nested": "4.0.0",
+        "postcss-plugin-px2rem": "^0.8.1",
         "postcss": "^7.0.0",
         "postcss-loader": "^4.0.0",
         "postcss-remove-declaration": "^1.0.0",

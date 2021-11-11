@@ -14,6 +14,7 @@ module.exports = {
     extends: [
         'stylelint-config-recommended',
         'stylelint-config-skyscanner',
+        'stylelint-config-css-modules',
         'stylelint-declaration-strict-value'
     ],
     plugins: [],

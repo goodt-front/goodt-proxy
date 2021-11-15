@@ -93,7 +93,8 @@ import {
     PageLearningCourseEntityDto,
     InfoDtoDto,
     EntityModelLearningCourseStepEntityDto,
-    EntityModelLearningCourseAnnouncementEntityDto
+    EntityModelLearningCourseAnnouncementEntityDto,
+    LearningCourseStudyExpertBindingDto
 } from './dtos';
 
 /**
@@ -181,7 +182,7 @@ export const create = (options, extensionsDescriptor) => new LearningCourseApiSe
  *
  * @return {Promise<SafeResult<EntityModelBudgetEntityDto, Error>>}
  */
-export function getBudget() {
+export function getBudgets() {
     return this.request(
         {
             action: ServiceAction.BUDGET_GET
@@ -10826,4 +10827,28 @@ export function getInfoMe() {
     return this.request({
         action: ServiceAction.INFO_ME_GET
     });
+}
+
+/**
+ * @description Получение информации о сущностях: привязки экспертов к учебным курсам
+ * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/followPropertyReference-learningcourseentity-get_7_1
+ *
+ * @param {string|number} learningCourseId
+ * @param {string|number|undefined} [studyExpertId]
+ *
+ * @return {Promise<SafeResult<LearningCourseStudyExpertBindingDto[], Error>>}
+ */
+export function getLearningCourseStudyExpertBindings(learningCourseId, studyExpertId) {
+    const requestDescriptor =
+        studyExpertId != null
+            ? {
+                  action: ServiceAction.LEARNING_COURSE_TO_STUDY_EXPERT_BINDING_GET_BY_FILTER,
+                  pathParams: { learningCourseId, studyExpertId }
+              }
+            : {
+                  action: ServiceAction.LEARNING_COURSE_TO_STUDY_EXPERT_BINDING_GET_ALL,
+                  pathParams: { learningCourseId }
+              };
+
+    return this.request(requestDescriptor, LearningCourseStudyExpertBindingDto);
 }

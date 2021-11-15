@@ -736,5 +736,23 @@ export const ServiceAction = {
     UTILS_IMPORT_LEARNING_COURSES_FROM_XLS_TEMPLATE_GET: { url: 'utils/import-learning-courses-from-xls/template' },
     UTILS_IMPORT_EDUCATION_FROM_XLS_TEMPLATE_GET: { url: 'utils/import-education-from-xls/template' },
     INFO_GET: { url: 'info' },
-    INFO_ME_GET: { url: 'info/me' }
+    INFO_ME_GET: { url: 'info/me' },
+    LEARNING_COURSE_TO_STUDY_EXPERT_BINDING_GET_ALL: {
+        url: 'learning-course/:learningCourseId/learning-course-study-expert'
+    },
+    LEARNING_COURSE_TO_STUDY_EXPERT_BINDING_GET_BY_FILTER: {
+        url: 'learning-course/:learningCourseId/learning-course-study-expert/:studyExpertId'
+    },
+    LEARNING_COURSE_STUDY_EXPERT_UPDATE_ALL: {
+        url: 'learning-course/:learningCourseId/learning-course-study-expert',
+        options: { method: 'patch' }
+    },
+    LEARNING_COURSE_STUDY_EXPERT_REPLACE_ALL: {
+        url: 'learning-course/:learningCourseId/learning-course-study-expert',
+        options: { method: 'put' }
+    },
+    LEARNING_COURSE_STUDY_EXPERT_DELETE_ALL: {
+        url: 'learning-course/:learningCourseId/learning-course-study-expert',
+        options: { method: 'delete' }
+    }
 };

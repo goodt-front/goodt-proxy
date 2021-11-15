@@ -95,6 +95,7 @@ export class EntityModelUserLearningCourseEntityDto extends ApiBaseDto {}
 export class EntityModelUserLearningCourseDocumentEntityDto extends ApiBaseDto {}
 export class EntityModelUserLearningCourseStepEntityDto extends ApiBaseDto {}
 export class LearningCourseStepEntityDto extends ApiBaseDto {}
+export class LearningCourseStudyExpertBindingDto extends ApiBaseDto {}
 export class BudgetEntityDto extends ApiBaseDto {}
 export class CollectionModelUserLearningCourseDocumentEntityDto extends ApiBaseDto {}
 export class CollectionModelSuggestionEntityDto extends ApiBaseDto {}

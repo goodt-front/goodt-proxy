@@ -18,43 +18,39 @@
     </div>
 </template>
 <script>
-/**
- * @typedef {import('./[[{name}]]').IInstance} IInstance
- */
 import { Elem } from '[[{core}]]';
 import { useDremio } from '[[{coreMixins}]]';
-import { DremioPanelAsync, [[{panelName}]]Async } from '[[{panelPath}]]';
-import { descriptor /*, Vars*/ } from './descriptor';
+import { descriptor /*, Vars */ } from './descriptor';
+import Panels from '[[{panelPath}]]';
 
-const { mixin: DremioMixin } = useDremio();
+/**
+ * @typedef {import('./types/[[{name}]]').TInstance} TInstance
+ * @type {TInstance}
+ */
+const ComponentInstanceTypeDescriptor = undefined;
 
 export default {
     extends: Elem,
-    mixins: [DremioMixin],
-    data() {
-        return {
-            descriptor: descriptor(),
-            loadDataHooks: {
-                before: () => {
-                    this.loading = true;
-                },
-                then: (r) => r,
-                catch: (e) => {
-                    if (!e.isCancel) {
-                        this.error = e;
-                    }
-                },
-                finally: () => {
-                    this.loading = false;
+    mixins: [ useDremio().mixin ],
+    data: (vm) => ({
+        descriptor: descriptor(),
+        loadDataHooks: {
+            before: () => {
+                vm.loading = true;
+            },
+            then: (result) => result,
+            catch: (error) => {
+                if (!error.isCancel) {
+                    vm.error = error;
                 }
             },
-            loading: false,
-            error: null
-        };
-    },
-    created() {
-        // to be implemented
-    },
+            finally: () => {
+                vm.loading = false;
+            }
+        },
+        /* Vetur HACK */
+        ...ComponentInstanceTypeDescriptor
+    }),
     methods: {
         getSlotNames() {
             return ['default'];
@@ -63,10 +59,7 @@ export default {
             return true;
         },
         getPanels() {
-            return [
-                DremioPanelAsync,
-                [[{panelName}]]Async
-            ];
+            return Panels;
         },
         loadDataPage(page) {
             this.page = page;

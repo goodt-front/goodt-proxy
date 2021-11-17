@@ -26,13 +26,13 @@ import { Elem } from '[[{core}]]';
 import {
     ApiMixins,
     ApiMixinsTypeDescriptor
-} from './mixins';
+} from './api/mixins';
 [[/hasTransport]]
-import { [[{panelName}]]Async } from '[[{panelPath}]]';
-import { descriptor /* , Vars */ } from './descriptor';
+import { descriptor /*, Vars */ } from './descriptor';
+import Panels from '[[{panelPath}]]';
 
 /**
- * @typedef {import('./types').TInstance} TInstance
+ * @typedef {import('./types/[[{name}]]').TInstance} TInstance
  * @type {TInstance}
  */
 const ComponentInstanceTypeDescriptor = undefined;
@@ -48,9 +48,13 @@ export default {
         /**
          * @type {import('[[{commonUtils}]]').ISafeResult}
          */
-        demoResult: null
+        demoResult: null,
         [[/hasTransport]]
+        /* Vetur HACK for type hinting */
+        ...ApiMixinsTypeDescriptor,
+        ...ComponentInstanceTypeDescriptor
     }),
+    /* static data used in <template></template> */
     static: {},
     watchStore: [
     /*
@@ -79,7 +83,7 @@ export default {
             return ['default'];
         },
         /**
-         * @param {string} type  widget type
+         * @param {string} [type]  widget type
          * @return {boolean}
          */
         isChildAllowed(/* type */) {
@@ -89,7 +93,7 @@ export default {
          * @return {import('vue').AsyncComponent[]}
          */
         getPanels() {
-            return [ [[{panelName}]]Async ];
+            return Panels;
         },
         [[#hasTransport]]
         async fetchDemoData() {
@@ -105,11 +109,8 @@ export default {
             if (isSuccess) {
                 console.log({ employeeAssignments });
             }
-        },
-        /* Vetur HACK – extra structure and type hinting */
-        ...ApiMixinsTypeDescriptor,
+        }
         [[/hasTransport]]
-        ...ComponentInstanceTypeDescriptor
     }
 };
 </script>

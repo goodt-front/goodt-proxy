@@ -12,6 +12,10 @@ module.exports = class extends Template {
         super(widgetName, config);
     }
 
+    get path() {
+        return __dirname;
+    }
+
     async build(options) {
         super.build(options);
 
@@ -24,7 +28,7 @@ module.exports = class extends Template {
             }
         }).run();
 
-        const tplBinds = {
+        const tplBindings = {
             core: this.corePath,
             corePanels: this.corePanelsPath,
             coreMixins: this.coreMixinsPath,
@@ -45,26 +49,8 @@ module.exports = class extends Template {
             })
         };
 
-        const elem = this.compileTpl(`${TPL_PATH}/elem.vue`, tplBinds);
-        const elemTypesDT = this.compileTpl(`${TPL_PATH}/elem.types.d.ts`, tplBinds);
-        const elemDT = this.compileTpl(`${TPL_PATH}/elem.d.ts`, tplBinds);
-        const panel = this.compileTpl(`${TPL_PATH}/panel.vue`, tplBinds);
-        const panelTypesDT = this.compileTpl(`${TPL_PATH}/panel.types.d.ts`, tplBinds);
-        const panelDT = this.compileTpl(`${TPL_PATH}/panel.d.ts`, tplBinds);
-        const panelsIndex = this.compileTpl(`${TPL_PATH}/panels.index.js`, tplBinds);
-        const descriptor = this.compileTpl(`${TPL_PATH}/descriptor.js`, tplBinds);
-        const readmeMd = this.compileTpl(`${TPL_PATH}/README.MD`, tplBinds);
-
-        const widgetCreated = this.createWidget({
-            elem,
-            panel,
-            elemDT,
-            elemTypesDT,
-            panelDT,
-            panelTypesDT,
-            panelsIndex,
-            descriptor,
-            readmeMd
+        this.createWidget({
+            tplBindings
         });
 
         /* Services */
@@ -74,23 +60,22 @@ module.exports = class extends Template {
             const prefixCapital = servicePrefix;
             const prefixCamel = camelCase(servicePrefix);
 
-            const localTplBinds = {
-                ...tplBinds,
+            const localTplBindings = {
+                ...tplBindings,
                 description,
                 prefixCapital,
                 prefixCamel
             };
-            const GqlServiceConsumer = this.compileTpl(`${SERVICE_PATH}/GqlServiceConsumer.js`, localTplBinds);
-            this.createWidgetFile(`${SERVICE_PATH_REL}/${prefixCapital}Consumer.js`, GqlServiceConsumer);
+
+            this.buildWidgetFile(
+                `${SERVICE_PATH}/GqlServiceConsumer.js`,
+                `${SERVICE_PATH_REL}/${prefixCapital}Consumer.js`,
+                localTplBindings
+            );
         });
 
-        const indexFile = this.compileTpl(`${SERVICE_PATH}/index.js`, tplBinds);
-        this.createWidgetFile(`${SERVICE_PATH_REL}/index.js`, indexFile);
+        this.buildWidgetFile(`${SERVICE_PATH}/index.js`, `${SERVICE_PATH_REL}/index.js`, tplBindings);
 
-        /* Styles */
-        const style = this.compileTpl(`${TPL_PATH}/style.less`, tplBinds);
-        this.createWidgetFile(`style.less`, style);
-
-        return widgetCreated;
+        return true;
     }
 };

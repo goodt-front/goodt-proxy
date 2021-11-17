@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const mustache = require('mustache');
 const merge = require('lodash.merge');
 mustache.tags = ['[[', ']]'];
@@ -54,30 +55,27 @@ module.exports = class {
      * @param {object} tpl  compiled vue template files
      * @return {boolean|Error}  true if success; else error
      */
-    createWidget({ elem, panel, panelDT, panelTypesDT, elemDT, elemTypesDT, descriptor, panelsIndex, readmeMd }) {
+    createWidget({ tplBindings, tplPath = this.tplPath }) {
         this.createWidgetDir();
         const { path: panelPath, name: panelName } = this.config.panel;
-        ['components', panelPath, `${panelPath}/components`].forEach((dir) => this.createWidgetDir(dir));
-        this.createWidgetFile(`${this.widgetName}.vue`, elem);
-        this.createWidgetFile(`${panelPath}/${panelName}.vue`, panel);
+        const { path: typesPath } = this.config.types;
 
-        if (panelDT && panelTypesDT) {
-            this.createWidgetFile(`${panelPath}/${panelName}Types.d.ts`, panelTypesDT);
-            this.createWidgetFile(`${panelPath}/${panelName}.d.ts`, panelDT);
-        }
-        if (panelsIndex) {
-            this.createWidgetFile(`${panelPath}/index.js`, panelsIndex);
-        }
-        if (elemDT && elemTypesDT) {
-            this.createWidgetFile(`types.d.ts`, elemTypesDT);
-            this.createWidgetFile(`${this.widgetName}.d.ts`, elemDT);
-        }
-        if (descriptor) {
-            this.createWidgetFile(`descriptor.js`, descriptor);
-        }
-        if (readmeMd) {
-            this.createWidgetFile(`README.MD`, readmeMd);
-        }
+        ['components', panelPath, `${panelPath}/components`, 'types'].forEach((dir) => this.createWidgetDir(dir));
+        this.buildWidgetFile(`${tplPath}/elem.vue`, `${this.widgetName}.vue`, tplBindings);
+        this.buildWidgetFile(`${tplPath}/elem.types.d.ts`, `${typesPath}/${this.widgetName}.d.ts`, tplBindings);
+        this.buildWidgetFile(`${tplPath}/panel.vue`, `${panelPath}/${panelName}.vue`, tplBindings);
+        this.buildWidgetFile(`${tplPath}/panel.types.d.ts`, `${typesPath}/${panelName}.d.ts`, tplBindings);
+        this.buildWidgetFile(`${tplPath}/panels.index.js`, `${panelPath}/index.js`, tplBindings);
+        this.buildWidgetFile(`${tplPath}/descriptor.js`, `descriptor.js`, tplBindings);
+        this.buildWidgetFile(`${tplPath}/README.MD`, `README.MD`, tplBindings);
+        this.buildWidgetFile(`${tplPath}/style.less`, `style.less`, tplBindings);
+        this.createWidgetFile(`constants.js`, '/* place constant values, magic number semantic explanations here */');
+        this.createWidgetFile(
+            `config.js`,
+            '/* place render data: texts, ui control settings, options lists, css class and styles map here */'
+        );
+        this.createWidgetFile(`utils.js`, '/* place utility functions here */');
+
         return true;
     }
     /**
@@ -100,6 +98,18 @@ module.exports = class {
         return true;
     }
     /**
+     * Build file from source and place relative to the widget home dir
+     * @param {string} sourcePathAbs   absolute source path
+     * @param {string} targetPathRel   relative path @example 'components/readme.txt'
+     * @param {object} bindings
+     * @return {boolean|Error}
+     */
+    buildWidgetFile(sourcePathAbs, targetPathRel, bindings) {
+        const data = this.compileTpl(sourcePathAbs, bindings);
+        fs.writeFileSync(`${this.widgetDirPath}/${targetPathRel}`, data);
+        return true;
+    }
+    /**
      * Checks whether widget home dir exists
      * @return {boolean}
      */
@@ -108,12 +118,27 @@ module.exports = class {
     }
     /**
      * Compile
-     * @param {string} path
-     * @param {object} binds
+     * @param {string} sourcePathAbs absolute source path
+     * @param {object} bindings
      */
-    compileTpl(path, binds) {
-        const tpl = fs.readFileSync(path, 'utf8');
-        return mustache.render(tpl, binds);
+    compileTpl(sourcePathAbs, bindings) {
+        const tpl = fs.readFileSync(sourcePathAbs, 'utf8');
+        return mustache.render(tpl, bindings);
+    }
+
+    /**
+     *
+     * @return {string}
+     */
+    get path() {
+        return __dirname;
+    }
+    /**
+     *
+     * @return {string}
+     */
+    get tplPath() {
+        return path.resolve(this.path, this.config.path.templates);
     }
 };
 

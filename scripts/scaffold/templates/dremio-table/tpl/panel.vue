@@ -7,19 +7,18 @@
     </ui-panel-container>
 </template>
 <script>
-/**
- * @typedef {import('./[[{panelName}]]').IComponentOptions} IComponentOptions
- * @typedef {import('./[[{panelName}]]').IInstance} IInstance
- */
 import { Panel } from '[[{core}]]';
-
 /**
- * @type {IComponentOptions}
+ * @typedef {import('../types/[[{panelName}]]').TInstance} TInstance
+ * @type {TInstance}
  */
-export default ({
+const ComponentInstanceTypeDescriptor = undefined;
+
+export default {
     extends: Panel,
     data: () => ({
-        $meta: { name: '[[{panelName}]]', icon: '' }
+        $meta: { name: '[[{panelName}]]', icon: '' },
+        ...ComponentInstanceTypeDescriptor
     })
-});
+};
 </script>

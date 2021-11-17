@@ -1,5 +1,6 @@
 import { IDescriptorProps } from '[[{core}]]';
 import { IElemComponentOptions, IElemInstance } from '[[{core}]]/Elem';
+
 import { descriptor } from '../descriptor';
 
 interface Data {}

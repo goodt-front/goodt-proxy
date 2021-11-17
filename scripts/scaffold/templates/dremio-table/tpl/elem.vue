@@ -1,16 +1,18 @@
 <script>
-/**
- * @typedef {import('./[[{name}]]').IComponentOptions} IComponentOptions
- * @typedef {import('./[[{name}]]').IInstance} IInstance
- */
 import Table, { COLUMN_RENDERS } from '[[{lib}]]/ElemDremioTable/ElemDremioTable.vue';
 [[#pagination]]
 import DemoPagination from './components/Pagination.vue';
 [[/pagination]]
 import DemoTableRow from './components/TableRow.vue';
 import renders from './renders';
-import { PaginationPanelAsync, [[{panelName}]]Async } from '[[{panelPath}]]';
+import Panels, { PaginationPanelAsync } from '[[{panelPath}]]';
 import { descriptor, /* Vars */ } from './descriptor';
+
+/**
+ * @typedef {import('./types/[[{name}]]').TInstance} TInstance
+ * @type {TInstance}
+ */
+const ComponentInstanceTypeDescriptor = undefined;
 
 export default {
     extends: Table,
@@ -34,7 +36,9 @@ export default {
         }
     },
     data: () => ({
-        descriptor: descriptor()
+        descriptor: descriptor(),
+        /* Vetur HACK */
+        ...ComponentInstanceTypeDescriptor
     }),
     created() {
         // to be implemented
@@ -44,7 +48,7 @@ export default {
             const panels = this.super(Table).getPanels.call(this);
             return [
                 ...panels,
-                [[{panelName}]]Async
+                ...Panels
             ];
         },
         [[#pagination]]

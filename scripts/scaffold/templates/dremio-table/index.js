@@ -5,6 +5,11 @@ module.exports = class extends Template {
     constructor(widgetName, config) {
         super(widgetName, config);
     }
+
+    get path() {
+        return __dirname;
+    }
+
     async build(options) {
         super.build(options);
 
@@ -14,43 +19,34 @@ module.exports = class extends Template {
             disabled: 'no'
         }).run();
 
-        const tplPath = `${__dirname}/tpl`;
-        const tplBinds = {
+        const tplBindings = {
             core: this.corePath,
             corePanels: this.corePanelsPath,
             coreMixins: this.coreMixinsPath,
             lib: this.widgetLibPath,
             path: this.widgetPath,
             name: this.widgetName,
-            pagination: paginationEnabled,
             panelName: this.config.panel.name,
-            panelPath: this.config.panel.path
+            panelPath: this.config.panel.path,
+            pagination: paginationEnabled
         };
-        const elem = this.compileTpl(`${tplPath}/elem.vue`, tplBinds);
-        const elemDT = this.compileTpl(`${tplPath}/elem.d.ts`, tplBinds);
-        const panel = this.compileTpl(`${tplPath}/panel.vue`, tplBinds);
-        const panelDT = this.compileTpl(`${tplPath}/panel.d.ts`, tplBinds);
-        const panelsIndex = this.compileTpl(`${tplPath}/panels/index.js`, tplBinds);
-        const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
-        const readmeMd = this.compileTpl(`${tplPath}/README.MD`, tplBinds);
 
-        this.createWidget({ elem, panel, elemDT, panelDT, panelsIndex, descriptor, readmeMd });
-        // render
-        const render = this.compileTpl(`${tplPath}/renders/render.vue`, tplBinds);
-        const rendersIndex = this.compileTpl(`${tplPath}/renders/index.js`, tplBinds);
+        this.createWidget({
+            tplBindings
+        });
+
+        const render = this.compileTpl(`${this.tplPath}/renders/render.vue`, tplBindings);
+        const rendersIndex = this.compileTpl(`${this.tplPath}/renders/index.js`, tplBindings);
         this.createWidgetDir('renders');
         this.createWidgetFile('renders/Render.vue', render);
         this.createWidgetFile('renders/index.js', rendersIndex);
         // table-row
-        const tableRow = this.compileTpl(`${tplPath}/components/table-row.vue`, tplBinds);
+        const tableRow = this.compileTpl(`${this.tplPath}/components/table-row.vue`, tplBindings);
         this.createWidgetFile('components/TableRow.vue', tableRow);
         // pagination
         if (paginationEnabled) {
-            const pagination = this.compileTpl(`${tplPath}/components/pagination.vue`, tplBinds);
-            const paginationPanel = this.compileTpl(
-                `${tplPath}/panels/pagination-panel.vue`,
-                tplBinds
-            );
+            const pagination = this.compileTpl(`${this.tplPath}/components/pagination.vue`, tplBindings);
+            const paginationPanel = this.compileTpl(`${this.tplPath}/panels/pagination-panel.vue`, tplBindings);
             this.createWidgetFile('components/Pagination.vue', pagination);
             this.createWidgetFile('panels/PaginationPanel.vue', paginationPanel);
         }

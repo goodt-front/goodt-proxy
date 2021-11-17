@@ -12,6 +12,7 @@ const cwd = process.cwd();
 const CONFIG = {
     path: {
         home: __dirname,
+        templates: './tpl',
         project: {
             home: cwd,
             src: `${cwd}/src`,
@@ -31,6 +32,9 @@ const CONFIG = {
     panel: {
         name: 'SettingsPanel',
         path: './panels'
+    },
+    types: {
+        path: './types'
     },
     services: [{ name: 'OrgStructure GraphQL API', value: 'OrgStructure' }]
 };

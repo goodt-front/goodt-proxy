@@ -12,7 +12,7 @@
 <script>
 import { Panel } from '[[{core}]]';
 /**
- * @typedef {import('./[[{panelName}]]').TInstance} TInstance
+ * @typedef {import('../types/[[{panelName}]]').TInstance} TInstance
  * @type {TInstance}
  */
 const ComponentInstanceTypeDescriptor = undefined;

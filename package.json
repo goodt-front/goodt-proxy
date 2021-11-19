@@ -1,9 +1,11 @@
 {
-    "version": "1.0.17",
+    "version": "1.0.19",
     "name": "goodt-wcore",
-    "private": true,
     "main": "src/core/index.js",
     "types": "src/core/index.d.ts",
+    "publishConfig": {
+      "registry": "https://art.goodt.me/repository/npm/"
+    },
     "scripts": {
         "start": "vite",
         "dev": "vite",

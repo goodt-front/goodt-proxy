@@ -4,7 +4,7 @@ import { BaseDto as ApiBaseDto } from '@goodt-common/infra';
 /**
  * @todo Purge Collection* classes
  */
-export class EntityModelBudgetEntityDto extends ApiBaseDto {}
+export class BudgetEntityDto extends ApiBaseDto {}
 export class EntityModelBudgetDataEntityDto extends ApiBaseDto {}
 export class CollectionModelEntityModelBudgetItemEntityDto extends ApiBaseDto {}
 export class EntityModelBudgetItemEntityDto extends ApiBaseDto {}
@@ -38,21 +38,18 @@ export class CollectionModelLearningCoursePartyEntityDto extends ApiBaseDto {}
 export class EntityModelLearningCourseStepEntityDto extends ApiBaseDto {}
 export class CollectionModelLearningCourseMessageEntityDto extends ApiBaseDto {}
 export class EntityModelLearningFormEntityDto extends ApiBaseDto {}
-export class EntityModelLearningProgramEntityDto extends ApiBaseDto {}
+export class LearningProgramEntityDto extends ApiBaseDto {}
 export class EntityModelLearningProgramCatalogEntityDto extends ApiBaseDto {}
 export class EntityModelLearningProgramDocumentTypeEntityDto extends ApiBaseDto {}
-export class CollectionModelEntityModelLearningProgramLearningCourseEntityDto extends ApiBaseDto {}
-export class EntityModelLearningProgramLearningCourseEntityDto extends ApiBaseDto {}
+export class LearningProgramLearningCourseBindingDto extends ApiBaseDto {}
 export class CollectionModelEntityModelLearningProgramLearningCourseDependencyEntityDto extends ApiBaseDto {}
 export class EntityModelLearningProgramLearningCourseDependencyEntityDto extends ApiBaseDto {}
 export class CollectionModelEntityModelLearningProgramLearningCoursePartyEntityDto extends ApiBaseDto {}
 export class EntityModelLearningProgramLearningCoursePartyEntityDto extends ApiBaseDto {}
-export class CollectionModelEntityModelLearningStudygroupEntityDto extends ApiBaseDto {}
-export class EntityModelLearningStudygroupEntityDto extends ApiBaseDto {}
+export class LearningStudyGroupDto extends ApiBaseDto {}
 export class CollectionModelEntityModelLearningStudygroupNumeratorEntityDto extends ApiBaseDto {}
 export class EntityModelLearningStudygroupNumeratorEntityDto extends ApiBaseDto {}
-export class CollectionModelEntityModelMessageEntityDto extends ApiBaseDto {}
-export class EntityModelMessageEntityDto extends ApiBaseDto {}
+export class MessageEntityDto extends ApiBaseDto {}
 export class CollectionModelEntityModelStatusEntityDto extends ApiBaseDto {}
 export class EntityModelStatusEntityDto extends ApiBaseDto {}
 export class CollectionModelEntityModelStudyDegreeEntityDto extends ApiBaseDto {}

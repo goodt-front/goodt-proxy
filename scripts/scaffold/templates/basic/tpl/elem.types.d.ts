@@ -4,7 +4,7 @@ import { IElemComponentOptions, IElemInstance } from '[[{core}]]/Elem';
 import { IApiServiceMixinInstance } from '@goodt-common/mixins';
 import { ApiService } from './api';
 [[/hasTransport]]
-import { descriptor } from './descriptor';
+import { descriptor } from '../descriptor';
 
 interface Data {}
 interface Methods {}

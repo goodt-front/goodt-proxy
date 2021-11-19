@@ -45,13 +45,14 @@ import { OperationResult, resolveOperationStates } from '@goodt-common/graphql';
 import { Destruct } from '@goodt-wcore/core/components';
 import { useConsumersMixins, ConsumersMixinsTypes } from './api';
 import { descriptor /* , Vars */ } from './descriptor';
-import { [[{panelName}]]Async } from '[[{panelPath}]]';
+import Panels from '[[{panelPath}]]';
 
 /**
- * @typedef {import('./types').TInstance} TInstance
+ * @typedef {import('./types/[[{name}]]').TInstance} TInstance
  * @type {TInstance}
  */
 const ComponentInstanceTypeDescriptor = undefined;
+
 /**
  * Создаёт массив миксинов для использования сервисов вместе с компонентом
  */
@@ -132,7 +133,7 @@ export default {
          * @return {Array<function(): Promise>}
          */
         getPanels() {
-            return [ [[{panelName}]]Async ];
+            return Panels;
         },
 
         // ///////////////////////////

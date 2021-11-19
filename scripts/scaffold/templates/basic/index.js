@@ -11,6 +11,11 @@ module.exports = class extends Template {
     constructor(widgetName, config) {
         super(widgetName, config);
     }
+
+    get path() {
+        return __dirname;
+    }
+
     async build(options) {
         super.build(options);
 
@@ -21,9 +26,9 @@ module.exports = class extends Template {
                 message
             }))
         }).run();
-        const tplPath = `${__dirname}/tpl`;
+
         const hasTransport = [TransportType.HTTP, TransportType.HTTP_AUTH].includes(transport);
-        const tplBinds = {
+        const tplBindings = {
             core: this.corePath,
             corePanels: this.corePanelsPath,
             coreMixins: this.coreMixinsPath,
@@ -40,43 +45,23 @@ module.exports = class extends Template {
             panelName: this.config.panel.name,
             panelPath: this.config.panel.path
         };
-        const servicePath = 'api';
 
-        const elem = this.compileTpl(`${tplPath}/elem.vue`, tplBinds);
-        const elemTypesDT = this.compileTpl(`${tplPath}/elem.types.d.ts`, tplBinds);
-        const elemDT = this.compileTpl(`${tplPath}/elem.d.ts`, tplBinds);
-        const panel = this.compileTpl(`${tplPath}/panel.vue`, tplBinds);
-        const panelTypesDT = this.compileTpl(`${tplPath}/panel.types.d.ts`, tplBinds);
-        const panelDT = this.compileTpl(`${tplPath}/panel.d.ts`, tplBinds);
-        const panelsIndex = this.compileTpl(`${tplPath}/panels.index.js`, tplBinds);
-        const descriptor = this.compileTpl(`${tplPath}/descriptor.js`, tplBinds);
-        const style = this.compileTpl(`${tplPath}/style.less`, tplBinds);
-        const readmeMd = this.compileTpl(`${tplPath}/README.MD`, tplBinds);
-        const widgetCreated = this.createWidget({
-            elem,
-            panel,
-            elemDT,
-            elemTypesDT,
-            panelDT,
-            panelTypesDT,
-            panelsIndex,
-            descriptor,
-            readmeMd
+        this.createWidget({
+            tplBindings
         });
-        this.createWidgetFile(`style.less`, style);
 
         if (hasTransport) {
-            const DemoApiService = this.compileTpl(`${tplPath}/${servicePath}/ApiService.js`, tplBinds);
-            const indexFile = this.compileTpl(`${tplPath}/${servicePath}/index.js`, tplBinds);
-
+            const servicePath = 'api';
             this.createWidgetDir(servicePath);
-            this.createWidgetFile(`${servicePath}/ApiService.js`, DemoApiService);
-            this.createWidgetFile(`${servicePath}/index.js`, indexFile);
-
-            const mixinsFile = this.compileTpl(`${tplPath}/mixins.js`, tplBinds);
-            this.createWidgetFile(`mixins.js`, mixinsFile);
+            this.buildWidgetFile(
+                `${this.tplPath}/${servicePath}/ApiService.js`,
+                `${servicePath}/ApiService.js`,
+                tplBindings
+            );
+            this.buildWidgetFile(`${this.tplPath}/${servicePath}/index.js`, `${servicePath}/index.js`, tplBindings);
+            this.buildWidgetFile(`${this.tplPath}/mixins.js`, `${servicePath}/mixins.js`, tplBindings);
         }
 
-        return widgetCreated;
+        return true;
     }
 };

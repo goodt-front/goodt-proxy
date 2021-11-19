@@ -1,2 +1,4 @@
-export { DremioPanelAsync } from '[[{corePanels}]]';
-export const [[{panelName}]]Async = () => import('./[[{panelName}]].vue');
+import { DremioPanelAsync } from '[[{corePanels}]]';
+const [[{panelName}]]Async = () => import('./[[{panelName}]].vue');
+
+export default [DremioPanelAsync, [[{panelName}]]Async];

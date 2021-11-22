@@ -22,6 +22,8 @@ import {
     LearningCourseCatalogEntityDto,
     LearningCourseDocumentTypeEntityDto,
     LearningCourseGroupEntityDto,
+    LearningCourseCuratorEntityDto,
+    LearningCourseGroupBindingDto,
     LearningCourseSimilarEntityDto,
     LearningCourseStudyDirectionEntityDto,
     LearningCourseTypeEntityDto,
@@ -32,10 +34,14 @@ import {
     LearningProgramLearningCoursePartyEntityDto,
     LearningStudyGroupDto,
     LearningStudyGroupNumeratorEntityDto,
+    LearningCourseMessageBindingDto,
     MessageEntityDto,
     StatusEntityDto,
+    StudyExpertContractEntityDto,
     StudyDegreeEntityDto,
     StudyDegreeGroupEntityDto,
+    StudyExpertEntityDto,
+    StudyDirectionEntityDto,
     StudyExpertContractRateEntityDto,
     StudyExpertContractTypeEntityDto,
     StudyGrantEntityDto,
@@ -57,7 +63,14 @@ import {
     PageLearningCourseEntityDto,
     InfoDtoDto,
     LearningCourseAnnouncementEntityDto,
-    LearningCourseStudyExpertBindingDto
+    LearningCourseStudyExpertBindingDto,
+    StudyStudentPerformanceEntityDto,
+    StudyStudentEducationEntityDto,
+    StudyProviderRegionEntityDto,
+    StudyProviderRegionCityEntityDto,
+    LearningProgramCatalogEntityDto,
+    LearningCoursePartyEntityDto,
+    LearningProgramEntityDto
 } from './dtos';
 
 /**
@@ -672,7 +685,7 @@ export function getBudgetSourceById(id) {
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B8%D1%81%D1%82%D0%BE%D1%87%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D1%84%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20(BudgetSource)/deleteItemResource-budgetsourceentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
 export function deleteBudgetSource(id) {
     return this.request({
@@ -738,6 +751,7 @@ export function deleteBudget(id) {
 /**
  * @description Изменение свойств сущности: версия бюджета
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F%D0%BC%D0%B8%20%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%D0%B0%20(Budget)/patchItemResource-budgetentity-patch_1
+ * @param {string} id
  * @param {string} date_from
  * @param {string} date_to
  * @param {string} name
@@ -745,14 +759,14 @@ export function deleteBudget(id) {
  * @param {string} confirm_date
  * @param {number} confirm_employee_id
  * @param {boolean} actual
- * @param {string} id
+ * @param {boolean} [isReplace=false]
  *
  * @return {Promise<SafeResult<BudgetEntityDto, Error>>}
  */
 export function updateBudget(
     id,
     { date_from, date_to, name, year, confirm_date, confirm_employee_id, actual },
-    isReplace
+    isReplace = false
 ) {
     return this.request(
         {
@@ -777,7 +791,7 @@ export function updateBudget(
  * @description Получение информации о сущности: аудитория
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B0%D1%83%D0%B4%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D1%8F%D0%BC%D0%B8%20(Classroom)/getCollectionResource-classroomentity-get_1_1
  *
- * @return {Promise<SafeResult<ClassroomEntityDto, Error>>}
+ * @return {Promise<SafeResult<ClassroomEntityDto[], Error>>}
  */
 export function getClassrooms() {
     return this.request(
@@ -1019,7 +1033,7 @@ export function getContractSubjectById(id) {
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B2%D0%B8%D0%B4%D0%B0%D0%BC%D0%B8%20%D0%B2%D0%B7%D0%B0%D0%B8%D0%BC%D0%BE%D0%B4%D0%B5%D0%B9%D1%81%D1%82%D0%B2%D0%B8%D1%8F%20%D0%BF%D0%BE%20%D0%B4%D0%BE%D0%B3%D0%BE%D0%B2%D0%BE%D1%80%D1%83%20(%D0%BF%D1%80%D0%B5%D0%B4%D0%BC%D0%B5%D1%82%20%D0%B4%D0%BE%D0%B3%D0%BE%D0%B2%D0%BE%D1%80%D0%B0)%20(ContractSubject)/deleteItemResource-contractsubjectentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
 export function deleteContractSubject(id) {
     return this.request({
@@ -1115,7 +1129,7 @@ export function getDocumentTypeById(id) {
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%82%D0%B8%D0%BF%D0%B0%D0%BC%D0%B8%20%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%BE%D0%B2%20(DocumentType)/deleteItemResource-documenttypeentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
 export function deleteDocumentType(id) {
     return this.request({
@@ -1132,7 +1146,7 @@ export function deleteDocumentType(id) {
  * @param {string} short_name
  * @param {string} name
  * @param {string} description
- * @param {string} isReplace
+ * @param {boolean} isReplace
  *
  * @return {Promise<SafeResult<DocumentTypeEntityDto, Error>>}
  */
@@ -1142,7 +1156,6 @@ export function updateDocumentType(id, { external_id, short_name, name, descript
             action: isReplace ? ServiceAction.DOCUMENT_TYPE_REPLACE_BY_ID : ServiceAction.DOCUMENT_TYPE_UPDATE_BY_ID,
             pathParams: { id },
             params: {
-                id,
                 external_id,
                 short_name,
                 name,
@@ -1215,7 +1228,7 @@ export function getDurationById(id) {
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%81%D1%80%D0%BE%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%B4%D0%B5%D0%B9%D1%81%D1%82%D0%B2%D0%B8%D1%8F%20(Duration)/deleteItemResource-durationentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
 export function deleteDuration(id) {
     return this.request({
@@ -1467,7 +1480,7 @@ export function getLearningCourseAnnouncementById(id) {
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B0%D0%BD%D0%BE%D0%BD%D1%81%D0%B0%D0%BC%D0%B8%20(LearningCourseAnnouncement)/deleteItemResource-learningcourseannouncemententity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
 export function deleteLearningCourseAnnouncement(id) {
     return this.request(
@@ -1602,9 +1615,9 @@ export function getLearningCourseBudgetItemById(id) {
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%B8%D0%B2%D1%8F%D0%B7%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BE%D0%B1%D1%83%D1%87%D0%B0%D1%8E%D1%89%D0%B8%D1%85%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20%D0%BA%20%D1%81%D1%82%D0%B0%D1%82%D1%8C%D1%8F%D0%BC%20%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%D0%B0%20(LearningCourseBudgetItem)/deleteItemResource-learningcoursebudgetitementity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
-export function deleteLearningCourseBudgetItemById(id) {
+export function deleteLearningCourseBudgetItem(id) {
     return this.request({
         action: ServiceAction.LEARNING_COURSE_BUDGET_ITEM_DELETE_BY_ID,
         pathParams: { id }
@@ -1729,9 +1742,9 @@ export function getLearningCourseCatalogById(id) {
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D0%B0%D0%BC%D0%B8%20%D0%BA%D1%83%D1%80%D1%81%D0%BE%D0%B2%20(LearningCourseCatalog)/deleteItemResource-learningcoursecatalogentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
-export function deleteLearningCourseCatalogById(id) {
+export function deleteLearningCourseCatalog(id) {
     return this.request({
         action: ServiceAction.LEARNING_COURSE_CATALOG_DELETE_BY_ID,
         pathParams: { id }
@@ -1826,7 +1839,7 @@ export function createLearningCourseCurator({ date_from, date_to, learning_cours
  *
  * @return {Promise<SafeResult<LearningCourseCuratorEntityDto, Error>>}
  */
-export function getLearningCourseCuratorById(id) {
+export function getLearningCourseCurator(id) {
     return this.request(
         {
             action: ServiceAction.LEARNING_COURSE_CURATOR_GET_BY_ID,
@@ -1841,9 +1854,9 @@ export function getLearningCourseCuratorById(id) {
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0%D0%BC%D0%B8%20%D0%BE%D0%B1%D1%83%D1%87%D0%B0%D1%8E%D1%89%D0%B8%D1%85%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(LearningCourseCurator)/deleteItemResource-learningcoursecuratorentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
-export function deleteLearningCourseCuratorById(id) {
+export function deleteLearningCourseCurator(id) {
     return this.request({
         action: ServiceAction.LEARNING_COURSE_CURATOR_DELETE_BY_ID,
         pathParams: { id }
@@ -1946,7 +1959,7 @@ export function createLearningCourseDocumentType({
  *
  * @return {Promise<SafeResult<LearningCourseDocumentTypeEntityDto, Error>>}
  */
-export function getLearningCourseDocumentTypeById(id) {
+export function getLearningCourseDocumentType(id) {
     return this.request(
         {
             action: ServiceAction.LEARNING_COURSE_DOCUMENT_TYPE_GET_BY_ID,
@@ -1997,9 +2010,9 @@ export function replaceLearningCourseDocumentType(
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%B8%D0%B2%D1%8F%D0%B7%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%B2%D0%B8%D0%B4%D0%BE%D0%B2%20%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%BE%D0%B2%20%D0%BA%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D1%8F%D0%BC%20(LearningCourseDocumentType)/deleteItemResource-learningcoursedocumenttypeentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
-export function deleteLearningCourseDocumentTypeById(id) {
+export function deleteLearningCourseDocumentType(id) {
     return this.request({
         action: ServiceAction.LEARNING_COURSE_DOCUMENT_TYPE_DELETE_BY_ID,
         pathParams: { id }
@@ -2106,7 +2119,7 @@ export function createLearningCourseGroup({
  *
  * @return {Promise<SafeResult<LearningCourseGroupEntityDto, Error>>}
  */
-export function getLearningCourseGroupById(id) {
+export function getLearningCourseGroup(id) {
     return this.request(
         {
             action: ServiceAction.LEARNING_COURSE_GROUP_GET_BY_ID,
@@ -2159,7 +2172,7 @@ export function replaceLearningCourseGroup(
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B3%D1%80%D1%83%D0%BF%D0%BF%D0%B0%D0%BC%D0%B8%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D1%85%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(LearningCourseGroup)/deleteItemResource-learningcoursegroupentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
 export function deleteLearningCourseGroup(id) {
     return this.request(
@@ -2213,14 +2226,14 @@ export function updateLearningCourseGroup(
  * @description Получение информации о сущности: привязка подборок к курсам
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%B8%D0%B2%D1%8F%D0%B7%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BF%D0%BE%D0%B4%D0%B1%D0%BE%D1%80%D0%BE%D0%BA%20%D0%BA%20%D0%BA%D1%83%D1%80%D1%81%D0%B0%D0%BC%20(LearningCourseLearningCourseGroup)/getCollectionResource-learningcourselearningcoursegroupentity-get_1_1
  *
- * @return {Promise<SafeResult<LearningCourseLearningCourseGroupEntityDto[], Error>>}
+ * @return {Promise<SafeResult<LearningCourseGroupBindingDto[], Error>>}
  */
 export function getLearningCourseGroupBindings() {
     return this.request(
         {
             action: ServiceAction.LEARNING_COURSE_LEARNING_COURSE_GROUP_GET
         },
-        LearningCourseLearningCourseGroupEntityDto
+        LearningCourseGroupBindingDto
     );
 }
 
@@ -2235,7 +2248,7 @@ export function getLearningCourseGroupBindings() {
  * @param {number} learning_course_group
  * @param {number} learning_course
  *
- * @return {Promise<SafeResult<LearningCourseLearningCourseGroupEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseGroupBindingDto, Error>>}
  */
 export function createLearningCourseGroupBinding({
     date_from,
@@ -2259,24 +2272,24 @@ export function createLearningCourseGroupBinding({
                 learning_course
             }
         },
-        LearningCourseLearningCourseGroupEntityDto
+        LearningCourseGroupBindingDto
     );
 }
 
 /**
  * @description undefined
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%B8%D0%B2%D1%8F%D0%B7%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BF%D0%BE%D0%B4%D0%B1%D0%BE%D1%80%D0%BE%D0%BA%20%D0%BA%20%D0%BA%D1%83%D1%80%D1%81%D0%B0%D0%BC%20(LearningCourseLearningCourseGroup)/executeSearch-learningcourselearningcoursegroupentity-get_1
- * @param {string[]} ids
+ * @param {string[]} groupIds
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<LearningCourseGroupBindingDto[], Error>>}
  */
-export function getLearningCourseGroupBindingsByGroupIds(ids) {
+export function getLearningCourseGroupBindingsByGroupIds(groupIds) {
     return this.request(
         {
             action: ServiceAction.LEARNING_COURSE_LEARNING_COURSE_GROUP_SEARCH_FIND_BY_GROUP_GET,
-            params: { id: ids }
+            params: { id: groupIds }
         },
-        LearningCourseLearningCourseGroupEntityDto
+        LearningCourseGroupBindingDto
     );
 }
 
@@ -2285,7 +2298,7 @@ export function getLearningCourseGroupBindingsByGroupIds(ids) {
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%B8%D0%B2%D1%8F%D0%B7%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BF%D0%BE%D0%B4%D0%B1%D0%BE%D1%80%D0%BE%D0%BA%20%D0%BA%20%D0%BA%D1%83%D1%80%D1%81%D0%B0%D0%BC%20(LearningCourseLearningCourseGroup)/getItemResource-learningcourselearningcoursegroupentity-get_1
  * @param {string|number} id
  *
- * @return {Promise<SafeResult<LearningCourseLearningCourseGroupEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseGroupBindingDto, Error>>}
  */
 export function getLearningCourseGroupBindingById(id) {
     return this.request(
@@ -2293,7 +2306,7 @@ export function getLearningCourseGroupBindingById(id) {
             action: ServiceAction.LEARNING_COURSE_LEARNING_COURSE_GROUP_GET_BY_ID,
             pathParams: { id }
         },
-        LearningCourseLearningCourseGroupEntityDto
+        LearningCourseGroupBindingDto
     );
 }
 
@@ -2309,7 +2322,7 @@ export function getLearningCourseGroupBindingById(id) {
  * @param {number} learning_course
  * @param {string} id
  *
- * @return {Promise<SafeResult<LearningCourseLearningCourseGroupEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseGroupBindingDto, Error>>}
  */
 export function replaceLearningCourseGroupBinding(
     id,
@@ -2329,7 +2342,7 @@ export function replaceLearningCourseGroupBinding(
                 learning_course
             }
         },
-        LearningCourseLearningCourseGroupEntityDto
+        LearningCourseGroupBindingDto
     );
 }
 
@@ -2340,7 +2353,7 @@ export function replaceLearningCourseGroupBinding(
  *
  * @return {Promise<SafeResult<unknown, Error>>}
  */
-export function deleteLearningCourseGroupBindingById(id) {
+export function deleteLearningCourseGroupBinding(id) {
     return this.request({
         action: ServiceAction.LEARNING_COURSE_LEARNING_COURSE_GROUP_DELETE_BY_ID,
         pathParams: { id }
@@ -2359,7 +2372,7 @@ export function deleteLearningCourseGroupBindingById(id) {
  * @param {number} learning_course_group
  * @param {number} learning_course
  *
- * @return {Promise<SafeResult<LearningCourseLearningCourseGroupEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseGroupBindingDto, Error>>}
  */
 export function updateLearningCourseGroupBinding(
     id,
@@ -2379,7 +2392,7 @@ export function updateLearningCourseGroupBinding(
                 learning_course
             }
         },
-        LearningCourseLearningCourseGroupEntityDto
+        LearningCourseGroupBindingDto
     );
 }
 
@@ -2387,14 +2400,14 @@ export function updateLearningCourseGroupBinding(
  * @description Получение информации о сущности: привязка сообщений к курсу
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%B8%D0%B2%D1%8F%D0%B7%D0%BA%D0%B0%D0%BC%D0%B8%20%D1%81%D0%BE%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B8%D0%B9%20%D0%BA%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D1%8F%D0%BC%20(LearningCourseMessage)/getCollectionResource-learningcoursemessageentity-get_1_1
  *
- * @return {Promise<SafeResult<LearningCourseMessageEntityDto[], Error>>}
+ * @return {Promise<SafeResult<LearningCourseMessageBindingDto[], Error>>}
  */
-export function getLearningCourseMessages() {
+export function getLearningCourseMessageBindingsAll() {
     return this.request(
         {
-            action: ServiceAction.LEARNING_COURSE_MESSAGE_GET
+            action: ServiceAction.LEARNING_COURSE_MESSAGE_BINDINGS_GET
         },
-        LearningCourseMessageEntityDto
+        LearningCourseMessageBindingDto
     );
 }
 
@@ -2407,7 +2420,7 @@ export function getLearningCourseMessages() {
  * @param {string} message
  * @param {boolean} actual
  *
- * @return {Promise<SafeResult<LearningCourseMessageEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseMessageBindingDto, Error>>}
  */
 export function createLearningCourseMessage({ date_from, date_to, learning_course, message, actual }) {
     return this.request(
@@ -2421,24 +2434,24 @@ export function createLearningCourseMessage({ date_from, date_to, learning_cours
                 actual
             }
         },
-        LearningCourseMessageEntityDto
+        LearningCourseMessageBindingDto
     );
 }
 
 /**
  * @description Получение информации о сущности: привязка сообщений к курсу
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%B8%D0%B2%D1%8F%D0%B7%D0%BA%D0%B0%D0%BC%D0%B8%20%D1%81%D0%BE%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B8%D0%B9%20%D0%BA%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D1%8F%D0%BC%20(LearningCourseMessage)/getItemResource-learningcoursemessageentity-get_1
- * @param {string} id
+ * @param {string} learningCourseId
  *
- * @return {Promise<SafeResult<LearningCourseMessageEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseMessageBindingDto[], Error>>}
  */
-export function getLearningCourseMessageById(id) {
+export function getLearningCourseMessageBindingsByLearningCourseId(learningCourseId) {
     return this.request(
         {
-            action: ServiceAction.LEARNING_COURSE_MESSAGE_GET_BY_ID,
-            pathParams: { id }
+            action: ServiceAction.LEARNING_COURSE_MESSAGE_BINDINGS_GET_BY_LEARNING_COURSE_ID,
+            pathParams: { learningCourseId }
         },
-        LearningCourseMessageEntityDto
+        LearningCourseMessageBindingDto
     );
 }
 
@@ -2452,7 +2465,7 @@ export function getLearningCourseMessageById(id) {
  * @param {boolean} actual
  * @param {string} id
  *
- * @return {Promise<SafeResult<LearningCourseMessageEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseMessageBindingDto, Error>>}
  */
 export function replaceLearningCourseMessage(id, { date_from, date_to, learning_course, message, actual }) {
     return this.request(
@@ -2467,23 +2480,23 @@ export function replaceLearningCourseMessage(id, { date_from, date_to, learning_
                 actual
             }
         },
-        LearningCourseMessageEntityDto
+        LearningCourseMessageBindingDto
     );
 }
 
 /**
- * @description Удаление (закрытие) сущности: привязка сообщений к курсу
+ * @description Удаление (закрытие) сущности: cообщение
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%B8%D0%B2%D1%8F%D0%B7%D0%BA%D0%B0%D0%BC%D0%B8%20%D1%81%D0%BE%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B8%D0%B9%20%D0%BA%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D1%8F%D0%BC%20(LearningCourseMessage)/deleteItemResource-learningcoursemessageentity-delete_1
- * @param {string} id
+ * @param {string} learningCourseId
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
-// export function deleteLearningCourseMessageById(id) {
-//     return this.request({
-//         action: ServiceAction.LEARNING_COURSE_MESSAGE_DELETE_BY_ID,
-//         pathParams: { id }
-//     });
-// }
+export function deleteMessagesByLearningCourseId(learningCourseId) {
+    return this.request({
+        action: ServiceAction.LEARNING_COURSE_MESSAGE_DELETE_BY_LEARNING_COURSE_ID,
+        pathParams: { learningCourseId }
+    });
+}
 
 /**
  * @description Изменение свойств сущности: привязка сообщений к курсу
@@ -2495,7 +2508,7 @@ export function replaceLearningCourseMessage(id, { date_from, date_to, learning_
  * @param {boolean} actual
  * @param {string} id
  *
- * @return {Promise<SafeResult<LearningCourseMessageEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseMessageBindingDto, Error>>}
  */
 export function updateLearningCourseMessage(id, { date_from, date_to, learning_course, message, actual }) {
     return this.request(
@@ -2510,7 +2523,7 @@ export function updateLearningCourseMessage(id, { date_from, date_to, learning_c
                 actual
             }
         },
-        LearningCourseMessageEntityDto
+        LearningCourseMessageBindingDto
     );
 }
 
@@ -3795,7 +3808,7 @@ export function deleteCuratorOfLearningCourse(learningCourseId, curatorId) {
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/followPropertyReference-learningcourseentity-get_2_1_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<LearningCourseLearningCourseGroupEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseGroupBindingDto, Error>>}
  */
 export function getLearningCourseLearningCourseLearningCourseGroupById(id) {
     return this.request(
@@ -3803,7 +3816,7 @@ export function getLearningCourseLearningCourseLearningCourseGroupById(id) {
             action: ServiceAction.LEARNING_COURSE_LEARNING_COURSE_LEARNING_COURSE_GROUP_GET_BY_ID,
             pathParams: { id }
         },
-        LearningCourseLearningCourseGroupEntityDto
+        LearningCourseGroupBindingDto
     );
 }
 
@@ -3814,7 +3827,7 @@ export function getLearningCourseLearningCourseLearningCourseGroupById(id) {
  * @param {Array} content
  * @param {string} id
  *
- * @return {Promise<SafeResult<LearningCourseLearningCourseGroupEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseGroupBindingDto, Error>>}
  */
 export function replaceLearningCourseLearningCourseLearningCourseGroup(id, { links, content }) {
     return this.request(
@@ -3826,7 +3839,7 @@ export function replaceLearningCourseLearningCourseLearningCourseGroup(id, { lin
                 content
             }
         },
-        LearningCourseLearningCourseGroupEntityDto
+        LearningCourseGroupBindingDto
     );
 }
 
@@ -3854,7 +3867,7 @@ export function deleteLearningCourseLearningCourseLearningCourseGroupById(id) {
  * @param {Array} content
  * @param {string} id
  *
- * @return {Promise<SafeResult<LearningCourseLearningCourseGroupEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseGroupBindingDto, Error>>}
  */
 export function updateLearningCourseLearningCourseLearningCourseGroup(id, { links, content }) {
     return this.request(
@@ -3866,40 +3879,40 @@ export function updateLearningCourseLearningCourseLearningCourseGroup(id, { link
                 content
             }
         },
-        LearningCourseLearningCourseGroupEntityDto
+        LearningCourseGroupBindingDto
     );
 }
 
 /**
  * @description Получение информации о сущности: привязка подборок к курсам
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/followPropertyReference-learningcourseentity-get_2_1
- * @param {string} id
- * @param {string} propertyId
+ * @param {string} learningCourseId
+ * @param {string} groupId
  *
- * @return {Promise<SafeResult<LearningCourseLearningCourseGroupEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseGroupBindingDto[], Error>>}
  */
-export function getLearningCourseLearningCourseLearningCourseGroup({ id, propertyId }) {
+export function getLearningCourseGroupBindingsByKeys(learningCourseId, groupId) {
     return this.request(
         {
             action: ServiceAction.LEARNING_COURSE_LEARNING_COURSE_LEARNING_COURSE_GROUP_GET,
-            pathParams: { id, propertyId }
+            pathParams: { learningCourseId, groupId }
         },
-        LearningCourseLearningCourseGroupEntityDto
+        LearningCourseGroupBindingDto
     );
 }
 
 /**
  * @description Удаление (закрытие) сущности: привязка подборок к курсам
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/deletePropertyReferenceId-learningcourseentity-delete_1_1
- * @param {string} id
- * @param {string} propertyId
+ * @param {string} learningCourseId
+ * @param {string} groupId
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
-export function deleteLearningCourseLearningCourseLearningCourseGroup({ id, propertyId }) {
+export function deleteLearningCourseGroupBindingsByKeys(learningCourseId, groupId) {
     return this.request({
         action: ServiceAction.LEARNING_COURSE_LEARNING_COURSE_LEARNING_COURSE_GROUP_DELETE,
-        pathParams: { id, propertyId }
+        pathParams: { learningCourseId, groupId }
     });
 }
 
@@ -4092,125 +4105,100 @@ export function getLearningCourseStepsByLearningCourseId(learningCourseId) {
  * @param {string} learningCourseId
  * @param {string} learningCourseStepId
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<boolean, Error>>}
  */
-export function deleteLearningCourseStepOfLearningCourse(learningCourseId, learningCourseStepId) {
-    return this.request(
-        {
-            action: ServiceAction.LEARNING_COURSE_LEARNING_COURSE_STEP_DELETE,
-            pathParams: { learningCourseId, learningCourseStepId }
-        },
-        true
-    );
+export function deleteLearningCourseStepsByKeys(learningCourseId, learningCourseStepId) {
+    return this.request({
+        action: ServiceAction.LEARNING_COURSE_LEARNING_COURSE_STEP_DELETE,
+        pathParams: { learningCourseId, learningCourseStepId }
+    });
 }
 
 /**
- * @description Получение информации о сущности: сообщение
+ * @description Получение информации о сущности: привязки сообщений к курсу
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/followPropertyReference-learningcourseentity-get_5_1_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<LearningCourseMessageEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseMessageBindingDto, Error>>}
  */
-// export function getLearningCourseMessageById(id) {
-//     return this.request(
-//         {
-//             action: ServiceAction.LEARNING_COURSE_MESSAGE_GET_BY_ID,
-//             pathParams: { id }
-//         },
-//         LearningCourseMessageEntityDto
-//     );
-// }
-
-/**
- * @description Изменение сущности целиком: сообщение
- * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/createPropertyReference-learningcourseentity-put_4_1
- * @param {Array} links
- * @param {Array} content
- * @param {string} id
- *
- * @return {Promise<SafeResult<LearningCourseMessageEntityDto, Error>>}
- */
-// export function replaceLearningCourseMessage(id, { links, content }) {
-//     return this.request(
-//         {
-//             action: ServiceAction.LEARNING_COURSE_MESSAGE_REPLACE_BY_ID,
-//             pathParams: { id },
-//             params: {
-//                 links,
-//                 content
-//             }
-//         },
-//         LearningCourseMessageEntityDto
-//     );
-// }
+export function getLearningCourseMessageBindingById(id) {
+    return this.request(
+        {
+            action: ServiceAction.LEARNING_COURSE_MESSAGE_BINDING_GET_BY_ID,
+            pathParams: { id }
+        },
+        LearningCourseMessageBindingDto
+    );
+}
 
 /**
  * @description Удаление (закрытие) сущности: сообщение
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/deletePropertyReference-learningcourseentity-delete_4_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<boolean, Error>>}
  */
-export function deleteLearningCourseMessageById(id) {
+export function deleteLearningCourseMessageBindingById(id) {
     return this.request({
-        action: ServiceAction.LEARNING_COURSE_MESSAGE_DELETE_BY_ID,
+        action: ServiceAction.LEARNING_COURSE_MESSAGE_BINDING_DELETE_BY_ID,
         pathParams: { id }
     });
 }
 
 /**
- * @description Изменение свойств сущности: сообщение
+ * @description Изменение свойств сущности: привязки сообщений
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/createPropertyReference-learningcourseentity-patch_4_1
- * @param {Array} links
- * @param {Array} content
- * @param {string} id
+ * @param {string} learningCourseId
+ * @param {Array} messages
+ * @param {boolean} [isReplace=false]
  *
- * @return {Promise<SafeResult<LearningCourseMessageEntityDto, Error>>}
+ * @return {Promise<SafeResult<LearningCourseMessageBindingDto[], Error>>}
  */
-// export function updateLearningCourseMessage(id, { links, content }) {
-//     return this.request(
-//         {
-//             action: ServiceAction.LEARNING_COURSE_MESSAGE_UPDATE_BY_ID,
-//             pathParams: { id },
-//             params: {
-//                 links,
-//                 content
-//             }
-//         },
-//         LearningCourseMessageEntityDto
-//     );
-// }
-
-/**
- * @description Получение информации о сущности: сообщение
- * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/followPropertyReference-learningcourseentity-get_5_1
- * @param {string} id
- * @param {string} propertyId
- *
- * @return {Promise<SafeResult<LearningCourseMessageEntityDto, Error>>}
- */
-export function getLearningCourseMessage({ id, propertyId }) {
+export function updateLearningCourseMessagesBindingsByLeaningCourseId(learningCourseId, messages, isReplace = false) {
     return this.request(
         {
-            action: ServiceAction.LEARNING_COURSE_MESSAGE_GET,
-            pathParams: { id, propertyId }
+            action: isReplace
+                ? ServiceAction.LEARNING_COURSE_MESSAGE_UPDATE_BY_ID
+                : ServiceAction.LEARNING_COURSE_MESSAGE_REPLACE_BY_ID,
+            pathParams: { learningCourseId },
+            params: {
+                content: messages
+            }
         },
-        LearningCourseMessageEntityDto
+        LearningCourseMessageBindingDto
+    );
+}
+
+/**
+ * @description Получение информации о сущности: привязка сообщений по ключам
+ * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/followPropertyReference-learningcourseentity-get_5_1
+ * @param {string} learningCourseId
+ * @param {string} messageId
+ *
+ * @return {Promise<SafeResult<LearningCourseMessageBindingDto[], Error>>}
+ */
+export function getLearningCourseMessageBindingsByKeys(learningCourseId, messageId) {
+    return this.request(
+        {
+            action: ServiceAction.LEARNING_COURSE_MESSAGE_BINDINGS_GET_BY_KEYS,
+            pathParams: { learningCourseId, messageId }
+        },
+        LearningCourseMessageBindingDto
     );
 }
 
 /**
  * @description Удаление (закрытие) сущности: сообщение
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D0%BC%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B5%D0%BC%20(LearningCourse)/deletePropertyReferenceId-learningcourseentity-delete_4_1
- * @param {string} id
- * @param {string} propertyId
+ * @param {string} learningCourseId
+ * @param {string} messageId
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<boolean, Error>>}
  */
-export function deleteLearningCourseMessage({ id, propertyId }) {
+export function deleteLearningCourseMessageBindingsByKeys(learningCourseId, messageId) {
     return this.request({
-        action: ServiceAction.LEARNING_COURSE_MESSAGE_DELETE,
-        pathParams: { id, propertyId }
+        action: ServiceAction.LEARNING_COURSE_MESSAGE_BINDING_DELETE_BY_KEYS,
+        pathParams: { learningCourseId, messageId }
     });
 }
 
@@ -5222,7 +5210,7 @@ export function updateLearningProgramLearningCourseBinding(
  *
  * @return {Promise<SafeResult<unknown, Error>>}
  */
-export function getLearningProgramSearchFindByCatalog(catalogId) {
+export function getLearningProgramsByCatalogId(catalogId) {
     return this.request({
         action: ServiceAction.LEARNING_PROGRAM_SEARCH_FIND_BY_CATALOG_GET,
         params: { catalog_id: catalogId }
@@ -5241,60 +5229,6 @@ export function getLearningProgramById(id) {
         {
             action: ServiceAction.LEARNING_PROGRAM_GET_BY_ID,
             pathParams: { id }
-        },
-        LearningProgramEntityDto
-    );
-}
-
-/**
- * @description Изменение сущности целиком: программа обучения
- * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B0%D0%BC%D0%B8%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D1%8F%20(LearningProgram)/putItemResource-learningprogramentity-put_1
- * @param {string} date_from
- * @param {string} date_to
- * @param {string} external_id
- * @param {string} name
- * @param {string} description
- * @param {boolean} is_supervisor_acceptance_required
- * @param {boolean} is_hr_acceptance_required
- * @param {string} status
- * @param {string} catalog
- * @param {boolean} actual
- * @param {string} id
- *
- * @return {Promise<SafeResult<LearningProgramEntityDto, Error>>}
- */
-export function replaceLearningProgram(
-    id,
-    {
-        date_from,
-        date_to,
-        external_id,
-        name,
-        description,
-        is_supervisor_acceptance_required,
-        is_hr_acceptance_required,
-        status,
-        catalog,
-        actual
-    }
-) {
-    return this.request(
-        {
-            action: ServiceAction.LEARNING_PROGRAM_REPLACE_BY_ID,
-            pathParams: { id },
-            params: {
-                id,
-                date_from,
-                date_to,
-                external_id,
-                name,
-                description,
-                is_supervisor_acceptance_required,
-                is_hr_acceptance_required,
-                status,
-                catalog,
-                actual
-            }
         },
         LearningProgramEntityDto
     );
@@ -5344,14 +5278,16 @@ export function updateLearningProgram(
         status,
         catalog,
         actual
-    }
+    },
+    isReplace = false
 ) {
     return this.request(
         {
-            action: ServiceAction.LEARNING_PROGRAM_UPDATE_BY_ID,
+            action: isReplace
+                ? ServiceAction.LEARNING_PROGRAM_UPDATE_BY_ID
+                : ServiceAction.LEARNING_PROGRAM_REPLACE_BY_ID,
             pathParams: { id },
             params: {
-                id,
                 date_from,
                 date_to,
                 external_id,
@@ -5372,7 +5308,7 @@ export function updateLearningProgram(
  * @description Получение информации о сущности: учебная группа
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%83%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D0%BC%D0%B8%20%D0%B3%D1%80%D1%83%D0%BF%D0%BF%D0%B0%D0%BC%D0%B8%20(LearningStudyGroup)/getCollectionResource-learningstudygroupentity-get_1_1
  *
- * @return {Promise<SafeResult<LearningStudyGroupDto, Error>>}
+ * @return {Promise<SafeResult<LearningStudyGroupDto[], Error>>}
  */
 export function getLearningStudyGroups() {
     return this.request(
@@ -5409,7 +5345,6 @@ export function createLearningStudyGroup({
         {
             action: ServiceAction.LEARNING_STUDYGROUP_CREATE,
             params: {
-                id,
                 date_from,
                 date_to,
                 manual_number,
@@ -5454,7 +5389,6 @@ export function createLearningStudyGroupNumerator({ name, prefix, current, suffi
         {
             action: ServiceAction.LEARNING_STUDYGROUP_NUMERATOR_CREATE,
             params: {
-                id,
                 name,
                 prefix,
                 current,
@@ -5518,9 +5452,9 @@ export function replaceLearningStudyGroupNumerator(id, { name, prefix, current, 
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BD%D1%83%D0%BC%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0%D0%BC%D0%B8%20%D1%83%D1%87%D0%B5%D0%B1%D0%BD%D1%8B%D1%85%20%D0%B3%D1%80%D1%83%D0%BF%D0%BF%20(LearningStudyGroupNumerator)/deleteItemResource-learningstudygroupnumeratorentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<boolean, Error>>}
  */
-export function deleteLearningStudyGroupNumeratorById(id) {
+export function deleteLearningStudyGroupNumerator(id) {
     return this.request({
         action: ServiceAction.LEARNING_STUDYGROUP_NUMERATOR_DELETE_BY_ID,
         pathParams: { id }
@@ -5545,7 +5479,6 @@ export function updateLearningStudyGroupNumerator(id, { name, prefix, current, s
             action: ServiceAction.LEARNING_STUDYGROUP_NUMERATOR_UPDATE_BY_ID,
             pathParams: { id },
             params: {
-                id,
                 name,
                 prefix,
                 current,
@@ -5589,8 +5522,9 @@ export function getLearningStudyGroupById(id) {
  * @return {Promise<SafeResult<LearningStudyGroupDto, Error>>}
  */
 export function replaceLearningStudyGroup(
-    id,
+    learningStudyGroupId,
     {
+        id,
         date_from,
         date_to,
         manual_number,
@@ -5603,7 +5537,7 @@ export function replaceLearningStudyGroup(
     return this.request(
         {
             action: ServiceAction.LEARNING_STUDYGROUP_REPLACE_BY_ID,
-            pathParams: { id },
+            pathParams: { id: learningStudyGroupId },
             params: {
                 id,
                 date_from,
@@ -5626,7 +5560,7 @@ export function replaceLearningStudyGroup(
  *
  * @return {Promise<SafeResult<unknown, Error>>}
  */
-export function deleteLearningStudyGroupById(id) {
+export function deleteLearningStudyGroup(id) {
     return this.request({
         action: ServiceAction.LEARNING_STUDYGROUP_DELETE_BY_ID,
         pathParams: { id }
@@ -5664,7 +5598,6 @@ export function updateLearningStudyGroup(
             action: ServiceAction.LEARNING_STUDYGROUP_UPDATE_BY_ID,
             pathParams: { id },
             params: {
-                id,
                 date_from,
                 date_to,
                 manual_number,
@@ -5715,7 +5648,6 @@ export function createMessage({ date_from, date_to, message, employee_id, parent
         {
             action: ServiceAction.MESSAGE_CREATE,
             params: {
-                id,
                 date_from,
                 date_to,
                 message,
@@ -5783,6 +5715,7 @@ export function getMessageById(id) {
 /**
  * @description Изменение сущности целиком: сообщение
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%81%D0%BE%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B8%D1%8F%D0%BC%D0%B8%20(Message)/putItemResource-messageentity-put_1
+ * @param {string} messageId
  * @param {string} date_from
  * @param {string} date_to
  * @param {string} message
@@ -5793,11 +5726,11 @@ export function getMessageById(id) {
  *
  * @return {Promise<SafeResult<MessageEntityDto, Error>>}
  */
-export function replaceMessage(id, { date_from, date_to, message, employee_id, parent_id, actual }) {
+export function replaceMessage(messageId, { id, date_from, date_to, message, employee_id, parent_id, actual }) {
     return this.request(
         {
             action: ServiceAction.MESSAGE_REPLACE_BY_ID,
-            pathParams: { id },
+            pathParams: { id: messageId },
             params: {
                 id,
                 date_from,
@@ -5817,9 +5750,9 @@ export function replaceMessage(id, { date_from, date_to, message, employee_id, p
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%81%D0%BE%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%B8%D1%8F%D0%BC%D0%B8%20(Message)/deleteItemResource-messageentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<boolean, Error>>}
  */
-export function deleteMessageById(id) {
+export function deleteMessage(id) {
     return this.request({
         action: ServiceAction.MESSAGE_DELETE_BY_ID,
         pathParams: { id }
@@ -5845,7 +5778,6 @@ export function updateMessage(id, { date_from, date_to, message, employee_id, pa
             action: ServiceAction.MESSAGE_UPDATE_BY_ID,
             pathParams: { id },
             params: {
-                id,
                 date_from,
                 date_to,
                 message,
@@ -5885,7 +5817,6 @@ export function createStatus({ name }) {
         {
             action: ServiceAction.STATUS_CREATE,
             params: {
-                id,
                 name
             }
         },
@@ -5914,15 +5845,16 @@ export function getStatusById(id) {
  * @description Изменение сущности целиком: Статус
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%81%D1%82%D0%B0%D1%82%D1%83%D1%81%D0%B0%D0%BC%D0%B8%20(Status)/putItemResource-statusentity-put_1
  * @param {string} name
+ * @param {string} statusId
  * @param {string} id
  *
  * @return {Promise<SafeResult<StatusEntityDto, Error>>}
  */
-export function replaceStatus(id, { name }) {
+export function replaceStatus(statusId, { id, name }) {
     return this.request(
         {
             action: ServiceAction.STATUS_REPLACE_BY_ID,
-            pathParams: { id },
+            pathParams: { id: statusId },
             params: {
                 id,
                 name
@@ -5960,7 +5892,6 @@ export function updateStatus(id, { name }) {
             action: ServiceAction.STATUS_UPDATE_BY_ID,
             pathParams: { id },
             params: {
-                id,
                 name
             }
         },
@@ -6000,7 +5931,6 @@ export function createStudyDegree({ date_from, date_to, code, name, study_degree
         {
             action: ServiceAction.STUDY_DEGREE_CREATE,
             params: {
-                id,
                 date_from,
                 date_to,
                 code,
@@ -6017,14 +5947,14 @@ export function createStudyDegree({ date_from, date_to, code, name, study_degree
  * @description Получение информации о сущности: Направление (группировка специальностей)
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B3%D1%80%D1%83%D0%BF%D0%BF%D0%B0%D0%BC%D0%B8%20%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B5%D0%B9%20(StudyDegreeGroup)/getCollectionResource-studydegreegroupentity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyDegreeGroupEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyDegreeGroupEntityDto, Error>>}
  */
 export function getStudyDegreeGroup() {
     return this.request(
         {
             action: ServiceAction.STUDY_DEGREE_GROUP_GET
         },
-        CollectionModelStudyDegreeGroupEntityDto
+        StudyDegreeGroupEntityDto
     );
 }
 
@@ -6045,7 +5975,6 @@ export function createStudyDegreeGroup({ date_from, date_to, name, parent_id, co
         {
             action: ServiceAction.STUDY_DEGREE_GROUP_CREATE,
             params: {
-                id,
                 date_from,
                 date_to,
                 name,
@@ -6114,7 +6043,7 @@ export function replaceStudyDegreeGroup(id, { date_from, date_to, name, parent_i
  *
  * @return {Promise<SafeResult<unknown, Error>>}
  */
-export function deleteStudyDegreeGroupById(id) {
+export function deleteStudyDegreeGroup(id) {
     return this.request({
         action: ServiceAction.STUDY_DEGREE_GROUP_DELETE_BY_ID,
         pathParams: { id }
@@ -6140,7 +6069,6 @@ export function updateStudyDegreeGroup(id, { date_from, date_to, name, parent_id
             action: ServiceAction.STUDY_DEGREE_GROUP_UPDATE_BY_ID,
             pathParams: { id },
             params: {
-                id,
                 date_from,
                 date_to,
                 name,
@@ -6161,7 +6089,7 @@ export function updateStudyDegreeGroup(id, { date_from, date_to, name, parent_id
  *
  * @return {Promise<SafeResult<unknown, Error>>}
  */
-export function getStudyDegreeSearchFindByName(name) {
+export function getStudyDegreeByName(name) {
     return this.request({
         action: ServiceAction.STUDY_DEGREE_SEARCH_FIND_BY_NAME_GET,
         params: { name }
@@ -6195,14 +6123,15 @@ export function getStudyDegreeById(id) {
  * @param {StudyDegreeGroupEntityDto} study_degree_group
  * @param {boolean} actual
  * @param {string} id
+ * @param {string} studyDegreeId
  *
  * @return {Promise<SafeResult<StudyDegreeEntityDto, Error>>}
  */
-export function replaceStudyDegree(id, { date_from, date_to, code, name, study_degree_group, actual }) {
+export function replaceStudyDegree(studyDegreeId, { id, date_from, date_to, code, name, study_degree_group, actual }) {
     return this.request(
         {
             action: ServiceAction.STUDY_DEGREE_REPLACE_BY_ID,
-            pathParams: { id },
+            pathParams: { id: studyDegreeId },
             params: {
                 id,
                 date_from,
@@ -6224,7 +6153,7 @@ export function replaceStudyDegree(id, { date_from, date_to, code, name, study_d
  *
  * @return {Promise<SafeResult<unknown, Error>>}
  */
-export function deleteStudyDegreeById(id) {
+export function deleteStudyDegree(id) {
     return this.request({
         action: ServiceAction.STUDY_DEGREE_DELETE_BY_ID,
         pathParams: { id }
@@ -6250,7 +6179,6 @@ export function updateStudyDegree(id, { date_from, date_to, code, name, study_de
             action: ServiceAction.STUDY_DEGREE_UPDATE_BY_ID,
             pathParams: { id },
             params: {
-                id,
                 date_from,
                 date_to,
                 code,
@@ -6267,7 +6195,7 @@ export function updateStudyDegree(id, { date_from, date_to, code, name, study_de
  * @description Получение информации о сущности: направление развития
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BD%D0%B0%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F%D0%BC%D0%B8%20%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D1%82%D0%B8%D1%8F%20(StudyDirection)/getCollectionResource-studydirectionentity-get_1_1
  *
- * @return {Promise<SafeResult<StudyDirectionEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyDirectionEntityDto[], Error>>}
  */
 // prettier-ignore
 export function getAllStudyDirections() {
@@ -6353,14 +6281,15 @@ export function getStudyDirectionById(id) {
  * @return {Promise<SafeResult<StudyDirectionEntityDto, Error>>}
  */
 export function replaceStudyDirection(
-    id,
-    { date_from, date_to, external_id, name, description, development_forms, actual, parent }
+    studyDirectionId,
+    { id, date_from, date_to, external_id, name, description, development_forms, actual, parent }
 ) {
     return this.request(
         {
             action: ServiceAction.STUDY_DIRECTION_REPLACE_BY_ID,
-            pathParams: { id },
+            pathParams: { id: studyDirectionId },
             params: {
+                id,
                 date_from,
                 date_to,
                 external_id,
@@ -6383,13 +6312,10 @@ export function replaceStudyDirection(
  * @return {Promise<SafeResult<true, Error>>}
  */
 export function deleteStudyDirection(id) {
-    return this.request(
-        {
-            action: ServiceAction.STUDY_DIRECTION_DELETE_BY_ID,
-            pathParams: { id }
-        },
-        true
-    );
+    return this.request({
+        action: ServiceAction.STUDY_DIRECTION_DELETE_BY_ID,
+        pathParams: { id }
+    });
 }
 
 /**
@@ -6568,10 +6494,7 @@ export function createStudyExpertContract({
  */
 
 export function getAllStudyExpertContractRates() {
-    return this.request(
-        { action: ServiceAction.STUDY_EXPERT_CONTRACT_RATE_GET_ALL },
-        StudyExpertContractRateEntityDto
-    );
+    return this.request({ action: ServiceAction.STUDY_EXPERT_CONTRACT_RATE_GET_ALL }, StudyExpertContractRateEntityDto);
 }
 
 /**
@@ -6715,14 +6638,14 @@ export function updateStudyExpertContractRate(
  * @description Получение информации о сущности: тип договора с преподавателями
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%82%D0%B8%D0%BF%D0%B0%D0%BC%D0%B8%20%D0%B4%D0%BE%D0%B3%D0%BE%D0%B2%D0%BE%D1%80%D0%BE%D0%B2%20%D1%81%20%D0%BF%D1%80%D0%B5%D0%BF%D0%BE%D0%B4%D0%B0%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F%D0%BC%D0%B8%20(StudyExpertContractType)/getCollectionResource-studyexpertcontracttypeentity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyExpertContractTypeEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyExpertContractTypeEntityDto[], Error>>}
  */
 export function getStudyExpertContractType() {
     return this.request(
         {
             action: ServiceAction.STUDY_EXPERT_CONTRACT_TYPE_GET
         },
-        CollectionModelStudyExpertContractTypeEntityDto
+        StudyExpertContractTypeEntityDto
     );
 }
 
@@ -7115,14 +7038,14 @@ export function updateStudyExpert(
  * @description Получение информации о сущности: стипендия
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%81%D1%82%D0%B8%D0%BF%D0%B5%D0%BD%D0%B4%D0%B8%D1%8F%D0%BC%D0%B8%20(StudyGrant)/getCollectionResource-studygrantentity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyGrantEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyGrantEntityDto[], Error>>}
  */
 export function getStudyGrant() {
     return this.request(
         {
             action: ServiceAction.STUDY_GRANT_GET
         },
-        CollectionModelStudyGrantEntityDto
+        StudyGrantEntityDto
     );
 }
 
@@ -7158,14 +7081,14 @@ export function createStudyGrant({ date_from, date_to, name, description, actual
  * @description Получение информации о сущности: назначение Стипендии
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D1%8F%D0%BC%D0%B8%20%D1%81%D1%82%D0%B8%D0%BF%D0%B5%D0%BD%D0%B4%D0%B8%D0%B8%20(StudyGrantAllocation)/getCollectionResource-studygrantallocationentity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyGrantAllocationEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyGrantAllocationEntityDto[], Error>>}
  */
 export function getStudyGrantAllocation() {
     return this.request(
         {
             action: ServiceAction.STUDY_GRANT_ALLOCATION_GET
         },
-        CollectionModelStudyGrantAllocationEntityDto
+        StudyGrantAllocationEntityDto
     );
 }
 
@@ -7222,14 +7145,14 @@ export function createStudyGrantAllocation({
  * @description Получение информации о сущности: эксперт
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%B8%D0%B2%D1%8F%D0%B7%D0%BA%D0%BE%D0%B9%20%D0%BF%D1%80%D0%B5%D0%BF%D0%BE%D0%B4%D0%B0%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D0%B5%D0%B9%20%D0%BA%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D1%8E%20%D0%A1%D1%82%D0%B8%D0%BF%D0%B5%D0%BD%D0%B4%D0%B8%D0%B8%20(StudyGrantAllocationStudyExpert)/getCollectionResource-studygrantallocationstudyexpertentity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyGrantAllocationStudyExpertEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyGrantAllocationStudyExpertEntityDto, Error>>}
  */
 export function getStudyGrantAllocationStudyExpert() {
     return this.request(
         {
             action: ServiceAction.STUDY_GRANT_ALLOCATION_STUDY_EXPERT_GET
         },
-        CollectionModelStudyGrantAllocationStudyExpertEntityDto
+        StudyGrantAllocationStudyExpertEntityDto
     );
 }
 
@@ -7368,14 +7291,14 @@ export function updateStudyGrantAllocationStudyExpert(
  * @description Получение информации о сущности: привязка учащихся к назначению Стипендии
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%B8%D0%B2%D1%8F%D0%B7%D0%BA%D0%BE%D0%B9%20%D1%83%D1%87%D0%B0%D1%89%D0%B8%D1%85%D1%81%D1%8F%20%D0%BA%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D1%8E%20%D0%A1%D1%82%D0%B8%D0%BF%D0%B5%D0%BD%D0%B4%D0%B8%D0%B8%20(StudyGrantAllocationStudyStudent)/getCollectionResource-studygrantallocationstudystudententity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyGrantAllocationStudyStudentEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyGrantAllocationStudyStudentEntityDto[], Error>>}
  */
 export function getStudyGrantAllocationStudyStudent() {
     return this.request(
         {
             action: ServiceAction.STUDY_GRANT_ALLOCATION_STUDY_STUDENT_GET
         },
-        CollectionModelStudyGrantAllocationStudyStudentEntityDto
+        StudyGrantAllocationStudyStudentEntityDto
     );
 }
 
@@ -7744,14 +7667,14 @@ export function updateStudyGrant(id, { date_from, date_to, name, description, ac
  * @description Получение информации о сущности: место проведения
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BC%D0%B5%D1%81%D1%82%D0%B0%D0%BC%D0%B8%20%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F%20(StudyLocation)/getCollectionResource-studylocationentity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyLocationEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyLocationEntityDto[], Error>>}
  */
 export function getStudyLocation() {
     return this.request(
         {
             action: ServiceAction.STUDY_LOCATION_GET
         },
-        CollectionModelStudyLocationEntityDto
+        StudyLocationEntityDto
     );
 }
 
@@ -7884,14 +7807,14 @@ export function updateStudyLocation(id, { date_from, date_to, external_id, name,
  * @description Получение информации о сущности: Виды оценки (успеваемость)
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B2%D0%B8%D0%B4%D0%B0%D0%BC%D0%B8%20%D0%BE%D1%86%D0%B5%D0%BD%D0%BA%D0%B8%20(%D1%83%D1%81%D0%BF%D0%B5%D0%B2%D0%B0%D0%B5%D0%BC%D0%BE%D1%81%D1%82%D1%8C)%20(StudyPerformanceType)/getCollectionResource-studyperformancetypeentity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyPerformanceTypeEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyPerformanceTypeEntityDto[], Error>>}
  */
 export function getStudyPerformanceType() {
     return this.request(
         {
             action: ServiceAction.STUDY_PERFORMANCE_TYPE_GET
         },
-        CollectionModelStudyPerformanceTypeEntityDto
+        StudyPerformanceTypeEntityDto
     );
 }
 
@@ -8078,14 +8001,14 @@ export function createStudyProvider({
  * @description Получение информации о сущности: договор с поставщиком мероприятий
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B4%D0%BE%D0%B3%D0%BE%D0%B2%D0%BE%D1%80%D0%B0%D0%BC%D0%B8%20%D1%81%20%D0%9F%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D1%89%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%9C%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(StudyProviderContract)/getCollectionResource-studyprovidercontractentity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyProviderContractEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyProviderContractEntityDto[], Error>>}
  */
 export function getStudyProviderContract() {
     return this.request(
         {
             action: ServiceAction.STUDY_PROVIDER_CONTRACT_GET
         },
-        CollectionModelStudyProviderContractEntityDto
+        StudyProviderContractEntityDto
     );
 }
 
@@ -8291,7 +8214,7 @@ export function updateStudyProviderContract(
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B4%D0%BE%D0%B3%D0%BE%D0%B2%D0%BE%D1%80%D0%B0%D0%BC%D0%B8%20%D1%81%20%D0%9F%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D1%89%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%9C%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(StudyProviderContract)/followPropertyReference-studyprovidercontractentity-get_1_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<CollectionModelContractSubjectEntityDto, Error>>}
+ * @return {Promise<SafeResult<ContractSubjectEntityDto[], Error>>}
  */
 export function getStudyProviderContractContractSubjectById(id) {
     return this.request(
@@ -8299,7 +8222,7 @@ export function getStudyProviderContractContractSubjectById(id) {
             action: ServiceAction.STUDY_PROVIDER_CONTRACT_CONTRACT_SUBJECT_GET_BY_ID,
             pathParams: { id }
         },
-        CollectionModelContractSubjectEntityDto
+        ContractSubjectEntityDto
     );
 }
 
@@ -8310,7 +8233,7 @@ export function getStudyProviderContractContractSubjectById(id) {
  * @param {Array} content
  * @param {string} id
  *
- * @return {Promise<SafeResult<CollectionModelContractSubjectEntityDto, Error>>}
+ * @return {Promise<SafeResult<ContractSubjectEntityDto[], Error>>}
  */
 export function replaceStudyProviderContractContractSubject(id, { links, content }) {
     return this.request(
@@ -8322,7 +8245,7 @@ export function replaceStudyProviderContractContractSubject(id, { links, content
                 content
             }
         },
-        CollectionModelContractSubjectEntityDto
+        ContractSubjectEntityDto
     );
 }
 
@@ -8347,7 +8270,7 @@ export function replaceStudyProviderContractContractSubject(id, { links, content
  * @param {Array} content
  * @param {string} id
  *
- * @return {Promise<SafeResult<CollectionModelContractSubjectEntityDto, Error>>}
+ * @return {Promise<SafeResult<ContractSubjectEntityDto[], Error>>}
  */
 export function updateStudyProviderContractContractSubject(id, { links, content }) {
     return this.request(
@@ -8359,7 +8282,7 @@ export function updateStudyProviderContractContractSubject(id, { links, content 
                 content
             }
         },
-        CollectionModelContractSubjectEntityDto
+        ContractSubjectEntityDto
     );
 }
 
@@ -8369,7 +8292,7 @@ export function updateStudyProviderContractContractSubject(id, { links, content 
  * @param {string} id
  * @param {string} propertyId
  *
- * @return {Promise<SafeResult<CollectionModelContractSubjectEntityDto, Error>>}
+ * @return {Promise<SafeResult<ContractSubjectEntityDto[], Error>>}
  */
 export function getStudyProviderContractContractSubject({ id, propertyId }) {
     return this.request(
@@ -8377,7 +8300,7 @@ export function getStudyProviderContractContractSubject({ id, propertyId }) {
             action: ServiceAction.STUDY_PROVIDER_CONTRACT_CONTRACT_SUBJECT_GET,
             pathParams: { id, propertyId }
         },
-        CollectionModelContractSubjectEntityDto
+        ContractSubjectEntityDto
     );
 }
 
@@ -8392,7 +8315,7 @@ export function getStudyProviderContractContractSubject({ id, propertyId }) {
 export function deleteStudyProviderContractContractSubject(contractId, contractSubjectId) {
     return this.request({
         action: ServiceAction.STUDY_PROVIDER_CONTRACT_CONTRACT_SUBJECT_DELETE,
-        pathParams: { contractSubjectId, propertyId }
+        pathParams: { contractId, contractSubjectId }
     });
 }
 
@@ -8639,14 +8562,14 @@ export function updateStudyProviderRegion(id, { external_id, name, country_code_
  * @description Получение информации о сущности: тип поставщика мероприятий
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%82%D0%B8%D0%BF%D0%B0%D0%BC%D0%B8%20%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D1%89%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(StudyProviderType)/getCollectionResource-studyprovidertypeentity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyProviderTypeEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyProviderTypeEntityDto[], Error>>}
  */
 export function getStudyProviderType() {
     return this.request(
         {
             action: ServiceAction.STUDY_PROVIDER_TYPE_GET
         },
-        CollectionModelStudyProviderTypeEntityDto
+        StudyProviderTypeEntityDto
     );
 }
 
@@ -8939,7 +8862,7 @@ export function updateStudyProvider(
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D1%89%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(StudyProvider)/followPropertyReference-studyproviderentity-get_1_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<CollectionModelStudyDegreeEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyDegreeEntityDto[], Error>>}
  */
 export function getStudyProviderStudyDegreeById(id) {
     return this.request(
@@ -8947,100 +8870,96 @@ export function getStudyProviderStudyDegreeById(id) {
             action: ServiceAction.STUDY_PROVIDER_STUDY_DEGREE_GET_BY_ID,
             pathParams: { id }
         },
-        CollectionModelStudyDegreeEntityDto
+        StudyDegreeEntityDto
     );
 }
 
 /**
  * @description Изменение сущности целиком: специальность
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D1%89%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(StudyProvider)/createPropertyReference-studyproviderentity-put_1
- * @param {Array} links
- * @param {Array} content
- * @param {string} id
+ * @param {Array} studyDegrees
+ * @param {string} studyProviderId
  *
- * @return {Promise<SafeResult<CollectionModelStudyDegreeEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyDegreeEntityDto[], Error>>}
  */
-export function replaceStudyProviderStudyDegree(id, { links, content }) {
+export function replaceStudyProviderStudyDegrees(studyProviderId, studyDegrees) {
     return this.request(
         {
             action: ServiceAction.STUDY_PROVIDER_STUDY_DEGREE_REPLACE_BY_ID,
-            pathParams: { id },
+            pathParams: { studyProviderId },
             params: {
-                links,
-                content
+                content: studyDegrees
             }
         },
-        CollectionModelStudyDegreeEntityDto
+        StudyDegreeEntityDto
     );
 }
 
 /**
  * @description Удаление (закрытие) сущности: специальность
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D1%89%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(StudyProvider)/deletePropertyReference-studyproviderentity-delete_1
- * @param {string} id
+ * @param {string} studyProviderId
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
-// export function deleteStudyProviderStudyDegree(id) {
-//     return this.request({
-//         action: ServiceAction.STUDY_PROVIDER_STUDY_DEGREE_DELETE_BY_ID,
-//         pathParams: { id }
-//     });
-// }
+export function deleteStudyProviderStudyDegreeBindingsByStudyProviderId(studyProviderId) {
+    return this.request({
+        action: ServiceAction.STUDY_PROVIDER_STUDY_DEGREE_DELETE_BY_ID,
+        pathParams: { studyProviderId }
+    });
+}
 
 /**
  * @description Изменение свойств сущности: специальность
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D1%89%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(StudyProvider)/createPropertyReference-studyproviderentity-patch_1
- * @param {Array} links
- * @param {Array} content
- * @param {string} id
+ * @param {string} studyProviderId
+ * @param {Array} studyDegrees
  *
- * @return {Promise<SafeResult<CollectionModelStudyDegreeEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyDegreeEntityDto[], Error>>}
  */
-export function updateStudyProviderStudyDegree(id, { links, content }) {
+export function updateStudyProviderStudyDegreeBindings(studyProviderId, studyDegrees) {
     return this.request(
         {
             action: ServiceAction.STUDY_PROVIDER_STUDY_DEGREE_UPDATE_BY_ID,
-            pathParams: { id },
+            pathParams: { studyProviderId },
             params: {
-                links,
-                content
+                content: studyDegrees
             }
         },
-        CollectionModelStudyDegreeEntityDto
+        StudyDegreeEntityDto
     );
 }
 
 /**
  * @description Получение информации о сущности: специальность
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D1%89%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(StudyProvider)/followPropertyReference-studyproviderentity-get_1
- * @param {string} id
- * @param {string} propertyId
+ * @param {string} studyProviderId
+ * @param {string} studyDegreeId
  *
- * @return {Promise<SafeResult<CollectionModelStudyDegreeEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyDegreeEntityDto[], Error>>}
  */
-export function getStudyProviderStudyDegree({ id, propertyId }) {
+export function getStudyProviderStudyDegreeBindingsByKeys(studyProviderId, studyDegreeId) {
     return this.request(
         {
-            action: ServiceAction.STUDY_PROVIDER_STUDY_DEGREE_GET,
-            pathParams: { id, propertyId }
+            action: ServiceAction.STUDY_PROVIDER_STUDY_DEGREE_GET_BY_KEYS,
+            pathParams: { studyProviderId, studyDegreeId }
         },
-        CollectionModelStudyDegreeEntityDto
+        StudyDegreeEntityDto
     );
 }
 
 /**
  * @description Удаление (закрытие) сущности: специальность
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D0%BE%D1%81%D1%82%D0%B0%D0%B2%D1%89%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%20%D0%BC%D0%B5%D1%80%D0%BE%D0%BF%D1%80%D0%B8%D1%8F%D1%82%D0%B8%D0%B9%20(StudyProvider)/deletePropertyReferenceId-studyproviderentity-delete_1
- * @param {string} id
- * @param {string} propertyId
+ * @param {string} studyProviderId
+ * @param {string} studyDegreeId
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
-export function deleteStudyProviderStudyDegree({ id, propertyId }) {
+export function deleteStudyProviderStudyDegreeBindingsByKeys(studyProviderId, studyDegreeId) {
     return this.request({
-        action: ServiceAction.STUDY_PROVIDER_STUDY_DEGREE_DELETE,
-        pathParams: { id, propertyId }
+        action: ServiceAction.STUDY_PROVIDER_STUDY_DEGREE_DELETE_BY_KEYS,
+        pathParams: { studyProviderId, studyDegreeId }
     });
 }
 
@@ -9048,14 +8967,14 @@ export function deleteStudyProviderStudyDegree({ id, propertyId }) {
  * @description Получение информации о сущности: учащийся
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%83%D1%87%D0%B0%D1%89%D0%B8%D0%BC%D0%B8%D1%81%D1%8F%20(StudyStudent)/getCollectionResource-studystudententity-get_1_1
  *
- * @return {Promise<SafeResult<CollectionModelStudyStudentEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyStudentEntityDto[], Error>>}
  */
-export function getStudyStudent() {
+export function getStudyStudents() {
     return this.request(
         {
             action: ServiceAction.STUDY_STUDENT_GET
         },
-        CollectionModelStudyStudentEntityDto
+        StudyStudentEntityDto
     );
 }
 
@@ -9117,7 +9036,7 @@ export function createStudyStudent({
  * @description Получение информации о сущности: обучение
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%9E%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5%D0%BC%20(StudyStudentEducation)/getCollectionResource-studystudenteducationentity-get_1_1
  *
- * @return {Promise<SafeResult<StudyStudentEducationEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyStudentEducationEntityDto[], Error>>}
  */
 export function getStudyStudentEducations() {
     return this.request(
@@ -9251,7 +9170,7 @@ export function replaceStudyStudentEducation(
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%9E%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5%D0%BC%20(StudyStudentEducation)/deleteItemResource-studystudenteducationentity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<true, Error>>}
  */
 export function deleteStudyStudentEducation(id) {
     return this.request({
@@ -9375,7 +9294,7 @@ export function createStudyStudentPerformance({
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%83%D1%81%D0%BF%D0%B5%D0%B2%D0%B0%D0%B5%D0%BC%D0%BE%D1%81%D1%82%D1%8C%D1%8E%20%D1%81%D1%82%D1%83%D0%B4%D0%B5%D0%BD%D1%82%D0%BE%D0%B2%20(StudyStudentPerformance)/getItemResource-studystudentperformanceentity-get_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<StudyStudentPerformanceEntityDto, Error>>}
+ * @return {Promise<SafeResult<StudyStudentPerformanceEntityDto[], Error>>}
  */
 export function getStudyStudentPerformanceById(id) {
     return this.request(
@@ -9576,7 +9495,7 @@ export function replaceStudyStudent(
  * @link https://goodt-dev.goodt.me:8466/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%83%D1%87%D0%B0%D1%89%D0%B8%D0%BC%D0%B8%D1%81%D1%8F%20(StudyStudent)/deleteItemResource-studystudententity-delete_1
  * @param {string} id
  *
- * @return {Promise<SafeResult<unknown, Error>>}
+ * @return {Promise<SafeResult<boolean, Error>>}
  */
 export function deleteStudyStudent(id) {
     return this.request({
@@ -10532,15 +10451,9 @@ export function createBudgetConfirm(budgetId) {
  * @param {string} dateToFrom
  * @param {string} dateToTo
  *
- * @return {Promise<SafeResult<CollectionModelUserLearningCourseDocumentEntityDto, Error>>}
+ * @return {Promise<SafeResult<UserLearningCourseDocumentEntityDto[], Error>>}
  */
-export function getUserLearningCourseDocumentSearchFindByDates({
-    isMandatory,
-    actualFrom,
-    actualTo,
-    dateToFrom,
-    dateToTo
-}) {
+export function getUserLearningCourseDocumentsByFilter({ isMandatory, actualFrom, actualTo, dateToFrom, dateToTo }) {
     return this.request(
         {
             action: ServiceAction.USER_LEARNING_COURSE_DOCUMENT_SEARCH_FIND_BY_DATES_GET,
@@ -10552,7 +10465,7 @@ export function getUserLearningCourseDocumentSearchFindByDates({
                 date_to_to: dateToTo
             }
         },
-        CollectionModelUserLearningCourseDocumentEntityDto
+        UserLearningCourseDocumentEntityDto
     );
 }
 
@@ -10564,9 +10477,9 @@ export function getUserLearningCourseDocumentSearchFindByDates({
  * @param {number} toLearningPartyId
  * @param {number} learningCourseId
  *
- * @return {Promise<SafeResult<CollectionModelSuggestionEntityDto, Error>>}
+ * @return {Promise<SafeResult<SuggestionEntityDto[], Error>>}
  */
-export function getSuggestionSearchFind({ fromEmployeeId, toEmployeeId, toLearningPartyId, learningCourseId }) {
+export function getSuggestionsByFilter({ fromEmployeeId, toEmployeeId, toLearningPartyId, learningCourseId }) {
     return this.request(
         {
             action: ServiceAction.SUGGESTION_SEARCH_FIND_GET,
@@ -10577,7 +10490,7 @@ export function getSuggestionSearchFind({ fromEmployeeId, toEmployeeId, toLearni
                 learning_course_id: learningCourseId
             }
         },
-        CollectionModelSuggestionEntityDto
+        SuggestionEntityDto
     );
 }
 

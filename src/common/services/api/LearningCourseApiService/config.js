@@ -145,12 +145,12 @@ export const ServiceAction = {
         url: 'learning-course-learning-course-group/:id',
         options: { method: 'patch' }
     },
-    // LEARNING_COURSE_MESSAGE_GET: { url: 'learning-course-message' },
+    LEARNING_COURSE_MESSAGE_BINDINGS_GET: { url: 'learning-course-message' },
     LEARNING_COURSE_MESSAGE_CREATE: { url: 'learning-course-message', options: { method: 'post' } },
-    // LEARNING_COURSE_MESSAGE_GET_BY_ID: { url: 'learning-course-message/:id' },
-    // LEARNING_COURSE_MESSAGE_REPLACE_BY_ID: { url: 'learning-course-message/:id', options: { method: 'put' } },
-    // LEARNING_COURSE_MESSAGE_DELETE_BY_ID: { url: 'learning-course-message/:id', options: { method: 'delete' } },
-    // LEARNING_COURSE_MESSAGE_UPDATE_BY_ID: { url: 'learning-course-message/:id', options: { method: 'patch' } },
+    LEARNING_COURSE_MESSAGE_BINDING_GET_BY_ID: { url: 'learning-course-message/:id' },
+    LEARNING_COURSE_MESSAGE_BINDING_REPLACE_BY_ID: { url: 'learning-course-message/:id', options: { method: 'put' } },
+    LEARNING_COURSE_MESSAGE_BINDING_DELETE_BY_ID: { url: 'learning-course-message/:id', options: { method: 'delete' } },
+    LEARNING_COURSE_MESSAGE_BINDING_UPDATE_BY_ID: { url: 'learning-course-message/:id', options: { method: 'patch' } },
     LEARNING_COURSE_PARTY_GET: { url: 'learning-course-party' },
     LEARNING_COURSE_PARTY_CREATE: { url: 'learning-course-party', options: { method: 'post' } },
     LEARNING_COURSE_PARTY_GET_BY_ID: { url: 'learning-course-party/:id' },
@@ -233,7 +233,7 @@ export const ServiceAction = {
         options: { method: 'patch' }
     },
     LEARNING_COURSE_LEARNING_COURSE_LEARNING_COURSE_GROUP_GET: {
-        url: 'learning-course/:id/learning-course-learning-course-group/:propertyId'
+        url: 'learning-course/:learningCourseId/learning-course-learning-course-group/:groupId'
     },
     LEARNING_COURSE_LEARNING_COURSE_LEARNING_COURSE_GROUP_DELETE: {
         url: 'learning-course/:id/learning-course-learning-course-group/:propertyId',
@@ -279,12 +279,25 @@ export const ServiceAction = {
         url: 'learning-course/:learningCourseId/learning-course-step/:learningCourseStepId',
         options: { method: 'delete' }
     },
-    LEARNING_COURSE_MESSAGE_GET_BY_ID: { url: 'learning-course/:id/message' },
-    LEARNING_COURSE_MESSAGE_REPLACE_BY_ID: { url: 'learning-course/:id/message', options: { method: 'put' } },
-    LEARNING_COURSE_MESSAGE_DELETE_BY_ID: { url: 'learning-course/:id/message', options: { method: 'delete' } },
-    LEARNING_COURSE_MESSAGE_UPDATE_BY_ID: { url: 'learning-course/:id/message', options: { method: 'patch' } },
-    LEARNING_COURSE_MESSAGE_GET: { url: 'learning-course/:id/message/:propertyId' },
-    LEARNING_COURSE_MESSAGE_DELETE: { url: 'learning-course/:id/message/:propertyId', options: { method: 'delete' } },
+    LEARNING_COURSE_MESSAGE_BINDINGS_GET_BY_LEARNING_COURSE_ID: { url: 'learning-course/:learningCourseId/message' },
+    LEARNING_COURSE_MESSAGE_GET_BY_ID: { url: 'learning-course/:learningCourseId/message' },
+    LEARNING_COURSE_MESSAGE_REPLACE_BY_ID: {
+        url: 'learning-course/:learningCourseId/message',
+        options: { method: 'put' }
+    },
+    LEARNING_COURSE_MESSAGE_DELETE_BY_LEARNING_COURSE_ID: {
+        url: 'learning-course/:learningCourseId/message',
+        options: { method: 'delete' }
+    },
+    LEARNING_COURSE_MESSAGE_UPDATE_BY_ID: {
+        url: 'learning-course/:learningCourseId/message',
+        options: { method: 'patch' }
+    },
+    LEARNING_COURSE_MESSAGE_BINDINGS_GET_BY_KEYS: { url: 'learning-course/:learningCourseId/message/:messageId' },
+    LEARNING_COURSE_MESSAGE_BINDING_DELETE_BY_KEYS: {
+        url: 'learning-course/:learningCourseId/message/:messageId',
+        options: { method: 'delete' }
+    },
     LEARNING_FORM_GET: { url: 'learning-form' },
     LEARNING_FORM_CREATE: { url: 'learning-form', options: { method: 'post' } },
     LEARNING_FORM_GET_BY_ID: { url: 'learning-form/:id' },
@@ -590,20 +603,20 @@ export const ServiceAction = {
     STUDY_PROVIDER_UPDATE_BY_ID: { url: 'study-provider/:id', options: { method: 'patch' } },
     STUDY_PROVIDER_STUDY_DEGREE_GET_BY_ID: { url: 'study-provider/:id/study-degree' },
     STUDY_PROVIDER_STUDY_DEGREE_REPLACE_BY_ID: {
-        url: 'study-provider/:id/study-degree',
+        url: 'study-provider/:studyProviderId/study-degree',
         options: { method: 'put' }
     },
     STUDY_PROVIDER_STUDY_DEGREE_DELETE_BY_ID: {
-        url: 'study-provider/:id/study-degree',
+        url: 'study-provider/:studyProviderId/study-degree',
         options: { method: 'delete' }
     },
     STUDY_PROVIDER_STUDY_DEGREE_UPDATE_BY_ID: {
-        url: 'study-provider/:id/study-degree',
+        url: 'study-provider/:studyProviderId/study-degree',
         options: { method: 'patch' }
     },
-    STUDY_PROVIDER_STUDY_DEGREE_GET: { url: 'study-provider/:id/study-degree/:propertyId' },
-    STUDY_PROVIDER_STUDY_DEGREE_DELETE: {
-        url: 'study-provider/:id/study-degree/:propertyId',
+    STUDY_PROVIDER_STUDY_DEGREE_GET_BY_KEYS: { url: 'study-provider/:studyProviderId/study-degree/:studyDegreeId' },
+    STUDY_PROVIDER_STUDY_DEGREE_DELETE_BY_KEYS: {
+        url: 'study-provider/:studyProviderId/study-degree/:studyDegreeId',
         options: { method: 'delete' }
     },
     STUDY_STUDENT_GET: { url: 'study-student' },

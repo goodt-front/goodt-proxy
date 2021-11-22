@@ -20,12 +20,12 @@ export class LearningCourseBudgetItemEntityDto extends ApiBaseDto {}
 export class LearningCourseCatalogEntityDto extends ApiBaseDto {}
 export class LearningCourseDocumentTypeEntityDto extends ApiBaseDto {}
 export class LearningCourseGroupEntityDto extends ApiBaseDto {}
-export class LearningCourseMessageEntityDto extends ApiBaseDto {}
+export class LearningCourseGroupBindingDto extends ApiBaseDto {}
+export class LearningCourseMessageBindingDto extends ApiBaseDto {}
 export class LearningCourseSimilarEntityDto extends ApiBaseDto {}
 export class LearningCourseStudyDirectionEntityDto extends ApiBaseDto {}
 export class LearningCourseTypeEntityDto extends ApiBaseDto {}
 export class LearningCourseCuratorEntityDto extends ApiBaseDto {}
-export class LearningCourseLearningCourseGroupEntityDto extends ApiBaseDto {}
 export class LearningCoursePartyEntityDto extends ApiBaseDto {}
 export class LearningCourseStepEntityDto extends ApiBaseDto {}
 export class LearningFormEntityDto extends ApiBaseDto {}

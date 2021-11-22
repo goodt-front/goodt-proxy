@@ -1,6 +1,9 @@
 {
-  "name": "@goodt-wcore/scaffold",
+  "name": "@goodt/scaffold",
   "version": "1.0.0",
+  "publishConfig": {
+    "registry": "https://art.goodt.me/repository/npm/"
+  },
   "peerDependencies": {
     "figlet": "latest",
     "jscodeshift": "^0.13.0",

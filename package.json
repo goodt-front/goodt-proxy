@@ -1,5 +1,5 @@
 {
-    "version": "1.0.19",
+    "version": "1.2.0",
     "name": "goodt-wcore",
     "main": "src/core/index.js",
     "types": "src/core/index.d.ts",
@@ -46,13 +46,6 @@
         "@goodt-wcore/net": "file:src/core/net",
         "@goodt-wcore/panels": "file:src/core/panels",
         "@goodt-wcore/render": "file:src/core/render",
-        "@goodt-wcore/scaffold": "file:scripts/scaffold",
-        "@goodt-wcore/styleguide": "file:scripts/styleguide",
-        "@goodt/browserslist-config": "file:.config/browserslist-config",
-        "@goodt/eslint-config-base": "file:.config/eslint-config-base",
-        "@goodt/postcss-config": "file:.config/postcss-config",
-        "@goodt/stylelint-config-base": "file:.config/stylelint-config-base",
-        "@goodt/tests": "file:tests",
         "apollo-invalidation-policies": "^1.0.0-beta16",
         "axios": "^0.21.1",
         "goodt-dremio-sdk": "^1.0.21",
@@ -65,6 +58,12 @@
         "vuedraggable": "^2.24.3"
     },
     "devDependencies": {
+        "@goodt/eslint-config-base": "^1.0.1",
+        "@goodt/browserslist-config": "^1.0.0",
+        "@goodt/postcss-config": "^1.0.0",
+        "@goodt/stylelint-config-base": "^1.0.0",
+        "@goodt/scaffold": "^1.0.0",
+        "@goodt/tests": "^1.0.0",
         "@vue/cli-plugin-babel": "^4.5.13",
         "@vue/cli-service": "^4.5.13",
         "friendly-errors-plugin": "^1.1.2",

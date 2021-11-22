@@ -1,5 +1,5 @@
 {
-    "version": "1.0.19",
+    "version": "1.2.0",
     "name": "goodt-wcore",
     "main": "src/core/index.js",
     "types": "src/core/index.d.ts",
@@ -48,8 +48,6 @@
         "@goodt-wcore/render": "file:src/core/render",
         "@goodt-wcore/scaffold": "file:scripts/scaffold",
         "@goodt-wcore/styleguide": "file:scripts/styleguide",
-        "@goodt/browserslist-config": "file:.config/browserslist-config",
-        "@goodt/eslint-config-base": "file:.config/eslint-config-base",
         "@goodt/postcss-config": "file:.config/postcss-config",
         "@goodt/stylelint-config-base": "file:.config/stylelint-config-base",
         "@goodt/tests": "file:tests",
@@ -65,6 +63,8 @@
         "vuedraggable": "^2.24.3"
     },
     "devDependencies": {
+        "@goodt/eslint-config-base": "^1.0.1",
+        "@goodt/browserslist-config": "^1.0.0",
         "@vue/cli-plugin-babel": "^4.5.13",
         "@vue/cli-service": "^4.5.13",
         "friendly-errors-plugin": "^1.1.2",

@@ -119,8 +119,8 @@ class ApiHttpClient {
         extraOptions.paramsSerializer = (params) => stringifyParams(params, { arrayFormat: 'repeat' });
 
         return {
-            ...transportOptions,
-            ...extraOptions
+            ...extraOptions,
+            ...transportOptions
         };
     }
 

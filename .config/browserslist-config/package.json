@@ -1,5 +1,8 @@
 {
   "name": "@goodt/browserslist-config",
   "version": "1.0.0",
+  "publishConfig": {
+    "registry": "https://art.goodt.me/repository/npm/"
+  },
   "description": "SUP: browserslist config. Shared browserslist config for reuse in SUP projects."
 }

@@ -1,6 +1,9 @@
 {
   "name": "@goodt/tests",
   "version": "1.0.1",
+  "publishConfig": {
+    "registry": "https://art.goodt.me/repository/npm/"
+  },
   "description": "SUP: Test. Shared tests configs and package dependencies config for reuse in SUP projects.",
   "dependencies": {
     "@vue/cli-plugin-unit-jest": "^4.5.13",

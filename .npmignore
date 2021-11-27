@@ -10,3 +10,9 @@ jsconfig.json
 .prettierignore
 .prettierrc
 .eslintignore
+.config/eslint-config-base
+.config/stylelint-config-base
+.config/postcss-config
+.config/browserslist-config
+scripts/scaffold
+tests

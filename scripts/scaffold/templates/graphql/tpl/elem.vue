@@ -45,13 +45,8 @@ import { OperationResult, resolveOperationStates } from '@goodt-common/graphql';
 import { Destruct } from '@goodt-wcore/core/components';
 import { useConsumersMixins, ConsumersMixinsTypes } from './api';
 import { descriptor /* , Vars */ } from './descriptor';
+import { ElemInstanceTypeDescriptor } from './types';
 import Panels from '[[{panelPath}]]';
-
-/**
- * @typedef {import('./types/[[{name}]]').TInstance} TInstance
- * @type {TInstance}
- */
-const ComponentInstanceTypeDescriptor = undefined;
 
 /**
  * Создаёт массив миксинов для использования сервисов вместе с компонентом
@@ -87,6 +82,9 @@ export default {
             employeeQuery: null,
             assignmentsQuery: null
         },
+        /* Vetur HACK – extra structure and type hinting */
+        ...ElemInstanceTypeDescriptor,
+        ...ConsumersMixinsTypes,
     }),
 
     watch: {
@@ -239,10 +237,7 @@ export default {
             if (isSuccess) {
                 this.assignmentDataEntries = this.buildAssignmentsSummary({ employeeResult, assignmentsResult });
             }
-        },
-        /* Vetur HACK – extra structure and type hinting */
-        ...ConsumersMixinsTypes,
-        ...ComponentInstanceTypeDescriptor
+        }
     }
 };
 </script>

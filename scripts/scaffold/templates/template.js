@@ -66,6 +66,7 @@ module.exports = class {
         this.buildWidgetFile(`${tplPath}/panel.vue`, `${panelPath}/${panelName}.vue`, tplBindings);
         this.buildWidgetFile(`${tplPath}/panel.types.d.ts`, `${typesPath}/${panelName}.d.ts`, tplBindings);
         this.buildWidgetFile(`${tplPath}/panels.index.js`, `${panelPath}/index.js`, tplBindings);
+        this.buildWidgetFile(`${tplPath}/index.types.js`, `${typesPath}/index.js`, tplBindings);
         this.buildWidgetFile(`${tplPath}/descriptor.js`, `descriptor.js`, tplBindings);
         this.buildWidgetFile(`${tplPath}/README.MD`, `README.MD`, tplBindings);
         this.buildWidgetFile(`${tplPath}/style.less`, `style.less`, tplBindings);

@@ -5,14 +5,10 @@ import DemoPagination from './components/Pagination.vue';
 [[/pagination]]
 import DemoTableRow from './components/TableRow.vue';
 import renders from './renders';
-import Panels, { PaginationPanelAsync } from '[[{panelPath}]]';
 import { descriptor, /* Vars */ } from './descriptor';
+import { ElemInstanceTypeDescriptor } from './types';
+import Panels, { PaginationPanelAsync } from '[[{panelPath}]]';
 
-/**
- * @typedef {import('./types/[[{name}]]').TInstance} TInstance
- * @type {TInstance}
- */
-const ComponentInstanceTypeDescriptor = undefined;
 
 export default {
     extends: Table,
@@ -38,7 +34,7 @@ export default {
     data: () => ({
         descriptor: descriptor(),
         /* Vetur HACK */
-        ...ComponentInstanceTypeDescriptor
+        ...ElemInstanceTypeDescriptor
     }),
     created() {
         // to be implemented

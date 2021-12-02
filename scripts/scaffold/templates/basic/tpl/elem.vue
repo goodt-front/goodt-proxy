@@ -29,13 +29,8 @@ import {
 } from './api/mixins';
 [[/hasTransport]]
 import { descriptor /*, Vars */ } from './descriptor';
+import { ElemInstanceTypeDescriptor } from './types';
 import Panels from '[[{panelPath}]]';
-
-/**
- * @typedef {import('./types/[[{name}]]').TInstance} TInstance
- * @type {TInstance}
- */
-const ComponentInstanceTypeDescriptor = undefined;
 
 export default {
     extends: Elem,
@@ -52,7 +47,7 @@ export default {
         [[/hasTransport]]
         /* Vetur HACK for type hinting */
         ...ApiMixinsTypeDescriptor,
-        ...ComponentInstanceTypeDescriptor
+        ...ElemInstanceTypeDescriptor
     }),
     /* static data used in <template></template> */
     static: {},

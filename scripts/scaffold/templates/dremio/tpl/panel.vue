@@ -8,18 +8,13 @@
 </template>
 <script>
 import { Panel } from '[[{core}]]';
-
-/**
- * @typedef {import('../types/[[{panelName}]]').TInstance} TInstance
- * @type {TInstance}
- */
-const ComponentInstanceTypeDescriptor = undefined;
+import { PanelInstanceTypeDescriptor } from '../types';
 
 export default {
     extends: Panel,
     data: () => ({
         $meta: { name: '[[{panelName}]]', icon: '' },
-        ...ComponentInstanceTypeDescriptor
+        ...PanelInstanceTypeDescriptor
     })
 };
 </script>

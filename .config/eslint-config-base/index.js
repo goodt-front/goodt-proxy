@@ -12,12 +12,7 @@ module.exports = {
         allowImportExportEverywhere: true
     },
 
-    extends: [
-        'airbnb-base',
-        'plugin:vue/recommended',
-        'plugin:vue-scoped-css/recommended',
-        'prettier'
-    ],
+    extends: ['airbnb-base', 'plugin:vue/recommended', 'plugin:vue-scoped-css/recommended', 'prettier'],
     plugins: [
         'unicorn',
         'radar',
@@ -52,6 +47,26 @@ module.exports = {
                 name: 'createWidgetApiService',
                 use: '"useApiServiceMixin" form scaffold for creating service instance'
             },
+            {
+                name: 'OrgStructureApiService',
+                use: 'common service with "useOrgStructureApiServiceMixin" from "import { useOrgStructureApiServiceMixin } from \'@goodt-common/api\';"'
+            },
+            {
+                name: 'LearningApiService',
+                use: 'common service with "useLearningApiServiceMixin" from "import { useLearningApiServiceMixin } from \'@goodt-common/api\';"'
+            },
+            {
+                name: 'LearningCourseApiService',
+                use: 'common service with "useLearningApiServiceMixin" from "import { useLearningApiServiceMixin } from \'@goodt-common/api\';"'
+            },
+            {
+                name: 'ApiService',
+                use: 'specify more semantic service class name (or remove if it is created by scaffold and not unused)'
+            },
+            {
+                name: 'Service',
+                use: 'migrate to more specific api service usage (extend BaseApiService) or reuse existing common one'
+            },
             { name: 'serviceOrgstructure', use: '"orgStructureApi" property name instead' },
             { name: 'serviceOrgStructure', use: '"orgStructureApi" property name instead' },
             { name: 'serviceTasksettings', use: '"taskSettingsApi" property name instead' },
@@ -82,6 +97,19 @@ module.exports = {
             {
                 name: 'createTasksettingsApiService',
                 use: 'Using "createTasksettingsApiService" is deprecated. Reuse "useApiServiceMixin" from scaffold to inject service instance'
+            },
+            {
+                name: 'useApiServiceMixin',
+                message: 'Specify more semantic function name or remove if it is unused'
+            },
+            {
+                name: 'createOrgStructureApiService',
+                message:
+                    'Use common service with "useOrgStructureApiServiceMixin" from "import { useOrgStructureApiServiceMixin } from \'@goodt-common/api\';"'
+            },
+            {
+                name: 'ApiEndpointPaths',
+                message: 'Importing and direct using of "ApiEndpointPaths" is not allowed'
             }
         ],
         /* eslint-recommended */

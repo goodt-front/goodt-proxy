@@ -1,3 +1,5 @@
+import './boot';
+
 import * as Components from './components';
 import * as Dremio from './dremio';
 import * as Managers from './managers';

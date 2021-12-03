@@ -1,6 +1,6 @@
 <template>
-    <portal :to="target">
-        <popup :visible="visible" v-bind="$attrs" @close="onClose">
+    <ui-portal>
+        <ui-popup :visible="visible" v-bind="$attrs" @close="onClose">
             <template #close="{ close }">
                 <slot name="close" v-bind="{ close }" />
             </template>
@@ -10,17 +10,16 @@
             <template v-if="$scopedSlots.footer" #footer="{ close }">
                 <slot name="footer" v-bind="{ close }" />
             </template>
-        </popup>
-    </portal>
+        </ui-popup>
+    </ui-portal>
 </template>
 <script>
-import { Popup } from 'goodteditor-ui';
-import { Portal } from 'portal-vue';
-import Const from '../../Const';
+import { Popup as UiPopup } from 'goodteditor-ui';
+import UiPortal from './Portal.vue';
 
 export default {
+    components: { UiPortal, UiPopup },
     inheritAttrs: false,
-    components: { Portal, Popup },
     props: {
         /** popup visibility state (.sync modifier supported) */
         visible: {
@@ -28,11 +27,6 @@ export default {
             default: false
         }
         /** for more props @see https://goodt-ui.netlify.app/#!/Popup */
-    },
-    data() {
-        return {
-            target: Const.PORTAL_TARGET_NAME_POPUP
-        };
     },
     methods: {
         onClose() {

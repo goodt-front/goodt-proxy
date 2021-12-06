@@ -5,3 +5,4 @@ export * from './proxy-decorator';
 export * from './useEventHook';
 export * from './descriptor';
 export * from './tree';
+export * from './unit';

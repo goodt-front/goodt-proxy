@@ -3,9 +3,16 @@
 </template>
 <script>
 import { get as getByPath } from 'lodash';
+import { convertPxToRemInString } from '@goodt-common/utils';
 import { buildExternalStateFromInternal, buildInternalStateFromExternal } from '../mixins/useStore';
 import { ConstManager, RouteManager, StoreManager, EB } from '../managers';
-import { dispatchEventByName, getDescriptorDefaultProps, patchComponentRootDomElement, unobserve } from './infra/utils';
+import {
+    dispatchEventByName,
+    getDescriptorDefaultProps,
+    patchComponentRootDomElement,
+    unobserve
+} from './infra/utils';
+
 
 import { descriptor } from './descriptor';
 import { ElemEvent } from './infra/config';
@@ -155,11 +162,6 @@ const ComponentOptions = {
             this.$watch('$cssVarsStatic', this.genCssStyle, { immediate: true });
         } else {
             this.genCssClass();
-            /*
-            // skipping due earlier
-            // this.$watch('$cssVars', this.genCssStyle, { immediate: true });
-            this.genCssStyle();
-            */
             unobserve([this.descriptor, this.$props, this.cssClass, this.cssStyle]);
         }
 
@@ -243,7 +245,8 @@ const ComponentOptions = {
             });
         },
         /**
-         *
+         * @param {Record<string, string|[string, string]|function(): string>} cssVarsMapping
+         * @param {Record<string, any>} props
          */
         buildCssVars(cssVarsMapping, props = this.props) {
             const resolveMapping = (mapping) => {
@@ -254,7 +257,7 @@ const ComponentOptions = {
                     return getByPath(props, mapping);
                 }
                 if (Array.isArray(mapping)) {
-                    const value = getByPath(props, mapping[0]);
+                    const value = resolveMapping(mapping[0], props);
                     return value || mapping[1];
                 }
                 return mapping;
@@ -267,12 +270,16 @@ const ComponentOptions = {
         },
         /**
          * Generates css-vars-style def
+         * @param {Record<string, string>} cssVars
          */
         genCssVarsStyle(cssVars = { ...this.$cssVarsStatic, ...this.$cssVars }) {
             // prettier-ignore
-            return Object.entries(cssVars).reduce((acc, [key, value]) => ({
+            return Object.entries(cssVars).reduce(
+                (acc, [varName, varValue]) => ({
                 ...acc,
-                [`--w-${key}`]: value
+                [`--w-${varName}`]: typeof varValue === 'string'
+                    ? convertPxToRemInString(varValue)
+                    : varValue
             }), {});
         },
         /**

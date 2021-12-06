@@ -6,3 +6,4 @@ export * from './useEventHook';
 export * from './descriptor';
 export * from './tree';
 export * from './unit';
+export * from './i18n';

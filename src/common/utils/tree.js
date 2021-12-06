@@ -15,22 +15,22 @@ class Queue {
     constructor(array) {
         this._array = [...array];
     }
-    
+
     /**
      * @param {AppEntityElem[]} value - nodes for interaction
      */
     enqueue(value) {
         this._array.push(...value);
     }
-    
+
     /**
      * @return {AppEntityElem} - first element in queue
      */
-    
+
     dequeue() {
         return this._array.shift();
     }
-    
+
     /**
      * @return {boolean} - shows queue is empty or not
      */
@@ -46,7 +46,7 @@ class Queue {
  */
 function findNode(array, childrenProp, match) {
     const nodeQueue = new Queue(array);
-    
+
     while (!nodeQueue.isEmpty) {
         const currentNode = nodeQueue.dequeue();
         if (match(currentNode)) {
@@ -54,7 +54,7 @@ function findNode(array, childrenProp, match) {
         }
         nodeQueue.enqueue(currentNode[childrenProp]);
     }
-    
+
     return null;
 }
 /**
@@ -65,7 +65,7 @@ function findNode(array, childrenProp, match) {
  */
 function findParentNode(array, childrenProp, match) {
     const nodeQueue = new Queue(array);
-    
+
     while (!nodeQueue.isEmpty) {
         const currentNode = nodeQueue.dequeue();
         // eslint-disable-next-line no-restricted-syntax
@@ -76,7 +76,7 @@ function findParentNode(array, childrenProp, match) {
         }
         nodeQueue.enqueue(currentNode[childrenProp]);
     }
-    
+
     return null;
 }
 /**
@@ -87,7 +87,7 @@ function findParentNode(array, childrenProp, match) {
  */
 function deleteNode(array, childrenProp, match) {
     const nodeQueue = new Queue(array);
-    
+
     while (!nodeQueue.isEmpty) {
         const currentNode = nodeQueue.dequeue();
         if (match(currentNode)) {
@@ -98,7 +98,7 @@ function deleteNode(array, childrenProp, match) {
         }
         nodeQueue.enqueue(currentNode[childrenProp]);
     }
-    
+
     return false;
 }
 /**
@@ -108,7 +108,7 @@ function deleteNode(array, childrenProp, match) {
  */
 function traverse(array, childrenProp, callback) {
     const nodeQueue = new Queue(array);
-    
+
     while (!nodeQueue.isEmpty) {
         const currentNode = nodeQueue.dequeue();
         const parentNode = findParentNode(array, childrenProp, ({ id }) => id === currentNode.id);

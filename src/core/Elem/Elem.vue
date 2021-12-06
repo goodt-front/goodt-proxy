@@ -3,7 +3,7 @@
 </template>
 <script>
 import { get as getByPath } from 'lodash';
-import { convertPxToRemInString } from '@goodt-common/utils';
+import { convertPxToRem } from '@goodt-common/utils';
 import { buildExternalStateFromInternal, buildInternalStateFromExternal } from '../mixins/useStore';
 import { ConstManager, RouteManager, StoreManager, EB } from '../managers';
 import {
@@ -278,7 +278,7 @@ const ComponentOptions = {
                 (acc, [varName, varValue]) => ({
                 ...acc,
                 [`--w-${varName}`]: typeof varValue === 'string'
-                    ? convertPxToRemInString(varValue)
+                    ? convertPxToRem(varValue)
                     : varValue
             }), {});
         },

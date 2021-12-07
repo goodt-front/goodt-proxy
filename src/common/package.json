@@ -1,7 +1,9 @@
 {
     "name": "@goodt-wcore/common",
-    "version": "1.0.0",
-    "private": true,
+    "version": "1.0.1",
+    "publishConfig": {
+        "registry": "https://art.goodt.me/repository/npm/"
+    },
     "description": "SUP: Common. Folder-based package with shared `core common` functionality to reuse in SUP projects.",
     "peerDependencies": {
         "axios": "^0.21.1",

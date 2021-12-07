@@ -27,12 +27,12 @@ class Queue {
     }
 
     /**
-     * @return {AppEntityElem} - first element in queue
+     * @return {[AppEntityElem, AppEntityElem]} - first element in queue
      */
     dequeue() {
         return this._array.shift();
     }
-    
+
     /**
      * @param {(AppEntityElem|null)=} parent
      * @return {(AppEntityElem) => [AppEntityElem, AppEntityElem|null]}

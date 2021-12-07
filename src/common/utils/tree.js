@@ -9,28 +9,38 @@
  * @property {AppEntityElem[]} children - children of element
  */
 class Queue {
+    _array = [];
+    
     /**
      * @param {AppEntityElem[]} array - started array of nodes
      */
     constructor(array) {
-        this._array = [...array];
+        this.enqueue(array);
     }
 
     /**
-     * @param {AppEntityElem[]} value - nodes for interaction
+     * @param {AppEntityElem[]} nodes - nodes for interaction
+     * @param {(AppEntityElem|null)=} parent - parent node of nodes
      */
-    enqueue(value) {
-        this._array.push(...value);
+    enqueue(nodes, parent = null) {
+        this._array.push(...nodes.map(this.mapper(parent)));
     }
 
     /**
-     * @return {AppEntityElem} - first element in queue
+     * @return {[AppEntityElem, AppEntityElem]} - first element in queue
      */
-
     dequeue() {
         return this._array.shift();
     }
 
+    /**
+     * @param {(AppEntityElem|null)=} parent
+     * @return {(AppEntityElem) => [AppEntityElem, AppEntityElem|null]}
+     */
+    mapper(parent = null) {
+        return (node) => [node, parent];
+    }
+    
     /**
      * @return {boolean} - shows queue is empty or not
      */
@@ -48,11 +58,11 @@ function findNode(array, childrenProp, match) {
     const nodeQueue = new Queue(array);
 
     while (!nodeQueue.isEmpty) {
-        const currentNode = nodeQueue.dequeue();
+        const [currentNode] = nodeQueue.dequeue();
         if (match(currentNode)) {
             return currentNode;
         }
-        nodeQueue.enqueue(currentNode[childrenProp]);
+        nodeQueue.enqueue(currentNode[childrenProp], currentNode);
     }
 
     return null;
@@ -67,14 +77,14 @@ function findParentNode(array, childrenProp, match) {
     const nodeQueue = new Queue(array);
 
     while (!nodeQueue.isEmpty) {
-        const currentNode = nodeQueue.dequeue();
+        const [currentNode] = nodeQueue.dequeue();
         // eslint-disable-next-line no-restricted-syntax
         for (const childNode of currentNode[childrenProp]) {
             if (match(childNode)) {
                 return currentNode;
             }
         }
-        nodeQueue.enqueue(currentNode[childrenProp]);
+        nodeQueue.enqueue(currentNode[childrenProp], currentNode);
     }
 
     return null;
@@ -89,14 +99,13 @@ function deleteNode(array, childrenProp, match) {
     const nodeQueue = new Queue(array);
 
     while (!nodeQueue.isEmpty) {
-        const currentNode = nodeQueue.dequeue();
+        const [currentNode, parentNode] = nodeQueue.dequeue();
         if (match(currentNode)) {
-            const parentNode = findParentNode(array, childrenProp, match);
             const currentNodeIndex = parentNode[childrenProp].findIndex(match);
             parentNode[childrenProp].splice(currentNodeIndex, 1);
             return true;
         }
-        nodeQueue.enqueue(currentNode[childrenProp]);
+        nodeQueue.enqueue(currentNode[childrenProp], currentNode);
     }
 
     return false;
@@ -110,10 +119,9 @@ function traverse(array, childrenProp, callback) {
     const nodeQueue = new Queue(array);
 
     while (!nodeQueue.isEmpty) {
-        const currentNode = nodeQueue.dequeue();
-        const parentNode = findParentNode(array, childrenProp, ({ id }) => id === currentNode.id);
+        const [currentNode, parentNode] = nodeQueue.dequeue();
         callback(currentNode, parentNode);
-        nodeQueue.enqueue(currentNode[childrenProp]);
+        nodeQueue.enqueue(currentNode[childrenProp], currentNode);
     }
 }
 

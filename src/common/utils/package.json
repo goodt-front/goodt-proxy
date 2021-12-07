@@ -1,7 +1,8 @@
 {
   "name": "@goodt-common/utils",
-  "version": "1.0.0",
-  "types": "./index.d.ts",
-  "dependencies": {
-  }
+  "publishConfig": {
+    "registry": "https://art.goodt.me/repository/npm/"
+  },
+  "version": "1.0.1",
+  "types": "./index.d.ts"
 }

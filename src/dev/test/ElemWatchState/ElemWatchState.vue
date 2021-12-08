@@ -72,6 +72,7 @@ export default {
         },
         {
             vars: [Vars.FOO],
+            when: true,
             handler([ foo ], state) {
                 console.log('FOO.changed', { foo }, { state });
                 this.hits[Vars.FOO] = true;
@@ -79,6 +80,7 @@ export default {
         },
         {
             vars: [Vars.BAR],
+            when: ([ bar ]) => bar > 6,
             handler([ bar ], state) {
                 console.log('BAR.changed', { bar }, { state });
                 this.hits[Vars.BAR] = true;

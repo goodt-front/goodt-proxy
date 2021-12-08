@@ -1,19 +1,27 @@
-export enum WatchStoreStratEnum {
-    ANY = 'any',
-    ALL = 'all'
-}
-export type WatchStoreStrat = WatchStoreStratEnum.ANY | WatchStoreStratEnum.ALL;
+export type WatchStoreStrategyEnum = {
+    ANY: 'any';
+    ALL: 'all';
+};
+
+export type WatchStoreStrategy = WatchStoreStrategyEnum['ALL'] | WatchStoreStrategyEnum['ANY'];
+
+export type WatchStoreHandler<TVarList> =
+    | ((values?: any[], state?: { [key in TVarList]: number | string | boolean | null | undefined }) => void)
+    | string;
+
+export type WatchStoreHandlerConditionFunction = (values: any[]) => boolean;
+
+export type WatchStoreHandlerCondition =
+    | WatchStoreHandlerConditionFunction
+    | WatchStoreHandlerConditionFunction[]
+    | string
+    | boolean;
 
 export interface IWatchStoreDefinition<TVarList = string[]> {
     vars?: TVarList;
     all?: boolean;
-    when?: string | boolean | ((values: any[]) => boolean) | ((values: any[]) => boolean)[];
-    handler:
-        | ((
-              values?: any[],
-              state?: { [key in ValuesOf<typeof TVarList>]: number | string | boolean | null | undefined }
-          ) => void)
-        | string;
+    when?: WatchStoreHandlerCondition;
+    handler: WatchStoreHandler;
 }
 
 declare global {

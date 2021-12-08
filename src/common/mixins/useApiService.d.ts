@@ -7,11 +7,10 @@ interface IApiServiceFactory {
 
 type ServiceMixinComputed<T extends IApiService> = {
     apiService: T;
-}
+};
 
 export interface IApiServiceMixinOptions {
     name?: string;
-    apiBaseURL?: string | (() => string);
 }
 
 export type IApiServiceMixinInstance<T extends IApiService> = ServiceMixinComputed<T>

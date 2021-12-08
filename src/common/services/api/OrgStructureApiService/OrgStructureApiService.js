@@ -1,9 +1,9 @@
 import { success } from '@goodt-common/utils';
 import { BaseDto, buildDtoSafeResult } from '@goodt-common/infra';
 
-import { BaseApiService, ApiClientMethod, ApiServiceError } from '@goodt-common/api';
+import { BaseApiService, ApiClientMethod, ApiServiceError, buildRequest } from '@goodt-common/api';
 
-import { ApiEndpointPaths as Paths } from './config';
+import { ApiEndpointPaths as Paths, ServiceAction } from './config';
 import {
     DivisionTeamAssignmentDto,
     DivisionTeamRoleContainerDto,
@@ -16,7 +16,9 @@ import {
     RoleInfoDto,
     DivisionTeamRoleRawDto,
     DivisionTeamRoleDto,
-    DivisionTeamAssignmentRotationDto
+    DivisionTeamAssignmentRotationDto,
+    DivisionTeamSuccessorDto,
+    AssignmentReadinessDto
 } from './dto';
 
 import { withEmployeeContext, withEmployeeIdContext } from './EmployeeContext';
@@ -32,7 +34,7 @@ import { withTeamContext, withTeamIdContext } from './TeamContext';
  * @param {SafeResult} safeResult
  * @return {SafeResult<BaseDto|BaseDto[]|true, Error>}
  */
-const processRequestResult = (DtoConstructor, safeResult) => {
+const processRequestResult = (safeResult, DtoConstructor = true) => {
     const { isError, result: dtoJsonResult } = safeResult;
 
     if (isError) {
@@ -53,18 +55,30 @@ const processRequestResult = (DtoConstructor, safeResult) => {
 class OrgStructureApiService extends BaseApiService {
     /**
      *
+     * @param {import('@goodt-common/api').IApiServiceRequest | import('@goodt-common/api').IApiServiceRequestOptions} apiServiceRequest
+     * @param {typeof BaseDto.constructor|true} DtoConstructor
+     * @return {SafeResult<BaseDto|BaseDto[]|true, Error>}
+     */
+    async request(apiServiceRequest, DtoConstructor) {
+        if ('action' in apiServiceRequest) {
+            apiServiceRequest = buildRequest(apiServiceRequest);
+        }
+        return processRequestResult(await super.request(apiServiceRequest), DtoConstructor);
+    }
+
+    /**
+     *
      * @param {?number} [employeeId]
      * @return {Promise<SafeResult<EmployeeExtendedInfoDto, Error>>}
      */
     async getEmployeeById(employeeId) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_INFO,
             params: {
                 id: employeeId
             }
-        });
-
-        return processRequestResult(EmployeeExtendedInfoDto, safeResult);
+        }, EmployeeExtendedInfoDto);
     }
 
     /**
@@ -73,14 +87,15 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<EmployeeExtendedInfoDto[], Error>>}
      */
     async getEmployeesByIds(employeeIds) {
-        const safeResult = await this.request({
-            url: Paths.EMPLOYEE_LIST,
-            params: {
-                employees: employeeIds
-            }
-        });
-
-        return processRequestResult(EmployeeExtendedInfoDto, safeResult);
+        return this.request(
+            {
+                url: Paths.EMPLOYEE_LIST,
+                params: {
+                    employees: employeeIds
+                }
+            },
+            EmployeeExtendedInfoDto
+        );
     }
 
     /**
@@ -91,16 +106,17 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<EmployeeExtendedInfoDto[], Error>>}
      */
     async getEmployeesByFilter({ employeeIds, divisionId, searchToken } = {}) {
-        const safeResult = await this.request({
-            url: Paths.EMPLOYEE_FIND,
-            params: {
-                ...(employeeIds && { id: employeeIds }),
-                ...(divisionId && { division: divisionId }),
-                ...(searchToken && { search: searchToken })
-            }
-        });
-
-        return processRequestResult(EmployeeExtendedInfoDto, safeResult);
+        return this.request(
+            {
+                url: Paths.EMPLOYEE_FIND,
+                params: {
+                    ...(employeeIds && { id: employeeIds }),
+                    ...(divisionId && { division: divisionId }),
+                    ...(searchToken && { search: searchToken })
+                }
+            },
+            EmployeeExtendedInfoDto
+        );
     }
 
     /**
@@ -109,14 +125,15 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<EmployeeConditionInfoDto, Error>>}
      */
     async getEmployeeConditionById(employeeId) {
-        const safeResult = await this.request({
-            url: Paths.EMPLOYEE_CONDITION,
-            params: {
-                id: employeeId
-            }
-        });
-
-        return processRequestResult(EmployeeConditionInfoDto, safeResult);
+        return this.request(
+            {
+                url: Paths.EMPLOYEE_CONDITION,
+                params: {
+                    id: employeeId
+                }
+            },
+            EmployeeConditionInfoDto
+        );
     }
 
     /**
@@ -127,15 +144,14 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamAssignmentDto[], Error>>}
      */
     async getEmployeeDivisionTeamAssignments({ employeeId, divisionTeamId } = {}) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_TEAM_DIVISION_ASSIGNMENTS,
             params: {
                 ...(employeeId && { employee: employeeId }),
                 ...(divisionTeamId && { team: divisionTeamId })
             }
-        });
-
-        return processRequestResult(DivisionTeamAssignmentDto, safeResult);
+        }, DivisionTeamAssignmentDto);
     }
 
     /**
@@ -143,14 +159,13 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamAssignmentDto[], Error>>}
      */
     async getDivisionTeamAssignmentsByIds(ids) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_TEAM_DIVISION_ASSIGNMENTS,
             params: {
                 id: ids
             }
-        });
-
-        return processRequestResult(DivisionTeamAssignmentDto, safeResult);
+        }, DivisionTeamAssignmentDto);
     }
 
     /**
@@ -160,15 +175,14 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamAssignmentDto[], Error>>}
      */
     async getSubordinatesDivisionsTeamAssignments({ employeeId, divisionTeamId }) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_TEAM_DIVISION_SUBORDINATES,
             params: {
                 id: employeeId,
                 team: divisionTeamId
             }
-        });
-
-        return processRequestResult(DivisionTeamAssignmentDto, safeResult);
+        }, DivisionTeamAssignmentDto);
     }
 
     /**
@@ -178,15 +192,14 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamAssignmentDto, Error>>}
      */
     async getTeamHeadDivisionsTeamAssignment({ employeeId, divisionTeamId }) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_TEAM_DIVISION_HEAD,
             params: {
                 id: employeeId,
                 team: divisionTeamId
             }
-        });
-
-        return processRequestResult(DivisionTeamAssignmentDto, safeResult);
+        }, DivisionTeamAssignmentDto);
     }
 
     /**
@@ -195,14 +208,13 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamRoleContainerDto[], Error>>}
      */
     async getDivisionTeamRoleInfosByDivisionTeamId(divisionTeamId) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_TEAM_DIVISION_ROLES_TEAM,
             params: {
                 team: divisionTeamId
             }
-        });
-
-        return processRequestResult(DivisionTeamRoleContainerDto, safeResult);
+        }, DivisionTeamRoleContainerDto);
     }
 
     /**
@@ -210,7 +222,8 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<boolean, Error>>}
      */
     async deleteDivisionTeamSuccessorById(id) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_DELETE_TEAM_DIVISION_SUCCESSOR,
             options: {
                 method: ApiClientMethod.POST,
@@ -219,13 +232,100 @@ class OrgStructureApiService extends BaseApiService {
                 }
             }
         });
+    }
 
-        const { isError } = safeResult;
-        if (isError) {
-            return safeResult;
-        }
+    /**
+     *
+     * @param {number} employeeId
+     * @param {number} divisionTeamRoleId
+     * @return {Promise<SafeResult<DivisionTeamSuccessorDto, Error>>}
+     */
+    addTeamDivisionSuccessor(employeeId, divisionTeamRoleId) {
+        // prettier-ignore
+        return this.request({
+            action: ServiceAction.EMPLOYEE_DIVISION_TEAM_SUCCESSOR_ADD,
+            queryParams: { employee_id: employeeId, division_team_role_id: divisionTeamRoleId }
+        }, DivisionTeamSuccessorDto);
+    }
 
-        return success(true);
+    /**
+     *
+     * @param {number} divisionTeamSuccessorId
+     * @param {number} assignmentReadinessId
+     * @return {Promise<SafeResult<true>>|Error}
+     */
+    setDivisionTeamSuccessorReadiness(divisionTeamSuccessorId, assignmentReadinessId) {
+        // prettier-ignore
+        return this.request({
+            action: ServiceAction.EMPLOYEE_DIVISION_TEAM_SUCCESSOR_READINESS_SET,
+            queryParams: {
+                division_team_successor_id: divisionTeamSuccessorId,
+                assignment_readiness_id: assignmentReadinessId
+            }
+        });
+    }
+
+    /**
+     *
+     * @param divisionTeamSuccessorId
+     * @param dateCommitHr
+     * @return {Promise<SafeResult>|Promise<SafeResult>|*}
+     */
+    updateDivisionTeamSuccessorDateHr(divisionTeamSuccessorId, dateCommitHr) {
+        // prettier-ignore
+        return this.request({
+            action: ServiceAction.EMPLOYEE_DIVISION_TEAM_SUCCESSOR_DATE_HR_UPDATE,
+            queryParams: {
+                division_team_successor_id: divisionTeamSuccessorId,
+                date_commit_hr: dateCommitHr
+            }
+        });
+    }
+
+    /**
+     * @return {Promise<SafeResult<AssignmentReadinessDto[], Error>>}
+     */
+    getLibraryAssignmentReadinesses() {
+        // prettier-ignore
+        return this.request({
+            action: ServiceAction.ASSIGNMENT_READINESS_GET
+        }, AssignmentReadinessDto);
+    }
+
+    /**
+     *
+     * @param {number} divisionTeamRoleId
+     * @param {number} divisionTeamToFilter
+     * @param {number} positionId
+     * @return {Promise<SafeResult>}
+     */
+    // updateDivisionTeamRole(divisionTeamRoleId, divisionTeamToFilter, positionId) {
+    //     return this.request(
+    //         {
+    //             action: ServiceAction.DIVISION_TEAM_ROLE_SET,
+    //             pathParams: { id: divisionTeamRoleId },
+    //             params: {
+    //                 division_team_id: divisionTeamToFilter,
+    //                 importance: positionId
+    //             }
+    //         },
+    //         DivisionTeamRoleDto
+    //     );
+    // }
+
+    /**
+     *
+     * @param {number[]} divisionTeamIds
+     * @return {Promise<SafeResult<DivisionTeamRoleContainerDto[], Error>>}
+     */
+    getDivisionTeamRolesByFilter({ divisionTeamIds }) {
+        // prettier-ignore
+        return this.request({
+            action: ServiceAction.DIVISION_TEAM_ROLE_FIND,
+            queryParams: {
+                division_team_id: divisionTeamIds
+            }
+        }, DivisionTeamRoleContainerDto);
     }
 
     /**
@@ -234,14 +334,13 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamAssignmentDto[], Error>>}
      */
     async getTeamDivisionTeamAssignmentsByTeamId(divisionTeamId) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_TEAM_DIVISION_ASSIGNMENTS_TEAM,
             params: {
                 team: divisionTeamId
             }
-        });
-
-        return processRequestResult(DivisionTeamAssignmentDto, safeResult);
+        }, DivisionTeamAssignmentDto);
     }
 
     /**
@@ -251,15 +350,14 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamAssignmentDto, Error>>}
      */
     async getHeadOfTeamHeadDivisionTeamAssignment({ employeeId, divisionTeamId }) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_TEAM_DIVISION_HEAD_HEAD,
             params: {
                 employee: employeeId,
                 team: divisionTeamId
             }
-        });
-
-        return processRequestResult(DivisionTeamAssignmentDto, safeResult);
+        }, DivisionTeamAssignmentDto);
     }
 
     /**
@@ -270,15 +368,14 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<LegalEntityTeamAssignmentDto[], Error>>}
      */
     async getEmployeesLegalEntityTeamAssignments({ employeeId, legalEntityTeamId }) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_TEAM_LEGAL_ENTITY_ASSIGNMENTS,
             params: {
                 ...(employeeId && { employee: employeeId }),
                 ...(legalEntityTeamId && { team: legalEntityTeamId })
             }
-        });
-
-        return processRequestResult(LegalEntityTeamAssignmentDto, safeResult);
+        }, LegalEntityTeamAssignmentDto);
     }
 
     /**
@@ -288,14 +385,13 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<LegalEntityTeamAssignmentDto[], Error>>}
      */
     async getLegalEntityTeamAssignmentsById(assignmentId) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_TEAM_LEGAL_ENTITY_ASSIGNMENTS,
             params: {
                 id: assignmentId
             }
-        });
-
-        return processRequestResult(LegalEntityTeamAssignmentDto, safeResult);
+        }, LegalEntityTeamAssignmentDto);
     }
 
     /**
@@ -305,14 +401,13 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamAssignmentDto[], Error>>}
      */
     async getDivisionTeamAssignmentsByLegalEntityId(legalEntityId) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.EMPLOYEE_TEAM_DIVISION_LEGAL_ENTITY_ASSIGNMENTS,
             params: {
                 legal_entity: legalEntityId
             }
-        });
-
-        return processRequestResult(DivisionTeamAssignmentDto, safeResult);
+        }, DivisionTeamAssignmentDto);
     }
 
     /**
@@ -321,14 +416,13 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionShortInfoDto[], Error>>}
      */
     async getDivisionPathById(divisionId) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.DIVISION_PATH,
             params: {
                 id: divisionId
             }
-        });
-
-        return processRequestResult(DivisionShortInfoDto, safeResult);
+        }, DivisionShortInfoDto);
     }
 
     /**
@@ -337,14 +431,13 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionInfoDto, Error>>}
      */
     async getDivisionInfoById(divisionId) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.DIVISION_INFO,
             params: {
                 id: divisionId
             }
-        });
-
-        return processRequestResult(DivisionInfoDto, safeResult);
+        }, DivisionInfoDto);
     }
 
     /**
@@ -354,15 +447,14 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionInfoDto[], Error>>}
      */
     async getDivisionInfosByParent({ divisionId, legalEntityId }) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.DIVISION_LIST,
             params: {
                 ...(divisionId && { parent: divisionId }),
                 ...(legalEntityId && { legalentity: legalEntityId })
             }
-        });
-
-        return processRequestResult(DivisionInfoDto, safeResult);
+        }, DivisionInfoDto);
     }
 
     /**
@@ -371,25 +463,24 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionPositionDto[], Error>>}
      */
     async getDivisionPositionsByDivisionId(divisionId) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.DIVISION_POSITION,
             params: {
                 division: divisionId
             }
-        });
-
-        return processRequestResult(DivisionPositionDto, safeResult);
+        },
+        DivisionPositionDto);
     }
 
     /**
      * @return {Promise<SafeResult<RoleInfoDto[], Error>>}
      */
     async getRolesAll() {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.ROLE_LIST
-        });
-
-        return processRequestResult(RoleInfoDto, safeResult);
+        }, RoleInfoDto);
     }
 
     /**
@@ -398,15 +489,14 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<LegalEntityTeamAssignmentDto[], Error>>}
      */
     async getRoleLegalEntityTeamAssignments({ roleId, legalEntityId }) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.ROLE_ASSIGNMENTS_LIST,
             params: {
                 role_id: roleId,
                 legal_entity_id: legalEntityId
             }
-        });
-
-        return processRequestResult(LegalEntityTeamAssignmentDto, safeResult);
+        }, LegalEntityTeamAssignmentDto);
     }
 
     /**
@@ -417,7 +507,8 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<Boolean, Error>>}
      */
     async createOrUpdateEmployeeRole({ employeeId, roleId, legalEntityId }) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.ROLE_SET_EMPLOYEE,
             params: {
                 employee_id: employeeId,
@@ -428,20 +519,14 @@ class OrgStructureApiService extends BaseApiService {
                 method: ApiClientMethod.POST
             }
         });
-
-        const { isSuccess } = safeResult;
-        if (isSuccess) {
-            return success(true);
-        }
-
-        return safeResult;
     }
 
     /**
      * @return {Promise<SafeResult<Boolean, Error>>}
      */
     async deleteEmployeeRole({ employeeId, roleId, legalEntityId }) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.ROLE_LIST,
             params: {
                 employee_id: employeeId,
@@ -452,13 +537,6 @@ class OrgStructureApiService extends BaseApiService {
                 method: ApiClientMethod.POST
             }
         });
-
-        const { isSuccess } = safeResult;
-        if (isSuccess) {
-            return success(true);
-        }
-
-        return safeResult;
     }
 
     /**
@@ -466,11 +544,10 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamRoleRawDto[], Error | null>>}
      */
     async getDivisionTeamRoles() {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.DIVISION_TEAM_ROLE
-        });
-
-        return processRequestResult(DivisionTeamRoleRawDto, safeResult);
+        }, DivisionTeamRoleRawDto);
     }
 
     /**
@@ -483,11 +560,10 @@ class OrgStructureApiService extends BaseApiService {
                 code: ApiServiceError.Code.INTERNAL
             });
         }
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.DIVISION_TEAM_ROLE_GET_BY_ID.replace(':id', id)
-        });
-
-        return processRequestResult(DivisionTeamRoleRawDto, safeResult);
+        }, DivisionTeamRoleRawDto);
     }
 
     /**
@@ -501,16 +577,14 @@ class OrgStructureApiService extends BaseApiService {
                 reason: { id, divisionTeamRoleDto }
             });
         }
-
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.DIVISION_TEAM_ROLE_SET_BY_ID.replace(':id', id),
             params: divisionTeamRoleDto,
             options: {
                 method: ApiClientMethod.PUT
             }
-        });
-
-        return processRequestResult(DivisionTeamRoleRawDto, safeResult);
+        }, DivisionTeamRoleRawDto);
     }
 
     /**
@@ -519,15 +593,14 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamRoleDto, Error>>}
      */
     async createDivisionTeamRole(divisionTeamRoleDto) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.DIVISION_TEAM_ROLE,
             params: divisionTeamRoleDto,
             options: {
                 method: ApiClientMethod.POST
             }
-        });
-
-        return processRequestResult(DivisionTeamRoleDto, safeResult);
+        }, DivisionTeamRoleDto);
     }
 
     /**
@@ -537,15 +610,13 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<true, Error>>}
      */
     async commitDivisionTeamAssignmentRotation(id) {
-        const safeResult = await this.request({
+        return this.request({
             url: Paths.DIVISION_TEAM_ASSIGNMENT_ROTATION_COMMIT,
             options: {
                 method: ApiClientMethod.POST,
                 params: { id }
             }
         });
-
-        return processRequestResult(true, safeResult);
     }
 
     /**
@@ -555,15 +626,13 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<true, Error>>}
      */
     async withdrawDivisionTeamAssignmentRotation(id) {
-        const safeResult = await this.request({
+        return this.request({
             url: Paths.DIVISION_TEAM_ASSIGNMENT_ROTATION_WITHDRAW,
             options: {
                 method: ApiClientMethod.POST,
                 params: { id }
             }
         });
-
-        return processRequestResult(true, safeResult);
     }
 
     /**
@@ -573,7 +642,8 @@ class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamAssignmentRotationDto[], Error>>}
      */
     async createDivisionTeamAssignmentRotation(divisionTeamAssignmentId, assignmentRotationId) {
-        const safeResult = await this.request({
+        // prettier-ignore
+        return this.request({
             url: Paths.DIVISION_TEAM_ASSIGNMENT_ROTATION_CREATE,
             options: {
                 method: ApiClientMethod.POST,
@@ -582,9 +652,7 @@ class OrgStructureApiService extends BaseApiService {
                     assignment_rotation_id: assignmentRotationId
                 }
             }
-        });
-
-        return processRequestResult(DivisionTeamAssignmentRotationDto, safeResult);
+        }, DivisionTeamAssignmentRotationDto);
     }
 
     /**
@@ -598,7 +666,7 @@ class OrgStructureApiService extends BaseApiService {
         divisionTeamAssignmentRotationId,
         { hrComment, employeeComment }
     ) {
-        const safeResult = await this.request({
+        return this.request({
             url: Paths.DIVISION_TEAM_ASSIGNMENT_ROTATION_UPDATE_COMMENT,
             options: {
                 method: ApiClientMethod.PUT,
@@ -609,8 +677,6 @@ class OrgStructureApiService extends BaseApiService {
                 }
             }
         });
-
-        return processRequestResult(true, safeResult);
     }
 
     /**

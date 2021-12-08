@@ -8,7 +8,7 @@
 const WATCH_STORE_COMPONENT_OPTION_NAME = 'watchStore';
 
 /**
- * @type {import('./WatchStore').WatchStoreStratEnum}
+ * @type {import('./WatchStore').WatchStoreStrategyEnum}
  */
 const WatchStoreStrategy = {
     ANY: 'any',
@@ -16,12 +16,46 @@ const WatchStoreStrategy = {
 };
 
 /**
- * @param {(function(): void)|string} handler
+ * @param {import('./WatchStore').WatchStoreHandler} handler
  * @param {ElemInstance} context
  * @return {function(): void}
  */
 const resolveHandler = (handler, context) =>
     typeof handler === 'function' ? handler.bind(context) : context[handler].bind(context);
+
+/**
+ * Checks if all values are meeting all conditions
+ *
+ * @param {any[]} values
+ * @param {(function(values: any[]): boolean) | Array<function(values: any[]): boolean>} conditions
+ * @return {boolean}
+ */
+// prettier-ignore
+const isMeetConditions = (values, conditions) => {
+    return []
+        .concat(conditions)
+        .filter((condition) => typeof condition === 'function')
+        .every((isMeetCondition) => isMeetCondition(values));
+}
+
+/**
+ * Resolves
+ *
+ * @param {string[]} vars
+ * @param {Record<string, any>} storeState
+ * @return {Record<string, any>}
+ */
+// prettier-ignore
+const resolveState = (vars, storeState) => {
+    if (vars.length === 0) {
+        return storeState;
+    }
+    return vars
+        .reduce((acc, varName) => ({
+            ...acc,
+            [varName]: storeState[varName]
+        }), {});
+}
 
 const WatchStoreStratFactory = {
     /**
@@ -33,38 +67,24 @@ const WatchStoreStratFactory = {
      * // vars: ['foo', 'bar']
      * // state: { foo:1, bar:undefined }
      *
-     * @param {ElemInstance} vm             vue component reference
-     * @param {WatchStoreDefinition} def    watcher definition
-     * @return {function(): void}           strat handler
+     * @param {ElemInstance} vm              vue component reference
+     * @param {string[]} vars                vue component reference
+     * @param {import('./WatchStore').WatchStoreHandlerCondition} when vue component reference
+     * @param {import('./WatchStore').WatchStoreHandler} handler watcher definition
+     * @return {function(): void}            return strat handler
      */
     [WatchStoreStrategy.ANY](vm, { vars, when, handler }) {
         handler = resolveHandler(handler, vm);
 
-        if (vars.length === 0) {
-            return () => vm.$nextTick(() => handler(Object.values(vm.$storeState), vm.$storeState));
-        }
-
-        // prettier-ignore
-        const shouldInvoke = (values) => []
-            .concat(when)
-            .filter((f) => typeof f === 'function')
-            .every((isTrue) => isTrue(values));
-
-        // prettier-ignore
-        const resolveState = () =>
-            vars.reduce((acc, varName) => ({
-                ...acc,
-                [varName]: vm.$storeState[varName]
-            }), {});
-
         return () => {
-            const state = resolveState();
+            const state = resolveState(vars, vm.$storeState);
             const values = Object.values(state);
-            if (shouldInvoke(values)) {
+            if (isMeetConditions(values, when)) {
                 vm.$nextTick(() => handler(values, state));
             }
         };
     },
+
     /**
      * Builds a 'state' object using 'vars' as keys, only if values are not 'undefined'
      * invoke handler only if all 'vars' keys are present in the 'state'
@@ -74,41 +94,24 @@ const WatchStoreStratFactory = {
      * vars: ['foo', 'bar']
      * state: { foo:1 }
      *
-     * @param {ElemInstance} vm             vue component reference
-     * @param {WatchStoreDefinition} def    watcher definition
-     * @return {Function}                   strat handler
+     * @param {ElemInstance} vm              vue component reference
+     * @param {string[]} vars                vue component reference
+     * @param {import('./WatchStore').WatchStoreHandlerCondition} when vue component reference
+     * @param {import('./WatchStore').WatchStoreHandler} handler watcher definition
+     * @return {function(): void}            return strat handler
      */
     [WatchStoreStrategy.ALL](vm, { vars, handler, when }) {
         handler = resolveHandler(handler, vm);
         // prettier-ignore
-        const resolveVarValue = (varName) =>
-            vm.$storeState[varName] !== undefined
-                ? { [varName]: vm.$storeState[varName] }
-                : undefined;
-
-        // prettier-ignore
-        const shouldInvoke = (values) => {
-            if (values.length !== vars.length) {
-                return false;
-            }
-            return []
-                .concat(when)
-                .filter((f) => typeof f === 'function')
-                .every((isTrue) => isTrue(values));
-        }
-
-        const resolveState = () => {
-            // prettier-ignore
-            return vars.reduce((acc, varName) => ({
-                ...acc,
-                ...resolveVarValue(varName)
-            }), {});
-        };
+        const conditions = [
+            (varValues) => varValues.every((value) => value !== undefined),
+            ...[].concat(when)
+        ];
 
         return () => {
-            const state = resolveState();
+            const state = resolveState(vars, vm.$storeState);
             const values = Object.values(state);
-            if (shouldInvoke(values)) {
+            if (isMeetConditions(values, conditions)) {
                 vm.$nextTick(() => handler(values, state));
             }
         };
@@ -132,6 +135,9 @@ const useWatchStoreStrategyWatcher = (strategy) => {
 
 /**
  *
+ * @param {boolean} all
+ * @param {import('./WatchStore').WatchStoreHandlerCondition} when
+ * @return {import('./WatchStore').WatchStoreStrategy}
  */
 const resolveStrategy = ({ all, when }) => {
     if (all === true || when === true || when === WatchStoreStrategy.ALL) {
@@ -154,21 +160,16 @@ const createStoreWatcher = (vm, definition, watchOptions = { immediate: true }) 
     validateDefinition({ ...definition, all, vars, when });
 
     const watcher = useWatchStoreStrategyWatcher(resolveStrategy({ all, when }));
-
-    // use 'vars' keys from '$storeState' || use all keys from '$storeState'
+    // stringify as 'state' is always a new object
     // prettier-ignore
-    const resolveWatcherValues = () => vars.length > 0
-        ? vars.map((key) => vm.$storeState[key])
-        : vm.$storeState;
+    const changesResolver = () => JSON.stringify(
+    // use 'vars' keys from '$storeState' || use all keys from '$storeState'
+        vars.length === 0
+            ? vm.$storeState
+            : vars.map((key) => vm.$storeState[key])
+    )
 
-    return vm.$watch(
-        () => {
-            // stringify as 'state' is always a new object
-            return JSON.stringify(resolveWatcherValues());
-        },
-        watcher(vm, { vars, handler, when }),
-        watchOptions
-    );
+    return vm.$watch(changesResolver, watcher(vm, { vars, handler, when }), watchOptions);
 };
 
 /**
@@ -180,7 +181,7 @@ const validateDefinition = (definition) => {
     const unknownProps = Object.keys(definition).filter(
         (prop) => false === ['handler', 'vars', 'all', 'when'].includes(prop)
     );
-    console.log({ unknownProps });
+
     if (unknownProps.length > 0) {
         throw new Error(
             `'watchStore' section invalid descriptor: prop(s) '${unknownProps.join("', '")}' ${

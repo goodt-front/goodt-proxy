@@ -293,25 +293,24 @@ class OrgStructureApiService extends BaseApiService {
     }
 
     /**
-     *
+     /**
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division_team_role/update
      * @param {number} divisionTeamRoleId
-     * @param {number} divisionTeamToFilter
-     * @param {number} positionId
-     * @return {Promise<SafeResult>}
+     * @param {number} divisionTeamId
+     * @param {number} importance
+     * @return {Promise<SafeResult<DivisionTeamRoleRawDto, Error>>}
      */
-    // updateDivisionTeamRole(divisionTeamRoleId, divisionTeamToFilter, positionId) {
-    //     return this.request(
-    //         {
-    //             action: ServiceAction.DIVISION_TEAM_ROLE_SET,
-    //             pathParams: { id: divisionTeamRoleId },
-    //             params: {
-    //                 division_team_id: divisionTeamToFilter,
-    //                 importance: positionId
-    //             }
-    //         },
-    //         DivisionTeamRoleDto
-    //     );
-    // }
+     updateDivisionTeamRoleById(divisionTeamRoleId, { divisionTeamId, importance }) {
+        // prettier-ignore
+        return this.request({
+             action: ServiceAction.DIVISION_TEAM_ROLE_SET_BY_ID,
+             pathParams: { id: divisionTeamRoleId },
+             params: {
+                 division_team_id: divisionTeamId,
+                 importance
+             }
+         }, DivisionTeamRoleRawDto);
+     }
 
     /**
      *
@@ -563,27 +562,6 @@ class OrgStructureApiService extends BaseApiService {
         // prettier-ignore
         return this.request({
             url: Paths.DIVISION_TEAM_ROLE_GET_BY_ID.replace(':id', id)
-        }, DivisionTeamRoleRawDto);
-    }
-
-    /**
-     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division_team_role/update
-     * @return {Promise<SafeResult<DivisionTeamRoleRawDto, Error>>}
-     */
-    async updateDivisionTeamRoleById(id, divisionTeamRoleDto) {
-        if (id == null || divisionTeamRoleDto == null) {
-            throw new ApiServiceError(`'OrgStructureApiService.updateDivisionTeamRoleById' method invalid arguments`, {
-                code: ApiServiceError.Code.INTERNAL,
-                reason: { id, divisionTeamRoleDto }
-            });
-        }
-        // prettier-ignore
-        return this.request({
-            url: Paths.DIVISION_TEAM_ROLE_SET_BY_ID.replace(':id', id),
-            params: divisionTeamRoleDto,
-            options: {
-                method: ApiClientMethod.PUT
-            }
         }, DivisionTeamRoleRawDto);
     }
 

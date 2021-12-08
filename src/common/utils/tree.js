@@ -1,13 +1,6 @@
+import('./tree.d.ts');
 // @ts-check
-/**
- * @typedef {object} AppEntityElem
- * @property {string} id - id of element
- * @property {string} pid - parent id of element
- * @property {string} type - type of element
- * @property {object} props - props of element
- * @property {boolean} visible - visibility of element
- * @property {AppEntityElem[]} children - children of element
- */
+
 class Queue {
     _array = [];
     
@@ -32,9 +25,9 @@ class Queue {
     dequeue() {
         return this._array.shift();
     }
-
+    
     /**
-     * @param {(AppEntityElem|null)=} parent
+     * @param {AppEntityElem|null} parent
      * @return {(AppEntityElem) => [AppEntityElem, AppEntityElem|null]}
      */
     mapper(parent = null) {
@@ -48,10 +41,12 @@ class Queue {
         return this._array.length === 0;
     }
 }
+
 /**
+ * finds node in the tree by the "match" function and returns it
  * @param {AppEntityElem[]} array
  * @param {string} childrenProp
- * @param {Function} match
+ * @param {(node: AppEntityElem) => boolean} match
  * @return {Object|null}
  */
 function findNode(array, childrenProp, match) {
@@ -67,10 +62,12 @@ function findNode(array, childrenProp, match) {
 
     return null;
 }
+
 /**
+ * find parent of node in the tree by the "match" function and returns it
  * @param {AppEntityElem[]} array
  * @param {string} childrenProp
- * @param {Function} match
+ * @param {(node: AppEntityElem) => boolean} match
  * @return {Object|null}
  */
 function findParentNode(array, childrenProp, match) {
@@ -89,10 +86,12 @@ function findParentNode(array, childrenProp, match) {
 
     return null;
 }
+
 /**
+ * finds node in the tree by the "match" function, delete it and returns boolean
  * @param {AppEntityElem[]} array
  * @param {string} childrenProp
- * @param {Function} match
+ * @param {(node: AppEntityElem) => boolean} match
  * @return {boolean}
  */
 function deleteNode(array, childrenProp, match) {
@@ -110,10 +109,12 @@ function deleteNode(array, childrenProp, match) {
 
     return false;
 }
+
 /**
+ * apply callback function for each node in the tree or subtree
  * @param {AppEntityElem[]} array
  * @param {string} childrenProp
- * @param {Function} callback
+ * @param {(node: AppEntityElem, parentNode?: AppEntityElem) => void} callback
  */
 function traverse(array, childrenProp, callback) {
     const nodeQueue = new Queue(array);

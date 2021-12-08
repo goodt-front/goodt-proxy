@@ -1,3 +1,5 @@
+import { BaseError } from '@goodt-common/errors';
+
 /**
  * Enum ошибок апи-сервиса
  */
@@ -20,7 +22,7 @@ export const ApiServiceErrorCode: TApiServiceErrorCode;
  * Класс-исключение транспортного уровня для запросов к api
  * @class ApiServiceError
  */
-export class ApiServiceError {
+export class ApiServiceError extends BaseError {
     static Code: TApiServiceErrorCode;
     /**
      *

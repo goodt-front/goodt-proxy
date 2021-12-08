@@ -59,7 +59,7 @@ export class OrgStructureApiService extends BaseApiService {
         employeeIds?: number[];
         divisionId?: number;
         searchToken?: string;
-    } = {}): Promise<SafeResult<EmployeeExtendedInfoDto[], ApiServiceError>>;
+    }): Promise<SafeResult<EmployeeExtendedInfoDto[], ApiServiceError>>;
 
     /**
      *

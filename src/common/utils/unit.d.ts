@@ -1,3 +1,13 @@
+export const DateTimeUnit: {
+    YEAR: 'year';
+    MONTH: 'month';
+    WEEK: 'week';
+    DAY: 'day';
+    HOUR: 'hour';
+    MINUTE: 'minute';
+    SECOND: 'second';
+};
+
 /**
  * Replace px units with converted in rem into string and returns new one
  * @param {string} cssPropValue

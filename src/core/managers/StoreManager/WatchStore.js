@@ -16,6 +16,63 @@ const WatchStoreStrategy = {
 };
 
 /**
+ *
+ * @param {boolean} all
+ * @param {import('./WatchStore').WatchStoreHandlerCondition} when
+ * @return {import('./WatchStore').WatchStoreStrategy}
+ */
+const resolveStrategy = ({ all, when }) => {
+    if (all === true || when === true || when === WatchStoreStrategy.ALL) {
+        return WatchStoreStrategy.ALL;
+    }
+    return WatchStoreStrategy.ANY;
+};
+
+/**
+ *
+ * @param {WatchStoreDefinition} definition watcher definition
+ * @throw {Error}
+ */
+const validateDefinition = (definition) => {
+    const unknownProps = Object.keys(definition).filter(
+        (prop) => false === ['handler', 'vars', 'all', 'when'].includes(prop)
+    );
+
+    if (unknownProps.length > 0) {
+        throw new Error(
+            `'watchStore' section invalid descriptor: prop(s) '${unknownProps.join("', '")}' ${
+                unknownProps.length > 1 ? 'are' : 'is'
+            } unknown.`
+        );
+    }
+
+    const { handler, vars, all, when } = definition;
+    if (['function', 'string'].includes(typeof handler) === false) {
+        throw new Error(
+            `'watchStore' section invalid descriptor format: 'handler' prop type is expected to be Function or String.`
+        );
+    }
+    if (Array.isArray(vars) === false) {
+        throw new Error(
+            `'watchStore' section invalid descriptor format: 'vars' prop type is expected to be Array<String>`
+        );
+    }
+    if (typeof all !== 'boolean') {
+        throw new Error(`'watchStore' section invalid descriptor format: 'all' prop type is expected to be Boolean`);
+    }
+    if (['function', 'string', 'boolean'].includes(typeof when) === false && Array.isArray(when) === false) {
+        throw new Error(
+            `'watchStore' section invalid descriptor format. 'when' prop type is expected to be Function, String,  Boolean, Array<Function>`
+        );
+    }
+    if (vars.length === 0 && (all === true || when === true)) {
+        throw new Error(
+            `'watchStore' section invalid descriptor format: 'all: true' or 'when: true' prop and empty 'vars' prop can't be used together`
+        );
+    }
+};
+
+/**
  * @param {import('./WatchStore').WatchStoreHandler} handler
  * @param {ElemInstance} context
  * @return {function(): void}
@@ -23,23 +80,9 @@ const WatchStoreStrategy = {
 const resolveHandler = (handler, context) =>
     typeof handler === 'function' ? handler.bind(context) : context[handler].bind(context);
 
-/**
- * Checks if all values are meeting all conditions
- *
- * @param {any[]} values
- * @param {(function(values: any[]): boolean) | Array<function(values: any[]): boolean>} conditions
- * @return {boolean}
- */
-// prettier-ignore
-const isMeetConditions = (values, conditions) => {
-    return []
-        .concat(conditions)
-        .filter((condition) => typeof condition === 'function')
-        .every((isMeetCondition) => isMeetCondition(values));
-}
 
 /**
- * Resolves
+ * Resolves state
  *
  * @param {string[]} vars
  * @param {Record<string, any>} storeState
@@ -56,6 +99,20 @@ const resolveState = (vars, storeState) => {
             [varName]: storeState[varName]
         }), {});
 }
+
+/**
+ * Checks if all values are meeting all conditions
+ *
+ * @param {any[]} values
+ * @param {(function(values: any[]): boolean) | Array<function(values: any[]): boolean>} conditions
+ * @return {boolean}
+ */
+// prettier-ignore
+const isMeetConditions = (values, conditions) => []
+    .concat(conditions)
+    .filter((condition) => typeof condition === 'function')
+    .every((isMeetCondition) => isMeetCondition(values));
+
 
 const WatchStoreStratFactory = {
     /**
@@ -134,19 +191,6 @@ const useWatchStoreStrategyWatcher = (strategy) => {
 };
 
 /**
- *
- * @param {boolean} all
- * @param {import('./WatchStore').WatchStoreHandlerCondition} when
- * @return {import('./WatchStore').WatchStoreStrategy}
- */
-const resolveStrategy = ({ all, when }) => {
-    if (all === true || when === true || when === WatchStoreStrategy.ALL) {
-        return WatchStoreStrategy.ALL;
-    }
-    return WatchStoreStrategy.ANY;
-};
-
-/**
  * Creates a new watcher, which watches 'vars' keys in '$storeState'
  * @param {ElemInstance} vm                                 vue component reference
  * @param {WatchStoreDefinition} definition                 watcher definition
@@ -163,7 +207,7 @@ const createStoreWatcher = (vm, definition, watchOptions = { immediate: true }) 
     // stringify as 'state' is always a new object
     // prettier-ignore
     const changesResolver = () => JSON.stringify(
-    // use 'vars' keys from '$storeState' || use all keys from '$storeState'
+        // use 'vars' keys from '$storeState' || use all keys from '$storeState'
         vars.length === 0
             ? vm.$storeState
             : vars.map((key) => vm.$storeState[key])
@@ -173,52 +217,8 @@ const createStoreWatcher = (vm, definition, watchOptions = { immediate: true }) 
 };
 
 /**
- *
- * @param {WatchStoreDefinition} definition watcher definition
- * @throw {Error}
- */
-const validateDefinition = (definition) => {
-    const unknownProps = Object.keys(definition).filter(
-        (prop) => false === ['handler', 'vars', 'all', 'when'].includes(prop)
-    );
-
-    if (unknownProps.length > 0) {
-        throw new Error(
-            `'watchStore' section invalid descriptor: prop(s) '${unknownProps.join("', '")}' ${
-                unknownProps.length > 1 ? 'are' : 'is'
-            } unknown.`
-        );
-    }
-
-    const { handler, vars, all, when } = definition;
-    if (['function', 'string'].includes(typeof handler) === false) {
-        throw new Error(
-            `'watchStore' section invalid descriptor format: 'handler' prop type is expected to be Function or String.`
-        );
-    }
-    if (Array.isArray(vars) === false) {
-        throw new Error(
-            `'watchStore' section invalid descriptor format: 'vars' prop type is expected to be Array<String>`
-        );
-    }
-    if (typeof all !== 'boolean') {
-        throw new Error(`'watchStore' section invalid descriptor format: 'all' prop type is expected to be Boolean`);
-    }
-    if (['function', 'string', 'boolean'].includes(typeof when) === false && Array.isArray(when) === false) {
-        throw new Error(
-            `'watchStore' section invalid descriptor format. 'when' prop type is expected to be Function, String,  Boolean, Array<Function>`
-        );
-    }
-    if (vars.length === 0 && (all === true || when === true)) {
-        throw new Error(
-            `'watchStore' section invalid descriptor format: 'all: true' or 'when: true' prop and empty 'vars' prop can't be used together`
-        );
-    }
-};
-
-/**
  * Allows creating a stateWatcher dynamically
- * @param {WatchStoreDefinition} def                                            watcher definition
+ * @param {WatchStoreDefinition} def watcher definition
  * @return {function(): void} watcher disposal function
  */
 function watchStore({ handler, vars = [], all = false, when = false }) {
@@ -230,7 +230,7 @@ function watchStore({ handler, vars = [], all = false, when = false }) {
  * @param {ElemInstance} vm  target component
  * @return {{ disposals: function[], $watchStore: function }}
  */
-const useWatchStore = (vm) => {
+export const useWatchStore = (vm) => {
     /** @type {WatchStoreDefinition[]} */
     const defs = vm.$options[WATCH_STORE_COMPONENT_OPTION_NAME] ?? [];
     const disposals = defs.map((def) => createStoreWatcher(vm, def));
@@ -240,5 +240,3 @@ const useWatchStore = (vm) => {
         $watchStore
     };
 };
-
-export { useWatchStore };

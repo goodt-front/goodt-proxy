@@ -8,8 +8,10 @@
 /public
 /scripts
 /jsconfig.json
-/.config
-/babel.*
+/.config/browserslist-config
+/.config/eslint-config-base
+/.config/postcss-config
+/.config/stylelint-config-base
 /jest.*
 /styleguide.config.js
 /CONTRIBUTING.MD

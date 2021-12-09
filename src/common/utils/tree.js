@@ -1,11 +1,10 @@
-import('./tree.d.ts');
 // @ts-check
 
 class Queue {
     _array = [];
     
     /**
-     * @param {AppEntityElem[]} array - started array of nodes
+     * @param {import('./tree.d.ts').AppEntityElem[]} array - started array of nodes
      */
     constructor(array) {
         this.enqueue(array);
@@ -13,7 +12,7 @@ class Queue {
 
     /**
      * @param {AppEntityElem[]} nodes - nodes for interaction
-     * @param {(AppEntityElem|null)=} parent - parent node of nodes
+     * @param {(AppEntityElem|null)=null} parent - parent node of nodes
      */
     enqueue(nodes, parent = null) {
         this._array.push(...nodes.map(this.mapper(parent)));
@@ -27,7 +26,7 @@ class Queue {
     }
     
     /**
-     * @param {AppEntityElem|null} parent
+     * @param {AppEntityElem|null=null} parent
      * @return {(AppEntityElem) => [AppEntityElem, AppEntityElem|null]}
      */
     mapper(parent = null) {

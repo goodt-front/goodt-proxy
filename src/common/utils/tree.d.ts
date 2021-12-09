@@ -25,7 +25,7 @@ class Queue {
 
     /**
      * @param {AppEntityElem[]} nodes - nodes for interaction
-     * @param {(AppEntityElem|null)=} parent - parent node of nodes
+     * @param {(AppEntityElem|null)=null} parent - parent node of nodes
      */
     enqueue(nodes: AppEntityElem[], parent?: AppEntityElem|null = null): void
 
@@ -35,7 +35,7 @@ class Queue {
     dequeue(): [AppEntityElem, AppEntityElem|null]
 
     /**
-     * @param {AppEntityElem|null} parent
+     * @param {AppEntityElem|null=null} parent
      * @return {(AppEntityElem) => [AppEntityElem, AppEntityElem|null]}
      */
     mapper(parent: AppEntityElem|null = null): (node: AppEntityElem) => [AppEntityElem, AppEntityElem|null]

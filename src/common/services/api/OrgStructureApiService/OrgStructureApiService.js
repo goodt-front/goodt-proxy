@@ -18,7 +18,8 @@ import {
     DivisionTeamRoleDto,
     DivisionTeamAssignmentRotationDto,
     DivisionTeamSuccessorDto,
-    AssignmentReadinessDto
+    AssignmentReadinessDto,
+    DivisionTeamSuccessorReadinessDto
 } from './dto';
 
 import { withEmployeeContext, withEmployeeIdContext } from './EmployeeContext';
@@ -235,12 +236,14 @@ class OrgStructureApiService extends BaseApiService {
     }
 
     /**
+     * Добавление преемника
      *
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/employee/createDivisionTeamSuccessorEntity
      * @param {number} employeeId
      * @param {number} divisionTeamRoleId
      * @return {Promise<SafeResult<DivisionTeamSuccessorDto, Error>>}
      */
-    addTeamDivisionSuccessor(employeeId, divisionTeamRoleId) {
+    createDivisionTeamSuccessor(employeeId, divisionTeamRoleId) {
         // prettier-ignore
         return this.request({
             action: ServiceAction.EMPLOYEE_DIVISION_TEAM_SUCCESSOR_ADD,
@@ -249,12 +252,14 @@ class OrgStructureApiService extends BaseApiService {
     }
 
     /**
+     * Добавление готовности заданного преемника к заданной ротации
      *
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/employee/createDivisionTeamSuccessorReadinessEntity
      * @param {number} divisionTeamSuccessorId
      * @param {number} assignmentReadinessId
-     * @return {Promise<SafeResult<true>>|Error}
+     * @return {Promise<SafeResult<DivisionTeamSuccessorReadinessDto, Error>>}
      */
-    setDivisionTeamSuccessorReadiness(divisionTeamSuccessorId, assignmentReadinessId) {
+    createDivisionTeamSuccessorReadiness(divisionTeamSuccessorId, assignmentReadinessId) {
         // prettier-ignore
         return this.request({
             action: ServiceAction.EMPLOYEE_DIVISION_TEAM_SUCCESSOR_READINESS_SET,
@@ -262,14 +267,16 @@ class OrgStructureApiService extends BaseApiService {
                 division_team_successor_id: divisionTeamSuccessorId,
                 assignment_readiness_id: assignmentReadinessId
             }
-        });
+        }, DivisionTeamSuccessorReadinessDto);
     }
 
     /**
+     * Добавление или обнуление записи подтверждения преемника hr-ом
      *
-     * @param divisionTeamSuccessorId
-     * @param dateCommitHr
-     * @return {Promise<SafeResult>|Promise<SafeResult>|*}
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/employee/divisionTeamSuccessorUpdateHr
+     * @param {number} divisionTeamSuccessorId
+     * @param {string} dateCommitHr
+     * @return {Promise<SafeResult<boolean, Error>>}
      */
     updateDivisionTeamSuccessorDateHr(divisionTeamSuccessorId, dateCommitHr) {
         // prettier-ignore
@@ -283,9 +290,12 @@ class OrgStructureApiService extends BaseApiService {
     }
 
     /**
+     * Получение всех готовностей к назначениям
+     *
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/library/getAllAssignmentReadiness
      * @return {Promise<SafeResult<AssignmentReadinessDto[], Error>>}
      */
-    getLibraryAssignmentReadinesses() {
+    getAssignmentReadinesses() {
         // prettier-ignore
         return this.request({
             action: ServiceAction.ASSIGNMENT_READINESS_GET
@@ -293,26 +303,27 @@ class OrgStructureApiService extends BaseApiService {
     }
 
     /**
-     /**
      * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division_team_role/update
      * @param {number} divisionTeamRoleId
      * @param {number} divisionTeamId
-     * @param {number} importance
+     * @param {number} importanceId
      * @return {Promise<SafeResult<DivisionTeamRoleRawDto, Error>>}
      */
-     updateDivisionTeamRoleById(divisionTeamRoleId, { divisionTeamId, importance }) {
+    updateDivisionTeamRoleById(divisionTeamRoleId, { divisionTeamId, importanceId }) {
         // prettier-ignore
         return this.request({
              action: ServiceAction.DIVISION_TEAM_ROLE_SET_BY_ID,
              pathParams: { id: divisionTeamRoleId },
              params: {
                  division_team_id: divisionTeamId,
-                 importance
+                 importance: importanceId
              }
          }, DivisionTeamRoleRawDto);
-     }
+    }
 
     /**
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division_team_role/findPost
+     * Получение информации о ролях, соответствующих заданным фильтрам.
      *
      * @param {number[]} divisionTeamIds
      * @return {Promise<SafeResult<DivisionTeamRoleContainerDto[], Error>>}
@@ -328,8 +339,7 @@ class OrgStructureApiService extends BaseApiService {
     }
 
     /**
-     *
-     * @param {number} divisionTeamId
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division_team_role/findPost     * @param {number} divisionTeamId
      * @return {Promise<SafeResult<DivisionTeamAssignmentDto[], Error>>}
      */
     async getTeamDivisionTeamAssignmentsByTeamId(divisionTeamId) {

@@ -18,3 +18,4 @@ export class DivisionTeamRoleDto extends BaseDto {}
 export class DivisionTeamAssignmentRotationDto extends BaseDto {}
 export class DivisionTeamSuccessorDto extends BaseDto {}
 export class AssignmentReadinessDto extends BaseDto {}
+export class DivisionTeamSuccessorReadinessDto extends BaseDto {}

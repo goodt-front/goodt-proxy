@@ -3,3 +3,4 @@ const StylePanelAsync = () => import('./StylePanel.vue');
 const VariablePanelAsync = () => import('./VariablePanel.vue');
 
 export { DremioPanelAsync, VariablePanelAsync, StylePanelAsync };
+export * from './utils';

@@ -1,4 +1,9 @@
-import { BaseApiService, ApiServiceError } from '@goodt-common/services/api';
+import {
+    BaseApiService,
+    ApiServiceError,
+    DivisionTeamSuccessorDto,
+    AssignmentReadinessDto
+} from '@goodt-common/services/api';
 
 import { IApiServiceMixinInstance, IApiServiceMixinOptions } from '@goodt-common/mixins';
 import { SafeResult } from '@goodt-common/utils';
@@ -20,7 +25,6 @@ import {
 import { IEmployeeContext } from './EmployeeContext';
 import { IDivisionContext } from './DivisionContext';
 import { ITeamContext } from './TeamContext';
-import { ApiClientMethod } from 'goodt-wcore/src/common/services/api';
 
 export interface IOrgStructureApiServiceMixinOptions extends IApiServiceMixinOptions {}
 
@@ -242,6 +246,78 @@ export class OrgStructureApiService extends BaseApiService {
     async deleteDivisionTeamSuccessorById(id: number): Promise<SafeResult<boolean, Error>>;
 
     /**
+     * Добавление заданного сотрудника в преемники на заданную роль в команде подразделения
+     *
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/employee/createDivisionTeamSuccessorEntity
+     * @param {number} employeeId
+     * @param {number} divisionTeamRoleId
+     * @return {Promise<SafeResult<DivisionTeamSuccessorDto, Error>>}
+     */
+    createDivisionTeamSuccessor(
+        employeeId: number,
+        divisionTeamRoleId: number
+    ): Promise<SafeResult<InstanceType<DivisionTeamSuccessorDto>, ApiServiceError>>;
+
+    /**
+     * Добавление готовности заданного преемника к заданной ротации
+     *
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/employee/createDivisionTeamSuccessorReadinessEntity
+     * @param {number} divisionTeamSuccessorId
+     * @param {number} assignmentReadinessId
+     * @return {Promise<SafeResult<true>>|Error}
+     */
+    createDivisionTeamSuccessorReadiness(
+        divisionTeamSuccessorId: number,
+        assignmentReadinessId: number
+    ): Promise<SafeResult<boolean, Error>>;
+
+    /**
+     * Добавление или обнуление записи подтверждения преемника hr-ом
+     *
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/employee/divisionTeamSuccessorUpdateHr
+     * @param {number} divisionTeamSuccessorId
+     * @param {string} dateCommitHr
+     * @return {Promise<SafeResult<boolean, Error>>;}
+     */
+    updateDivisionTeamSuccessorDateHr(
+        divisionTeamSuccessorId: number,
+        dateCommitHr: string
+    ): Promise<SafeResult<boolean, Error>>;
+
+    /**
+     * @return {Promise<SafeResult<AssignmentReadinessDto[], Error>>}
+     */
+    getLibraryAssignmentReadinesses(): Promise<SafeResult<AssignmentReadinessDto[], Error>>;
+
+    /**
+     /**
+     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division_team_role/update
+     * @param {number} divisionTeamRoleId
+     * @param {number} divisionTeamId
+     * @param {number} importanceId
+     * @return {Promise<SafeResult<DivisionTeamRoleRawDto, Error>>}
+     */
+    updateDivisionTeamRoleById(
+        divisionTeamRoleId,
+        { divisionTeamId, importanceId }
+    ): Promise<SafeResult<DivisionTeamRoleRawDto, Error>>;
+
+    /**
+     *
+     * @param {number[]} divisionTeamIds
+     * @return {Promise<SafeResult<DivisionTeamRoleContainerDto[], Error>>}
+     */
+    getDivisionTeamRolesByFilter({ divisionTeamIds }) {
+        // prettier-ignore
+        return this.request({
+            action: ServiceAction.DIVISION_TEAM_ROLE_FIND,
+            queryParams: {
+                division_team_id: divisionTeamIds
+            }
+        }, DivisionTeamRoleContainerDto);
+    }
+
+    /**
      *
      * @param {number} divisionTeamId
      * @return {Promise<SafeResult<DivisionTeamRoleContainerDto[], Error>>}
@@ -261,15 +337,6 @@ export class OrgStructureApiService extends BaseApiService {
      * @return {Promise<SafeResult<DivisionTeamRoleRawDto, Error>>}
      */
     async getDivisionTeamRoleById(id: number): Promise<SafeResult<DivisionTeamRoleRawDto, Error>>;
-
-    /**
-     * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division_team_role/update
-     * @return {Promise<SafeResult<DivisionTeamRoleRawDto, Error>>}
-     */
-    async updateDivisionTeamRoleById(
-        id: number,
-        divisionTeamRoleDto: Record<string, number | string | undefined | null>
-    ): Promise<SafeResult<DivisionTeamRoleRawDto, Error>>;
 
     /**
      * @param {Record<string, number|string|undefined>} divisionTeamRoleDto

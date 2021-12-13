@@ -1,3 +1,6 @@
+import { ApiClientMethod } from '../ApiHttpClient';
+import { stringify as stringifyParams } from 'qs';
+
 const ApiEndpointPaths = {
     EMPLOYEE_TEAM_DIVISION_ASSIGNMENTS: 'employee/teamdivisionassignments',
     EMPLOYEE_TEAM_DIVISION_HEAD: 'employee/teamdivisionhead',
@@ -32,6 +35,66 @@ const ApiEndpointPaths = {
     DIVISION_TEAM_ASSIGNMENT_ROTATION_WITHDRAW: 'employee/teamdivisionassignmentrotationwithdraw',
     DIVISION_TEAM_ASSIGNMENT_ROTATION_CREATE: 'employee/addteamdivisionassignmentrotation',
     DIVISION_TEAM_ASSIGNMENT_ROTATION_UPDATE_COMMENT: 'employee/teamdivisionassignmentrotationcomment'
+};
+
+export const ServiceAction = {
+    EMPLOYEE_DIVISION_TEAM_SUCCESSOR_ADD: {
+        url: 'employee/addteamdivisionsuccessor',
+        options: {
+            method: ApiClientMethod.POST,
+            headers: {
+                'content-type': 'application/json'
+            }
+        }
+    },
+    EMPLOYEE_DIVISION_TEAM_SUCCESSOR_READINESS_SET: {
+        url: 'employee/setteamdivisionsuccessorreadiness',
+        options: {
+            method: ApiClientMethod.POST,
+            headers: {
+                'content-type': 'application/json'
+            }
+        }
+    },
+    EMPLOYEE_DIVISION_TEAM_SUCCESSOR_DATE_HR_UPDATE: {
+        url: 'employee/divisionteamsuccessorupdatehr',
+        options: {
+            method: ApiClientMethod.PUT,
+            headers: {
+                'content-type': 'application/json'
+            },
+            paramsSerializer: (params) =>
+                Object.entries(params).reduce((result, param) => {
+                    if (!param[1]) {
+                        return result;
+                    }
+
+                    return `${result}&${param[0]}=${encodeURI(param[1])}`;
+                }, '')
+        }
+    },
+    ASSIGNMENT_READINESS_GET: {
+        url: 'library/assignmentreadiness'
+    },
+    DIVISION_TEAM_ROLE_SET_BY_ID: {
+        url: 'divisionteamrole/:id',
+        options: {
+            method: ApiClientMethod.PUT,
+            headers: {
+                'content-type': 'application/json'
+            }
+        }
+    },
+    DIVISION_TEAM_ROLE_FIND: {
+        url: 'divisionteamrole/find',
+        options: {
+            method: ApiClientMethod.POST,
+            paramsSerializer: (params) => stringifyParams(params, { arrayFormat: 'comma', encode: false })
+        }
+    },
+    COMPETENCE_ASSIGMENT_ACCORDANCE_GET: {
+        url: 'competence/assignmentaccordance'
+    }
 };
 
 export { ApiEndpointPaths };

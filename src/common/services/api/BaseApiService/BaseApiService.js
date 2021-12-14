@@ -5,30 +5,30 @@ import {
     ApiHttpClientError,
     ApiHttpClientErrorCode,
     create as createApiHttpClient
-} from './ApiHttpClient';
-import { ApiServiceError, ApiServiceErrorCode } from './errors';
-import './typedefs';
+} from '../ApiHttpClient';
+import { ApiServiceError, ApiServiceErrorCode } from '../errors';
+import '../typedefs';
 
 /**
- * @type {import('./BaseApiService').IApiService}
+ * @type {import('./').IApiService}
  */
 class BaseApiService {
     /**
-     * @private
-     * @type {import('./ApiHttpClient').ApiHttpClient}
+     * @protected
+     * @type {import('../ApiHttpClient').ApiHttpClient}
      */
     _client;
 
     /**
-     * @private
+     * @protected
      * @type {IApiServiceOptions}
      */
     _options = {};
 
     /**
-     * @param {import('./ApiHttpClient').ApiHttpClient} client?
-     * @param {ITransport} transport?
-     * @param {IApiServiceOptions} options?
+     * @param {?import('../ApiHttpClient').ApiHttpClient} client
+     * @param {?ITransport} transport
+     * @param {?IApiServiceOptions} options
      * @throws ApiServiceError
      */
     constructor({ client, transport, options = {} } = {}) {
@@ -77,7 +77,7 @@ class BaseApiService {
     }
 
     /**
-     * @param {import('./ApiHttpClient').ApiHttpClient} client
+     * @param {import('../ApiHttpClient').ApiHttpClient} client
      */
     setClient(client) {
         this._client = client;
@@ -92,7 +92,7 @@ class BaseApiService {
 
     /**
      *
-     * @param {import('./types').IApiServiceRequest} request
+     * @param {import('../types').IApiServiceRequest} request
      * @return {Promise<import('@goodt-common/utils').ISafeResult<*, Error>>}
      */
     async request(request) {
@@ -126,9 +126,9 @@ class BaseApiService {
 
     /**
      * Билдит конфиг реквеста для клиента
-     *
+     * @protected
      * @param {IApiServiceRequest} request
-     * @return {import('./ApiHttpClient').IApiClientRequest} IApiClientRequest
+     * @return {import('../ApiHttpClient').IApiClientRequest} IApiClientRequest
      */
     // eslint-disable-next-line class-methods-use-this
     _buildApiClientRequest(request) {
@@ -136,7 +136,7 @@ class BaseApiService {
     }
 
     /**
-     *
+     * @protected
      * @param {Error} error
      * @return {ApiServiceError|Error|null}
      */
@@ -156,7 +156,7 @@ class BaseApiService {
     }
 
     /**
-     *
+     * @protected
      * @param {Error} error
      * @return {ApiServiceError}
      */

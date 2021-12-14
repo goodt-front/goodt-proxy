@@ -1,7 +1,14 @@
-import { success } from '@goodt-common/utils';
-import { applyConstructorOrFactory, BaseDto, buildDtoSafeResult } from '@goodt-common/infra';
+/**
+ * @typedef {import('@goodt-common/infra').BaseDto} BaseDto
+ */
 
-import { BaseApiService, ApiClientMethod, ApiServiceError, buildRequest } from '@goodt-common/api';
+import {
+    BaseApiService,
+    ApiServiceError,
+    ApiClientMethod,
+    buildRequest,
+    processRequestResult
+} from '@goodt-common/api';
 
 import { ApiEndpointPaths as Paths, ServiceAction } from './config';
 import {
@@ -27,30 +34,6 @@ import { withDivisionContext, withDivisionIdContext } from './DivisionContext';
 import { withTeamContext, withTeamIdContext } from './TeamContext';
 
 /**
- * @typeof {import('@goodt-common/infra/BaseDto').BaseDto} BaseDto
- */
-/**
- *
- * @param {function(...args?: any[]): any} [DtoConstructorOrFactory=BaseDto]
- * @param {SafeResult} safeResult
- * @return {SafeResult<BaseDto|BaseDto[]|any, Error>}
- */
-const processRequestResult = (safeResult, DtoConstructorOrFactory = BaseDto) => {
-    const { isError, result: dtoJsonResult } = safeResult;
-
-    if (isError) {
-        return safeResult;
-    }
-    if (BaseDto.isPrototypeOf(DtoConstructorOrFactory)) {
-        return buildDtoSafeResult(DtoConstructorOrFactory, dtoJsonResult);
-    }
-    if (typeof DtoConstructorOrFactory !== 'function') {
-        return success(dtoJsonResult);
-    }
-    return success(applyConstructorOrFactory(DtoConstructorOrFactory, dtoJsonResult));
-};
-
-/**
  *
  */
 class OrgStructureApiService extends BaseApiService {
@@ -58,7 +41,7 @@ class OrgStructureApiService extends BaseApiService {
      *
      * @param {import('@goodt-common/api').IApiServiceRequest | import('@goodt-common/api').IApiServiceRequestOptions} apiServiceRequest
      * @param {function(...args?: any[]): any} [DtoConstructor=BaseDto]
-     * @return {SafeResult<BaseDto|BaseDto[]|any, Error>}
+     * @return {typeof ReturnType<processRequestResult>}
      */
     async request(apiServiceRequest, DtoConstructor) {
         if ('action' in apiServiceRequest) {

@@ -8,3 +8,4 @@ export * from './tree';
 export * from './unit';
 export * from './i18n';
 export * from './vue';
+export * from './url';

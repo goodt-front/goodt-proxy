@@ -152,15 +152,17 @@ class OrgStructureApiService extends BaseApiService {
      *
      * @param {number} employeeId
      * @param {number} divisionTeamId
+     * @param {boolean} [withChildren=false]
      * @return {Promise<SafeResult<DivisionTeamAssignmentDto[], Error>>}
      */
-    async getSubordinatesDivisionsTeamAssignments({ employeeId, divisionTeamId }) {
+    async getSubordinatesDivisionsTeamAssignments({ employeeId, divisionTeamId }, { withChildren = false } = {}) {
         // prettier-ignore
         return this.request({
             url: Paths.EMPLOYEE_TEAM_DIVISION_SUBORDINATES,
             params: {
                 id: employeeId,
-                team: divisionTeamId
+                team: divisionTeamId,
+                withchilds: withChildren
             }
         }, DivisionTeamAssignmentDto);
     }
@@ -430,17 +432,19 @@ class OrgStructureApiService extends BaseApiService {
 
     /**
      * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division/listInfo
-     * @param {number} divisionId?
-     * @param {number} legalEntityId?
+     * @param {?number} divisionId
+     * @param {?number} legalEntityId
+     * @param {boolean} [withChildren=false]
      * @return {Promise<SafeResult<DivisionInfoDto[], Error>>}
      */
-    async getDivisionInfosByParent({ divisionId, legalEntityId }) {
+    async getDivisionInfosByParent({ divisionId, legalEntityId }, { withChildren = false } = {}) {
         // prettier-ignore
         return this.request({
             url: Paths.DIVISION_LIST,
             params: {
                 ...(divisionId && { parent: divisionId }),
-                ...(legalEntityId && { legalentity: legalEntityId })
+                ...(legalEntityId && { legalentity: legalEntityId }),
+                withchilds: withChildren
             }
         }, DivisionInfoDto);
     }

@@ -13,7 +13,7 @@ export interface IApiServiceMixinOptions {
     name?: string;
 }
 
-export type IApiServiceMixinInstance<T extends IApiService> = ServiceMixinComputed<T>
+export type IApiServiceMixinInstance<T extends IApiService = IApiService> = ServiceMixinComputed<T>;
 export interface IApiServiceMixin extends VueConstructor<Vue & IApiServiceMixinInstance> {}
 
 /**

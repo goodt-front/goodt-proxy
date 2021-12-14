@@ -7,7 +7,7 @@ export class BaseDto {
     constructor(dtoJson) {
         this._validate(dtoJson);
 
-        return Object.freeze(dtoJson);
+        return Object.freeze(Object.assign(this, dtoJson));
     }
 
     /**

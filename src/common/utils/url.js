@@ -24,9 +24,9 @@ const isRelativeURL = (url) => {
 const createURLFromStringSafe = (url) => {
     try {
         // absolute path
-        return new global.URL(url);
-    } catch (e) {
-        return new global.URL(url, [ORIGIN_FAKE_PROTOCOL, '//', ORIGIN_FAKE_HOST].join(''));
+        return new globalThis.URL(url);
+    } catch {
+        return new globalThis.URL(url, [ORIGIN_FAKE_PROTOCOL, '//', ORIGIN_FAKE_HOST].join(''));
     }
 };
 
@@ -72,18 +72,17 @@ const createURLFromString = (urlString) => {
             if (propKey === 'path') {
                 return target.pathname;
             }
-            if (isRelativeURL(target) === false) {
-                const propValue = target[propKey];
-                return typeof propValue === 'function' ? propValue.bind(target) : propValue;
+            if (isRelative) {
+                // if relative url
+                if (ORIGIN_PART_NAMES.includes(propKey)) {
+                    return undefined;
+                }
+                if (propKey === 'toString') {
+                    return () => target.toString().replace([target.protocol, '//', target.host].join(''), '');
+                }
             }
-
-            // if relative url
-            if (ORIGIN_PART_NAMES.includes(propKey)) {
-                return undefined;
-            }
-            if (propKey === 'toString') {
-                return () => target.toString().replace([target.protocol, '//', target.host].join(''), '');
-            }
+            const propValue = target[propKey];
+            return typeof propValue === 'function' ? propValue.bind(target) : propValue;
         },
         has(target, propKey) {
             if (isRelativeURL(target) && ORIGIN_PART_NAMES.includes(propKey)) {
@@ -107,22 +106,41 @@ const createURLFromString = (urlString) => {
  * @return {URL}
  */
 const createURLFromParts = (parts) => {
-    const { host, hostname, origin, path, pathname, searchParams, query, search, ...restUrlParts } = parts;
+    const {
+        href,
+        host,
+        hostname,
+        origin,
+        path,
+        pathname,
+        searchParams,
+        query,
+        search: queryString,
+        ...restUrlParts
+    } = parts;
 
     // prettier-ignore
-    const resolvedHost = origin
+    const resolvedHref = href
+        ?? origin
         ?? ((hostname ?? host)
             ? [PROTOCOL_BASE, '//', hostname ?? host].join('')
             : null)
         ?? '';
 
-    const resolvedParts = {
-        ...restUrlParts,
-        search: new URLSearchParams(query ?? search ?? searchParams).toString(),
-        pathname: path ?? pathname ?? ''
-    };
+    const url = createURLFromString(resolvedHref);
 
-    return Object.assign(createURLFromString(resolvedHost), resolvedParts);
+    // prettier-ignore
+    new URLSearchParams(query ?? queryString ?? searchParams)
+        .forEach((queryValue, queryName) => {
+            url.searchParams.append(queryName, queryValue);
+        });
+
+    const pathResolved = path ?? pathname;
+    if (pathResolved != null) {
+        url.pathname = pathResolved;
+    }
+
+    return Object.assign(url, restUrlParts);
 };
 
 /**

@@ -76,7 +76,7 @@ export class OrgStructureApiService extends BaseApiService {
     getEmployeeDivisionTeamAssignments({
         employeeId,
         divisionTeamId
-    }: {
+    }?: {
         employeeId?: number;
         divisionTeamId?: number;
     }): Promise<SafeResult<DivisionTeamAssignmentDto[], ApiServiceError>>;
@@ -102,7 +102,7 @@ export class OrgStructureApiService extends BaseApiService {
         {
             employeeId,
             divisionTeamId
-        }: {
+        }?: {
             employeeId?: number;
             divisionTeamId?: number;
         },
@@ -118,7 +118,7 @@ export class OrgStructureApiService extends BaseApiService {
     getTeamHeadDivisionsTeamAssignment({
         employeeId,
         divisionTeamId
-    }: {
+    }?: {
         employeeId?: number;
         divisionTeamId?: number;
     }): Promise<SafeResult<DivisionTeamAssignmentDto, ApiServiceError>>;
@@ -148,7 +148,7 @@ export class OrgStructureApiService extends BaseApiService {
     getHeadOfTeamHeadDivisionTeamAssignment({
         employeeId,
         divisionTeamId
-    }: {
+    }?: {
         employeeId?: number;
         divisionTeamId?: number;
     }): Promise<SafeResult<DivisionTeamAssignmentDto, ApiServiceError>>;

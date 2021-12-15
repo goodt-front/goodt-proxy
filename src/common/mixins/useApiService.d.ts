@@ -25,5 +25,5 @@ export function useApiService(
     serviceOptions: IApiServiceOptions,
     mixinOptions: IApiServiceMixinOptions
 ): {
-    mixin: IApiServiceMixin;
+    mixin: IApiServiceMixinInstance;
 };

@@ -13,13 +13,7 @@ export class DivisionPositionDto extends BaseDto {}
 export class RoleInfoDto extends BaseDto {}
 export class DivisionTeamRoleContainerDto extends BaseDto {}
 export class DivisionTeamRoleRawDto extends BaseDto {}
-export class DivisionTeamRoleDto extends BaseDto {
-    id;
-    role;
-    importance;
-    division_team;
-    external_id;
-}
+export class DivisionTeamRoleDto extends BaseDto {}
 
 export class DivisionTeamAssignmentRotationDto extends BaseDto {}
 export class DivisionTeamSuccessorReadinessDto extends BaseDto {}

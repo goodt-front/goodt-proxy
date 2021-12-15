@@ -21,14 +21,14 @@ export const applyConstructorOrFactory = (ConstructorOrFactory, value) => {
     } catch {
         return applyMapper(ConstructorOrFactory, value);
     }
-}
-
+};
 
 /**
  *
- * @param {import('./BaseDto').BaseDto.constructor} DtoConstructor
+ * @template T
+ * @param {T} DtoConstructor
  * @param {DtoJson|DtoJson[]} dtoJson
- * @return {import('@goodt-common/utils').SafeResult<BaseDto|BaseDto[], Error>}
+ * @return {SafeResult<InstanceType<T>, Error>}
  */
 export const buildDtoSafeResult = (DtoConstructor, dtoJson) => {
     try {

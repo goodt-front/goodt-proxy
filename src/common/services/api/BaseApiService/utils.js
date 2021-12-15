@@ -23,7 +23,7 @@ export const processRequestResult = (
     }
 
     const dtoJson = resultTransformer(result);
-    if (BaseDto.isPrototypeOf(DtoConstructorOrFactory)) {
+    if (DtoConstructorOrFactory === BaseDto || BaseDto.isPrototypeOf(DtoConstructorOrFactory)) {
         return buildDtoSafeResult(DtoConstructorOrFactory, dtoJson);
     }
     if (typeof DtoConstructorOrFactory !== 'function') {

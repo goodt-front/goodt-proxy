@@ -91,7 +91,6 @@ class BaseApiService {
     }
 
     /**
-     *
      * @param {import('../types').IApiServiceRequest} request
      * @return {Promise<import('@goodt-common/utils').ISafeResult<*, Error>>}
      */

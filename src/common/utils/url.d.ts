@@ -37,21 +37,22 @@ export class Url implements UrlInstance {
     /**
      * Static class factory
      *
-     * @param {UrlParts | string} input
-     * @return {string}
+     * @param {UrlParts | string} [input='']
+     * @return {Url}
      */
-    static create(input: UrlParts | string = ''): Url;
+    static create(input?: UrlParts | string = ''): Url;
 
     /**
      * Concats path part strings, resolving leading and trailing slashes
      *
      * @param {...string[]} args
-     * @return {string}
+     * @return {Url}
      */
     static join(...args: string[]): string;
 
     /**
-     * @construct {Url}
+     * @param {string|UrlParts} [input='']
+     * @construct {URL}
      */
-    constructor(input: UrlParts | string = ''): Url;
+    constructor(input?: UrlParts | string = ''): Url;
 }

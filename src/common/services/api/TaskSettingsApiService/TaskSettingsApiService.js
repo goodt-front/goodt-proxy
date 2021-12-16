@@ -1,6 +1,6 @@
 //import { success } from '@goodt-common/utils';
 import { BaseApiService, buildRequest, processRequestResult } from '@goodt-common/api';
-import { TaskDto } from './dto';
+import { TaskDto, TaskLinkDto, UserTaskTreeDto } from './dto';
 import { ServiceAction } from './config';
 
 /**
@@ -9,41 +9,53 @@ import { ServiceAction } from './config';
 export class TaskSettingsApiService extends BaseApiService {
     /**
      *
+     * @param {IApiServiceRequestOptions} request
+     * @param [DtoConstructor]
+     * @param [processOptions]
+     * @return {Promise<SafeResult<*, Error>>}
+     */
+    async request(request, DtoConstructor, processOptions) {
+        return processRequestResult(await super.request(buildRequest(request)), DtoConstructor, processOptions);
+    }
+
+    /**
+     * Получение списка сущностей "пользовательское дерево задач" для списка заданных идентификаторов
+     * пользователей и заданного типа задачи
+     *
      * @param {number|number[]} userIds
      * @param {number} typeId
      * @return {Promise<SafeResult<UserTaskTreeDto[], Error>>}
      */
     getUserTaskTrees(userIds, typeId) {
-        const request = buildRequest({
+        // prettier-ignore
+        return this.request({
             action: ServiceAction.GET_TASK_TREES,
             params: {
                 type: typeId,
                 users: userIds
             }
-        });
-
-        return this.request(request);
+        }, UserTaskTreeDto);
     }
 
     /**
+     * Получение списка сущностей "задача" (одного "дерева" задач) для заданного пользователя
+     * и заданного типа задачи
      *
      * @param {number} userId
      * @param {number} typeId
      * @return {Promise<SafeResult<TaskDto[], Error>>}
      */
     async getTaskTree(userId, typeId) {
-        const request = buildRequest({
+        // prettier-ignore
+        return this.request({
             action: ServiceAction.GET_TASK_TREES,
             params: {
                 type: typeId,
                 users: userId
             }
-        });
-
-        const safeResult = await this.request(request);
-        const resultTransformer = (result) => result.flatMap(({ tree }) => tree);
-
-        return processRequestResult(safeResult, TaskDto, { resultTransformer });
+        },
+        TaskDto,
+        { resultTransformer: ServiceAction.GET_TASK_TREES.resultTransformer });
     }
 
     /**
@@ -52,31 +64,30 @@ export class TaskSettingsApiService extends BaseApiService {
      * @param {number} linkTypeId
      * @return {Promise<SafeResult<TaskLinkDto[], Error>>}
      */
-    getTaskLinks(userIds, linkTypeId) {
-        const request = buildRequest({
+    async getTaskLinks(userIds, linkTypeId) {
+        // prettier-ignore
+        return this.request({
             action: ServiceAction.GET_TASK_LINKLIST,
             params: {
                 users: userIds,
                 task_link_type_id: linkTypeId
             }
-        });
-
-        return this.request(request);
+        }, TaskLinkDto);
     }
 
     /**
+     * Получение сущности "задача" по её идентификатору
      *
      * @param {number} taskId
      * @return {Promise<SafeResult<TaskDto, Error>>}
      */
-    getTaskById(taskId) {
-        const request = buildRequest({
+    async getTaskById(taskId) {
+        // prettier-ignore
+        return this.request({
             action: ServiceAction.GET_TASK_INFO,
             params: {
                 id: taskId
             }
-        });
-
-        return this.request(request);
+        }, TaskDto);
     }
 }

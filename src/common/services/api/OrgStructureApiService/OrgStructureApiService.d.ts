@@ -76,7 +76,7 @@ export class OrgStructureApiService extends BaseApiService {
     getEmployeeDivisionTeamAssignments({
         employeeId,
         divisionTeamId
-    }: {
+    }?: {
         employeeId?: number;
         divisionTeamId?: number;
     }): Promise<SafeResult<DivisionTeamAssignmentDto[], ApiServiceError>>;
@@ -93,17 +93,21 @@ export class OrgStructureApiService extends BaseApiService {
 
     /**
      *
-     * @param {number} [employeeId]
-     * @param {number} [divisionTeamId]
+     * @param {number} employeeId
+     * @param {number} divisionTeamId
+     * @param {boolean} [withChildren=false]
      * @return {Promise<SafeResult<DivisionTeamAssignmentDto[], Error>>}
      */
-    getSubordinatesDivisionsTeamAssignments({
-        employeeId,
-        divisionTeamId
-    }: {
-        employeeId?: number;
-        divisionTeamId?: number;
-    }): Promise<SafeResult<DivisionTeamAssignmentDto[], ApiServiceError>>;
+    async getSubordinatesDivisionsTeamAssignments(
+        {
+            employeeId,
+            divisionTeamId
+        }?: {
+            employeeId?: number;
+            divisionTeamId?: number;
+        },
+        { withChildren = false }: { withChildren: Boolean } = {}
+    ): Promise<SafeResult<DivisionTeamAssignmentDto[], ApiServiceError>>;
 
     /**
      *
@@ -114,7 +118,7 @@ export class OrgStructureApiService extends BaseApiService {
     getTeamHeadDivisionsTeamAssignment({
         employeeId,
         divisionTeamId
-    }: {
+    }?: {
         employeeId?: number;
         divisionTeamId?: number;
     }): Promise<SafeResult<DivisionTeamAssignmentDto, ApiServiceError>>;
@@ -144,7 +148,7 @@ export class OrgStructureApiService extends BaseApiService {
     getHeadOfTeamHeadDivisionTeamAssignment({
         employeeId,
         divisionTeamId
-    }: {
+    }?: {
         employeeId?: number;
         divisionTeamId?: number;
     }): Promise<SafeResult<DivisionTeamAssignmentDto, ApiServiceError>>;
@@ -203,17 +207,21 @@ export class OrgStructureApiService extends BaseApiService {
 
     /**
      * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division/listInfo
-     * @param {number} divisionId?
-     * @param {number} legalEntityId?
+     * @param {?number} divisionId
+     * @param {?number} legalEntityId
+     * @param {boolean} [withChildren=false]
      * @return {Promise<SafeResult<DivisionInfoDto[], Error>>}
      */
-    getDivisionInfosByParent({
-        divisionId,
-        legalEntityId
-    }: {
-        divisionId: number;
-        legalEntityId: number;
-    }): Promise<SafeResult<DivisionInfoDto[], ApiServiceError>>;
+    getDivisionInfosByParent(
+        {
+            divisionId,
+            legalEntityId
+        }: {
+            divisionId: number;
+            legalEntityId: number;
+        },
+        { withChildren = false } = {}
+    ): Promise<SafeResult<DivisionInfoDto[], ApiServiceError>>;
 
     /**
      * @link https://goodt-dev.goodt.me:8480/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/division/GetDivisionPositions

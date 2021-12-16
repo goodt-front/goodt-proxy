@@ -1,9 +1,4 @@
-import {
-    ITransport,
-    ITransportRequest,
-    ITransportResponse,
-    ITransportOptions
-} from '@goodt-wcore/net';
+import { ITransport, ITransportRequest, ITransportResponse, ITransportOptions } from '@goodt-wcore/net';
 /**
  * @class ApiHttpClient
  */
@@ -61,11 +56,11 @@ export class ApiHttpClient {
 }
 
 export const ApiClientMethod: Readonly<{
-    GET: string;
-    POST: string;
-    PATCH: string;
-    PUT: string;
-    DELETE: string;
+    GET: 'get';
+    POST: 'post';
+    PATCH: 'patch';
+    PUT: 'put';
+    DELETE: 'delete';
 }>;
 
 export interface IApiClientRequest extends ITransportRequest {}

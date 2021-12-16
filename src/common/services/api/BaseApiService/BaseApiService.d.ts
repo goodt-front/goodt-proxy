@@ -1,15 +1,7 @@
-/**
- * @type {import('./BaseApiService').IApiService}
- */
-import {
-    IApiService,
-    IApiServiceConstructorOptions,
-    IApiServiceOptions,
-    IApiServiceRequest
-} from './types';
-import { ApiHttpClient, IApiClientRequest } from './ApiHttpClient';
-import { ApiServiceError } from './error';
-import { SafeResult } from '../../utils';
+import { SafeResult } from '@goodt-common/utils';
+import { IApiService, IApiServiceConstructorOptions, IApiServiceOptions, IApiServiceRequest } from '../types';
+import { ApiHttpClient, IApiClientRequest } from '../ApiHttpClient';
+import { ApiServiceError } from '../error';
 
 export class BaseApiService implements IApiService {
     /**
@@ -17,20 +9,20 @@ export class BaseApiService implements IApiService {
      */
     constructor({ client, transport, options }: IApiServiceConstructorOptions);
     /**
-     * @private
+     * @protected
      */
-    private _client: ApiHttpClient;
+    protected _client: ApiHttpClient;
     /**
-     * @private
+     * @protected
      */
-    private _options: IApiServiceOptions;
+    protected _options: IApiServiceOptions;
     /**
      *
      * @param {string} url
      */
     apiBaseURL: string | undefined;
     /**
-     * @param {import('./ApiHttpClient').ApiHttpClient} client
+     * @param {import('./../ApiHttpClient').ApiHttpClient} client
      */
     setClient(client: ApiHttpClient): void;
     /**
@@ -53,17 +45,17 @@ export class BaseApiService implements IApiService {
      * @param {IApiServiceRequest} request
      * @return {IApiClientRequest} IApiClientRequest
      */
-    private _buildApiClientRequest(request: IApiServiceRequest): IApiClientRequest;
+    protected _buildApiClientRequest(request: IApiServiceRequest): IApiClientRequest;
     /**
      *
      * @param {Error} error
      * @return {ApiServiceError|Error|null}
      */
-    private _processError(error: Error): ApiServiceError | Error | null;
+    protected _processError(error: Error): ApiServiceError | Error | null;
     /**
      *
      * @param {Error} error
      * @return {ApiServiceError}
      */
-    private _buildApiServiceError(error: Error): ApiServiceError;
+    protected _buildApiServiceError(error: Error): ApiServiceError;
 }

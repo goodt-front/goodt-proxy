@@ -1,5 +1,5 @@
 {
-    "version": "1.2.28",
+    "version": "1.2.29",
     "name": "goodt-wcore",
     "main": "src/core/index.js",
     "types": "src/core/index.d.ts",

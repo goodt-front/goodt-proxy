@@ -144,14 +144,17 @@ const createURLFromParts = (parts) => {
 };
 
 /**
- * @param {string|UrlParts} input
+ * @param {string|UrlParts} [input]
  * @return {URL}
  */
 const create = (input) => {
+    if (input === null) {
+        throw new Error(`Argument invalid value: '${input}'`);
+    }
     if (typeof input === 'string') {
         return createURLFromString(input);
     }
-    if (typeof input === 'object') {
+    if (typeof input === 'object' && false === input instanceof Array) {
         return createURLFromParts(input);
     }
     throw new Error(`Argument invalid type: '${typeof input}'`);
@@ -165,7 +168,7 @@ export class Url {
     /**
      *
      * @param {string|UrlParts} [input='']
-     * @return {URL}
+     * @return {Url}
      */
     static create(input = '') {
         return new Url(input);

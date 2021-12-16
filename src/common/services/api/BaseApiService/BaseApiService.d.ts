@@ -1,5 +1,11 @@
 import { SafeResult } from '@goodt-common/utils';
-import { IApiService, IApiServiceConstructorOptions, IApiServiceOptions, IApiServiceRequest } from '../types';
+import {
+    IApiService,
+    IApiServiceConstructorOptions,
+    IApiServiceOptions,
+    IApiServiceRequest,
+    IApiServiceRequestMethodArguments
+} from '../types';
 import { ApiHttpClient, IApiClientRequest } from '../ApiHttpClient';
 import { ApiServiceError } from '../error';
 
@@ -31,10 +37,14 @@ export class BaseApiService implements IApiService {
     setOptions(options: IApiServiceOptions): void;
     /**
      *
-     * @param {IApiServiceRequest} request
-     * @return {Promise<import('@goodt-common/utils').ISafeResult<*, Error>>}
+     * @param request
+     * @param {IApiServiceRequestMethodArguments} args
+     * @return {Promise<import('@goodt-common/utils').ISafeResult<any, Error>>}
      */
-    request(request: IApiServiceRequest): Promise<SafeResult>;
+    request<T = any, E extends Error = Error>(
+        request: IApiServiceRequest,
+        ...args: IArguments
+    ): Promise<SafeResult<T, E>>;
     /**
      * Освобождает ресурсы, используемые сервисом
      */

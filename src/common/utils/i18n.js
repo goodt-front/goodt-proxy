@@ -13,5 +13,5 @@ export const pluralize = (count, wordForms = ['', '', '']) => {
     const cases = [2, 0, 1, 1, 1, 2];
 
     // eslint-disable-next-line no-magic-numbers
-    return `${count} ${wordForms[count % 100 > 4 && count % 100 < 20 ? 2 : cases[Math.min(count % 10, 5)]]}`;
+    return wordForms[count % 100 > 4 && count % 100 < 20 ? 2 : cases[Math.min(count % 10, 5)]];
 };

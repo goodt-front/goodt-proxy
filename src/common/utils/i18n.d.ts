@@ -9,4 +9,7 @@
  * @param {[string, string, string]} wordForms
  * @return {string}
  */
-export function pluralize(count: number, wordForms: [string, string, string]): string;
+export function pluralize<A extends string, B extends string, C extends string>(
+    count: number,
+    wordForms: [A, B, C]
+): A | B | C;

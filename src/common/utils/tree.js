@@ -1,10 +1,14 @@
 // @ts-check
 
+/**
+ * @typedef {import('./tree').AppEntityElem} AppEntityElem
+ */
+
 class Queue {
     _array = [];
     
     /**
-     * @param {import('./tree.d.ts').AppEntityElem[]} array - started array of nodes
+     * @param {AppEntityElem[]} array - started array of nodes
      */
     constructor(array) {
         this.enqueue(array);

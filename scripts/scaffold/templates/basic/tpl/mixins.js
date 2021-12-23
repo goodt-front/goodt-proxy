@@ -1,7 +1,7 @@
 [[#hasTransport]]
 import { extractDescriptorPropMeta } from '@goodt-common/utils';
 import { useOrgStructureApiServiceMixin } from '@goodt-common/api';
-import { useApiServiceMixin } from './api';
+import { useApiServiceMixin } from './index';
 
 /**
  * Миксин для использования ApiService вместе с компонентом

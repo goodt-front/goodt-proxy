@@ -1,7 +1,8 @@
 {
-    "version": "1.2.32",
+    "version": "1.2.33",
     "name": "goodt-proxy",
     "dependencies": {
+        "goodt-wcore": "^1.0.0"
     },
     "engines": {
         "node": ">=14",

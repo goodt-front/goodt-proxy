@@ -4,10 +4,6 @@
     "dependencies": {
        "@goodt/goodt-wcore": "^1.0.0"
     },
-    "devDependencies": {
-    },
-    "peerDependencies": {
-    },
     "engines": {
         "node": ">=14",
         "npm": ">=7"
